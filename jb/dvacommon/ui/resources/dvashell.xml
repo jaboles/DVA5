@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<frame title="DVA 5" size="1080,700" defaultcloseoperation="JFrame.EXIT_ON_CLOSE" bundle="jb.dvacommon.ui.resources.dvashell" locale="en" iconimage="dva_icon.png">
+    <menubar>
+        <menu text="Application" mnemonic="VK_A">
+            <menuitem action="showDVAPanelAction" icon="null" mnemonic="VK_D" accelerator="MENU_DVA_SHOW_DVA_PANEL_ACCELERATOR"/>
+            <menuitem action="showIndicatorsManualPanelAction" icon="null" mnemonic="VK_M" accelerator="MENU_DVA_SHOW_INDICATORS_MANUAL_PANEL_ACCELERATOR"/>
+            <menuitem action="showIndicatorsTimetablePanelAction" icon="null" mnemonic="VK_I" accelerator="MENU_DVA_SHOW_INDICATORS_TIMETABLE_PANEL_ACCELERATOR"/>
+            <separator />
+            <menuitem action="voiceLibraryToggleAction" icon="null" mnemonic="VK_V" />
+            <menuitem action="soundInfoAction" icon="null" mnemonic="VK_S" accelerator="MENU_DVA_SOUND_INFO_ACCELERATOR" />
+            <separator />
+            <menuitem action="specialSoundsAction" icon="null" mnemonic="VK_E" />
+            <separator />
+            <menuitem action="quitAction" macos_quit="true" icon="null" mnemonic="VK_X" accelerator="MENU_FILE_QUIT_ACCELERATOR"/>
+        </menu>
+        <menu text="Edit" mnemonic="VK_E">
+            <menuitem action="undoAction" accelerator="MENU_FILE_UNDO_ACCELERATOR"/>
+            <menuitem action="redoAction" accelerator="MENU_FILE_REDO_ACCELERATOR"/>
+            <separator/>
+            <menuitem action="cutAction" text="Cut" mnemonic="VK_T" accelerator="MENU_EDIT_CUT_ACCELERATOR"/>
+            <menuitem action="copyAction" text="Copy" mnemonic="VK_C" accelerator="MENU_EDIT_COPY_ACCELERATOR"/>
+            <menuitem action="pasteAction" text="Paste" mnemonic="VK_P" accelerator="MENU_EDIT_PASTE_ACCELERATOR"/>
+            <menuitem action="selectAllAction" text="Select All" mnemonic="VK_A" accelerator="MENU_EDIT_SELECT_ALL_ACCELERATOR"/>
+        </menu>
+        <menu text="Announcement" mnemonic="VK_N">
+            <menuitem action="openAction" icon="null" mnemonic="VK_L" accelerator="MENU_FILE_OPEN_ACCELERATOR"/>
+            <menuitem action="renameAction" icon="null" mnemonic="VK_R" accelerator="MENU_FILE_RENAME_ACCELERATOR"/>
+            <menuitem action="deleteAction" icon="null" mnemonic="VK_D" accelerator="MENU_FILE_DELETE_ACCELERATOR"/>
+            <separator/>
+            <menuitem action="newAction" icon="null" mnemonic="VK_N" accelerator="MENU_FILE_NEW_ACCELERATOR"/>
+            <menuitem action="saveAction" icon="null" mnemonic="VK_S" accelerator="MENU_FILE_SAVE_ACCELERATOR"/>
+            <menuitem action="exportAction" icon="null" mnemonic="VK_E" text="Export As Single .WAV File" />
+            <separator/>
+            <menuitem action="playSavedAction" icon="null" mnemonic="VK_A" text="Play Selected Saved Announcement" accelerator="MENU_CONTROL_PLAY_SAVED_ACCELERATOR"/>
+            <menuitem action="playCurrentAction" icon="null" mnemonic="VK_C" text="Play Current Announcement" accelerator="MENU_CONTROL_PLAY_CURRENT_ACCELERATOR"/>
+            <menuitem action="stopAction" icon="null" mnemonic="VK_P" accelerator="MENU_CONTROL_STOP_ACCELERATOR"/>
+        </menu>
+        <menu text="Indicators" mnemonic="VK_I">
+            <menuitem action="indicatorWindowAction" icon="null" mnemonic="VK_W" accelerator="MENU_INDICATOR_WINDOW_ACCELERATOR"/>
+            <menuitem action="indicatorFullScreenAction" icon="null" mnemonic="VK_F" accelerator="MENU_INDICATOR_FULL_SCREEN_ACCELERATOR"/>
+            <separator/>
+            <menuitem action="indicatorPlayAnnouncementAction" icon="null" mnemonic="VK_P" text="Play Next Train's Announcement" accelerator="MENU_INDICATOR_PLAY_ANNOUNCEMENT"/>
+            <separator/>
+            <menuitem action="indicatorEditSubstitutionsAction" icon="null" mnemonic="VK_S" />
+            <menuitem action="indicatorEditViasAction" icon="null" mnemonic="VK_V" />
+            <menuitem action="indicatorEditAllStationsTosAction" icon="null" mnemonic="VK_A" />
+        </menu>
+        <menu text="Help" mnemonic="VK_H">
+            <menuitem action="helpAction" icon="null" mnemonic="VK_H" accelerator="MENU_DVA_HELP_ACCELERATOR" />
+            <menuitem action="versionHistoryAction" icon="null" mnemonic="VK_V" />
+            <menuitem action="checkForUpdateAction" icon="null" mnemonic="VK_U" />
+            <menuitem action="relaunchWithLogging" icon="null" mnemonic="VK_L" />
+            <menuitem action="aboutAction" macos_about="true" icon="null" mnemonic="VK_A" />
+        </menu>
+    </menubar>
+    <tabbedpane titles="DVA,Indicators" id="tabbedPane">
+        <panel id="dvaPanel" layout="BorderLayout" constraints="BorderLayout.CENTER"/>
+        <panel id="indicatorsPanel" layout="BorderLayout" constraints="BorderLayout.CENTER"/>
+    </tabbedpane>
+</frame>

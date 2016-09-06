@@ -1,0 +1,226 @@
+<?xml version="1.0" ?>
+<!-- Configuration of the Ant build system to generate a Jar file --> 
+<project name="DVA" default="CreateJar">
+    <property name="InDir" value="build/Intermediate/Debug"/>
+    <property name="OutDir" value="build/Debug"/>
+    <property name="AppBundle" value="${OutDir}/DVA.app"/>
+    <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
+	<property name="Classpath" value="jars/azure-storage-2.2.0.jar:jars/swingx-all-1.6.4.jar:jars/jdom.jar:jars/swixml.jar:jars/jna-4.2.1.jar:jars/jna-platform-4.2.1.jar:jars/javatuples-1.2.jar:jars/mac/xuggle-xuggler-5.4.jar:jars/slf4j-api-1.7.7.jar:jars/collections-query-0.2.9.jar"/>
+
+    <!-- Mac signing identity in Keychain -->
+    <property name="SignIdentity" value="Jonathan Boles"/>
+    <!-- Windows signing cert paths. -->
+    <property name="SignKey" value="/Users/jb/Software/jb.pvk"/>
+    <property name="SignCert" value="/Users/jb/Software/jb.spc"/>
+
+	<!-- Mac setup -->
+    <property name="DmgName" value="DVA5"/>
+    <property name="DmgVolumeName" value="DVA 5"/>
+    <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
+    <property name="DmgSizeMb" value="25"/>
+	
+	<!-- Windows setup -->
+    <property name="Wine" value="/Applications/Wine.app/Contents/Resources/bin/wine"/>
+    <property name="WinePrefix" value="/Users/jb/Wine Files"/>
+    <property name="SetupScript" value="z:\Users\jb\Software\DVA\win\setup.iss"/>
+	<property name="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/iscc.exe"/>
+	<property name="WindowsSetupName" value="DVA5Setup"/>
+
+    <!-- Increments the build number -->
+    <target name="IncrementBuildNumber" description="Increment build number">
+        <buildnumber file="buildnumber.txt"/>
+    </target>
+
+    <target name="Clean" description="Clean output folder">
+        <delete failonerror="false" dir="${InDir}"/>
+        <delete failonerror="false" dir="${OutDir}"/>
+    </target>
+	
+	<target name="Compile" description="Compile java code">
+        <mkdir dir="${InDir}"/>
+		<javac srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
+	</target>
+
+    <!-- After Eclipse compile task, prepare JAR file -->
+    <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
+        <java jar="retrolambda-2.0.6.jar" fork="true">
+            <sysproperty key="retrolambda.inputDir" value="${InDir}"/>
+            <sysproperty key="retrolambda.classpath" value="${Classpath}:${InDir}"/>
+            <sysproperty key="retrolambda.bytecodeVersion" value="49"/>
+        </java>
+        <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
+        	<fileset dir="${InDir}"/>
+        	<fileset dir=".">
+        		<patternset id="jar-resources">
+                    <include name="*.wav"/>
+                    <include name="*.mp3"/>
+                    <include name="*.jpg"/>
+                    <include name="*.png"/>
+                    <include name="*.gif"/>
+                    <include name="*.html"/>
+                    <include name="*.tt"/>
+                    <include name="buildnumber.txt"/>
+                    <include name="**/*.xml"/>
+                    <include name="jb/**/*.properties"/>
+                    <include name="jb/**/*.png"/>
+          			<exclude name=".metadata/**"/>
+        	    </patternset>
+        	</fileset>
+    	</jar>
+    </target>
+    
+    <target name="BundledResources" description="Resources that are bundled with the app but not part of the jar">
+        <copy todir="${OutDir}" preservelastmodified="true">
+            <fileset dir=".">
+            	<patternset id="bundled-resources">
+                    <include name="*.txt"/>
+                    <exclude name="buildnumber.txt"/>
+            	</patternset>
+            </fileset>
+        </copy>
+    </target>
+    
+    <!-- Builds the Mac app bundle. Windows uses a stub .exe launcher so no need to update it. -->
+    <target name="CleanMacApp" description="Clean the Mac DVA.app bundle">
+        <delete failonerror="false" dir="${AppBundle}"/>
+    </target>
+    <target name="UpdateMacApp" description="Update contents of the mac app" depends="CreateJar,BundledResources">
+        <copy todir="${OutDir}">
+            <fileset dir="mac">
+                <include name="DVA.app/**"/>
+            </fileset>
+        </copy>
+        <copy todir="${AppBundleContents}" preservelastmodified="true">
+        	<fileset dir=".">
+                <include name="logging.properties"/>	
+            </fileset>
+        	<fileset dir="${OutDir}">
+        		<include name="*.txt"/>
+        		<include name="DVA.jar"/>
+        	</fileset>
+            <fileset dir="jars">
+            	<include name="*.jar"/>
+            </fileset>
+            <fileset dir="jars/mac">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <chmod perm="u+x" file="${AppBundleContents}/dva"/>
+    </target>
+
+    <target name="SignMacApp" description="Mac App Signing" depends="UpdateMacApp">
+        <apply executable="codesign">
+            <arg line="-v -f -s '${SignIdentity}'"/>
+            <fileset dir="${OutDir}/DVA.app/Contents/MacOS">
+                <include name="*.jar"/>
+                <include name="*.txt"/> <!-- TODO: user space -->
+                <include name="*.properties"/> <!-- TODO: user space -->
+            </fileset>
+        </apply>
+        <exec executable="codesign" dir="${OutDir}">
+            <arg line="-v -f -s '${SignIdentity}' DVA.app"/>
+        </exec>
+        <!-- verify codesign -->
+        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+            <arg line="-vv DVA.app"/>
+        </exec>
+        <!-- verify gatekeeper -->
+        <exec executable="spctl" dir="${OutDir}" failonerror="false">
+            <arg line="-vv --assess --type execute DVA.app"/>
+        </exec>
+    </target>
+
+    <target name="RebuildMacApp" description="Clean/rebuild the mac app" depends="CleanMacApp,UpdateMacApp,SignMacApp"/>
+    
+    <!-- Source code zip file -->
+    <target name="SourceArchive" description="Source code distribution">
+        <zip destfile="${OutDir}/src.zip" basedir=".">
+            <patternset refid="jar-resources"/>
+            <patternset refid="bundled-resources"/>
+            <include name="**/*.java"/>
+            <include name="*.sh"/>
+            <include name="mac/**"/>
+            <include name="win/**"/>
+            <include name=".classpath"/>
+            <include name=".project"/>
+            <include name=".externalToolBuilders/**"/>
+            <include name=".svnignore"/>
+        </zip>
+    </target>
+    
+    <target name="SetupCommon" description="common setup crap">
+        <copy file="new.html" todir="${OutDir}"/>
+    </target>
+    
+    <!-- Build Mac setup -->
+    <target name="BuildMacSetup" description="Build Mac DMG" depends="RebuildMacApp,SourceArchive,SetupCommon">
+        <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
+        <exec executable="hdiutil">
+            <arg line="create -megabytes ${DmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${OutDir}/${DmgName}.dmg"/>
+        </exec>
+        <exec executable="hdiutil">
+            <arg line="attach ${OutDir}/${DmgName}.dmg"/>
+        </exec>
+        <copy todir="${DmgMountPoint}" preservelastmodified="true">
+            <fileset dir="${OutDir}">
+                <include name="DVA.app/**"/>
+                <include name="src.zip"/>
+            </fileset>
+        </copy>
+        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
+        <exec executable="osascript">
+            <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
+        </exec>
+        <sleep seconds="1"/>
+        <exec executable="umount">
+            <arg value="${DmgMountPoint}"/>
+        </exec>
+        <exec executable="bzip2">
+            <arg line="--verbose --fast ${OutDir}/${DmgName}.dmg"/>
+        </exec>
+    </target>
+    
+    <target name="PrepareSoundJars">
+        <exec executable="/bin/bash" dir=".">
+            <arg value="makejars.sh"/>
+        </exec>
+    </target>
+
+    <!-- Build windows setup -->
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,BundledResources,SourceArchive,SetupCommon">
+        <exec executable="${Wine}">
+            <env key="WINEPREFIX" value="${WinePrefix}"/>
+            <arg value="${InnoSetupCompiler}"/>
+            <arg value="/Qp"/>
+            <arg value="${SetupScript}"/>
+        </exec>
+    </target>
+
+    <!-- Sign windows setup -->
+    <target name="SignWinSetup">
+        <exec executable="signcode" dir="${OutDir}">
+            <arg line="signcode -a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; DVA5Setup.exe"/>
+        </exec>
+    </target>
+    
+    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacSetup,BuildWinSetup,SignWinSetup">
+        <java jar="${AppBundleContents}/DVA.jar" fork="true">
+            <arg value="/clearsettings"/>
+        </java>
+        <exec executable="/bin/sh" outputproperty="DVAVersion">
+            <arg value="-c"/>
+            <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\.\d\.\d&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
+        </exec>
+        <copy todir="build/TestUpdateDrop/${DVAVersion}">
+            <fileset dir="${OutDir}">
+                <include name="${DmgName}.dmg.bz2"/>
+                <include name="${WindowsSetupName}.exe"/>
+                <include name="new.html"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="DevBuild" description="Fast dev build" depends="UpdateMacApp"/>
+
+</project>

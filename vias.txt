@@ -1,0 +1,34 @@
+# This file controls the addition of "... via X" to the destination when generating
+# an announcement from the indicator board.
+#
+# Entries format: A,B,C
+# If a train is routed A->B->C, "... via B" will be added to the destination.
+# A is optional. If omitted, any routing B->C will cause "... via B" will be added
+# to the destination.
+
+
+# Northern/North Shore line
+Chatswood,Gordon,Hornsby
+Chatswood,Macquarie Park,Hornsby
+,Strathfield,Epping
+,Macquarie Park,Epping
+North Strathfield,Strathfield,Central
+Hornsby,Strathfield,Central
+Epping,Strathfield,Central
+Epping,Macquarie Park,Chatswood
+Hornsby,Gordon,Chatswood
+
+# Bankstown/South/Old Main South/East Hills lines
+Lidcombe,Regents Park,Bankstown
+Lidcombe,Regents Park,Liverpool
+Sydenham,Bankstown,Lidcombe
+Sydenham,Bankstown,Liverpool
+Redfern,Sydenham,Bankstown
+Lidcombe,Granville,Cabramatta
+Central,East Hills,Glenfield
+Cabramatta,Granville,Lidcombe
+Sefton,Regents Park,Lidcombe
+Sefton,Bankstown,Sydenham
+Glenfield,East Hills,Sydenham
+Glenfield,East Hills,Wolli Creek
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<panel layout="BorderLayout">
+    <panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.CENTER)">
+        <label text="Select Timetable to use the CityRail timetable, or Manual to enter your own information" />
+    </panel>
+    <tabbedpane id="tabbedPane" constraints="BorderLayout.CENTER">
+		<panel name="Manual" layout="FlowLayout">
+            <hbox>
+                <vbox id="departuresList" />
+                <label text=" "/>
+                <vbox>
+                    <panel layout="BorderLayout">
+                        <button constraints="BorderLayout.NORTH" id="playStopButton" action="announceAction"/>
+                        <label constraints="BorderLayout.CENTER" text="                   "/>
+                    </panel>
+                    <panel layout="BorderLayout">
+                        <button constraints="BorderLayout.WEST" text="" id="promoteDeparturesButton" action="promoteDepartures"/>
+                    </panel>
+                </vbox>
+            </hbox>
+		</panel>
+        <panel name="Timetable" layout="FlowLayout">
+            <vbox>
+                <panel constraints="BorderLayout.NORTH" layout="GridLayout(9,1,5,2)" border="EmptyBorder(0,0,0,2)">
+                    <label text="Timetable:"/>
+                    <panel layout="BorderLayout()">
+                        <jbcombobox constraints="BorderLayout.CENTER" id="timetable" size="400,10"/>
+                        <hbox constraints="BorderLayout.EAST">
+                            <button action="downloadTimetableAction" text="New..."/>
+                            <button action="deleteTimetableAction" text="Delete"/>
+                        </hbox>
+                    </panel>
+                    <label text="Select line:"/>
+                    <jbcombobox id="scheduleLine" size="400,10"/>
+                    <label text="Select direction:"/>
+                    <jbcombobox id="scheduleDirection" size="400,10" />
+                    <label text="Select station:"/>
+                    <jbcombobox id="scheduleStation" size="400,10" />
+                    <label text=" "/>
+                </panel>
+                <hbox>
+                    <label text="Platform:" />
+                    <spinner id="platformValue" />
+                    <label text=" Cars:" />
+                    <spinner id="carsValue" />
+                </hbox>
+                <label text=" "/>
+                <panel layout="FlowLayout(FlowLayout.CENTER)">
+                    <label text="&lt;html&gt;Use Window/Full Screen buttons at bottom of window to start&lt;br&gt;indicator, or use button below to load the Manual page.&lt;/html&gt;"/>
+                </panel>
+                <panel layout="FlowLayout(FlowLayout.CENTER)">
+                    <button action="loadManualFromTimetable"/>
+                </panel>
+            </vbox>
+        </panel>
+    </tabbedpane>
+	<panel constraints="BorderLayout.SOUTH">
+		<separator constraints="BorderLayout.NORTH"/>
+		<panel constraints="BorderLayout.CENTER" layout="FlowLayout(FlowLayout.LEADING)">
+            <vbox>
+                <panel layout="BorderLayout">
+                    <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
+                        <checkbox id="playAnnouncementCheckbox" text="Announce" />
+                        <textfield id="playAnnouncementTimes" />
+                        <label text="mins before departure:"/>
+                    </panel>
+                </panel>
+                <combobox id="playAnnouncementVoiceCombobox" />
+                <panel layout="BorderLayout">
+                    <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
+                        <checkbox id="coalesceStationSequencesCheckbox" text="Enable &quot;all stations to&quot; phrasing" selected="true"/>
+                    </panel>
+                </panel>
+            </vbox>
+			<vbox id="rendererComboboxesPanel"/>
+			<panel id="startButtonsPanel" layout="FlowLayout(FlowLayout.TRAILING)">
+				<label text="Show:" border="EmptyBorder(0,15,0,0)" />
+                <vbox>
+                    <button id="windowButton" action="windowAction" text="Window" />
+                    <button id="fullScreenButton" action="fullScreenAction" text="Full Screen" />
+                </vbox>
+			</panel>
+			<panel id="previewButtonPanel" layout="FlowLayout(FlowLayout.TRAILING)">
+				<button id="previewButton" action="previewAction"/>
+			</panel>
+		</panel>
+	</panel>
+</panel>

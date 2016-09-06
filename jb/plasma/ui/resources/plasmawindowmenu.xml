@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<menubar bundle="jb.dvacommon.ui.resources.dvashell" locale="en">
+    <menu text="Indicator">
+        <menuitem action="announceAction" icon="null" text="Play Announcement" accelerator="MENU_PLASMAWINDOW_INDICATOR_PLAY_ANNOUNCEMENT"/>
+    </menu>
+</menubar>

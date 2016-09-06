@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1265.19">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Helvetica}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Helvetica; min-height: 13.0px}
+    li.li3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.0px Helvetica}
+    ul.ul1 {list-style-type: disc}
+  </style>
+</head>
+<body>
+<p class="p1"><b>Version History</b></p>
+<p class="p2"><br></p>
+<p class="p3"><b>5.3.3</b></p>
+<ul class="ul1">
+    <li class="li3">Fixed: Java auto-installation on Windows uses the most up-to-date version at the time DVA is released.</li>
+    <li class="li3">Update: Application is signed on both Mac and Windows to prevent security warnings and the error message that was shown on Mac OS the first time DVA is opened.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.3.2</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Download up-to-date timetables from www.sydneytrains.info.</li>
+    <li class="li3">Fixed: Terminating trains are now correctly announced as such.</li>
+    <li class="li3">Update: Code cleanup and convert Eclipse project to IDEA.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.3.1</b></p>
+<ul class="ul1">
+    <li class="li3">Fixed: Hidden errors due to demo data not being populated properly on first run.</li>
+    <li class="li3">Fixed: The mini preview in the Windows screen saver settings dialog box now works.</li>
+    <li class="li3">Fixed: Sound jar updater running asynchronously in the background, resulting in un-populated sound list.</li>
+    <li class="li3">Fixed: Fixed substitutions in substitutions.txt not being applied if the casing was different.</li>
+    <li class="li3">Fixed: Other minor bug fixes.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.3.0</b></p>
+<ul class="ul1">
+    <li class="li3">Update: Improved updater. The sound library files are not packaged along with each updated, and are instead re-downloaded only when they change. This will reduce the size of updates from ~130MB to ~25MB.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.9</b></p>
+<ul class="ul1">
+    <li class="li3">Fixed: Dock icon and application name when running under Java 1.8+ on Macs.</li>
+    <li class="li3">Fixed: Improved Java Runtime Environment detection on Macs. Apple Java 1.6 is favoured, if present, due to broken font antialiasing in Oracle's Java 1.8. The Java version used is now shown with the application version.</li>
+    <li class="li3">Fixed: Bug fixes in the updater.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.8</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Some Sydney A-set sounds.</li>
+    <li class="li3">Added: Validation of the destination text fields on the Indicators page, similar to that which already takes place on the DVA page.</li>
+    <li class="li3">Added: Icon in sound list indicates which sounds have come from a fallback library instead of the selected library.</li>
+    <li class="li3">Updated: Faster startup by caching application data.</li>
+    <li class="li3">Updated: Updater supports downloading from Windows Azure for future software updates.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.7</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Sydney DVA sounds for SWRL stations.</li>
+    <li class="li3">Added: Validation of the stations lists on the Indicators page, similar to that which already takes place on the DVA page.</li>
+    <li class="li3">Added: Menu items to edit configuration files for the Indicators.</li>
+    <li class="li3">Updated: DVA will now install and use a 64-bit Java Runtime Environment on 64-bit Windows.</li>
+    <li class="li3">Updated: Further optimised the Indicator rendering code.</li>
+    <li class="li3">Fixed: 'The next train to arrive on platform' once again is played in generated announcements when minutes to departure &gt; 0.</li>
+    <li class="li3">Fixed: Incorrect scrolling or fixed station list when the number of stations is close to just fitting on the screen.</li> 
+    <li class="li3">Fixed: Misnamed Sydney 'High Street' and 'Coalcliff' sounds.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.6</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Manually play next train announcement on Indicators page.</li>
+    <li class="li3">Added: For added realism, auto-generated announcements now have "X via Y" and "all stations to Z" phrasing. Additional stations can be configured by editing the text files 'vias.txt' and 'allStationsTos.txt' in the application folder.</li>
+    <li class="li3">Added: Moved substitution list into a separate text file. Additional substitutions can be configured by editing the text file 'substitutions.txt' in the application folder.</li>
+    <li class="li3">Added: Sydney DVA sound for Shellharbour Junction.</li>
+    <li class="li3">Updated: More responsive performance when previewing sounds.</li>
+    <li class="li3">Updated: Busy indication when preparing an announcement to play takes a long time.</li>
+    <li class="li3">Fixed: Misnamed Sydney 'Turrella', 'Victoria Street' and 'High Street' sounds.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.5</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Sydney DVA sounds for ECRL.</li>
+    <li class="li3">Fixed: Sound playing code crashing or failing to play in sometimes.</li>
+    <li class="li3">Fixed: Program hang when stopping a playing announcement.</li>
+    <li class="li3">Fixed: Cut/copy/paste now works.</li>
+    <li class="li3">Fixed: Undo/redo now works in all text components.</li>
+    <li class="li3">Updated: Code cleanup and refactoring.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.4</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Automatic substitution where there are small differences between the timetable and the voice library, that was causing certain automatically-generated announcements to not play. Examples: 'Domestic' vs 'Domestic Airport' vs 'Domestic Terminal', 'Kembla Grange' vs 'Kembla Grange Racecourse'.</li>
+    <li class="li3">Added: Custom announcements can be used with the indicators instead of the auto-generated ones.</li>
+    <li class="li3">Added: Added Sydney Terminal country platforms style of announcements.</li>
+    <li class="li3">Updated: Improved reliability of the automatic update mechanism.</li>
+    <li class="li3">Updated: Per user suggestion for realism, 'due out' decrements and trains change over at the 40 second mark each minute.</li>
+    <li class="li3">Fixed: Improved scrolling appearance. The scrolling speed is more realistic, and the rounding logic applied to text positioning in the scrolling list has been updated to remove the ugly 'wriggling'/'bumping' effect '.</li>
+    <li class="li3">Fixed: Bugs exporting files and playing large sound files.</li>
+    <li class="li3">Fixed: Misnamed Sydney-Male 'Coalcliff' sound'.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.3</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Platform number and cars count can be input when using auto (timetable) mode.</li>
+    <li class="li3">Added: Select between weekday and weekend timetables.</li>
+    <li class="li3">Added: Line name and colours can be changed in manual mode.</li>
+    <li class="li3">Added: Added functions to shift departures upwards in manual mode. and to populate the manual page from the timetable.</li>
+    <li class="li3">Added: 'Relaunch with Logging' option under Help menu.</li>
+    <li class="li3">Updated: Improved code to play announcements, that eliminates the gap between each sound bite, particularly on slower computers.</li>
+    <li class="li3">Updated: Reworked indicator page for better usability.</li>
+    <li class="li3">Updated: Faster startup due to improvements in timetable analyser.</li>
+    <li class="li3">Fixed: Export now works correctly. MP3 files can be exported in addition to WAV files.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.2</b></p>
+<ul class="ul1">
+    <li class="li3">Added: Play auto-generated DVA announcements while the Indicator board is showing.</li>
+    <li class="li3">Added: Many new Sydney DVA sounds.</li>
+    <li class="li3">Added: Added support for handling different inflections (i.e. rising and falling) for the same sound bite. This is available in, for example the Sydney Male and Female DVA. Multiple inflections, if available, will be shown underneath the sound list. The inflection used in the announcement is automatically decided based on sentence structure, but can be overridden as described in Help.</li>
+    <li class="li3">Added: Program source released, under the conditions of the existing software Licence. The source code contained in a file named src.zip, located on the disk image on Mac, and in the C:\Program Files\DVA folder on Windows.</li>
+    <li class="li3">Updated: Modernised start-up sound.</li>
+    <li class="li3">Fixed: Show progress when opening screen saver settings window, due to the length of the operation.</li>
+    <li class="li3">Fixed: Announcements continuing to play after closing the indicator window using the window's close button.</li>
+    <li class="li3">Fixed: DVA failing to start on Mac OSX 10.10 ('Yosemite').</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.1</b></p>
+<ul class="ul1">
+  <li class="li3">Added: Windows screensaver mode. Access from the Windows screensaver settings in the desktop 'Personalize' menu.</li>
+  <li class="li3">Added: CityRail V3 (dual-screen) indicators.</li>
+  <li class="li3">Updated: User interface improvements.</li>
+  <li class="li3">Updated: Indicator settings are remembered across program restarts.</li>
+  <li class="li3">Fixed: Many bugs in the timetable analyser.</li>
+  <li class="li3">Fixed: Font smoothing was not working on Windows.</li>
+  <li class="li3">Fixed: Tiny window when showing the indicators.</li>
+  <li class="li3">Fixed: First station missing in CityRail V2 platform indicator.</li>
+  <li class="li3">Fixed: Incorrect Sydney 'Werrington' sound.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.2.0</b></p>
+<ul class="ul1">
+  <li class="li3">Added: New or improved-quality Sydney DVA sounds. The replaced sounds remain in the 'replaced low-quality sounds' libraries (using the newer sounds as a completeness fallback), for the classic DVA experience ;)</li>
+  <li class="li3">Added: CityRail indicator emulator. This can be driven from manually entered info, or using the built-in CityRail timetable data.</li>
+  <li class="li3">Converted all remaining WAV sounds to MP3 to reduce download size.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.1.1</b></p>
+<ul class="ul1">
+  <li class="li3">Added: New or improved-quality Sydney DVA sounds.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.1.0</b></p>
+<ul class="ul1">
+  <li class="li3">Added: MP3 sound files can be used.</li>
+  <li class="li3">Added: New Sydney DVA sounds from PKBeam and Ben Cousins.</li>
+  <li class="li3">Added: New Sydney and Melbourne DVA sounds.</li>
+  <li class="li3">Updated: Mac updater now uses bzip2 file format instead of Gzip, resulting in about 15% smaller file size.</li>
+  <li class="li3">Fixed: Bug causing announcements to fail to parse when using combined sound libraries (e.g. ‘All’).</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.9</b></p>
+<ul class="ul1">
+  <li class="li3">Added: Sound list supports drag/drop of sounds to the announcement editor, for easier use on touch screens.</li>
+  <li class="li3">Added: Sound size and duration info in sound info panel.</li>
+  <li class="li3">Added: Show total duration of announcement.</li>
+  <li class="li3">Fixed: A few misnamed sounds.</li>
+  <li class="li3">Fixed: User interface improvements to bring appearance on Windows into line with Mac OS.</li>
+  <li class="li3">Fixed: Licence information was not being shown again after installing new version.</li>
+  <li class="li3">Fixed: Unhandled exception when inserting a sound at the beginning of the announcement by auto-completing.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.8</b></p>
+<ul class="ul1">
+  <li class="li3">Added: When notifying of new updates, information about the latest version is shown.</li>
+  <li class="li3">Fixed: Unhandled exception when playing an announcement for which a sound library does not exist.</li>
+  <li class="li3">Fixed: Unhandled exception when exporting an announcement containing punctuation. This is now correctly inserted into the exported file as silence.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.7</b></p>
+<ul class="ul1">
+  <li class="li3">Added: New Sydney DVA sound files, supplied by Ben Cousins.</li>
+  <li class="li3">Added: Program error reporting.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.6</b></p>
+<ul class="ul1">
+  <li class="li3">Added: Mac version of DVA now installs the update automatically and relaunches, similar to the Windows version.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.5</b></p>
+<ul class="ul1">
+  <li class="li3">Fixed: Potential crashing issue when encountering a kind of folder structure.</li>
+  <li class="li3">Fixed: Level meter not rendered properly for 16-bit (two bytes per frame) audio files.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.4</b></p>
+<ul class="ul1">
+  <li class="li3">Added a check for newer version, accessed through the Help menu. Windows version will install the update automatically and relaunch. Mac version will open the disk image volume and require DVA to be manually copied to the Applications folder.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.3</b></p>
+<ul class="ul1">
+  <li class="li3">Minor bug fixes.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.2</b></p>
+<ul class="ul1">
+  <li class="li3">Added: Voice library list can be toggled on/off.</li>
+  <li class="li3">Fixed: Minor bug fixes.</li>
+  <li class="li3">Licence agreement is shown again on version upgrade.<span class="Apple-converted-space"> </span></li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.1</b></p>
+<ul class="ul1">
+  <li class="li3">Added: Built-in voice libraries can be added to by creating a folder with the same name as the .jar file and placing sounds in it. The folder and the .jar file will be combined in DVA.</li>
+  <li class="li3">Added: Undo and redo.</li>
+  <li class="li3">Added: Version history</li>
+  <li class="li3">Fixed: Icons wouldn’t appear for voice libraries in the form of folders, only .jar files.</li>
+  <li class="li3">Fixed: Duplicated application icons in Windows 7 taskbar while running.</li>
+  <li class="li3">Fixed: Arrow keys would not function in editor because they were used to navigate the auto-complete list. Page Up, Page Down, or Shift + arrow keys are now used to navigate the auto-complete list.</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>5.0.0</b></p>
+<ul class="ul1">
+  <li class="li3">Initial release of version 5</li>
+</ul>
+<p class="p4"><br></p>
+<p class="p3"><b>DVA 4 (Rapid-Q, 2000-2001)</b></p>
+<p class="p4"><img src="dva4.png" /></p>
+<p class="p4"><br></p>
+<p class="p3"><b>DVA 2, 3 (QuickBasic, 2000)</b></p>
+<p class="p4"><img src="dva3.png" /></p>
+<p class="p4"><br></p>
+<p class="p3"><b>DVA 1 (1999)</b></p>
+<ul class="ul1">
+  <li class="li3">Experimental version not publicly released.</li>
+</ul>
+</body>
+</html>

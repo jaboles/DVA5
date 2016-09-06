@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog title="Licence Agreement" resizable="true" locale="en" modal="true" iconimage="dva_icon.png">
+    <panel name="Licence" layout="BorderLayout" border="EmptyBorder(10,10,10,10)">
+        <panel id="labelPanel" constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEADING)" border="EmptyBorder(0,0,10,0)">
+            <label text="You must accept the following licence terms in order to use DVA." />
+        </panel>
+        <scrollpane preferredsize="600,420" constraints="BorderLayout.CENTER" border="BevelBorder(1)">
+            <textpane id="licencePane" editable="false" contenttype="text/html" border="EmptyBorder(2,2,2,2)"/>
+        </scrollpane>
+        <panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.TRAILING)" border="EmptyBorder(10,0,0,0)">
+            <button id="acceptButton" text="I Accept" />
+            <button id="cancelButton" text="Cancel" />
+        </panel>
+    </panel>
+</dialog>

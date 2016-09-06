@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dialog layout="BorderLayout" title="Download Timetable" modal="true">
+    <vbox border="EmptyBorder(5,5,5,5)">
+        <panel layout="GridLayout(2,1,5,2)">
+            <label text="Enter name:"/>
+            <textfield id="timetableName"/>
+        </panel>
+        <hbox border="EmptyBorder(6,2,2,2)">
+            <label text="Timetable:"/>
+            <vbox>
+                <buttongroup>
+                    <radiobutton id="weekday" text="Weekday"/>
+                    <radiobutton id="weekend" text="Weekend"/>
+                </buttongroup>
+            </vbox>
+        </hbox>
+        <panel layout="FlowLayout(FlowLayout.TRAILING">
+            <button action="okAction"/>
+            <button action="cancelAction"/>
+        </panel>
+    </vbox>
+</dialog>

@@ -1,0 +1,30 @@
+# This file controls the substitution of one station name for another when
+# generating an announcement from the indicator board. This is needed when
+# the timetable's station name does not match the available announcement
+# sound files.
+#
+# Entries format: A,B,C
+# When constructing an announcement, A will be replaced with B. If C is
+# supplied, the substitution will only occur if the voice library name
+# matches C.
+
+
+# Airport stations
+Domestic Airport,Domestic,Sydney-Male
+Domestic Terminal,Domestic,Sydney-Male
+Domestic Airport,Domestic Terminal,Sydney-Female
+Domestic,Domestic Terminal,Sydney-Female
+International Airport,International,Sydney-Male
+International Terminal,International,Sydney-Male
+International Airport,International Terminal,Sydney-Female
+International,International Terminal,Sydney-Female
+
+# New stations
+Shellharbour Junction,Dunmore,Sydney-Male
+
+# Other
+Kembla Grange,Kembla Grange Racecourse,Sydney-Female
+Nth Strathfield,North Strathfield
+Mt Victoria,Mount Victoria
+Rosehill,Rosehill Racecourse
+Central (i),Central

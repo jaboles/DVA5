@@ -1,0 +1,55 @@
+# This file controls the conversion of a list of stations into an "all stations to"
+# phrase when generating an announcement from the indicator board.
+#
+# Each line defines a station grouping. Subsequences of stations which match part
+# of the list will be collapsed into "all stations to X" phrasing. 
+
+
+# Northern line
+Strathfield, North Strathfield, Concord West, Rhodes, Meadowbank, West Ryde, Denistone, Eastwood, Epping, Cheltenham, Beecroft, Pennant Hills, Thornleigh, Normanhurst, Hornsby
+
+# North Shore
+North Sydney,Waverton,Wollstonecraft,St Leonards,Artarmon,Chatswood
+Chatswood,Roseville,Lindfield,Killara,Gordon
+Gordon,Pymble,Turramurra,Warrawee,Wahroonga,Waitara,Hornsby
+
+# Western
+Westmead, Wentworthville, Pendle Hill, Toongabbie, Seven Hills, Blacktown
+Blacktown, Marayong, Quakers Hill, Schofields, Riverstone, Vineyard, Mulgrave, Windsor, Clarendon, East Richmond, Richmond
+Blacktown, Doonside, Rooty Hill, Mount Druitt, St Marys, Werrington, Kingswood, Penrith, Emu Plains
+
+# Inner West
+Redfern, Macdonaldtown, Newtown, Stanmore, Petersham, Lewisham, Summer Hill, Ashfield
+
+# South
+Granville, Merrylands, Guildford, Yennora, Fairfield, Canley Vale, Cabramatta, Warwick Farm, Liverpool
+
+# Bankstown
+Sydenham, Marrickville, Dulwich Hill, Hurlstone Park, Canterbury, Campsie, Belmore, Lakemba, Wiley Park, Punchbowl, Bankstown
+Sefton, Chester Hill, Leightonfield, Villawood, Carramar, Cabramatta, Warwick Farm, Liverpool
+
+# East Hills
+Wolli Creek, Turrella, Bardwell Park, Bexley North, Kingsgrove, Beverly Hills, Narwee, Riverwood, Padstow, Revesby
+Glenfield,Macquarie Fields,Ingleburn,Minto,Leumeah,Campbelltown
+
+# Illawarra
+Sydenham, Tempe, Wolli Creek, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah, Hurstville, Penshurst, Mortdale, Oatley, Como, Jannali, Sutherland
+Sutherland, Kirrawee, Gymea, Miranda, Caringbah, Woolooware, Cronulla
+Sutherland, Loftus, Engadine, Heathcote, Waterfall
+
+# Carlingford
+Rosehill, Camellia, Rydalmere, Dundas, Telopea, Carlingford
+
+# Newcastle & Central Coast
+Berowra, Cowan, Hawkesbury River, Wondabyne, Woy Woy, Koolewong, Tascott, Point Clare, Gosford, Narara, Niagara Park, Lisarow, Ourimbah, Tuggerah, Wyong, Warnervale, Wyee, Morisset, Dora Creek, Awaba, Fassifern, Booragul, Teralba, Cockle Creek, Cardiff, Kotara, Adamstown, Broadmeadow, Hamilton, Wickham, Civic, Newcastle
+
+# South Coast
+Waterfall, Helensburgh, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Thirroul, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow, North Wollongong
+Coniston, Lysaghts, Cringila, Port Kembla North, Port Kembla
+Unanderra, Kembla Grange, Dapto, Albion Park, Oak Flats, Shellharbour Junction | Dunmore, Minnamurra, Bombo, Kiama
+
+# Southern Highlands
+Campbelltown, Macarthur, Menangle Park, Menangle, Douglas Park, Picton, Tahmoor, Bargo, Yerrinbool, Mittagong, Bowral, Burradoo, Moss Vale, Exeter, Bundanoon, Penrose, Wingello, Tallong, Marulan, Goulburn
+
+# Blue Mountains
+Penrith, Emu Plains, Lapstone, Glenbrook, Blaxland, Warrimoo, Valley Heights, Springwood, Faulconbridge, Linden, Woodford, Hazelbrook, Lawson, Bullaburra, Wentworth Falls, Leura, Katoomba, Medlow Bath, Blackheath, Mount Victoria, Bell, Zig Zag, Lithgow

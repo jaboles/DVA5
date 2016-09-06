@@ -1,0 +1,6 @@
+#!/bin/sh
+BASEDIR=`dirname "$0"`
+cd "$BASEDIR"
+cd "../../../DVA.app/Contents/MacOS"
+exec java -cp DVA.jar jb.dva.DVA /c
+

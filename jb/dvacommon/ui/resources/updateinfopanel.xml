@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<panel layout="BorderLayout">
+        <label id="updateInfoLabel" constraints="BorderLayout.NORTH" Border="EmptyBorder(0,0,8,0)" />
+        <scrollpane preferredsize="200,100" border="BevelBorder(1)" constraints="BorderLayout.CENTER">
+            <textpane id="updateVersionHistoryPane" contenttype="text/html" editable="false" />
+        </scrollpane>
+</panel>

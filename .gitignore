@@ -1,0 +1,10 @@
+.DS_Store
+build
+output
+azure.secret
+.svn
+sounds
+*.iws
+.metadata
+.settings
+
