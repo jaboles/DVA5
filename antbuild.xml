@@ -1,6 +1,8 @@
 <?xml version="1.0" ?>
 <!-- Configuration of the Ant build system to generate a Jar file --> 
 <project name="DVA" default="CreateJar">
+    <property environment="env"/>
+    <property name="Hostname" value="${env.HOSTNAME}"/>
     <property name="InDir" value="build/Intermediate/Debug"/>
     <property name="OutDir" value="build/Debug"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
@@ -108,7 +110,12 @@
         <chmod perm="u+x" file="${AppBundleContents}/dva"/>
     </target>
 
-    <target name="SignMacApp" description="Mac App Signing" depends="UpdateMacApp">
+    <target name="SignMacApp.Check">
+        <condition property="WillSignMacApp">
+            <equals arg1="${Hostname}" arg2="jb"/>
+        </condition>
+    </target>
+    <target name="SignMacApp" description="Mac App Signing" depends="UpdateMacApp" if="WillSignMacApp">
         <apply executable="codesign">
             <arg line="-v -f -s '${SignIdentity}'"/>
             <fileset dir="${OutDir}/DVA.app/Contents/MacOS">
