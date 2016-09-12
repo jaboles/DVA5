@@ -188,7 +188,10 @@
     </target>
 
     <!-- Build windows setup -->
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,BundledResources,SourceArchive,SetupCommon">
+    <target name="BuildWinSetup.Check">
+        <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
+    </target>
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,BundledResources,SourceArchive,SetupCommon" if="InnoSetupCompilerExists">
         <exec executable="${Wine}">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg value="${InnoSetupCompiler}"/>
@@ -198,7 +201,10 @@
     </target>
 
     <!-- Sign windows setup -->
-    <target name="SignWinSetup">
+    <target name="WignWinSetup.Check">
+        <available file="${SignKey}" property="SignKeyExists"/>
+    </target>
+    <target name="SignWinSetup" if="SignKeyExists">
         <exec executable="signcode" dir="${OutDir}">
             <arg line="signcode -a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; DVA5Setup.exe"/>
         </exec>
