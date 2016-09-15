@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DVA 5 Build Instructions</title>
+    <style>
+        h1, h2 {
+            font-family: sans-serif;
+        }
+        body {
+            background-color: floralwhite;
+        }
+        a:visited {
+            color: darkblue;
+        }
+    </style>
+</head>
+<body>
+
+<h1><img src="dva_icon.png" width="32" height="32"/> DVA 5 Build Instructions</h1>
+<p>The following instructions have been tested on a fresh Mac OSX 10.11 virtual machine.</p>
+
+<h2>Prerequisites</h2>
+<ul>
+    <li>
+        The easiest way to install pre-requisite software tools is by using <a href="http://brew.sh" target="_blank">Homebrew</a>, a package manager for Mac OSX.
+        <pre>/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</pre>
+    </li>
+    <li>
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a> version 1.6 or higher.
+        <pre>brew cask install java</pre>
+    </li>
+    <li>
+        <a href="http://ant.apache.org">Apache Ant</a>.
+        <pre>brew install ant</pre>
+    </li>
+    <li>
+        Building a Windows setup requires the following additional tools:
+        <ul>
+            <li>
+                <a href="https://www.winehq.org" target="_blank">Wine</a>, required for running Inno Setup. Wine requires <a href="https://www.xquartz.org" target="_blank">XQuartz</a>.
+                <pre>brew cask install xquartz</pre>
+                <pre>brew install wine</pre>
+            </li>
+            <li>
+                <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>. Any recent version 5 should work.
+                <pre>curl -OL http://www.jrsoftware.org/download.php/is.exe && wine is.exe /silent</pre>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<h2>Building</h2>
+<ul>
+    <li>
+        Build DVA:
+        <pre>./b.sh</pre>
+        Build outputs will be placed in build/Debug, which will contain the built JAR (DVA.jar) as well as the Mac application package (DVA.app).
+    </li>
+</ul>
+
+</body>
+</html>

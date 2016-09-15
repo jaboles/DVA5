@@ -1,2 +1,2 @@
 #!/bin/bash
-ant -f antbuild.xml AllSetups
+ant AllSetups
