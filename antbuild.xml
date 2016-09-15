@@ -22,10 +22,10 @@
     <property name="DmgSizeMb" value="25"/>
 	
 	<!-- Windows setup -->
-    <property name="Wine" value="/Applications/Wine.app/Contents/Resources/bin/wine"/>
-    <property name="WinePrefix" value="/Users/jb/Wine Files"/>
-    <property name="SetupScript" value="z:\Users\jb\Software\DVA\win\setup.iss"/>
-	<property name="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/iscc.exe"/>
+    <property name="Wine" value="wine"/>
+    <property name="WinePrefix" value="/Users/${user.name}/.wine"/>
+    <property name="SetupScript" value="z:\Users\${user.name}\DVA5\win\setup.iss"/>
+	<property name="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/ISCC.exe"/>
 	<property name="WindowsSetupName" value="DVA5Setup"/>
 
     <!-- Increments the build number -->
@@ -111,11 +111,12 @@
     </target>
 
     <target name="SignMacApp.Check">
+    	<echo>Running on ${Hostname}</echo>
         <condition property="WillSignMacApp">
             <equals arg1="${Hostname}" arg2="jb"/>
         </condition>
     </target>
-    <target name="SignMacApp" description="Mac App Signing" depends="UpdateMacApp" if="WillSignMacApp">
+    <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,UpdateMacApp" if="WillSignMacApp">
         <apply executable="codesign">
             <arg line="-v -f -s '${SignIdentity}'"/>
             <fileset dir="${OutDir}/DVA.app/Contents/MacOS">
@@ -196,9 +197,10 @@
 
     <!-- Build windows setup -->
     <target name="BuildWinSetup.Check">
+    	<echo>Checking for ${InnoSetupCompiler}</echo>
         <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
     </target>
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,BundledResources,SourceArchive,SetupCommon" if="InnoSetupCompilerExists">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SourceArchive,SetupCommon" if="InnoSetupCompilerExists">
         <exec executable="${Wine}">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg value="${InnoSetupCompiler}"/>
@@ -208,10 +210,11 @@
     </target>
 
     <!-- Sign windows setup -->
-    <target name="WignWinSetup.Check">
+    <target name="SignWinSetup.Check">
+    	<echo>Checking for ${SignKey}</echo>
         <available file="${SignKey}" property="SignKeyExists"/>
     </target>
-    <target name="SignWinSetup" if="SignKeyExists">
+    <target name="SignWinSetup" depends="SignWinSetup.Check" if="SignKeyExists">
         <exec executable="signcode" dir="${OutDir}">
             <arg line="signcode -a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; DVA5Setup.exe"/>
         </exec>
