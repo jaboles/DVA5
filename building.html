@@ -13,17 +13,30 @@
         a:visited {
             color: darkblue;
         }
+
+        pre {
+            width: 70%;
+            max-height: 400px;
+            color: #444;
+            padding: 10px;
+            padding-left: 20px;
+            background: #efe;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            word-wrap: normal;
+            line-height: 20px;
+        }
     </style>
 </head>
 <body>
 
 <h1><img src="dva_icon.png" width="32" height="32"/> DVA 5 Build Instructions</h1>
-<p>The following instructions have been tested on a fresh Mac OSX 10.11 virtual machine.</p>
+<p>The following instructions have been tested on fresh installs of both Mac OS 10.11 ("El Capitan") and 10.12 ("Sierra").</p>
 
 <h2>Prerequisites</h2>
 <ul>
     <li>
-        The easiest way to install pre-requisite software tools is by using <a href="http://brew.sh" target="_blank">Homebrew</a>, a package manager for Mac OSX.
+        The easiest way to install pre-requisite software tools is by using <a href="http://brew.sh" target="_blank">Homebrew</a>, a package manager for Mac OSX. You may be prompted to install Apple developer tools. Click 'Install' at this point.
         <pre>/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</pre>
     </li>
     <li>
@@ -39,8 +52,8 @@
         <ul>
             <li>
                 <a href="https://www.winehq.org" target="_blank">Wine</a>, required for running Inno Setup. Wine requires <a href="https://www.xquartz.org" target="_blank">XQuartz</a>.
-                <pre>brew cask install xquartz</pre>
-                <pre>brew install wine</pre>
+                <pre>brew cask install xquartz
+brew install wine</pre>
             </li>
             <li>
                 <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>. Any recent version 5 should work.
@@ -52,6 +65,11 @@
 
 <h2>Building</h2>
 <ul>
+    <li>
+        Download source archive (if you haven't already)
+        <pre>curl -OL https://github.com/jaboles/DVA5/archive/master.zip && unzip master.zip
+cd DVA5-master</pre>
+    </li>
     <li>
         Build DVA:
         <pre>./b.sh</pre>

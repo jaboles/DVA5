@@ -2,7 +2,7 @@
 <!-- Configuration of the Ant build system to generate a Jar file --> 
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
-    <property name="Hostname" value="${env.HOSTNAME}"/>
+    <exec executable="hostname" outputproperty="hostname"/>
     <property name="InDir" value="build/Intermediate/Debug"/>
     <property name="OutDir" value="build/Debug"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
@@ -24,9 +24,20 @@
 	<!-- Windows setup -->
     <property name="Wine" value="wine"/>
     <property name="WinePrefix" value="/Users/${user.name}/.wine"/>
-    <property name="SetupScript" value="z:\Users\${user.name}\DVA5\win\setup.iss"/>
+    <property name="SetupScript" value="${basedir}/win/setup.iss"/>
 	<property name="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/ISCC.exe"/>
 	<property name="WindowsSetupName" value="DVA5Setup"/>
+
+    <loadresource property="SetupScriptTemp">
+        <propertyresource name="SetupScript"/>
+        <filterchain>
+            <tokenfilter>
+                <filetokenizer/>
+                <replacestring from="/" to="\"/>
+            </tokenfilter>
+        </filterchain>
+    </loadresource>
+    <property name="SetupScriptWine" value="z:${SetupScriptTemp}"/>
 
     <!-- Increments the build number -->
     <target name="IncrementBuildNumber" description="Increment build number">
@@ -111,9 +122,9 @@
     </target>
 
     <target name="SignMacApp.Check">
-    	<echo>Running on ${Hostname}</echo>
+    	<echo>Running on ${hostname}</echo>
         <condition property="WillSignMacApp">
-            <equals arg1="${Hostname}" arg2="jb"/>
+            <equals arg1="${hostname}" arg2="jb"/>
         </condition>
     </target>
     <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,UpdateMacApp" if="WillSignMacApp">
@@ -205,7 +216,7 @@
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg value="${InnoSetupCompiler}"/>
             <arg value="/Qp"/>
-            <arg value="${SetupScript}"/>
+            <arg value="${SetupScriptWine}"/>
         </exec>
     </target>
 
