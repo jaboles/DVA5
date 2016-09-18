@@ -25,16 +25,37 @@
             border-radius: 5px;
             word-wrap: normal;
             line-height: 20px;
+            position: relative;
+            left: 20px;
+        }
+        table {
+            border-style: solid;
+            border-collapse: collapse;
+            position: relative;
+            left: 20px;
+        }
+        th,td {
+            border: 1px solid;
+            padding: 3px;
+        }
+        th {
+            font-family: sans-serif;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-<h1><img src="dva_icon.png" width="32" height="32"/> DVA 5 Build Instructions</h1>
-<p>The following instructions have been tested on fresh installs of both Mac OS 10.11 ("El Capitan") and 10.12 ("Sierra").</p>
+<h1>DVA 5 Build Instructions</h1>
+The following instructions have been tested on fresh installs of the following operating systems:
+<ul>
+    <li>Mac OS 10.10 ("Yosemite")</li>
+    <li>Mac OS 10.11 ("El Capitan")</li>
+    <li>Mac OS 10.12 ("Sierra")</li>
+</ul>
 
 <h2>Prerequisites</h2>
-<ul>
+<ol>
     <li>
         The easiest way to install pre-requisite software tools is by using <a href="http://brew.sh" target="_blank">Homebrew</a>, a package manager for Mac OSX. You may be prompted to install Apple developer tools. Click 'Install' at this point.
         <pre>/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</pre>
@@ -61,10 +82,10 @@ brew install wine</pre>
             </li>
         </ul>
     </li>
-</ul>
+</ol>
 
 <h2>Building</h2>
-<ul>
+<ol>
     <li>
         Download source archive (if you haven't already)
         <pre>curl -OL https://github.com/jaboles/DVA5/archive/master.zip && unzip master.zip
@@ -73,9 +94,18 @@ cd DVA5-master</pre>
     <li>
         Build DVA:
         <pre>./b.sh</pre>
-        Build outputs will be placed in build/Debug, which will contain the built JAR (DVA.jar) as well as the Mac application package (DVA.app).
     </li>
-</ul>
+    <li>
+        Build outputs will be placed in build/Debug:
+        <table>
+            <tr><th>File</th><th>Description</th></tr>
+            <tr><td>DVA.jar</td><td>DVA application (cross-platform)</td></tr>
+            <tr><td>DVA.app</td><td>DVA application (Mac)</td></tr>
+            <tr><td>DVA5.dmg.bz2</td><td>Installer disk image (Mac)</td></tr>
+            <tr><td>DVA5Setup.exe</td><td>Installer (Windows) (if Wine and Inno Setup were installed above)</td></tr>
+        </table>
+    </li>
+</ol>
 
 </body>
 </html>
