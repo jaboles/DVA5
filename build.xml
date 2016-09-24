@@ -3,11 +3,12 @@
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname"/>
+    <echo>Running on ${hostname} (${os.name})</echo>
     <property name="InDir" value="build/Intermediate/Debug"/>
     <property name="OutDir" value="build/Debug"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
-	<property name="Classpath" value="jars/azure-storage-2.2.0.jar:jars/swingx-all-1.6.4.jar:jars/jdom.jar:jars/swixml.jar:jars/jna-4.2.1.jar:jars/jna-platform-4.2.1.jar:jars/javatuples-1.2.jar:jars/mac/xuggle-xuggler-5.4.jar:jars/slf4j-api-1.7.7.jar:jars/collections-query-0.2.9.jar"/>
+	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-4.2.1.jar${path.separator}jars/jna-platform-4.2.1.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/slf4j-api-1.7.7.jar${path.separator}jars/collections-query-0.2.9.jar"/>
 
     <!-- Mac signing identity in Keychain -->
     <property name="SignIdentity" value="Jonathan Boles"/>
@@ -24,8 +25,10 @@
 	<!-- Windows setup -->
     <property name="Wine" value="wine"/>
     <property name="WinePrefix" value="/Users/${user.name}/.wine"/>
-    <property name="SetupScript" value="${basedir}/win/setup.iss"/>
-	<property name="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/ISCC.exe"/>
+    <property name="SetupScript" value="${basedir}${file.separator}win${file.separator}setup.iss"/>
+    <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/ISCC.exe" else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
+        <os family="mac"/>
+    </condition>
 	<property name="WindowsSetupName" value="DVA5Setup"/>
 
     <loadresource property="SetupScriptTemp">
@@ -38,6 +41,13 @@
         </filterchain>
     </loadresource>
     <property name="SetupScriptWine" value="z:${SetupScriptTemp}"/>
+
+    <condition property="isMac">
+        <os family="mac" />
+    </condition>
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
 
     <!-- Increments the build number -->
     <target name="IncrementBuildNumber" description="Increment build number">
@@ -58,7 +68,7 @@
     <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
         <java jar="retrolambda-2.0.6.jar" fork="true">
             <sysproperty key="retrolambda.inputDir" value="${InDir}"/>
-            <sysproperty key="retrolambda.classpath" value="${Classpath}:${InDir}"/>
+            <sysproperty key="retrolambda.classpath" value="${Classpath}${path.separator}${InDir}"/>
             <sysproperty key="retrolambda.bytecodeVersion" value="49"/>
         </java>
         <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
@@ -172,7 +182,7 @@
     </target>
     
     <!-- Build Mac setup -->
-    <target name="BuildMacSetup" description="Build Mac DMG" depends="RebuildMacApp,SourceArchive,SetupCommon">
+    <target name="BuildMacSetup" description="Build Mac DMG" if="isMac" depends="RebuildMacApp,SourceArchive,SetupCommon">
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
         <exec executable="hdiutil">
@@ -212,11 +222,15 @@
         <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
     </target>
     <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SourceArchive,SetupCommon" if="InnoSetupCompilerExists">
-        <exec executable="${Wine}">
+        <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg value="${InnoSetupCompiler}"/>
             <arg value="/Qp"/>
             <arg value="${SetupScriptWine}"/>
+        </exec>
+        <exec executable="${InnoSetupCompiler}" osfamily="windows">
+            <arg value="/Qp"/>
+            <arg value="${SetupScript}"/>
         </exec>
     </target>
 
@@ -230,15 +244,20 @@
             <arg line="signcode -a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; DVA5Setup.exe"/>
         </exec>
     </target>
-    
+
     <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacSetup,BuildWinSetup,SignWinSetup">
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>
-        <exec executable="/bin/sh" outputproperty="DVAVersion">
+        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac">
             <arg value="-c"/>
             <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\.\d\.\d&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
+        <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows">
+            <arg value="-command"/>
+            <arg value="(gc jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
+        </exec>
+        <echo>Version ${DVAVersion}</echo>
         <copy todir="build/TestUpdateDrop/${DVAVersion}">
             <fileset dir="${OutDir}">
                 <include name="${DmgName}.dmg.bz2"/>

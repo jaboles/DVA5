@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>DVA 5 Build Instructions</title>
     <style>
-        h1, h2 {
+        h1, h2, h3 {
             font-family: sans-serif;
         }
         body {
@@ -15,7 +15,7 @@
         }
 
         pre {
-            width: 70%;
+            width: 80%;
             max-height: 400px;
             color: #444;
             padding: 10px;
@@ -47,14 +47,21 @@
 <body>
 
 <h1>DVA 5 Build Instructions</h1>
-The following instructions have been tested on fresh installs of the following operating systems:
+<p><a href="#mac"><font face="Baskerville Old Face">&#xf000;</font> Mac OS</a> | <a href="#windows"><font face="Wingdings">&#xff;</font> Windows</a></p>
+<p>The following instructions have been tested on fresh installs of the following operating systems:</p>
 <ul>
     <li>Mac OS 10.10 ("Yosemite")</li>
     <li>Mac OS 10.11 ("El Capitan")</li>
     <li>Mac OS 10.12 ("Sierra")</li>
+    <li>Windows 7 ("Windows NT 6.1")</li>
+    <li>Windows Server 2012 R2 ("Windows NT 6.3")</li>
 </ul>
 
-<h2>Prerequisites</h2>
+<hr>
+
+<h2><a name="mac"/><font face="Baskerville Old Face">&#xf000;</font> Mac OS</h2>
+<h3>Prerequisites</h3>
+<p>The following commands are to be run in Terminal (/Applications/Utilities/Terminal.app).</p>
 <ol>
     <li>
         The easiest way to install pre-requisite software tools is by using <a href="http://brew.sh" target="_blank">Homebrew</a>, a package manager for Mac OSX. You may be prompted to install Apple developer tools. Click 'Install' at this point.
@@ -84,7 +91,7 @@ brew install wine</pre>
     </li>
 </ol>
 
-<h2>Building</h2>
+<h3>Building</h3>
 <ol>
     <li>
         Download source archive (if you haven't already)
@@ -93,7 +100,7 @@ cd DVA5-master</pre>
     </li>
     <li>
         Build DVA:
-        <pre>./b.sh</pre>
+        <pre>ant AllSetups</pre>
     </li>
     <li>
         Build outputs will be placed in build/Debug:
@@ -106,6 +113,63 @@ cd DVA5-master</pre>
         </table>
     </li>
 </ol>
+
+<hr>
+
+<h2><a name="windows"/><font face="Wingdings">&#xff;</font> Windows</h2>
+<p>The following commands are to be run in Powershell.</p>
+<h3>Prerequisites</h3>
+<ol>
+    <li>
+        If running Windows 7, <a href="https://www.microsoft.com/en-us/download/details.aspx?id=34595" target="_blank">Powershell 3</a> is required for running Scoop.
+    </li>
+    <li>
+        Enable Powershell.
+        <pre>Set-ExecutionPolicy unrestricted -s cu</pre>
+    </li>
+    <li>
+        <a href="http://scoop.sh" target="_blank">Scoop</a>, a command-line installer for Windows.
+        <pre>iex (new-object net.webclient).downloadstring('https://get.scoop.sh')</pre>
+    </li>
+    <li>
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a> version 1.6 or higher.
+        <pre>scoop install openjdk</pre>
+    </li>
+    <li>
+        <a href="http://ant.apache.org">Apache Ant</a>.
+        <pre>scoop install ant</pre>
+    </li>
+    <li>
+        <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>. Any recent version 5 should work.
+        <pre>(new-object net.webclient).downloadfile('http://www.jrsoftware.org/download.php/is.exe', 'is.exe'); ./is.exe /silent</pre>
+    </li>
+</ol>
+
+<h3>Building</h3>
+<ol>
+    <li>
+        Download source archive (if you haven't already)
+        <pre>(new-object net.webclient).downloadfile('https://github.com/jaboles/DVA5/archive/master.zip', 'master.zip');
+Add-Type -AssemblyName System.IO.Compression.FileSystem;
+[System.IO.Compression.ZipFile]::ExtractToDirectory('master.zip', '.')
+cd DVA5-master</pre>
+    </li>
+    <li>
+        Build DVA:
+        <pre>ant AllSetups</pre>
+    </li>
+    <li>
+        Build outputs will be placed in build/Debug:
+        <table>
+            <tr><th>File</th><th>Description</th></tr>
+            <tr><td>DVA.jar</td><td>DVA application (cross-platform)</td></tr>
+            <tr><td>DVA.app</td><td>DVA application (Mac)</td></tr>
+            <tr><td>DVA5.dmg.bz2</td><td>Installer disk image (Mac)</td></tr>
+            <tr><td>DVA5Setup.exe</td><td>Installer (Windows) (if Wine and Inno Setup were installed above)</td></tr>
+        </table>
+    </li>
+</ol>
+
 
 </body>
 </html>
