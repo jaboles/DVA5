@@ -53,7 +53,7 @@
     <li>Mac OS 10.10 ("Yosemite")</li>
     <li>Mac OS 10.11 ("El Capitan")</li>
     <li>Mac OS 10.12 ("Sierra")</li>
-    <li>Windows 7 ("Windows NT 6.1")</li>
+    <li>Windows 7 Service Pack 1 ("Windows NT 6.1")</li>
     <li>Windows Server 2012 R2 ("Windows NT 6.3")</li>
 </ul>
 
@@ -76,12 +76,21 @@
         <pre>brew install ant</pre>
     </li>
     <li>
-        Building a Windows setup requires the following additional tools:
+        Building a Windows app or setup requires the following additional tools:
         <ul>
             <li>
                 <a href="https://www.winehq.org" target="_blank">Wine</a>, required for running Inno Setup. Wine requires <a href="https://www.xquartz.org" target="_blank">XQuartz</a>.
                 <pre>brew cask install xquartz
 brew install wine</pre>
+            </li>
+            <li>
+                <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>.
+                <pre>curl -OL http://www.angusj.com/resourcehacker/resource_hacker.zip && unzip resource_hacker.zip -d resource_hacker && rm resource_hacker.zip</pre>
+            </li>
+            <li>
+                <a href="https://sourceforge.net/projects/winrun4j/" target="_blank">WinRun4J</a>.
+                <pre>WinRun4JVersion=0.4.5
+curl -OL https://sourceforge.net/projects/winrun4j/files/winrun4j/$WinRun4JVersion/winrun4J-$WinRun4JVersion.zip/download && unzip download -d . && rm download</pre>
             </li>
             <li>
                 <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>. Any recent version 5 should work.
@@ -108,8 +117,10 @@ cd DVA5-master</pre>
             <tr><th>File</th><th>Description</th></tr>
             <tr><td>DVA.jar</td><td>DVA application (cross-platform)</td></tr>
             <tr><td>DVA.app</td><td>DVA application (Mac)</td></tr>
-            <tr><td>DVA5.dmg.bz2</td><td>Installer disk image (Mac)</td></tr>
-            <tr><td>DVA5Setup.exe</td><td>Installer (Windows) (if Wine and Inno Setup were installed above)</td></tr>
+            <tr><td>win\i386\DVA.exe, DVA.scr</td><td>DVA application and screensaver (Windows, 32-bit)</td></tr>
+            <tr><td>win\amd64\DVA.exe, DVA.scr</td><td>DVA application and screensaver (Windows, 64-bit)</td></tr>
+            <tr><td>DVA5.dmg.bz2</td><td>Mac disk image</td></tr>
+            <tr><td>DVA5Setup.exe</td><td>Windows installer (if Wine and Inno Setup were installed above)</td></tr>
         </table>
     </li>
 </ol>
@@ -121,7 +132,15 @@ cd DVA5-master</pre>
 <h3>Prerequisites</h3>
 <ol>
     <li>
-        If running Windows 7, <a href="https://www.microsoft.com/en-us/download/details.aspx?id=34595" target="_blank">Powershell 3</a> is required for running Scoop.
+        If running Windows 7, the following are required for running Scoop:
+        <ul>
+            <li>
+                <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" target="_blank">.NET Framework 4.5</a> or later.
+            </li>
+            <li>
+                Powershell 3 or later. Powershell 3 is superseded; Powershell 4 can be <a href="https://www.microsoft.com/en-us/download/details.aspx?id=40855" target="_blank">downloaded here</a>. You'll need the "Windows6.1" package, either x64 or x86 depending on your system.
+            </li>
+        </ul>
     </li>
     <li>
         Enable Powershell.
@@ -140,8 +159,19 @@ cd DVA5-master</pre>
         <pre>scoop install ant</pre>
     </li>
     <li>
+        <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>.
+        <pre>(new-object net.webclient).downloadfile("http://www.angusj.com/resourcehacker/resource_hacker.zip", "$env:userprofile\resource_hacker.zip");
+Add-Type -AssemblyName System.IO.Compression.FileSystem;
+[System.IO.Compression.ZipFile]::ExtractToDirectory("$env:userprofile\resource_hacker.zip", "$env:userprofile\resource_hacker")</pre>
+    </li>
+    <li>
+        <a href="https://sourceforge.net/projects/winrun4j/" target="_blank">WinRun4J</a>.
+        <pre>(new-object net.webclient).downloadfile("https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download", "$env:userprofile\winrun4j.zip");
+[System.IO.Compression.ZipFile]::ExtractToDirectory("$env:userprofile\winrun4j.zip", "$env:userprofile")</pre>
+    </li>
+    <li>
         <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>. Any recent version 5 should work.
-        <pre>(new-object net.webclient).downloadfile('http://www.jrsoftware.org/download.php/is.exe', 'is.exe'); ./is.exe /silent</pre>
+        <pre>(new-object net.webclient).downloadfile("http://www.jrsoftware.org/download.php/is.exe", "$env:userprofile\is.exe"); &amp;"$env:userprofile\is.exe" /silent</pre>
     </li>
 </ol>
 
@@ -149,10 +179,9 @@ cd DVA5-master</pre>
 <ol>
     <li>
         Download source archive (if you haven't already)
-        <pre>(new-object net.webclient).downloadfile('https://github.com/jaboles/DVA5/archive/master.zip', 'master.zip');
-Add-Type -AssemblyName System.IO.Compression.FileSystem;
-[System.IO.Compression.ZipFile]::ExtractToDirectory('master.zip', '.')
-cd DVA5-master</pre>
+        <pre>(new-object net.webclient).downloadfile("https://github.com/jaboles/DVA5/archive/master.zip", "$env:userprofile\master.zip");
+[System.IO.Compression.ZipFile]::ExtractToDirectory("$env:userprofile\master.zip", "$env:userprofile")
+cd "$env:userprofile\DVA5-master"</pre>
     </li>
     <li>
         Build DVA:
@@ -164,8 +193,9 @@ cd DVA5-master</pre>
             <tr><th>File</th><th>Description</th></tr>
             <tr><td>DVA.jar</td><td>DVA application (cross-platform)</td></tr>
             <tr><td>DVA.app</td><td>DVA application (Mac)</td></tr>
-            <tr><td>DVA5.dmg.bz2</td><td>Installer disk image (Mac)</td></tr>
-            <tr><td>DVA5Setup.exe</td><td>Installer (Windows) (if Wine and Inno Setup were installed above)</td></tr>
+            <tr><td>win\i386\DVA.exe, DVA.scr</td><td>DVA application and screensaver (Windows, 32-bit)</td></tr>
+            <tr><td>win\amd64\DVA.exe, DVA.scr</td><td>DVA application and screensaver (Windows, 64-bit)</td></tr>
+            <tr><td>DVA5Setup.exe</td><td>Windows installer</td></tr>
         </table>
     </li>
 </ol>

@@ -8,6 +8,8 @@
 		<excludeFolder url="file://$MODULE_DIR$/jb/common/nativefilechooser"/>
 		<excludeFolder url="file://$MODULE_DIR$/mac"/>
 		<excludeFolder url="file://$MODULE_DIR$/sounds"/>
+		<excludeFolder url="file://$MODULE_DIR$/tools"/>
+		<excludeFolder url="file://$MODULE_DIR$/tools/winrun4j"/>
 		<excludeFolder url="file://$MODULE_DIR$/win"/>
 	</contentEntry>
 	<lib name="javatuples-1.2.jar" scope="COMPILE">

@@ -33,15 +33,12 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "i386\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
-Source: "i386\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
-Source: "amd64\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
-Source: "amd64\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
-Source: "DVA.ini"; DestDir: "{app}"; Flags: replacesameversion
-Source: "ttfetch.ini"; DestDir: "{app}"; Flags: replacesameversion
-Source: "i386\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: not IsWin64
-Source: "amd64\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: IsWin64
-Source: "DVA.ini"; DestDir: "{sys}"; Flags: replacesameversion
+Source: "..\build\Debug\win\i386\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
+Source: "..\build\Debug\win\i386\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
+Source: "..\build\Debug\win\amd64\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
+Source: "..\build\Debug\win\amd64\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
+Source: "..\build\Debug\win\i386\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: not IsWin64
+Source: "..\build\Debug\win\amd64\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: IsWin64
 Source: "..\logging.properties"; DestDir: "{app}"
 Source: "..\jars\*.jar"; DestDir: "{app}"
 Source: "..\jars\win\*.jar"; DestDir: "{app}"
