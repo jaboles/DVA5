@@ -28,8 +28,14 @@
     <property name="Wine" value="/Applications/Wine.app/Contents/Resources/bin/wine"/>
     <!--<property name="WinePrefix" value="/Users/${user.name}/.wine"/>-->
     <property name="WinePrefix" value="/Users/${user.name}/Wine Files"/>
-    <property name="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"/>
-    <property name="WinRun4JDir" value="${basedir}${file.separator}..${file.separator}winrun4j${file.separator}bin${file.separator}"/>
+    <condition property="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"
+                                        else="${user.home}${file.separator}resource_hacker${file.separator}">
+        <os family="mac"/>
+    </condition>
+    <condition property="WinRun4JDir" value="${basedir}${file.separator}..${file.separator}winrun4j${file.separator}bin${file.separator}"
+                                       else="${user.home}${file.separator}winrun4j${file.separator}bin${file.separator}">
+        <os family="mac"/>
+    </condition>
     <property name="WinOutDir32" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
     <property name="WinOutDir64" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
     <property name="WinResourcesDir" value="${basedir}${file.separator}win${file.separator}"/>
