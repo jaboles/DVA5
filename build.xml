@@ -4,9 +4,9 @@
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname"/>
     <echo>Running on ${hostname} (${os.name})</echo>
-    <property name="IntDir" value="build/Intermediate"/>
-    <property name="InDir" value="${IntDir}/Debug"/>
-    <property name="OutDir" value="build/Debug"/>
+    <property name="IntDir" value="build${file.separator}Intermediate"/>
+    <property name="InDir" value="${IntDir}${file.separator}Debug"/>
+    <property name="OutDir" value="build${file.separator}Debug"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
 	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-4.2.1.jar${path.separator}jars/jna-platform-4.2.1.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/slf4j-api-1.7.7.jar${path.separator}jars/collections-query-0.2.9.jar"/>
@@ -36,8 +36,14 @@
                                        else="${user.home}${file.separator}winrun4j${file.separator}bin${file.separator}">
         <os family="mac"/>
     </condition>
-    <property name="WinOutDir32" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
-    <property name="WinOutDir64" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
+    <condition property="WinOutDir32" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}i386${file.separator}"
+                                       else="${OutDir}${file.separator}win${file.separator}i386${file.separator}">
+        <os family="mac"/>
+    </condition>
+    <condition property="WinOutDir64" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}amd64${file.separator}"
+                                       else="${OutDir}${file.separator}win${file.separator}amd64${file.separator}">
+        <os family="mac"/>
+    </condition>
     <property name="WinResourcesDir" value="${basedir}${file.separator}win${file.separator}"/>
     <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/ISCC.exe"
                                              else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
