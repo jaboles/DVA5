@@ -53,14 +53,17 @@
     <li>Mac OS 10.10 ("Yosemite")</li>
     <li>Mac OS 10.11 ("El Capitan")</li>
     <li>Mac OS 10.12 ("Sierra")</li>
-    <li>Windows 7 Service Pack 1 ("Windows NT 6.1")</li>
-    <li>Windows Server 2012 R2 ("Windows NT 6.3")</li>
+    <li>Windows 7 Service Pack 1 (Windows NT 6.1)</li>
+    <li>Windows 8 (Windows NT 6.2)</li>
+    <li>Windows 8.1 (Windows NT 6.3)</li>
+    <li>Windows Server 2012 R2 (Windows NT 6.3)</li>
+    <li>Windows 10 (Windows NT 10.0)</li>
 </ul>
 
 <hr>
 
 <h2><a name="mac"/><font face="Baskerville Old Face">&#xf000;</font> Mac OS</h2>
-<h3>Prerequisites</h3>
+<h3><font face="Baskerville Old Face">&#xf000;</font> Prerequisites</h3>
 <p>The following commands are to be run in Terminal (/Applications/Utilities/Terminal.app).</p>
 <ol>
     <li>
@@ -68,42 +71,42 @@
         <pre>/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</pre>
     </li>
     <li>
-        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a> version 1.6 or higher.
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a> version 1.6 or higher:
         <pre>brew cask install java</pre>
     </li>
     <li>
-        <a href="http://ant.apache.org">Apache Ant</a>.
+        <a href="http://ant.apache.org">Apache Ant</a>:
         <pre>brew install ant</pre>
     </li>
     <li>
         Building a Windows app or setup requires the following additional tools:
         <ul>
             <li>
-                <a href="https://www.winehq.org" target="_blank">Wine</a>, required for running Inno Setup. Wine requires <a href="https://www.xquartz.org" target="_blank">XQuartz</a>.
+                <a href="https://www.winehq.org" target="_blank">Wine</a>, required for running Inno Setup. Wine requires <a href="https://www.xquartz.org" target="_blank">XQuartz</a>:
                 <pre>brew cask install xquartz
 brew install wine</pre>
             </li>
             <li>
-                <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>.
+                <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>:
                 <pre>curl -OL http://www.angusj.com/resourcehacker/resource_hacker.zip && unzip resource_hacker.zip -d resource_hacker && rm resource_hacker.zip</pre>
             </li>
             <li>
-                <a href="https://sourceforge.net/projects/winrun4j/" target="_blank">WinRun4J</a>.
+                <a href="https://sourceforge.net/projects/winrun4j/" target="_blank">WinRun4J</a>:
                 <pre>WinRun4JVersion=0.4.5
 curl -OL https://sourceforge.net/projects/winrun4j/files/winrun4j/$WinRun4JVersion/winrun4J-$WinRun4JVersion.zip/download && unzip download -d . && rm download</pre>
             </li>
             <li>
-                <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>. Any recent version 5 should work.
+                <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>:
                 <pre>curl -OL http://www.jrsoftware.org/download.php/is.exe && wine is.exe /silent</pre>
             </li>
         </ul>
     </li>
 </ol>
 
-<h3>Building</h3>
+<h3><font face="Baskerville Old Face">&#xf000;</font> Building</h3>
 <ol>
     <li>
-        Download source archive (if you haven't already)
+        Download source archive (if you haven't already):
         <pre>curl -OL https://github.com/jaboles/DVA5/archive/master.zip && unzip master.zip
 cd DVA5-master</pre>
     </li>
@@ -129,10 +132,10 @@ cd DVA5-master</pre>
 
 <h2><a name="windows"/><font face="Wingdings">&#xff;</font> Windows</h2>
 <p>The following commands are to be run in Powershell.</p>
-<h3>Prerequisites</h3>
+<h3><font face="Wingdings">&#xff;</font> Prerequisites</h3>
 <ol>
     <li>
-        If running Windows 7, the following are required for running Scoop:
+        If building on Windows 7, the following are required for running Scoop:
         <ul>
             <li>
                 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" target="_blank">.NET Framework 4.5</a> or later.
@@ -143,42 +146,42 @@ cd DVA5-master</pre>
         </ul>
     </li>
     <li>
-        Enable Powershell.
+        Enable Powershell:
         <pre>Set-ExecutionPolicy unrestricted -s cu</pre>
     </li>
     <li>
-        <a href="http://scoop.sh" target="_blank">Scoop</a>, a command-line installer for Windows.
+        <a href="http://scoop.sh" target="_blank">Scoop</a>, a command-line installer for Windows:
         <pre>iex (new-object net.webclient).downloadstring('https://get.scoop.sh')</pre>
     </li>
     <li>
-        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a> version 1.6 or higher.
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a> version 1.6 or higher:
         <pre>scoop install openjdk</pre>
     </li>
     <li>
-        <a href="http://ant.apache.org">Apache Ant</a>.
+        <a href="http://ant.apache.org">Apache Ant</a>:
         <pre>scoop install ant</pre>
     </li>
     <li>
-        <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>.
+        <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>:
         <pre>(new-object net.webclient).downloadfile("http://www.angusj.com/resourcehacker/resource_hacker.zip", "$env:userprofile\resource_hacker.zip");
 Add-Type -AssemblyName System.IO.Compression.FileSystem;
 [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:userprofile\resource_hacker.zip", "$env:userprofile\resource_hacker")</pre>
     </li>
     <li>
-        <a href="https://sourceforge.net/projects/winrun4j/" target="_blank">WinRun4J</a>.
+        <a href="https://sourceforge.net/projects/winrun4j/" target="_blank">WinRun4J</a>:
         <pre>(new-object net.webclient).downloadfile("https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download", "$env:userprofile\winrun4j.zip");
 [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:userprofile\winrun4j.zip", "$env:userprofile")</pre>
     </li>
     <li>
-        <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>. Any recent version 5 should work.
+        <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>:
         <pre>(new-object net.webclient).downloadfile("http://www.jrsoftware.org/download.php/is.exe", "$env:userprofile\is.exe"); &amp;"$env:userprofile\is.exe" /silent</pre>
     </li>
 </ol>
 
-<h3>Building</h3>
+<h3><font face="Wingdings">&#xff;</font> Building</h3>
 <ol>
     <li>
-        Download source archive (if you haven't already)
+        Download source archive (if you haven't already):
         <pre>(new-object net.webclient).downloadfile("https://github.com/jaboles/DVA5/archive/master.zip", "$env:userprofile\master.zip");
 [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:userprofile\master.zip", "$env:userprofile")
 cd "$env:userprofile\DVA5-master"</pre>

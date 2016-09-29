@@ -62,7 +62,7 @@ Root: HKLM; Subkey: "Software\Wow6432Node\JavaSoft"; ValueType: string; ValueNam
 
 [Run]
 Filename: "{app}\DVA.exe"; Description: "{cm:LaunchProgram,DVA}"; Flags: nowait postinstall
-Filename: "{app}\DVA.exe"; Parameters: "/x"; Description: "Downloading sound libraries"
+Filename: "{app}\DVA.exe"; Parameters: "/x"; StatusMsg: "Updating sound libraries"
 
 [Code]
 function InitializeSetup() : Boolean;
