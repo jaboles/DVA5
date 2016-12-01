@@ -266,7 +266,7 @@ public class DVA {
         
         // Set AUMI on Windows 7, to fix two separate DVA taskbar icons appearing during
         // launch (DVA.exe and java.exe)
-        boolean isWindows = !org.swixml.SwingEngine.isMacOSX();
+        boolean isWindows = OSDetection.isWindows();
         if (isWindows)
         {
             Shell32Ex.INSTANCE.SetCurrentProcessExplicitAppUserModelID(new WString("jb.DVA"));
@@ -444,6 +444,10 @@ public class DVA {
         else if (OSDetection.isMac())
         {
             return new File("/Users/Shared/Library/Application Support/DVA");
+        }
+        else if (OSDetection.isUnix())
+        {
+            return new File(FileUtilities.getUserApplicationDataFolder(), ".dva");
         }
         else
         {

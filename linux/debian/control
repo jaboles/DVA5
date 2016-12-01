@@ -1,0 +1,9 @@
+Package: dva
+Name: DVA
+Version: 5.3.3
+Section: utilities
+Priority: optional
+Architecture: all
+Installed-Size: 25000
+Maintainer: Jonathan Boles <jaboles@fastmail.fm>
+Description: DVA

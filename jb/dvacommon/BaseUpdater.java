@@ -150,6 +150,7 @@ public abstract class BaseUpdater
                 return -1;
             }
             List<String> urls = FileUtilities.readLinesFromUrl(artifactList);
+            logger.info("Downloading {} artifacts", urls.size());
             for (String s : urls) {
                 logger.info("Base URL {}", baseUrl);
                 URL url = new URL(baseUrl, s.replaceAll(" ", "%20"));

@@ -214,6 +214,10 @@ public class FileUtilities
         {
             return new File(System.getenv("LOCALAPPDATA"));
         }
+        else if (OSDetection.isUnix())
+        {
+            return new File(System.getProperty("user.home"));
+        }
         else
         {
             return new File("/");

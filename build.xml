@@ -51,6 +51,9 @@
     </condition>
 	<property name="WindowsSetupName" value="DVA5Setup"/>
 
+    <!-- linux DEB -->
+    <property name="DpkgRoot" value="${OutDir}${file.separator}debian"/>
+
     <loadresource property="BaseDirTemp">
         <propertyresource name="basedir"/>
         <filterchain>
@@ -520,6 +523,14 @@
     
     <target name="SetupCommon" description="common setup crap">
         <copy file="new.html" todir="${OutDir}"/>
+        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac">
+            <arg value="-c"/>
+            <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\.\d\.\d&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
+        </exec>
+        <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows">
+            <arg value="-command"/>
+            <arg value="(gc jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
+        </exec>
     </target>
     
     <!-- Build Mac setup -->
@@ -586,18 +597,44 @@
         </exec>
     </target>
 
-    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacSetup,BuildWinSetup,SignWinSetup">
+    <!-- Linux Debian Setup -->
+    <target name="BuildLinuxDeb" depends="CreateJar,BundledResources,SourceArchive,SetupCommon">
+        <delete failonerror="false" dir="${DpkgRoot}"/>
+        <mkdir dir="${DpkgRoot}"/>
+        <mkdir dir="${DpkgRoot}${file.separator}DEBIAN"/>
+        <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}bin"/>
+        <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva"/>
+        <copy todir="${DpkgRoot}${file.separator}DEBIAN" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}debian${file.separator}control"/>
+        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}applications" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}debian${file.separator}dva.desktop"/>
+        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}bin" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}dva"/>
+        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true" file="${basedir}${file.separator}dva_icon.png"/>
+        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true">
+            <fileset dir="${OutDir}">
+                <include name="*.txt"/>
+                <include name="src.zip"/>
+                <include name="DVA.jar"/>
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="jars">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="jars/linux">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}bin${file.separator}dva"/>
+        <exec executable="fakeroot" dir="${OutDir}">
+            <arg value="dpkg"/>
+            <arg value="--build"/>
+            <arg value="debian"/>
+        </exec>
+        <move file="${OutDir}${file.separator}debian.deb" tofile="${OutDir}${file.separator}DVA5.deb"/>
+    </target>
+
+    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacSetup,BuildWinSetup,SignWinSetup,BuildLinuxDeb">
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>
-        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac">
-            <arg value="-c"/>
-            <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\.\d\.\d&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
-        </exec>
-        <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows">
-            <arg value="-command"/>
-            <arg value="(gc jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
-        </exec>
         <echo>Version ${DVAVersion}</echo>
         <copy todir="build/TestUpdateDrop/${DVAVersion}">
             <fileset dir="${OutDir}">

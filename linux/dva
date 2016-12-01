@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /usr/share/dva
+exec java -jar DVA.jar $*
