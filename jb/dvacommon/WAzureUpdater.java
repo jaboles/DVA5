@@ -93,6 +93,7 @@ public class WAzureUpdater extends BaseUpdater
                     new File("/Users/jb/Software/DVA/new.html"),
                     new File("/Users/jb/Software/DVA/build/Debug/DVA5.dmg.bz2"),
                     new File("/Users/jb/Software/DVA/build/Debug/DVA5Setup.exe"),
+                    new File("/Users/jb/Software/DVA/build/Debug/DVA5.deb"),
                 };
             for (File f : artifacts)
             {
