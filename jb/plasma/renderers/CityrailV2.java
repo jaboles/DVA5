@@ -35,14 +35,14 @@ public class CityrailV2 extends Cityrail
 
     public void dimensionsChanged()
     {
-        TimeNowFont = new Font("Arial", Font.BOLD, (int)(height * 0.024));
-        TimeFont = new Font("Arial", Font.BOLD, (int)(height * 0.036));
-        DepartureTimeFont = new Font("Arial", Font.BOLD, (int)(height * 0.04));
-        DestinationFont = new Font("Arial", Font.BOLD, (int)(height * 0.10));
+        TimeNowFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.024));
+        TimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.036));
+        DepartureTimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.04));
+        DestinationFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.10));
         Destination2Font = DepartureTimeFont;
-        MainFont = new Font("Arial", Font.BOLD, (int)(height * 0.044));
-        DueOutFont = new Font("Arial", Font.BOLD, (int)(height * 0.05));
-        SmallFont = new Font("Arial", Font.BOLD, (int)(height * 0.0238));
+        MainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.044));
+        DueOutFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        SmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.0238));
         NextTrainFont = Destination2Font;
     }
 

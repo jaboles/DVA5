@@ -1,10 +1,8 @@
 package jb.plasma;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.util.List;
+
+import jb.common.ExceptionReporter;
 import jb.plasma.ui.PlasmaPanel;
 
 // Abstract renderer class
@@ -20,12 +18,33 @@ public abstract class Drawer implements Cloneable
     protected List<DepartureData> DepartureData;
 
     // Aspect ratios
-    protected Dimension LANDSCAPE_43 = new Dimension(4, 3);
-    protected Dimension LANDSCAPE_1610 = new Dimension(16, 10);
-    protected Dimension PORTRAIT_1610 = new Dimension(10, 16);
+    protected static Dimension LANDSCAPE_43 = new Dimension(4, 3);
+    protected static Dimension LANDSCAPE_1610 = new Dimension(16, 10);
+    protected static Dimension PORTRAIT_1610 = new Dimension(10, 16);
+
+    // Fonts
+    protected static Font ArialRegular;
+    protected static Font ArialBold;
+    protected static Font TPFrankRegular;
+    protected static Font TPFrankBold;
 
     public Drawer()
     {
+    }
+
+    public static void initializeFonts()
+    {
+        try
+        {
+            ArialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arial.ttf"));
+            ArialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arialbd.ttf"));
+            TPFrankRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/tpfrank-regular-webfont.ttf"));
+            TPFrankBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/tpfrank-bold-webfont.ttf"));
+        }
+        catch (Exception ex)
+        {
+            ExceptionReporter.reportException(ex);
+        }
     }
 
     // Called before each render cycle to notify the renderer of the dimensions it is drawing in

@@ -21,7 +21,7 @@
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-    <property name="DmgSizeMb" value="25"/>
+    <property name="DmgSizeMb" value="27"/>
 	
 	<!-- Windows setup -->
     <!--<property name="Wine" value="wine"/>-->
@@ -153,6 +153,7 @@
                     <include name="*.jpg"/>
                     <include name="*.png"/>
                     <include name="*.gif"/>
+                    <include name="*.ttf"/>
                     <include name="*.html"/>
                     <include name="*.tt"/>
                     <include name="buildnumber.txt"/>

@@ -29,14 +29,14 @@ public class CityrailV1Landscape extends CityrailV1
     public void dimensionsChanged()
     {
         // Update the fonts if the dimensions changed.
-        TimeNowFont = new Font("Arial", Font.BOLD, (int)(height * 0.05));
-        TimeFont = new Font("Arial", Font.BOLD, (int)(height * 0.07));
-        DepartureTimeFont = new Font("Arial", Font.BOLD, (int)(height * 0.098));
-        DestinationFont = new Font("Arial", Font.BOLD, (int)(height * 0.12));
-        Destination2Font = new Font("Arial", Font.BOLD, (int)(height * 0.05));
-        MainFont = new Font("Arial", Font.BOLD, (int)(height * 0.066));
-        SmallFont = new Font("Arial", Font.BOLD, (int)(height * 0.05));
-        TypeSmallFont = new Font("Arial", Font.BOLD, (int)(height * 0.035));
+        TimeNowFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        TimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.07));
+        DepartureTimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.098));
+        DestinationFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.12));
+        Destination2Font = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        MainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.066));
+        SmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        TypeSmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.035));
     }
     
     public void paint(Graphics g)

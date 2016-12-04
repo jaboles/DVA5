@@ -23,9 +23,9 @@ public abstract class CityrailV4 extends Cityrail
 
     public void dimensionsChanged()
     {
-        HeaderFont = new Font("Arial", Font.PLAIN, (int)(height * 0.08));
-        HeaderTimeNowFont = new Font("Arial", Font.PLAIN, (int)(height * 0.05));
-        DestinationFont = new Font("Arial", Font.BOLD, (int)(height * 0.10));
+        HeaderFont = TPFrankRegular.deriveFont(Font.PLAIN, (int)(height * 0.08));
+        HeaderTimeNowFont = TPFrankRegular.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        DestinationFont = TPFrankBold.deriveFont(Font.PLAIN, (int)(height * 0.10));
     }
 
     public Dimension getAspectRatio()

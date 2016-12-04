@@ -26,16 +26,16 @@ public abstract class CityrailV3 extends Cityrail
 
     public void dimensionsChanged()
     {
-        MainFont = new Font("Arial", Font.BOLD, (int)(height * 0.12));
+        MainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.12));
         DestinationFont = MainFont;
-        NextTrainFont = new Font("Arial", Font.BOLD, (int)(height * 0.065));
-        MicroFont = new Font("Arial", Font.PLAIN, (int)(height * 0.04));
-        MicroFontBold = new Font("Arial", Font.BOLD, (int)(height * 0.04));
-        CarsFont = new Font("Arial", Font.BOLD, (int)(height * 0.1));
-        Cars2Font = new Font("Arial", Font.BOLD, (int)(height * 0.049));
-        HeaderFont = new Font("Arial", Font.PLAIN, (int)(height * 0.05));
-        TypeFont = new Font("Arial", Font.BOLD, (int)(height * 0.056));
-        TypeNextFont = new Font("Arial", Font.PLAIN, (int)(height * 0.078));
+        NextTrainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.065));
+        MicroFont = ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.04));
+        MicroFontBold = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.04));
+        CarsFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.1));
+        Cars2Font = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.049));
+        HeaderFont = ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        TypeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.056));
+        TypeNextFont = ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.078));
     }
 
     public void paint(Graphics g)
