@@ -7,4 +7,5 @@ sounds
 *.iws
 .metadata
 .settings
+*.bak
 
