@@ -102,6 +102,19 @@ curl -OL https://sourceforge.net/projects/winrun4j/files/winrun4j/$WinRun4JVersi
             </li>
         </ul>
     </li>
+    <li>
+        Building a Linux .DEB package requires the following additional tools:
+        <ul>
+            <li>
+                <a href="https://www.debian.org/doc/manuals/debian-faq/ch-pkgtools.en.html" target="_blank">Dpkg</a> for creating a .DEB package:
+                <pre>brew install dpkg</pre>
+            </li>
+            <li>
+                <a href="https://wiki.debian.org/FakeRoot" target="_blank">Fakeroot</a> to ensure correct file permissions:
+                <pre>brew install fakeroot</pre>
+            </li>
+        </ul>
+    </li>
 </ol>
 
 <h3><img class="icon icons8-Mac-OS" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABHtJREFUaAXtV11oHFUUPvfO7O7MbpNiarci+mCxUqwGoREfbLVpLOLvg2gxKRRBpfgT7UOKKIgFn0TQFoI20CqYlIoPCiqoxaZB3yql1Y2UNLYVf6DNT9kkOzs7OzP3em6VMtlsZu6dcVcf9sJm7tzz933nzj33BKA1WhloZaCVgf8yA6TZwTcO8VR7zroHCDxKgNw3uiO3IQkGPYmxqm3PsL2ZU+sQAFn3j62t6qNWn9YuNOp964j1LKdsLAAeNwEmksZryg50D1sPIdohBLvok2UcPk9KoOE7cPeh6TZC4GAteHy3KOXvJSXQ8B3IGOYuBHldLVAO5PXRvtyl2nXV94bvAH41TywFRYaP95n7lq6rrzSBANwagOUC4a+OTppPASE8sB572vBPCJHN4sn9BtEeY5R+NdZr/hobbR3DRVWhjnzZpU2Hi9ekWGozoXwLfib3ouJafJ7C5wlO4AefwInverO/Bx3c/8lch+dpGxmDLkJIF8rED5NIxnBnjusePXZ0p3khaBM1j0Wg53BpBx5CURZzoQE4/InAvgdOpoFCN3C4LVT/b+FBmnIGvt3eMSehu7guRxrs5bR7nfUutgAvReomUuCToOkPjD5pnItyo3SIt95c3td48AIythq+90EUeCGXJtAzYj2M+9Uv4zSxDoHPMtx5RMaPdBViBN6IdWBkUAR0GPCPx3pzfUByUmVWisCWI1YXwcoRiNOQadnxZvm8tlvljpAioHF4TCodsWlxuDxXAcfjhTO7Vyu1F1IEOPBNeLBiwwszLNkuzBZtcD0GK1doyu2FFAFgWBX+JfwMe+hK1YeK44FVccHBuRhY3aAws+aLMLL1ZHIECLQHjT3Mlgjuugw8n4OHV6tY8xGcGNg+A8U/4nnlh+A4ijyfAROTOoNQ7I324klTHHIEAGzOedayPZgrOWBj9sKGwIjVJExliYwxRjo/Wsj/tLNtaokwZEHqHiiVq6XfLi7AxVkrEnxIrEgRm3eejlSqUZAigFlPi0PW6OG63nOqMaQI6Bo9q+o4jn7F8W/sHJx+RsVWioBG+JcqTuPqilODZfX924dm1sv6kCLgU3KAiirRhIFVTS/Pu4XOwRmpjle6uq/fPzVRtt1bmsDhagjTSP0xUVx9E5bXZcue1A4Ijzqlb1713KQJlm4SBl7AkCYw3n/tiJHWLjcJ+5WL30xD5GckTUAAzxh0oFkETEOf+PGFNZ9GxVMiUHg+/2HWSP0S5TSpXKOUGYRI/UOjREAAMwg8SDX1nkWFVM5Mv3P65fykjI0yAeG4zdRfky5fMigCOllDHx/vX7UnsBQ6VSYgvBVezL+1IqsfCfUcQ5jJaNOVlfk7VUwTJXLD/qmjC7a7rV5AcfGlNFrG5yWqQdH34AZspzt8n+n1bsRMSlto59m1JwfaZ+r5W24tEQHhtPPA1OOuA/1Vz7+LM9DSae081ejXJL9qz8/bSbU28B2DxW1V33nF9XgX3rptqH8hpfHhTNp/++Su68u1+q33VgZaGWhl4P+dgb8Av5luFjqm0oQAAAAASUVORK5CYII=" width="24" height="24">Building</h3>
@@ -125,6 +138,7 @@ cd DVA5-master</pre>
             <tr><td>win\amd64\DVA.exe, DVA.scr</td><td>DVA application and screensaver (Windows, 64-bit)</td></tr>
             <tr><td>DVA5.dmg.bz2</td><td>Mac disk image</td></tr>
             <tr><td>DVA5Setup.exe</td><td>Windows installer (if Wine and Inno Setup were installed above)</td></tr>
+            <tr><td>DVA5.deb</td><td>Linux installer</td></tr>
         </table>
     </li>
 </ol>

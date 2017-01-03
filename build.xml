@@ -208,7 +208,10 @@
     <target name="SignMacApp.Check">
     	<echo>Running on ${hostname}</echo>
         <condition property="WillSignMacApp">
-            <equals arg1="${hostname}" arg2="jb"/>
+            <or>
+                <equals arg1="${hostname}" arg2="jb"/>
+                <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
+            </or>
         </condition>
     </target>
     <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,UpdateMacApp" if="WillSignMacApp">
@@ -233,7 +236,15 @@
         </exec>
     </target>
 
-    <target name="RebuildMacApp" description="Clean/rebuild the mac app" depends="CleanMacApp,UpdateMacApp,SignMacApp"/>
+    <target name="RebuildMacApp" description="Clean/rebuild the mac app" depends="CleanMacApp,UpdateMacApp,SignMacApp,SetupCommon">
+        <exec executable="plutil" dir="${OutDir}">
+            <arg value="-replace"/>
+            <arg value="CFBundleGetInfoString"/>
+            <arg value="-string"/>
+            <arg value="${DVAVersion}"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
+    </target>
 
     <target name="BuildWinApp">
         <copy tofile="${WinOutDir32}DVA.exe" file="${WinRun4JDir}WinRun4J.exe"/>
@@ -575,6 +586,16 @@
         <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
     </target>
     <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SourceArchive,SetupCommon,BuildWinApp" if="InnoSetupCompilerExists">
+        <exec executable="sed" dir="${basedir}" osfamily="mac">
+            <arg value="-i"/>
+            <arg value=".bak"/>
+            <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
+            <arg value="${WinResourcesDir}setup.iss"/>
+        </exec>
+        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows">
+            <arg value="-command"/>
+            <arg value="(gc '${WinResourcesDir}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file '${WinResourcesDir}setup.iss'"/>
+        </exec>
         <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg value="${InnoSetupCompiler}"/>
@@ -624,6 +645,16 @@
             </fileset>
         </copy>
         <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}bin${file.separator}dva"/>
+        <exec executable="sed" dir="${basedir}" osfamily="mac">
+            <arg value="-i"/>
+            <arg value=".bak"/>
+            <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
+            <arg value="linux${file.separator}debian${file.separator}control"/>
+        </exec>
+        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows">
+            <arg value="-command"/>
+            <arg value="(gc 'linux${file.separator}debian${file.separator}control' -raw) -replace '\d\.\d\.\d', '${DVAVersion}' | out-file 'linux${file.separator}debian${file.separator}control'"/>
+        </exec>
         <exec executable="fakeroot" dir="${OutDir}">
             <arg value="dpkg"/>
             <arg value="--build"/>
