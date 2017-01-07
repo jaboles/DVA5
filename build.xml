@@ -25,7 +25,7 @@
 	
 	<!-- Windows setup -->
     <!--<property name="Wine" value="wine"/>-->
-    <property name="Wine" value="/Applications/Wine.app/Contents/Resources/bin/wine"/>
+    <property name="Wine" value="wine"/>
     <!--<property name="WinePrefix" value="/Users/${user.name}/.wine"/>-->
     <property name="WinePrefix" value="/Users/${user.name}/Wine Files"/>
     <condition property="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"
