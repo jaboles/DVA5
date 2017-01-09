@@ -19,10 +19,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
-import jb.common.ExceptionReporter;
-import jb.common.FileUtilities;
-import jb.common.RangeFactory;
-import jb.common.URLStat;
+
+import jb.common.*;
 import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +59,7 @@ public abstract class BaseUpdater
                     {
                         File downloaded = downloadToTemp(getDownloadUrl(version), pw);
                         logger.debug("Downloaded update to {}", downloaded != null ? downloaded.getAbsolutePath() : "<null>");
-                        pw.updateProgressComplete("Download complete - " + (SwingEngine.isMacOSX() ? "installing" : "launching installer"));
+                        pw.updateProgressComplete("Download complete - " + (OSDetection.isMac() ? "installing" : "launching installer"));
                         launchInstaller(downloaded);
                     }
                 }
@@ -132,7 +130,14 @@ public abstract class BaseUpdater
     
     public URL getDownloadUrl(String version) throws MalformedURLException
     {
-        return new URL(getBaseUrl(version), (SwingEngine.isMacOSX()? "DVA5.dmg.bz2" : "DVA5Setup.exe"));
+        String filename = null;
+        if (OSDetection.isMac())
+            filename = "DVA5.dmg.bz2";
+        else if (OSDetection.isWindows())
+            filename = "DVA5Setup.exe";
+        else
+            filename = "DVA5.deb";
+        return new URL(getBaseUrl(version), filename);
     }
 
     public URL getVersionHistoryUrl(String version) throws MalformedURLException
@@ -194,7 +199,7 @@ public abstract class BaseUpdater
     private void launchInstaller(File downloadedInstaller) throws IOException, InterruptedException
     {
         String installerPath = downloadedInstaller.getPath();
-        if (SwingEngine.isMacOSX()) // Mac OSX
+        if (OSDetection.isMac()) // Mac OSX
         {
             Process p;
             // Unzip
@@ -229,7 +234,7 @@ public abstract class BaseUpdater
                 new ProcessBuilder(updateScript.getPath()).start();
             }
         }
-        else // Windows
+        else if (OSDetection.isWindows()) // Windows
         {
             // Run the installer quietly
             ProcessBuilder updater = new ProcessBuilder(installerPath, "/silent");
@@ -248,6 +253,12 @@ public abstract class BaseUpdater
                     return null;
                 }
             }).firstOrDefault(p -> p != null);
+        }
+        else if (OSDetection.isUnix())
+        {
+            // Run the installer quietly
+            Process p = new ProcessBuilder("xdg-open", installerPath, "&>/dev/null").start();
+            p.waitFor();
         }
         System.exit(0);        
     }
