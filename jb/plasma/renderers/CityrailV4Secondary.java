@@ -61,7 +61,7 @@ public class CityrailV4Secondary extends CityrailV4
     {
         if (Line1Logo != null)
         {
-            drawImageSquare(Line1Logo, 0.025, y, 0.15);
+            drawImageSquare(Line1Logo, 0.025, y, 0.2);
         }
         drawString(d.Destination, 0.4, y, TextColor, DestinationFont);
     }

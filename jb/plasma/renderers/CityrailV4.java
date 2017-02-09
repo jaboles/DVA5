@@ -20,12 +20,21 @@ public abstract class CityrailV4 extends Cityrail
     protected Font HeaderFont;
     protected Font HeaderTimeNowFont;
     protected Font DestinationFont;
+    protected Font PlatformDepartsLabelFont;
+    protected Font PlatformDepartsFont;
+    protected Font TextBoxFont;
 
     public void dimensionsChanged()
     {
-        HeaderFont = TPFrankRegular.deriveFont(Font.PLAIN, (int)(height * 0.08));
-        HeaderTimeNowFont = TPFrankRegular.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        DestinationFont = TPFrankBold.deriveFont(Font.PLAIN, (int)(height * 0.10));
+        HeaderFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.075));
+        HeaderTimeNowFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        TimeFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.07));
+        DestinationFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.15));
+        Destination2Font = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        PlatformDepartsLabelFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.04));
+        PlatformDepartsFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.12));
+        MainFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.082));
+        TextBoxFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.01));
     }
 
     public Dimension getAspectRatio()
@@ -52,5 +61,13 @@ public abstract class CityrailV4 extends Cityrail
             }
         }
         return null;
+    }
+
+    protected void drawMiniTextBox(double x, double y, String s)
+    {
+        double h = 0.04;
+        double w = 0.15;
+        fillRect(x, y, x + w, y + h, TextColor);
+        drawString(s, x + 0.01, y + h - 0.01, Color.white, TextBoxFont);
     }
 }

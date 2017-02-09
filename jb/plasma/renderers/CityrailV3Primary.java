@@ -155,7 +155,6 @@ public class CityrailV3Primary extends CityrailV3
                     stationListPos += (stationList.length + 5) * stationListSeparation;
                 }
             }
-
         }
     }
 }
