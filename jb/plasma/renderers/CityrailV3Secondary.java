@@ -1,11 +1,9 @@
 package jb.plasma.renderers;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Polygon;
+import java.awt.*;
 import java.util.List;
 import jb.plasma.CityrailLine;
 import jb.plasma.DepartureData;
+import org.javatuples.Pair;
 
 public class CityrailV3Secondary extends CityrailV3
 {
@@ -16,6 +14,11 @@ public class CityrailV3Secondary extends CityrailV3
     protected Color Line2Color2;
     protected Color Line2TextColor;
 
+    protected Font TimeFontLarge;
+    protected Font TimeLabelsFontLarge;
+    protected Font TimeFontSmall;
+    protected Font TimeLabelsFontSmall;
+
     public CityrailV3Secondary() {
     }
 
@@ -25,6 +28,12 @@ public class CityrailV3Secondary extends CityrailV3
     public void dimensionsChanged()
     {
         super.dimensionsChanged();
+
+        TimeFontLarge = DestinationFont;
+        TimeLabelsFontLarge = MicroFontBold;
+        TimeFontSmall = TimeFontLarge.deriveFont(0.8f * TimeFontLarge.getSize());
+        TimeLabelsFontSmall = TimeLabelsFontLarge.deriveFont(0.8f * TimeLabelsFontLarge.getSize());
+
         nextTrainBackground = new Polygon();
         nextTrainBackground.addPoint(0, 0);
         nextTrainBackground.addPoint(round(0.22 * width), 0);
@@ -87,9 +96,23 @@ public class CityrailV3Secondary extends CityrailV3
 
     private void DrawDeparture(DepartureData d, double y)
     {
-        drawStringR(getDueOut(d.DueOut).getValue1(), 0.14, y + 0.12, TextBlue, DestinationFont);
-        drawString("mins", 0.15, y + 0.12, TextBlue, MicroFontBold);
-        drawString(d.Destination, 0.25, y + 0.12, TextBlue, DestinationFont);
+        Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);
+        int h = dueOut.getValue0();
+        int m = dueOut.getValue1();
+        double timeOffset = y + 0.12;
+        if (h > 0)
+        {
+            drawStringR(h, 0.092, timeOffset, TextBlue, TimeFontSmall);
+            drawString("hr", 0.094, timeOffset, TextBlue, TimeLabelsFontSmall);
+            drawStringR(m, 0.183, timeOffset, TextBlue, TimeFontSmall);
+            drawString("mins", 0.186, timeOffset, TextBlue, TimeLabelsFontSmall);
+        }
+        else
+        {
+            drawStringR(m, 0.14, timeOffset, TextBlue, TimeFontLarge);
+            drawString("mins", 0.146, timeOffset, TextBlue, TimeLabelsFontLarge);
+        }
+        drawString(d.Destination, 0.25, timeOffset, TextBlue, DestinationFont);
         if (d.Line != null)
         {
             fillRect(0.05, y + 0.21, 1, y + 0.29, Line2Color1);
