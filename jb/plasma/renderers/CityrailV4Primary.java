@@ -12,12 +12,10 @@ public class CityrailV4Primary extends CityrailV4
 {
     public BufferedImage LineLogo;
     private String dueOutString;
-    private final double LeftMargin = 0.03;
-    private final double RightMargin = 0.97;
 
     public CityrailV4Primary() {
         stationListInc = 0.0528 / PlasmaPanel.FPS;
-        stationListSeparation = 0.11;
+        stationListSeparation = 0.10;
         stationListPosInitial = 0.35 + (1 * stationListSeparation);
         stationListPos = stationListPosInitial;
     }
@@ -56,8 +54,8 @@ public class CityrailV4Primary extends CityrailV4
             if (LineLogo != null) {
                 drawImageSquare(LineLogo, LeftMargin, 0.12, 0.2);
             }
-            drawString(d0.Destination, 0.2, 0.26, TextColor, DestinationFont);
-            drawString(d0.Destination2, 0.2, 0.3, TextColor, Destination2Font);
+            drawString(d0.Destination, 0.16, 0.25, TextColor, DestinationFont);
+            drawString(d0.Destination2, 0.165, 0.31, TextColor, Destination2Font);
 
             drawStringR(d0.Platform, RightMargin, 0.28, OrangeTextColor, PlatformDepartsFont);
             Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
@@ -68,11 +66,13 @@ public class CityrailV4Primary extends CityrailV4
                 dueOutString = Integer.toString(h) + " hr ";
             }
             drawStringR(dueOutString, RightMargin, 0.95, OrangeTextColor, PlatformDepartsFont);
+            drawMiniTextBox(0.77, 0.39, Integer.toString(d0.Cars) + " carriages");
+            drawMiniTextBox(0.77, 0.46, d0.Type);
 
             // Scrolling list
             boolean shouldScroll = d0.Stops.length > 6;
-            g.setClip(round(LeftMargin * width), round(0.35 * height), round(RightMargin * width), height - round(0.35 * height));
-            fillRect(LeftMargin, 0.35, 0.75, 1, Color.white);
+            g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.6 * width), height - round(0.35 * height));
+            fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
             String[] stationList = d0.Stops;
             for (int i = 0; i < stationList.length; i++) {
                 double y = stationListPos + (i * stationListSeparation);

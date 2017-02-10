@@ -2,6 +2,7 @@ package jb.plasma.renderers;
 
 import jb.plasma.CityrailLine;
 import jb.plasma.DepartureData;
+import org.javatuples.Pair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -51,18 +52,38 @@ public class CityrailV4Secondary extends CityrailV4
         drawString("Time now:", 0.6, 0.08, HeaderTextColor, HeaderTimeNowFont);
 
         // 2nd departure
-        if (d1 != null) DrawDeparture(d1, 0.3);
+        DrawDeparture(d1, 0.12);
+
+        drawLine(LeftMargin, 0.55, RightMargin, 0.55, TextColor);
 
         // 3rd departure
-        if (d2 != null) DrawDeparture(d2, 0.6);
+        DrawDeparture(d2, 0.57);
     }
 
     private void DrawDeparture(DepartureData d, double y)
     {
-        if (Line1Logo != null)
-        {
-            drawImageSquare(Line1Logo, 0.025, y, 0.2);
+        String dueOutString;
+        drawStringR("Platform", RightMargin, y + 0.05, TextColor, PlatformDepartsLabelFont);
+        drawStringR("Departs", RightMargin, y + 0.27, TextColor, PlatformDepartsLabelFont);
+
+        if (d != null) {
+            if (Line1Logo != null) {
+                drawImageSquare(Line1Logo, 0.025, y, 0.2);
+            }
+            drawString(d.Destination, 0.16, y + 0.13, TextColor, DestinationFont);
+            drawString(d.Destination2, 0.165, y + 0.19, TextColor, Destination2Font);
+
+            drawStringR(d.Platform, RightMargin, y + 0.17, OrangeTextColor, PlatformDepartsFontSmall);
+            Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);
+            int h = dueOut.getValue0();
+            int m = dueOut.getValue1();
+            dueOutString = Integer.toString(m) + " min";
+            if (h > 0) {
+                dueOutString = Integer.toString(h) + " hr ";
+            }
+            drawStringR(dueOutString, RightMargin, y + 0.38, OrangeTextColor, PlatformDepartsFontSmall);
+            drawMiniTextBox(LeftMargin, y + 0.24, Integer.toString(d.Cars) + " carriages");
+            drawMiniTextBox(0.25, y + 0.24, d.Type);
         }
-        drawString(d.Destination, 0.4, y, TextColor, DestinationFont);
     }
 }
