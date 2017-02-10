@@ -26,8 +26,7 @@
 	<!-- Windows setup -->
     <!--<property name="Wine" value="wine"/>-->
     <property name="Wine" value="wine"/>
-    <!--<property name="WinePrefix" value="/Users/${user.name}/.wine"/>-->
-    <property name="WinePrefix" value="/Users/${user.name}/Wine Files"/>
+    <property name="WinePrefix" value="/Users/${user.name}/.wine"/>
     <condition property="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"
                                         else="${user.home}${file.separator}resource_hacker${file.separator}">
         <os family="mac"/>
@@ -45,7 +44,7 @@
         <os family="mac"/>
     </condition>
     <property name="WinResourcesDir" value="${basedir}${file.separator}win${file.separator}"/>
-    <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files/Inno Setup 5/ISCC.exe"
+    <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files (x86)/Inno Setup 5/ISCC.exe"
                                              else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
         <os family="mac"/>
     </condition>
