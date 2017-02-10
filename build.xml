@@ -26,7 +26,7 @@
 	<!-- Windows setup -->
     <!--<property name="Wine" value="wine"/>-->
     <property name="Wine" value="wine"/>
-    <property name="WinePrefix" value="/Users/${user.name}/.wine"/>
+    <property name="WinePrefix" value="${user.home}/.wine"/>
     <condition property="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"
                                         else="${user.home}${file.separator}resource_hacker${file.separator}">
         <os family="mac"/>
