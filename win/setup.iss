@@ -6,7 +6,7 @@
 
 [Setup]
 AppName=DVA
-AppVerName=DVA 5.3.4
+AppVerName=DVA 5.3.5
 AppPublisher=Jonathan Boles
 CloseApplications=yes
 CloseApplicationsFilter=*.exe;*.dll;*.chm;*.jar
