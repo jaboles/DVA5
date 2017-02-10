@@ -8,27 +8,25 @@
 
 
 # Northern/North Shore line
-Chatswood,Gordon,Hornsby
-Chatswood,Macquarie Park,Hornsby
+,Gordon,Hornsby
+,Macquarie Park,Hornsby
 ,Strathfield,Epping
 ,Macquarie Park,Epping
-North Strathfield,Strathfield,Central
-Hornsby,Strathfield,Central
-Epping,Strathfield,Central
-Epping,Macquarie Park,Chatswood
-Hornsby,Gordon,Chatswood
+,Strathfield,Central
+,Macquarie Park,Chatswood
+,Gordon,Chatswood
 
 # Bankstown/South/Old Main South/East Hills lines
-Lidcombe,Regents Park,Bankstown
-Lidcombe,Regents Park,Liverpool
-Sydenham,Bankstown,Lidcombe
-Sydenham,Bankstown,Liverpool
-Redfern,Sydenham,Bankstown
-Lidcombe,Granville,Cabramatta
-Central,East Hills,Glenfield
-Cabramatta,Granville,Lidcombe
-Sefton,Regents Park,Lidcombe
-Sefton,Bankstown,Sydenham
-Glenfield,East Hills,Sydenham
-Glenfield,East Hills,Wolli Creek
+,Regents Park,Bankstown
+,Regents Park,Liverpool
+,Bankstown,Lidcombe
+,Bankstown,Liverpool
+,Sydenham,Bankstown
+,Granville,Cabramatta
+,East Hills,Glenfield
+,Granville,Lidcombe
+,Regents Park,Lidcombe
+,Bankstown,Sydenham
+,East Hills,Sydenham
+,East Hills,Wolli Creek
 

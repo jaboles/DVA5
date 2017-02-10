@@ -182,6 +182,7 @@ public class TimetableTranslator
                 d.Cars = cars;
                 d.DueOut = departure;
                 d.Stops = stops.toArray(new String[stops.size()]);
+                d.Destination2 = new Phraser().getVia(d);
                 dd.add(d);
             }
         }
