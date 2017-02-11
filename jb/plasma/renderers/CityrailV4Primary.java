@@ -51,11 +51,13 @@ public class CityrailV4Primary extends CityrailV4
         drawStringR("Departs", RightMargin, 0.8, TextColor, PlatformDepartsLabelFont);
 
         if (d0 != null) {
+            double departureLeft = LeftMargin;
             if (LineLogo != null) {
                 drawImageSquare(LineLogo, LeftMargin, 0.12, 0.2);
+                departureLeft = 0.16;
             }
-            drawString(d0.Destination, 0.16, 0.25, TextColor, DestinationFont);
-            drawString(d0.Destination2, 0.165, 0.31, TextColor, Destination2Font);
+            drawString(d0.Destination, departureLeft, 0.25, TextColor, DestinationFont);
+            drawString(d0.Destination2, departureLeft + 0.005, 0.31, TextColor, Destination2Font);
 
             drawStringR(d0.Platform, RightMargin, 0.28, OrangeTextColor, PlatformDepartsFont);
             Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);

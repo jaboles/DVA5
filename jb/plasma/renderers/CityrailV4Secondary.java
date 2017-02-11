@@ -52,26 +52,28 @@ public class CityrailV4Secondary extends CityrailV4
         drawString("Time now:", 0.6, 0.08, HeaderTextColor, HeaderTimeNowFont);
 
         // 2nd departure
-        DrawDeparture(d1, 0.12);
+        DrawDeparture(d1, 0.12, Line1Logo);
 
         drawLine(LeftMargin, 0.55, RightMargin, 0.55, TextColor);
 
         // 3rd departure
-        DrawDeparture(d2, 0.57);
+        DrawDeparture(d2, 0.57, Line2Logo);
     }
 
-    private void DrawDeparture(DepartureData d, double y)
+    private void DrawDeparture(DepartureData d, double y, BufferedImage lineLogo)
     {
         String dueOutString;
         drawStringR("Platform", RightMargin, y + 0.05, TextColor, PlatformDepartsLabelFont);
         drawStringR("Departs", RightMargin, y + 0.27, TextColor, PlatformDepartsLabelFont);
 
         if (d != null) {
-            if (Line1Logo != null) {
-                drawImageSquare(Line1Logo, 0.025, y, 0.2);
+            double destinationLeft = LeftMargin;
+            if (lineLogo != null) {
+                drawImageSquare(lineLogo, LeftMargin, y, 0.2);
+                destinationLeft = 0.16;
             }
-            drawString(d.Destination, 0.16, y + 0.13, TextColor, DestinationFont);
-            drawString(d.Destination2, 0.165, y + 0.19, TextColor, Destination2Font);
+            drawString(d.Destination, destinationLeft, y + 0.13, TextColor, DestinationFont);
+            drawString(d.Destination2, destinationLeft + 0.005, y + 0.19, TextColor, Destination2Font);
 
             drawStringR(d.Platform, RightMargin, y + 0.17, OrangeTextColor, PlatformDepartsFontSmall);
             Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);

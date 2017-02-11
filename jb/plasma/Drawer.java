@@ -2,6 +2,7 @@ package jb.plasma;
 import java.awt.*;
 import java.util.List;
 
+import com.innahema.collections.query.queriables.Queryable;
 import jb.common.ExceptionReporter;
 import jb.plasma.ui.PlasmaPanel;
 
@@ -68,6 +69,11 @@ public abstract class Drawer implements Cloneable
     // of the list when its due-out time has passed)
     public void dataChanged(List<DepartureData> newData)
     {
+        List<DepartureData> filteredNewData = Queryable.from(newData)
+                .where(d -> d.Destination != null && !d.Destination.equals(""))
+                .toList();
+        newData.clear();
+        newData.addAll(filteredNewData);
         DepartureData = newData;
     }
 

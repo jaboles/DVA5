@@ -3,6 +3,7 @@ package jb.plasma.announcers;
 import java.util.Calendar;
 import jb.dva.SoundLibrary;
 import jb.plasma.DepartureData;
+import jb.plasma.Phraser;
 
 public class NswCountry extends CityrailStandard
 {
@@ -13,9 +14,9 @@ public class NswCountry extends CityrailStandard
 
     public String createAnnouncementText(DepartureData d, int minutesToDeparture)
     {
-        loadSubstitutions();
+        Phraser phraser = new Phraser();
         String[] stops = d.Stops.clone();
-        doSubstitutions(stops);
+        phraser.doSubstitutions(stops, getSoundLibrary().getName());
 
         String s = getSoundLibrary().initialSoundName();
         s = s + " The train on platform";
