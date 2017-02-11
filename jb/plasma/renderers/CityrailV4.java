@@ -73,6 +73,6 @@ public abstract class CityrailV4 extends Cityrail
         double h = 0.06;
         double w = 0.20;
         fillRect(x, y, x + w, y + h, TextColor);
-        drawString(s, x + 0.01, y + h - 0.02, Color.white, TextBoxFont);
+        drawString(s, x + 0.01, y + h - 0.016, Color.white, TextBoxFont);
     }
 }
