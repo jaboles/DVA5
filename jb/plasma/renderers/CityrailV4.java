@@ -36,7 +36,7 @@ public abstract class CityrailV4 extends Cityrail
         DestinationFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.145));
         Destination2Font = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.05));
         PlatformDepartsLabelFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.04));
-        PlatformDepartsFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.12));
+        PlatformDepartsFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.115));
         PlatformDepartsFontSmall = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.1));
         MainFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.085));
         TextBoxFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.04));

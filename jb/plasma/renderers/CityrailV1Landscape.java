@@ -100,7 +100,9 @@ public class CityrailV1Landscape extends CityrailV1
             }
             drawString(d0.Destination,  0.21, 0.2, TextYellow, DestinationFont);
             if (isv11) {
-                drawString(d0.Destination2, 0.21, 0.265, TextYellow, Destination2Font);
+                if (d0.Destination2 != null) {
+                    drawString(d0.Destination2, 0.21, 0.265, TextYellow, Destination2Font);
+                }
                 drawString(d0.Type, 0.02, 0.265, TextWhite, TypeSmallFont);
             } else {
                 drawString(d0.Type, 0.21, 0.265, TextWhite, MainFont);

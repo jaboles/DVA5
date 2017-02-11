@@ -75,7 +75,9 @@ public class CityrailV2 extends Cityrail
         {
             d0 = data.get(0);
             drawString(d0.Destination, 0.02, 0.13, TextYellow, DestinationFont);
-            drawString(d0.Destination2, 0.02, 0.18, TextYellow, Destination2Font);
+            if (d0.Destination2 != null) {
+                drawString(d0.Destination2, 0.02, 0.18, TextYellow, Destination2Font);
+            }
             drawString(d0.Type, 0.02, 0.24, TextWhite, SmallFont);
             drawStringC("Departs", 0.125, 0.34, TextWhite, SmallFont);
             drawStringC(getDueOut(d0.DueOut).getValue1(), 0.125, 0.39, TextWhite, DueOutFont);

@@ -73,7 +73,9 @@ public class CityrailV4Secondary extends CityrailV4
                 destinationLeft = 0.16;
             }
             drawString(d.Destination, destinationLeft, y + 0.13, TextColor, DestinationFont);
-            drawString(d.Destination2, destinationLeft + 0.005, y + 0.19, TextColor, Destination2Font);
+            if (d.Destination2 != null) {
+                drawString(d.Destination2, destinationLeft + 0.005, y + 0.19, TextColor, Destination2Font);
+            }
 
             drawStringR(d.Platform, RightMargin, y + 0.17, OrangeTextColor, PlatformDepartsFontSmall);
             Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);
@@ -81,7 +83,7 @@ public class CityrailV4Secondary extends CityrailV4
             int m = dueOut.getValue1();
             dueOutString = Integer.toString(m) + " min";
             if (h > 0) {
-                dueOutString = Integer.toString(h) + " hr ";
+                dueOutString = Integer.toString(h) + " hr " + dueOutString;
             }
             drawStringR(dueOutString, RightMargin, y + 0.38, OrangeTextColor, PlatformDepartsFontSmall);
             drawMiniTextBox(LeftMargin, y + 0.24, Integer.toString(d.Cars) + " carriages");

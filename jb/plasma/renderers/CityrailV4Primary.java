@@ -57,7 +57,9 @@ public class CityrailV4Primary extends CityrailV4
                 departureLeft = 0.16;
             }
             drawString(d0.Destination, departureLeft, 0.25, TextColor, DestinationFont);
-            drawString(d0.Destination2, departureLeft + 0.005, 0.31, TextColor, Destination2Font);
+            if (d0.Destination2 != null) {
+                drawString(d0.Destination2, departureLeft + 0.005, 0.31, TextColor, Destination2Font);
+            }
 
             drawStringR(d0.Platform, RightMargin, 0.28, OrangeTextColor, PlatformDepartsFont);
             Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
@@ -65,7 +67,7 @@ public class CityrailV4Primary extends CityrailV4
             int m = dueOut.getValue1();
             dueOutString = Integer.toString(m) + " min";
             if (h > 0) {
-                dueOutString = Integer.toString(h) + " hr ";
+                dueOutString = Integer.toString(h) + " hr " + dueOutString;
             }
             drawStringR(dueOutString, RightMargin, 0.95, OrangeTextColor, PlatformDepartsFont);
             drawMiniTextBox(0.77, 0.39, Integer.toString(d0.Cars) + " carriages");
@@ -73,7 +75,7 @@ public class CityrailV4Primary extends CityrailV4
 
             // Scrolling list
             boolean shouldScroll = d0.Stops.length > 6;
-            g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.6 * width), height - round(0.35 * height));
+            g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.55 * width), height - round(0.35 * height));
             fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
             String[] stationList = d0.Stops;
             for (int i = 0; i < stationList.length; i++) {

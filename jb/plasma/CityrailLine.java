@@ -136,6 +136,7 @@ public class CityrailLine
                 return CityrailLine.BLUE_MOUNTAINS;
             case "Newcastle & Central Coast":
             case "Central Coast":
+            case "Central Coast & Newcastle":
                 return CityrailLine.NEWCASTLE_CENTRAL_COAST;
             case "South Coast":
                 return CityrailLine.SOUTH_COAST;
