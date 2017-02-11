@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Polygon;
 import java.util.List;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 
 public class CityrailV2 extends Cityrail

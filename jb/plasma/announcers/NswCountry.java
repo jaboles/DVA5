@@ -2,7 +2,7 @@ package jb.plasma.announcers;
 
 import java.util.Calendar;
 import jb.dva.SoundLibrary;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.Phraser;
 
 public class NswCountry extends CityrailStandard

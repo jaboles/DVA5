@@ -7,8 +7,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.Drawer;
+import jb.plasma.data.IDepartureDataSource;
 
 public class PlasmaPanel extends JPanel
 {
@@ -26,10 +27,10 @@ public class PlasmaPanel extends JPanel
     private Image buf = null;
     private Graphics bg = null;
 
-    public PlasmaPanel(Drawer drawer, List<DepartureData> data) {
+    public PlasmaPanel(Drawer drawer, IDepartureDataSource dataSource) {
         this.drawer = drawer;
         setDoubleBuffered(true);
-        drawer.dataChanged(data);
+        drawer.dataChanged(dataSource.getDepartureData());
         new Timer(1000 / FPS, repaintAction).start();
         /*
         if (mouseDebug)

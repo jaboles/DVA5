@@ -40,7 +40,7 @@ import jb.dvacommon.ProgressAdapter;
 import jb.common.ui.ProgressWindow;
 import jb.dvacommon.Settings;
 import jb.plasma.Announcer;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.Drawer;
 import jb.plasma.Generator;
 import jb.plasma.IndicatorSettings;
@@ -51,6 +51,8 @@ import jb.plasma.TimetableManager;
 import jb.plasma.TimetableTranslator;
 import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
+import jb.plasma.data.IDepartureDataSource;
+import jb.plasma.data.TimetableDepartureDataSource;
 import jb.plasma.renderers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +62,7 @@ import org.swixml.XVBox;
 
 // The main CityRail Indicators application. It is usually hosted inside the DVA application, but
 // can exist outside of it, which is used by the screen saver mode.
-public class PlasmaUI
+public class PlasmaUI implements IDepartureDataSource
 {
     public class Mode
     {
@@ -75,6 +77,7 @@ public class PlasmaUI
     private String settingsKey;
     private PlasmaSession session;
     private TimetableManager timetableManager;
+    private IDepartureDataSource dataSource;
 
     private JPanel panel;
     public JTabbedPane tabbedPane;
@@ -83,7 +86,6 @@ public class PlasmaUI
     public XVBox departuresList;
     private DeparturePanel[] departurePanels = new DeparturePanel[3];
     public JButton playStopButton;
-    private List<DepartureData> departureData = new LinkedList<>();
 
     public JBComboBox<Timetable> timetable;
     public JBComboBox<String> scheduleLine;
@@ -259,34 +261,41 @@ public class PlasmaUI
         tabbedPane.setSelectedIndex(i);
     }
 
-    private List<DepartureData> getDepartureData()
+    @Override
+    public void notifyDeparture() {
+        for (int i = 0; i < departurePanels.length - 1; i++) {
+            departurePanels[i].setData(departurePanels[i + 1].getData());
+        }
+        if (dataSource != null){
+            dataSource.notifyDeparture();
+            List<DepartureData> departureData = dataSource.getDepartureData();
+            if (departureData.size() > 2) {
+                departurePanels[departurePanels.length - 1].setData(departureData.get(2));
+                return;
+            }
+        }
+        departurePanels[departurePanels.length - 1].setData(new DepartureData());
+    }
+
+    public List<DepartureData> getDepartureData()
     {
         // If 'manual', get the departure data from what's been entered in the
         // panels.
         // Otherwise ('auto'), use the timetable.
-        List<DepartureData> dd = null;
-        if (tabbedPane.getSelectedIndex() == 0) {
-            try {
-                dd = new LinkedList<>();
-                for (int i = 0; i < departurePanels.length; i++) {
-                    if (i >= dd.size()) {
-                        dd.add(new DepartureData());
-                    }
-                    dd.set(i, departurePanels[i].getData());
+        if (dataSource != null) {
+            return dataSource.getDepartureData();
+        }
+        List<DepartureData> dd = new LinkedList<>();
+        try {
+            for (int i = 0; i < departurePanels.length; i++) {
+                if (i >= dd.size()) {
+                    dd.add(new DepartureData());
                 }
-            } catch (IndexOutOfBoundsException ex) {
-                JOptionPane.showMessageDialog(null,
-                        "IndexOutOfBoundsException, check entered departure times are valid.");
+                dd.set(i, departurePanels[i].getData());
             }
-        } else {
-            try {
-                dd = getActiveTimetable().getDepartureDataForStation(
-                        (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
-                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(),
-                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue());
-            } catch (Exception e) {
-                jb.common.ExceptionReporter.reportException(e);
-            }
+        } catch (IndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(null,
+                    "IndexOutOfBoundsException, check entered departure times are valid.");
         }
         return dd;
     }
@@ -298,9 +307,6 @@ public class PlasmaUI
     // on an event (e.g. when running as an actual screen saver).
     public List<PlasmaWindow> showIndicatorBoard(PlasmaWindow.Mode mode, Dimension size)
     {
-        departureData = getDepartureData();
-        if (departureData == null) return null;
-
         // Get all graphics devices (screens) and if set to run in full screen,
         // ensure there are enough.
         int maxScreens;
@@ -334,7 +340,7 @@ public class PlasmaUI
             try {
                 d = (Drawer) (rendererComboBox.getItemAt(rendererComboBox.getSelectedIndex())).clone();
                 drawers.add(d);
-                PlasmaPanel p = new PlasmaPanel(d, departureData);
+                PlasmaPanel p = new PlasmaPanel(d, dataSource);
                 PlasmaWindow w = new PlasmaWindow(this, mode, i, d.toString(), size, d.getAspectRatio(), new ProportionalPanel(d
                         .getAspectRatio(), p));
                 w.paint(w.getGraphics());
@@ -367,7 +373,7 @@ public class PlasmaUI
                 announce = this::announce;
             }
         }
-        session = new PlasmaSession(windows, announce, departureData, drawers, announcementTimes);
+        session = new PlasmaSession(windows, announce, dataSource, drawers, announcementTimes);
         return windows;
     }
 
@@ -381,6 +387,7 @@ public class PlasmaUI
     
     public void announce()
     {
+        List<DepartureData> departureData = getDepartureData();
         if (departureData != null && departureData.size() > 0)
         {
             Player player = null;
@@ -548,7 +555,6 @@ public class PlasmaUI
     public Action announceAction = new AbstractAction("Play", new ImageIcon(PlasmaUI.class.getResource("/toolbarButtonGraphics/media/Play24.gif"))) {
         public void actionPerformed(ActionEvent e)
         {
-            departureData = getDepartureData();
             announce();
         }
     };
@@ -567,19 +573,10 @@ public class PlasmaUI
     public Action promoteDepartures = new AbstractAction("Shift Departures Upwards") {
         public void actionPerformed(ActionEvent e)
         {
-            if (session != null) {
-                session.trainDeparted();
-            } else if (departureData != null && departureData.size() > 0) {
-                departureData.remove(0);
-            }
-            for (int i = 0; i < departurePanels.length - 1; i++) {
-                departurePanels[i].setData(departurePanels[i + 1].getData());
-            }
-            if (departureData != null && departureData.size() > 2) {
-                departurePanels[departurePanels.length - 1].setData(departureData.get(2));
-            } else {
-                departurePanels[departurePanels.length - 1].setData(new DepartureData());
-            }
+            logger.debug("Reached the departure time -- dequeuing first DepartureData");
+            notifyDeparture();
+            if (session !=null)
+                session.dataChanged();
         }
     };
 
@@ -588,10 +585,12 @@ public class PlasmaUI
         public void actionPerformed(ActionEvent e)
         {
             try {
-                departureData = getActiveTimetable().getDepartureDataForStation(
+                dataSource = new TimetableDepartureDataSource(
+                        (Timetable)timetableManager.getSelectedItem(),
                         (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
                         (String) scheduleStation.getSelectedItem(), Calendar.getInstance(),
                         (Integer) platformValue.getValue(), (Integer) carsValue.getValue());
+                List<DepartureData> departureData = dataSource.getDepartureData();
                 for (int i = 0; i < departurePanels.length; i++) {
                     if (departureData.size() > i) {
                         departurePanels[i].setData(departureData.get(i));

@@ -9,7 +9,7 @@ import java.awt.Stroke;
 import java.util.List;
 import org.javatuples.Pair;
 import jb.plasma.CityrailLine;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 
 public class CityrailV3Primary extends CityrailV3

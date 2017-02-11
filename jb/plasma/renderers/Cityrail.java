@@ -8,7 +8,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import org.javatuples.Pair;
 import jb.common.ExceptionReporter;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.Drawer;
 import jb.plasma.ui.PlasmaPanel;
 

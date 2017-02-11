@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.innahema.collections.query.queriables.Queryable;
 import jb.common.ExceptionReporter;
+import jb.plasma.data.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 
 // Abstract renderer class
@@ -16,7 +17,7 @@ public abstract class Drawer implements Cloneable
     protected double realFPSAdjustment;
     private long lastFrame = 0;
     
-    protected List<DepartureData> DepartureData;
+    protected List<jb.plasma.data.DepartureData> DepartureData;
 
     // Aspect ratios
     protected static Dimension LANDSCAPE_43 = new Dimension(4, 3);

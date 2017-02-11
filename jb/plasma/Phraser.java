@@ -6,6 +6,7 @@ import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.StringUtilities;
 import jb.plasma.announcers.CityrailStandard;
+import jb.plasma.data.DepartureData;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 

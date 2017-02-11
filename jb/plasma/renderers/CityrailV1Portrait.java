@@ -3,7 +3,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.Date;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 
 public class CityrailV1Portrait extends CityrailV1

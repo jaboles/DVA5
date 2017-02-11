@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -24,9 +25,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
+
+import jb.plasma.data.IDepartureDataSource;
+import jb.plasma.data.TestDepartureDataSource;
 import org.swixml.SwingEngine;
 import jb.common.ui.ProportionalPanel;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.Drawer;
 import jb.plasma.renderers.CityrailV3Secondary;
 
@@ -236,7 +240,7 @@ public class PlasmaWindow extends JFrame
         };
 
         Drawer dr = new CityrailV3Secondary();
-        PlasmaPanel p = new PlasmaPanel(dr, Arrays.asList(dd));
+        PlasmaPanel p = new PlasmaPanel(dr, new TestDepartureDataSource(Arrays.asList(dd)));
         new PlasmaWindow(null, PlasmaWindow.Mode.FULLSCREEN, 0, dr.toString(), null, dr.getAspectRatio(), new ProportionalPanel(dr.getAspectRatio(), p)).setVisible(true);
     }
 }

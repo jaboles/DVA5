@@ -22,7 +22,7 @@ import jb.dvacommon.ui.DVATextArea;
 import jb.dvacommon.ui.DVATextField;
 import jb.dvacommon.ui.FileTextField;
 import jb.plasma.CityrailLine;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import org.swixml.SwingEngine;
 
 // Panel for editing a train departure.

@@ -13,7 +13,7 @@ import jb.common.RangeFactory;
 import jb.common.Utilities;
 import jb.dva.Script;
 import jb.plasma.CityrailLine;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import jb.plasma.IndicatorSettings;
 import jb.plasma.ui.PlasmaUI;
 

@@ -1,4 +1,4 @@
-package jb.plasma;
+package jb.plasma.data;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

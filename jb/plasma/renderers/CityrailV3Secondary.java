@@ -2,7 +2,7 @@ package jb.plasma.renderers;
 import java.awt.*;
 import java.util.List;
 import jb.plasma.CityrailLine;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import org.javatuples.Pair;
 
 public class CityrailV3Secondary extends CityrailV3

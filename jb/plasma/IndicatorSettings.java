@@ -1,4 +1,6 @@
 package jb.plasma;
+import jb.plasma.data.DepartureData;
+
 import java.util.List;
 
 // Class used to store settings on the Indicators page for saving/loading

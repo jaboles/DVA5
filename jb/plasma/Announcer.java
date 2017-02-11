@@ -2,6 +2,7 @@ package jb.plasma;
 
 import jb.dva.Script;
 import jb.dva.SoundLibrary;
+import jb.plasma.data.DepartureData;
 
 public abstract class Announcer
 {

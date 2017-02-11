@@ -1,18 +1,13 @@
 package jb.plasma;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import jb.common.IntPair;
-import jb.common.ObjectCache;
+import jb.plasma.data.DepartureData;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +104,7 @@ public class TimetableTranslator
     // Picks out a list of train departures given a line, direction, station,
     // and time.
     public List<DepartureData> getDepartureDataForStation(String lineName, String directionName, String stationName,
-            Calendar afterTime, int platform, int cars) throws Exception
+                                                          Calendar afterTime, int platform, int cars) throws Exception
     {
         List<DepartureData> dd = new LinkedList<>();
         TimetableLineSchedule sched = tt.lines.get(lineName).directions.get(directionName);

@@ -1,7 +1,7 @@
 package jb.plasma.renderers;
 
 import jb.plasma.CityrailLine;
-import jb.plasma.DepartureData;
+import jb.plasma.data.DepartureData;
 import org.javatuples.Pair;
 
 import java.awt.*;
