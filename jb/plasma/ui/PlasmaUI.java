@@ -269,8 +269,8 @@ public class PlasmaUI implements IDepartureDataSource
         if (dataSource != null){
             dataSource.notifyDeparture();
             List<DepartureData> departureData = dataSource.getDepartureData();
-            if (departureData.size() > 2) {
-                departurePanels[departurePanels.length - 1].setData(departureData.get(2));
+            if (departureData.size() >= departurePanels.length) {
+                departurePanels[departurePanels.length - 1].setData(departureData.get(departurePanels.length - 1));
                 return;
             }
         }
@@ -282,9 +282,6 @@ public class PlasmaUI implements IDepartureDataSource
         // If 'manual', get the departure data from what's been entered in the
         // panels.
         // Otherwise ('auto'), use the timetable.
-        if (dataSource != null) {
-            return dataSource.getDepartureData();
-        }
         List<DepartureData> dd = new LinkedList<>();
         try {
             for (int i = 0; i < departurePanels.length; i++) {
@@ -297,9 +294,12 @@ public class PlasmaUI implements IDepartureDataSource
             JOptionPane.showMessageDialog(null,
                     "IndexOutOfBoundsException, check entered departure times are valid.");
         }
+        if (dataSource != null) {
+            dd.addAll(dataSource.getDepartureData());
+        }
         return dd;
     }
-    
+
     // Show the indicator board, specifying whether to run in full screen,
     // whether to close the
     // indicator windows on an event (e.g. screen saver 'preview', and whether
@@ -331,6 +331,13 @@ public class PlasmaUI implements IDepartureDataSource
         // Create a window for each renderer selected for use
         List<Drawer> drawers = new LinkedList<>();
         List<PlasmaWindow> windows = new LinkedList<>();
+        IDepartureDataSource dataSource;
+        updateDataSource();
+        if (tabbedPane.getSelectedIndex() == 0) {
+            dataSource = this;
+        } else {
+            dataSource = this.dataSource;
+        }
         for (int i = 0; i < maxScreens; i++) {
             JComboBox<Drawer> rendererComboBox = rendererComboBoxes.get(i);
             if (rendererComboBox.getSelectedItem() instanceof NullDrawer)
@@ -446,6 +453,21 @@ public class PlasmaUI implements IDepartureDataSource
     private TimetableTranslator getActiveTimetable()
     {
         return new TimetableTranslator((Timetable)timetableManager.getSelectedItem());
+    }
+
+    private void updateDataSource()
+    {
+        try {
+            if (tabbedPane.getSelectedIndex() == 1) {
+                this.dataSource = new TimetableDepartureDataSource(
+                        (Timetable) timetableManager.getSelectedItem(),
+                        (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
+                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(),
+                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue());
+            }
+        } catch (Exception e) {
+            ExceptionReporter.reportException(e);
+        }
     }
 
     // Get the indicator settings entered into the panels as an
@@ -585,11 +607,7 @@ public class PlasmaUI implements IDepartureDataSource
         public void actionPerformed(ActionEvent e)
         {
             try {
-                dataSource = new TimetableDepartureDataSource(
-                        (Timetable)timetableManager.getSelectedItem(),
-                        (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
-                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(),
-                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue());
+                updateDataSource();
                 List<DepartureData> departureData = dataSource.getDepartureData();
                 for (int i = 0; i < departurePanels.length; i++) {
                     if (departureData.size() > i) {
