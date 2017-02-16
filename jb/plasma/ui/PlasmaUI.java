@@ -39,20 +39,15 @@ import jb.dvacommon.DVA;
 import jb.dvacommon.ProgressAdapter;
 import jb.common.ui.ProgressWindow;
 import jb.dvacommon.Settings;
-import jb.plasma.Announcer;
+import jb.plasma.*;
 import jb.plasma.data.DepartureData;
-import jb.plasma.Drawer;
-import jb.plasma.Generator;
-import jb.plasma.IndicatorSettings;
-import jb.plasma.NullDrawer;
-import jb.plasma.PlasmaSession;
 import jb.plasma.Timetable;
 import jb.plasma.TimetableManager;
-import jb.plasma.TimetableTranslator;
+import jb.plasma.data.IDepartureDataSource;
+import jb.plasma.timetable.TimetableTranslator;
 import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
-import jb.plasma.data.IDepartureDataSource;
-import jb.plasma.data.TimetableDepartureDataSource;
+import jb.plasma.timetable.TimetableDepartureDataSource;
 import jb.plasma.renderers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,9 +83,9 @@ public class PlasmaUI implements IDepartureDataSource
     public JButton playStopButton;
 
     public JBComboBox<Timetable> timetable;
-    public JBComboBox<String> scheduleLine;
-    public JBComboBox<String> scheduleDirection;
-    public JBComboBox<String> scheduleStation;
+    public JBComboBox<String> timetableLine;
+    public JBComboBox<String> timetableDirection;
+    public JBComboBox<String> timetableStation;
     public JSpinner carsValue;
     public JSpinner platformValue;
 
@@ -181,30 +176,30 @@ public class PlasmaUI implements IDepartureDataSource
 
             // When the timetable is changed, update the list of lines
             timetable.addActionListener(e -> {
-                TimetableTranslator tt = getActiveTimetable();
+                IScheduleTranslator tt = getActiveSchedule();
 
-                scheduleLine.replaceItems(tt.getLines());
+                timetableLine.replaceItems(tt.getLines());
             });
 
             // When the line is changed, update the list of directions and
             // stations
-            scheduleLine.addActionListener(e -> {
-                TimetableTranslator tt = getActiveTimetable();
+            timetableLine.addActionListener(e -> {
+                IScheduleTranslator tt = getActiveSchedule();
 
-                String line = (String) scheduleLine.getSelectedItem();
+                String line = (String) timetableLine.getSelectedItem();
                 if (line != null) {
-                    scheduleDirection.replaceItems(tt.getDirectionsForLine(line));
+                    timetableDirection.replaceItems(tt.getDirectionsForLine(line));
                 }
             });
 
             // When the direction is changed, update the list of stations
-            scheduleDirection.addActionListener(e -> {
-                TimetableTranslator tt = getActiveTimetable();
+            timetableDirection.addActionListener(e -> {
+                IScheduleTranslator tt = getActiveSchedule();
 
-                String line = (String) scheduleLine.getSelectedItem();
-                String direction = (String) scheduleDirection.getSelectedItem();
+                String line = (String) timetableLine.getSelectedItem();
+                String direction = (String) timetableDirection.getSelectedItem();
                 if (line != null && direction != null) {
-                    scheduleStation.replaceItems(tt.getStationsForLineAndDirection(line, direction));
+                    timetableStation.replaceItems(tt.getStationsForLineAndDirection(line, direction));
                 }
             });
 
@@ -282,7 +277,12 @@ public class PlasmaUI implements IDepartureDataSource
         // If 'manual', get the departure data from what's been entered in the
         // panels.
         // Otherwise ('auto'), use the timetable.
-        List<DepartureData> dd = new LinkedList<>();
+        List<DepartureData> dd;
+        if (dataSource != null) {
+            dd = dataSource.getDepartureData();
+        } else {
+            dd = new LinkedList<>();
+        }
         try {
             for (int i = 0; i < departurePanels.length; i++) {
                 if (i >= dd.size()) {
@@ -293,9 +293,6 @@ public class PlasmaUI implements IDepartureDataSource
         } catch (IndexOutOfBoundsException ex) {
             JOptionPane.showMessageDialog(null,
                     "IndexOutOfBoundsException, check entered departure times are valid.");
-        }
-        if (dataSource != null) {
-            dd.addAll(dataSource.getDepartureData());
         }
         return dd;
     }
@@ -335,8 +332,10 @@ public class PlasmaUI implements IDepartureDataSource
         updateDataSource();
         if (tabbedPane.getSelectedIndex() == 0) {
             dataSource = this;
+            logger.info("Using UI as data source. (data source object null: {})", dataSource == null);
         } else {
             dataSource = this.dataSource;
+            logger.info("Using data source object (null: {}) as data source", dataSource == null);
         }
         for (int i = 0; i < maxScreens; i++) {
             JComboBox<Drawer> rendererComboBox = rendererComboBoxes.get(i);
@@ -450,7 +449,7 @@ public class PlasmaUI implements IDepartureDataSource
         }        
     }
 
-    private TimetableTranslator getActiveTimetable()
+    private IScheduleTranslator getActiveSchedule()
     {
         return new TimetableTranslator((Timetable)timetableManager.getSelectedItem());
     }
@@ -460,9 +459,9 @@ public class PlasmaUI implements IDepartureDataSource
         try {
             if (tabbedPane.getSelectedIndex() == 1) {
                 this.dataSource = new TimetableDepartureDataSource(
-                        (Timetable) timetableManager.getSelectedItem(),
-                        (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
-                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(),
+                        (Timetable) timetable.getSelectedItem(),
+                        (String) timetableLine.getSelectedItem(), (String) timetableDirection.getSelectedItem(),
+                        (String) timetableStation.getSelectedItem(), Calendar.getInstance(),
                         (Integer) platformValue.getValue(), (Integer) carsValue.getValue());
             }
         } catch (Exception e) {
@@ -490,9 +489,9 @@ public class PlasmaUI implements IDepartureDataSource
                 dva != null ? ((Announcer) playAnnouncementVoiceCombobox.getSelectedItem()).getName() : null,
                 coalesceStationSequencesCheckbox.isSelected(),
                 data,
-                scheduleLine.getSelectedItem().toString(),
-                scheduleDirection.getSelectedItem().toString(),
-                scheduleStation.getSelectedItem().toString(),
+                timetableLine.getSelectedItem().toString(),
+                timetableDirection.getSelectedItem().toString(),
+                timetableStation.getSelectedItem().toString(),
                 (Integer) platformValue.getValue(),
                 (Integer) carsValue.getValue());
     }
@@ -526,19 +525,19 @@ public class PlasmaUI implements IDepartureDataSource
             departurePanels[i].setData(settings.getDepartureData().get(i));
         }
 
-        for (int i = 0; i < scheduleLine.getItemCount(); i++)
-            if (scheduleLine.getItemAt(i).equals(settings.getLine())) {
-                scheduleLine.setSelectedIndex(i);
+        for (int i = 0; i < timetableLine.getItemCount(); i++)
+            if (timetableLine.getItemAt(i).equals(settings.getLine())) {
+                timetableLine.setSelectedIndex(i);
                 break;
             }
-        for (int i = 0; i < scheduleDirection.getItemCount(); i++)
-            if (scheduleDirection.getItemAt(i).equals(settings.getDirection())) {
-                scheduleDirection.setSelectedIndex(i);
+        for (int i = 0; i < timetableDirection.getItemCount(); i++)
+            if (timetableDirection.getItemAt(i).equals(settings.getDirection())) {
+                timetableDirection.setSelectedIndex(i);
                 break;
             }
-        for (int i = 0; i < scheduleStation.getItemCount(); i++)
-            if (scheduleStation.getItemAt(i).equals(settings.getStation())) {
-                scheduleStation.setSelectedIndex(i);
+        for (int i = 0; i < timetableStation.getItemCount(); i++)
+            if (timetableStation.getItemAt(i).equals(settings.getStation())) {
+                timetableStation.setSelectedIndex(i);
                 break;
             }
         platformValue.setValue(settings.getPlatform());
@@ -652,7 +651,7 @@ public class PlasmaUI implements IDepartureDataSource
             newName += new SimpleDateFormat(" (MMM yyyy)").format(Calendar.getInstance().getTime());
             List<String> existingNames = new LinkedList<>();
             for (int i = 0; i < timetableManager.getSize(); i++) {
-                existingNames.add(timetableManager.getElementAt(i).getName());
+                existingNames.add(((Timetable)timetableManager.getElementAt(i)).getName());
             }
             DownloadTimetableDialog d = new DownloadTimetableDialog(newName, activeTimetable.type, existingNames);
             if (d.accepted()) {
@@ -689,6 +688,9 @@ public class PlasmaUI implements IDepartureDataSource
 
     public Action deleteTimetableAction = new AbstractAction("Delete timetable") {
         public void actionPerformed(ActionEvent e) {
+            // Only work on downloaded timetables, not realtime
+            if (!(timetableManager.getSelectedItem() instanceof Timetable)) return;
+
             Timetable activeTimetable = (Timetable)timetableManager.getSelectedItem();
             timetableManager.deleteTimetable(activeTimetable);
         }

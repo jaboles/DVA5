@@ -16,7 +16,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -26,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
-import jb.plasma.data.IDepartureDataSource;
 import jb.plasma.data.TestDepartureDataSource;
 import org.swixml.SwingEngine;
 import jb.common.ui.ProportionalPanel;

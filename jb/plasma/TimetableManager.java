@@ -1,7 +1,7 @@
 package jb.plasma;
 
 import jb.common.ObjectCache;
-import jb.common.Utilities;
+import jb.plasma.timetable.TimetableTranslator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public class TimetableManager extends DefaultComboBoxModel<Timetable>
             String name = e.getName();
             if (name.toLowerCase().endsWith(".tt")) {
                 loadFrom(Integer.toString((DVA.VersionString + name).hashCode()),
-                    TimetableManager.class.getResourceAsStream("/" + name));
+                        TimetableManager.class.getResourceAsStream("/" + name));
             }
         }
 

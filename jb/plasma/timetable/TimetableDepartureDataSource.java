@@ -1,10 +1,12 @@
-package jb.plasma.data;
+package jb.plasma.timetable;
 
 import jb.common.IntPair;
 import jb.plasma.CityrailLine;
 import jb.plasma.Phraser;
 import jb.plasma.Timetable;
 import jb.plasma.TimetableLineSchedule;
+import jb.plasma.data.DepartureData;
+import jb.plasma.data.IDepartureDataSource;
 
 import java.util.Calendar;
 import java.util.LinkedList;

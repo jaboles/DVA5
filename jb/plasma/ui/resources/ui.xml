@@ -31,11 +31,11 @@
                         </hbox>
                     </panel>
                     <label text="Select line:"/>
-                    <jbcombobox id="scheduleLine" size="400,10"/>
+                    <jbcombobox id="timetableLine" size="400,10"/>
                     <label text="Select direction:"/>
-                    <jbcombobox id="scheduleDirection" size="400,10" />
+                    <jbcombobox id="timetableDirection" size="400,10" />
                     <label text="Select station:"/>
-                    <jbcombobox id="scheduleStation" size="400,10" />
+                    <jbcombobox id="timetableStation" size="400,10" />
                     <label text=" "/>
                 </panel>
                 <hbox>
@@ -50,6 +50,18 @@
                 </panel>
                 <panel layout="FlowLayout(FlowLayout.CENTER)">
                     <button action="loadManualFromTimetable"/>
+                </panel>
+            </vbox>
+        </panel>
+        <panel name="Real-time" layout="FlowLayout">
+            <vbox>
+                <panel constraints="BorderLayout.NORTH" layout="GridLayout(6,1,5,2)" border="EmptyBorder(0,0,0,2)">
+                    <label text="Select line:"/>
+                    <jbcombobox id="realtimeLine" size="400,10"/>
+                    <label text="Select direction:"/>
+                    <jbcombobox id="realtimeDirection" size="400,10" />
+                    <label text="Select station:"/>
+                    <jbcombobox id="realtimeStation" size="400,10" />
                 </panel>
             </vbox>
         </panel>

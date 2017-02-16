@@ -4,10 +4,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionListener;
-import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import jb.plasma.data.DepartureData;
+
 import jb.plasma.Drawer;
 import jb.plasma.data.IDepartureDataSource;
 

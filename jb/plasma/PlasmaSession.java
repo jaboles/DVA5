@@ -69,7 +69,7 @@ public class PlasmaSession
                 // If due-out time has passed, pop off the first entry in the list and notify the renderers
                 if (data.get(0).DueOut.compareTo(now) < 0)
                 {
-                    logger.debug("Reached the departure time -- dequeuing first DepartureData");
+                    logger.info("Reached the departure time -- dequeuing first DepartureData");
                     dataSource.notifyDeparture();
                     dataChanged();
                 }
