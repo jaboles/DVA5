@@ -17,6 +17,7 @@ public class CityrailLine
     public Color TextColor;
     public String LogoImageFilename;
     public List<CityrailLine> Continuations;
+    public String RealtimeId;
 
     public static CityrailLine NORTHERN;
     public static CityrailLine NORTH_SHORE;
@@ -51,22 +52,22 @@ public class CityrailLine
 
     static
     {
-        NORTHERN = new CityrailLine("Northern Line", red, Color.white, "T1.png");
-        NORTH_SHORE = new CityrailLine("North Shore Line", yellow, Color.black, "T1.png");
-        WESTERN = new CityrailLine("Western Line", yellow, Color.black, "T1.png");
-        AIRPORT_EAST_HILLS = new CityrailLine("Airport & East Hills Line", green, Color.white, "T2.png");
-        SOUTH = new CityrailLine("South Line", lightBlue, Color.black, "T2.png");
-        INNER_WEST = new CityrailLine("Inner West Line", lightPurple, Color.white, "T2.png");
-        BANKSTOWN = new CityrailLine("Bankstown Line", brown, Color.black, "T3.png");
-        EASTERN_SUBURBS_ILLAWARRA = new CityrailLine("Eastern Suburbs & Illawarra Line", blue, Color.white, "T4.png");
-        CUMBERLAND = new CityrailLine("Cumberland Line", pink, Color.white, "T5.png");
-        CARLINGFORD = new CityrailLine("Carlingford Line", darkBlue, Color.white, "T6.png");
-        OLYMPIC_PARK = new CityrailLine("Olympic Park Line", grey, Color.white, "T7.png");
-        BLUE_MOUNTAINS = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, null);
-        NEWCASTLE_CENTRAL_COAST = new CityrailLine("Newcastle & Central Coast Line", grey, red, Color.white, null);
-        SOUTH_COAST = new CityrailLine("South Coast Line", grey, blue, Color.white, null);
-        SOUTHERN_HIGHLANDS = new CityrailLine("Southern Highlands Line", grey, green, Color.white, null);
-        HUNTER = new CityrailLine("Hunter Line", grey, darkRed, Color.white, null);
+        NORTHERN = new CityrailLine("Northern Line", red, Color.white, "T1.png", "nta");
+        NORTH_SHORE = new CityrailLine("North Shore Line", yellow, Color.black, "T1.png", "ns");
+        WESTERN = new CityrailLine("Western Line", yellow, Color.black, "T1.png", "wt");
+        AIRPORT_EAST_HILLS = new CityrailLine("Airport & East Hills Line", green, Color.white, "T2.png", "eh");
+        SOUTH = new CityrailLine("South Line", lightBlue, Color.black, "T2.png", "st");
+        INNER_WEST = new CityrailLine("Inner West Line", lightPurple, Color.white, "T2.png", "iw");
+        BANKSTOWN = new CityrailLine("Bankstown Line", brown, Color.black, "T3.png", "bk");
+        EASTERN_SUBURBS_ILLAWARRA = new CityrailLine("Eastern Suburbs & Illawarra Line", blue, Color.white, "T4.png", "il");
+        CUMBERLAND = new CityrailLine("Cumberland Line", pink, Color.white, "T5.png", null);
+        CARLINGFORD = new CityrailLine("Carlingford Line", darkBlue, Color.white, "T6.png", null);
+        OLYMPIC_PARK = new CityrailLine("Olympic Park Line", grey, Color.white, "T7.png", null);
+        BLUE_MOUNTAINS = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, null, "bm");
+        NEWCASTLE_CENTRAL_COAST = new CityrailLine("Newcastle & Central Coast Line", grey, red, Color.white, null, "nc");
+        SOUTH_COAST = new CityrailLine("South Coast Line", grey, blue, Color.white, null, "sc");
+        SOUTHERN_HIGHLANDS = new CityrailLine("Southern Highlands Line", grey, green, Color.white, null, null);
+        HUNTER = new CityrailLine("Hunter Line", grey, darkRed, Color.white, null, null);
 
         CityrailLine[] lines = new CityrailLine[] {
                 NORTHERN, NORTH_SHORE, WESTERN, AIRPORT_EAST_HILLS, SOUTH, INNER_WEST, BANKSTOWN, EASTERN_SUBURBS_ILLAWARRA,
@@ -78,22 +79,24 @@ public class CityrailLine
         }
     }
 
-    public CityrailLine(String name, Color color1, Color color2, Color textColor, String logoImageFilename)
+    public CityrailLine(String name, Color color1, Color color2, Color textColor, String logoImageFilename, String realtimeId)
     {
         this.Name = name;
         this.Color1 = color1;
         this.Color2 = color2;
         this.TextColor = textColor;
         this.LogoImageFilename = logoImageFilename;
+        this.RealtimeId = realtimeId;
     }
 
-    public CityrailLine(String name, Color color, Color textColor, String logoImageFilename)
+    public CityrailLine(String name, Color color, Color textColor, String logoImageFilename, String realtimeId)
     {
         this.Name = name;
         this.Color1 = color;
         this.Color2 = color;
         this.TextColor = textColor;
         this.LogoImageFilename = logoImageFilename;
+        this.RealtimeId = realtimeId;
     }
 
     public void addContinuation(CityrailLine line)

@@ -1,5 +1,6 @@
 package jb.plasma.realtime;
 
+import jb.plasma.CityrailLine;
 import jb.plasma.data.IDepartureDataSource;
 import jb.plasma.IScheduleTranslator;
 import jb.plasma.data.DepartureData;
@@ -21,12 +22,12 @@ public class RealtimeTranslator implements IScheduleTranslator, IDepartureDataSo
 
     @Override
     public String[] getLines() {
-        return new String[0];
+        return CityrailLine.allLineNames.toArray(new String[0]);
     }
 
     @Override
     public String[] getDirectionsForLine(String lineName) {
-        return new String[0];
+        return new String[] {"up", "down"};
     }
 
     @Override

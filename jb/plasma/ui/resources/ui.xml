@@ -6,8 +6,7 @@
     <tabbedpane id="tabbedPane" constraints="BorderLayout.CENTER">
 		<panel name="Manual" layout="FlowLayout">
             <hbox>
-                <vbox id="departuresList" />
-                <label text=" "/>
+                <vbox id="departuresPanelHolder" />
                 <vbox>
                     <panel layout="BorderLayout">
                         <button constraints="BorderLayout.NORTH" id="playStopButton" action="announceAction"/>
@@ -53,7 +52,7 @@
                 </panel>
             </vbox>
         </panel>
-        <panel name="Real-time" layout="FlowLayout">
+        <!--<panel name="Real-time" layout="FlowLayout">
             <vbox>
                 <panel constraints="BorderLayout.NORTH" layout="GridLayout(6,1,5,2)" border="EmptyBorder(0,0,0,2)">
                     <label text="Select line:"/>
@@ -64,7 +63,7 @@
                     <jbcombobox id="realtimeStation" size="400,10" />
                 </panel>
             </vbox>
-        </panel>
+        </panel>-->
     </tabbedpane>
 	<panel constraints="BorderLayout.SOUTH">
 		<separator constraints="BorderLayout.NORTH"/>

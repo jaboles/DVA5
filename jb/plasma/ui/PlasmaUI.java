@@ -21,11 +21,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 import jb.common.ExceptionReporter;
 import jb.common.sound.Player;
@@ -66,7 +64,6 @@ public class PlasmaUI implements IDepartureDataSource
         public static final int SCREENSAVER_PREVIEW = 2;
     }
     
-    private static String[] departurePanelTitles = new String[] { "Next Train:", "2nd Train:", "3rd Train:" };
     final static Logger logger = LoggerFactory.getLogger(PlasmaUI.class);
     private DVA dva;
     private String settingsKey;
@@ -78,8 +75,8 @@ public class PlasmaUI implements IDepartureDataSource
     public JTabbedPane tabbedPane;
 
     public JButton promoteDeparturesButton;
-    public XVBox departuresList;
-    private DeparturePanel[] departurePanels = new DeparturePanel[3];
+    public XVBox departuresPanelHolder;
+    public DeparturesPanel departuresPanel;
     public JButton playStopButton;
 
     public JBComboBox<Timetable> timetable;
@@ -155,20 +152,8 @@ public class PlasmaUI implements IDepartureDataSource
                 playAnnouncementVoiceCombobox.setSelectedIndex(0);
             }
 
-            // Add the DeparturePanels, currently 3 for use with Cityrail
-            // indicators.
-            for (int i = 0; i < departurePanels.length; i++) {
-                departurePanels[i] = new DeparturePanel(departurePanelTitles[i],
-                    dva,
-                    dva != null ? ((Announcer) playAnnouncementVoiceCombobox.getSelectedItem()).getSoundLibrary().getName() : null);
-
-                if (i >= 1) {
-                    JSeparator separator = new JSeparator();
-                    separator.setBorder(new EmptyBorder(0, 0, 0, 0));
-                    departuresList.add(separator);
-                }
-                departuresList.add(departurePanels[i]);
-            }
+            departuresPanel = new DeparturesPanel(dva, playAnnouncementVoiceCombobox);
+            departuresPanelHolder.add(departuresPanel);
 
             // Populate the timetables combobox
             timetableManager = TimetableManager.getInstance();
@@ -214,11 +199,6 @@ public class PlasmaUI implements IDepartureDataSource
             // Load the indicators from user preferences. Defaults are in the Settings class.
             setSettings(Settings.getIndicator(settingsKey));
 
-            playAnnouncementVoiceCombobox.addActionListener(e -> {
-                for (DeparturePanel departurePanel : departurePanels) {
-                    departurePanel.setScriptVoice(((Announcer) playAnnouncementVoiceCombobox.getSelectedItem()).getSoundLibrary().getName());
-                }
-            });
         } catch (Exception e) {
             jb.common.ExceptionReporter.reportException(e);
         }
@@ -258,18 +238,15 @@ public class PlasmaUI implements IDepartureDataSource
 
     @Override
     public void notifyDeparture() {
-        for (int i = 0; i < departurePanels.length - 1; i++) {
-            departurePanels[i].setData(departurePanels[i + 1].getData());
-        }
         if (dataSource != null){
             dataSource.notifyDeparture();
             List<DepartureData> departureData = dataSource.getDepartureData();
-            if (departureData.size() >= departurePanels.length) {
-                departurePanels[departurePanels.length - 1].setData(departureData.get(departurePanels.length - 1));
+            if (departureData.size() >= departuresPanel.count()) {
+                departuresPanel.shiftUpwards(departureData.get(departuresPanel.count() - 1));
                 return;
             }
         }
-        departurePanels[departurePanels.length - 1].setData(new DepartureData());
+        departuresPanel.shiftUpwards(new DepartureData());
     }
 
     public List<DepartureData> getDepartureData()
@@ -284,12 +261,7 @@ public class PlasmaUI implements IDepartureDataSource
             dd = new LinkedList<>();
         }
         try {
-            for (int i = 0; i < departurePanels.length; i++) {
-                if (i >= dd.size()) {
-                    dd.add(new DepartureData());
-                }
-                dd.set(i, departurePanels[i].getData());
-            }
+            departuresPanel.copyTo(dd);
         } catch (IndexOutOfBoundsException ex) {
             JOptionPane.showMessageDialog(null,
                     "IndexOutOfBoundsException, check entered departure times are valid.");
@@ -478,9 +450,7 @@ public class PlasmaUI implements IDepartureDataSource
             renderers.add(r.getSelectedItem().toString());
         }
         List<DepartureData> data = new LinkedList<>();
-        for (DeparturePanel dp : departurePanels) {
-            data.add(dp.getData());
-        }
+        departuresPanel.copyTo(data);
 
         return new IndicatorSettings(tabbedPane.getSelectedIndex() == 1,
                 renderers,
@@ -521,9 +491,7 @@ public class PlasmaUI implements IDepartureDataSource
             }
         }
 
-        for (int i = 0; i < departurePanels.length; i++) {
-            departurePanels[i].setData(settings.getDepartureData().get(i));
-        }
+        departuresPanel.populateFrom(settings.getDepartureData());
 
         for (int i = 0; i < timetableLine.getItemCount(); i++)
             if (timetableLine.getItemAt(i).equals(settings.getLine())) {
@@ -607,12 +575,7 @@ public class PlasmaUI implements IDepartureDataSource
         {
             try {
                 updateDataSource();
-                List<DepartureData> departureData = dataSource.getDepartureData();
-                for (int i = 0; i < departurePanels.length; i++) {
-                    if (departureData.size() > i) {
-                        departurePanels[i].setData(departureData.get(i));
-                    }
-                }
+                departuresPanel.populateFrom(dataSource.getDepartureData());
                 tabbedPane.setSelectedIndex(0);
             } catch (Exception ex) {
                 jb.common.ExceptionReporter.reportException(ex);
