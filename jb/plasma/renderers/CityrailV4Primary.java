@@ -8,7 +8,7 @@ import org.javatuples.Pair;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class CityrailV4Primary extends CityrailV4
+public class CityrailV4Primary extends CityrailV4Landscape
 {
     public BufferedImage LineLogo;
     private String dueOutString;
@@ -20,9 +20,14 @@ public class CityrailV4Primary extends CityrailV4
         stationListPos = stationListPosInitial;
     }
 
+    public Dimension getAspectRatio()
+    {
+        return LANDSCAPE_1610;
+    }
+
     public String toString()
     {
-        return "CityRail V4 Dual-screen Primary (Landscape 16:10)";
+        return "CityRail V4 Dual-screen Platform Primary (Landscape 16:10)";
     }
 
     public void dataChanged(java.util.List<DepartureData> data)
