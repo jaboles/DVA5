@@ -161,7 +161,9 @@ public class CityrailV4Portrait extends CityrailV4
                 dueOutString = Integer.toString(h) + " hr " + dueOutString;
             }
             drawStringR(dueOutString, RightMargin, 0.93, TextColor, NextDestinationFont);
-            drawString(d1.Destination2, LeftMargin, 0.97, TextColor, NextDestination2Font);
+            if (d1.Destination2 != null) {
+                drawString(d1.Destination2, LeftMargin, 0.97, TextColor, NextDestination2Font);
+            }
             drawMiniMiniTextBox(0.3, 0.947, d1.Type);
         }
     }
