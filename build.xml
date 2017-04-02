@@ -235,7 +235,7 @@
         </exec>
     </target>
 
-    <target name="RebuildMacApp" description="Clean/rebuild the mac app" depends="CleanMacApp,UpdateMacApp,SignMacApp,SetupCommon">
+    <target name="RebuildMacApp" description="Clean/rebuild the mac app" if="isMac" depends="CleanMacApp,UpdateMacApp,SignMacApp,SetupCommon">
         <exec executable="plutil" dir="${OutDir}">
             <arg value="-replace"/>
             <arg value="CFBundleGetInfoString"/>
