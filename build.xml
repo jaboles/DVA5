@@ -619,7 +619,7 @@
     </target>
 
     <!-- Linux Debian Setup -->
-    <target name="BuildLinuxDeb" depends="CreateJar,BundledResources,SourceArchive,SetupCommon">
+    <target name="BuildLinuxDeb" if="isMac" depends="CreateJar,BundledResources,SourceArchive,SetupCommon">
         <delete failonerror="false" dir="${DpkgRoot}"/>
         <mkdir dir="${DpkgRoot}"/>
         <mkdir dir="${DpkgRoot}${file.separator}DEBIAN"/>
