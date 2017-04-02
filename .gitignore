@@ -7,4 +7,5 @@ azure.secret
 .metadata
 .settings
 *.bak
+Thumbs.db
 
