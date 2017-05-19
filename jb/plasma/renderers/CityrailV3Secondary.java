@@ -96,21 +96,20 @@ public class CityrailV3Secondary extends CityrailV3
 
     private void DrawDeparture(DepartureData d, double y)
     {
-        Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);
-        int h = dueOut.getValue0();
-        int m = dueOut.getValue1();
         double timeOffset = y + 0.12;
-        if (h > 0)
-        {
-            drawStringR(h, 0.092, timeOffset, TextBlue, TimeFontSmall);
-            drawString("hr", 0.094, timeOffset, TextBlue, TimeLabelsFontSmall);
-            drawStringR(m, 0.183, timeOffset, TextBlue, TimeFontSmall);
-            drawString("mins", 0.186, timeOffset, TextBlue, TimeLabelsFontSmall);
-        }
-        else
-        {
-            drawStringR(m, 0.14, timeOffset, TextBlue, TimeFontLarge);
-            drawString("mins", 0.146, timeOffset, TextBlue, TimeLabelsFontLarge);
+        if (d.DueOut != null) {
+            Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);
+            int h = dueOut.getValue0();
+            int m = dueOut.getValue1();
+            if (h > 0) {
+                drawStringR(h, 0.092, timeOffset, TextBlue, TimeFontSmall);
+                drawString("hr", 0.094, timeOffset, TextBlue, TimeLabelsFontSmall);
+                drawStringR(m, 0.183, timeOffset, TextBlue, TimeFontSmall);
+                drawString("mins", 0.186, timeOffset, TextBlue, TimeLabelsFontSmall);
+            } else {
+                drawStringR(m, 0.14, timeOffset, TextBlue, TimeFontLarge);
+                drawString("mins", 0.146, timeOffset, TextBlue, TimeLabelsFontLarge);
+            }
         }
         drawString(d.Destination, 0.25, timeOffset, TextBlue, DestinationFont);
         if (d.Line != null)

@@ -67,16 +67,20 @@ public class CityrailV4Primary extends CityrailV4Landscape
             }
 
             drawStringR(d0.Platform, RightMargin, 0.28, OrangeTextColor, PlatformDepartsFont);
-            Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
-            int h = dueOut.getValue0();
-            int m = dueOut.getValue1();
-            dueOutString = Integer.toString(m) + " min";
-            if (h > 0) {
-                dueOutString = Integer.toString(h) + " hr " + dueOutString;
+            if (d0.DueOut != null) {
+                Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
+                int h = dueOut.getValue0();
+                int m = dueOut.getValue1();
+                dueOutString = Integer.toString(m) + " min";
+                if (h > 0) {
+                    dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                }
+                drawStringR(dueOutString, RightMargin, 0.95, OrangeTextColor, PlatformDepartsFont);
             }
-            drawStringR(dueOutString, RightMargin, 0.95, OrangeTextColor, PlatformDepartsFont);
             drawMiniTextBox(0.77, 0.39, Integer.toString(d0.Cars) + " carriages");
-            drawMiniTextBox(0.77, 0.46, d0.Type);
+            if (d0.Type != null && !d0.Type.equals("")) {
+                drawMiniTextBox(0.77, 0.46, d0.Type);
+            }
 
             // Scrolling list
             boolean shouldScroll = d0.Stops.length > 6;
