@@ -67,7 +67,7 @@ public class PlasmaSession
             {
                 Calendar now = Calendar.getInstance();
                 // If due-out time has passed, pop off the first entry in the list and notify the renderers
-                if (data.get(0).DueOut.compareTo(now) < 0)
+                if (data.get(0).DueOut != null && data.get(0).DueOut.compareTo(now) < 0)
                 {
                     trainDeparted();
                 }
@@ -79,7 +79,8 @@ public class PlasmaSession
                         Calendar c = Calendar.getInstance();
                         c.add(Calendar.MINUTE, announcementTime);
                         c.add(Calendar.SECOND, 30);
-                        if (withinOneSecondOf(c, data.get(0).DueOut))
+                        Calendar dueOut = data.get(0).DueOut;
+                        if (dueOut != null && withinOneSecondOf(c, dueOut))
                         {
                             announce.run();
                             break;

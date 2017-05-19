@@ -87,24 +87,26 @@ public class CityrailV3Primary extends CityrailV3
             {
                 // 'in X mins to Destination'
                 drawString("in", 0.15, 0.105, TextBlue, MicroFont);
-                Pair<Integer,Integer> dueOut = getDueOut(d0.DueOut);
                 double hoursWidth = 0;
-                int dueOutHours = dueOut.getValue0();
-                int dueOutMins = dueOut.getValue1();
-                if (dueOutHours > 0)
-                {
-                    hoursWidth = 0.07;  
-                    if (dueOutHours >= 10)
-                    {
-                        hoursWidth += 0.03;
+                if (d0.DueOut != null) {
+                    Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
+                    int dueOutHours = dueOut.getValue0();
+                    int dueOutMins = dueOut.getValue1();
+                    if (dueOutHours > 0) {
+                        hoursWidth = 0.07;
+                        if (dueOutHours >= 10) {
+                            hoursWidth += 0.03;
+                        }
+                        drawStringR(dueOutHours, 0.16 + hoursWidth, 0.105, TextBlue, MainFont);
+                        drawString("hr", 0.162 + hoursWidth, 0.105, TextBlue, MicroFontBold);
                     }
-                    drawStringR(dueOutHours, 0.16 + hoursWidth, 0.105, TextBlue, MainFont);
-                    drawString("hr", 0.162 + hoursWidth, 0.105, TextBlue, MicroFontBold);
+                    drawStringR(dueOutMins, 0.28 + hoursWidth, 0.105, TextBlue, MainFont);
+                    drawString("mins", 0.285 + hoursWidth, 0.105, TextBlue, MicroFontBold);
                 }
-                drawStringR(dueOutMins, 0.28 + hoursWidth, 0.105, TextBlue, MainFont);
-                drawString("mins", 0.285 + hoursWidth, 0.105, TextBlue, MicroFontBold);
-                drawString("to", 0.36 + hoursWidth, 0.105, TextBlue, MicroFont);
-                drawString(d0.Destination, 0.41 + hoursWidth, 0.105, TextBlue, MainFont);
+                if (d0.Destination != null) {
+                    drawString("to", 0.36 + hoursWidth, 0.105, TextBlue, MicroFont);
+                    drawString(d0.Destination, 0.41 + hoursWidth, 0.105, TextBlue, MainFont);
+                }
 
                 drawStringC(d0.Type.split(" "), 0.125, 0.4, 0.08, TextBlue, TypeFont);
 

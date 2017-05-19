@@ -77,7 +77,6 @@ public class CityrailV1Portrait extends CityrailV1
         // 1st departure
         if (d0 != null)
         {
-            Date dueOut = d0.DueOut.getTime();
             if (isConcourse) {
                 drawString(Integer.toString(d0.Platform), 0.88, 0.09, TextWhite, MainFont);
             } else if (d0.Cars > 0) {
@@ -93,15 +92,20 @@ public class CityrailV1Portrait extends CityrailV1
             } else {
                 drawString(d0.Type, 0.21, 0.09, TextWhite, MainFont);
             }
-            drawString(DueOutFormat.format(dueOut), 0.012, 0.048, TextWhite, DepartureTimeFont);
-            drawStringR(Integer.toString((int)((dueOut.getTime() - timeNow.getTime()) / 1000 / 60)), 0.089, 0.84, TextWhite, DepartureTimeFont);
+            if (d0.DueOut != null) {
+                Date dueOut = d0.DueOut.getTime();
+                drawString(DueOutFormat.format(dueOut), 0.012, 0.048, TextWhite, DepartureTimeFont);
+                drawStringR(Integer.toString((int) ((dueOut.getTime() - timeNow.getTime()) / 1000 / 60)), 0.089, 0.84, TextWhite, DepartureTimeFont);
+            }
         }
 
         // 2nd departure
         if (d1 != null)
         {
-            drawStringR(getDueOut(d1.DueOut).getValue1(), 0.077, 0.94, TextYellow, MainFont);
-            drawString("mins",  0.09, 0.94, TextWhite, SmallFont);
+            if (d1.DueOut != null) {
+                drawStringR(getDueOut(d1.DueOut).getValue1(), 0.077, 0.94, TextYellow, MainFont);
+                drawString("mins",  0.09, 0.94, TextWhite, SmallFont);
+            }
             drawString(d1.Destination, 0.21, 0.94, TextYellow, MainFont);
             drawString(d1.Type, 0.6, 0.94, TextWhite, SmallFont);
             drawString(d1.Platform, 0.9, 0.94, TextYellow, MainFont);
@@ -110,8 +114,10 @@ public class CityrailV1Portrait extends CityrailV1
         // 3rd departure
         if (d2 != null)
         {
-            drawStringR(getDueOut(d2.DueOut).getValue1(), 0.077, 0.98, TextYellow, MainFont);
-            drawString("mins",  0.09, 0.98, TextWhite, SmallFont);
+            if (d2.DueOut != null) {
+                drawStringR(getDueOut(d2.DueOut).getValue1(), 0.077, 0.98, TextYellow, MainFont);
+                drawString("mins", 0.09, 0.98, TextWhite, SmallFont);
+            }
             drawString(d2.Destination, 0.21, 0.98, TextYellow, MainFont);
             drawString(d2.Type, 0.6, 0.98, TextWhite, SmallFont);
             drawString(d2.Platform, 0.9, 0.98, TextYellow, MainFont);

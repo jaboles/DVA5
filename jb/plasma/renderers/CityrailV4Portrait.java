@@ -106,16 +106,20 @@ public class CityrailV4Portrait extends CityrailV4
             }
 
             drawStringR(d0.Platform, RightMargin, top + 0.22, OrangeTextColor, PlatformDepartsFont);
-            Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
-            int h = dueOut.getValue0();
-            int m = dueOut.getValue1();
-            dueOutString = Integer.toString(m) + " min";
-            if (h > 0) {
-                dueOutString = Integer.toString(h) + " hr " + dueOutString;
+            if (d0.DueOut != null) {
+                Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
+                int h = dueOut.getValue0();
+                int m = dueOut.getValue1();
+                dueOutString = Integer.toString(m) + " min";
+                if (h > 0) {
+                    dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                }
+                drawStringR(dueOutString, RightMargin, 0.83, OrangeTextColor, PlatformDepartsFont);
             }
-            drawStringR(dueOutString, RightMargin, 0.83, OrangeTextColor, PlatformDepartsFont);
             drawMiniTextBox(0.74, 0.32, Integer.toString(d0.Cars) + " carriages");
-            drawMiniTextBox(LeftMargin, 0.8, d0.Type);
+            if (d0.Type != null && !d0.Type.equals("")) {
+                drawMiniTextBox(LeftMargin, 0.8, d0.Type);
+            }
 
             // Scrolling list
             boolean shouldScroll = d0.Stops.length > 6;
@@ -153,18 +157,22 @@ public class CityrailV4Portrait extends CityrailV4
         if (d1 != null) {
             drawString(d1.Destination, LeftMargin, 0.93, TextColor, NextDestinationFont);
             drawStringC(d1.Platform, 0.7, 0.93, TextColor, NextDestinationFont);
-            Pair<Integer, Integer> dueOut = getDueOut(d1.DueOut);
-            int h = dueOut.getValue0();
-            int m = dueOut.getValue1();
-            dueOutString = Integer.toString(m) + " min";
-            if (h > 0) {
-                dueOutString = Integer.toString(h) + " hr " + dueOutString;
+            if (d1.DueOut != null) {
+                Pair<Integer, Integer> dueOut = getDueOut(d1.DueOut);
+                int h = dueOut.getValue0();
+                int m = dueOut.getValue1();
+                dueOutString = Integer.toString(m) + " min";
+                if (h > 0) {
+                    dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                }
+                drawStringR(dueOutString, RightMargin, 0.93, TextColor, NextDestinationFont);
             }
-            drawStringR(dueOutString, RightMargin, 0.93, TextColor, NextDestinationFont);
             if (d1.Destination2 != null) {
                 drawString(d1.Destination2, LeftMargin, 0.97, TextColor, NextDestination2Font);
             }
-            drawMiniMiniTextBox(0.3, 0.947, d1.Type);
+            if (d1.Type != null && !d1.Type.equals("")) {
+                drawMiniMiniTextBox(0.3, 0.947, d1.Type);
+            }
         }
     }
 
