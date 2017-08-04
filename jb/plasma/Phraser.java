@@ -47,7 +47,7 @@ public class Phraser
 
     public String getVia(DepartureData d)
     {
-        if (d.Destination2.toLowerCase().trim().startsWith("via "))
+        if (d != null && d.Destination2 != null && d.Destination2.toLowerCase().trim().startsWith("via "))
         {
             return d.Destination2;
         }
