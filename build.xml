@@ -677,6 +677,6 @@
         </copy>
     </target>
     
-    <target name="DevBuild" description="Fast dev build" depends="UpdateMacApp"/>
+    <target name="DevBuild" description="Fast dev build" depends="Clean,UpdateMacApp"/>
 
 </project>
