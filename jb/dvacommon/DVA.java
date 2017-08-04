@@ -16,10 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import com.sun.jna.platform.win32.*;
-import jb.common.ExceptionReporter;
-import jb.common.FileUtilities;
-import jb.common.OSDetection;
-import jb.common.ObjectCache;
+import jb.common.*;
 import jb.common.jna.windows.GDI32Ex;
 import jb.common.jna.windows.Shell32Ex;
 import jb.common.jna.windows.User32Ex;
@@ -104,6 +101,7 @@ public class DVA {
     
     public DVA(boolean showMainWindow, boolean showLoadingProgress) {
         logger.info("DVA {}, Java {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
+        logger.info("OS {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
         logger.info("Temp is " + System.getProperty("java.io.tmpdir"));
         LoadWindow lw = null;
         Player.emptyCache();
@@ -267,7 +265,7 @@ public class DVA {
         // Set AUMI on Windows 7, to fix two separate DVA taskbar icons appearing during
         // launch (DVA.exe and java.exe)
         boolean isWindows = OSDetection.isWindows();
-        if (isWindows)
+        if (isWindows && VersionComparator.Instance.compare(System.getProperty("os.version"), "6.1") >= 0)
         {
             Shell32Ex.INSTANCE.SetCurrentProcessExplicitAppUserModelID(new WString("jb.DVA"));
         }

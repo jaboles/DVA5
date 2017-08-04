@@ -212,7 +212,14 @@ public class FileUtilities
         }
         else if (OSDetection.isWindows())
         {
-            return new File(System.getenv("LOCALAPPDATA"));
+            if (System.getenv("LOCALAPPDATA") != null)
+            {
+                return new File(System.getenv("LOCALAPPDATA"));
+            }
+            else
+            {
+                return new File(System.getenv("HOMEPATH"));
+            }
         }
         else if (OSDetection.isUnix())
         {
