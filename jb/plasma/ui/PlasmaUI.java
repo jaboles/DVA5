@@ -261,12 +261,12 @@ public class PlasmaUI implements IDepartureDataSource
             dd = dataSource.getDepartureData();
         } else {
             dd = new LinkedList<>();
-        }
-        try {
-            departuresPanel.copyTo(dd);
-        } catch (IndexOutOfBoundsException ex) {
-            JOptionPane.showMessageDialog(null,
-                    "IndexOutOfBoundsException, check entered departure times are valid.");
+            try {
+                departuresPanel.copyTo(dd);
+            } catch (IndexOutOfBoundsException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "IndexOutOfBoundsException, check entered departure times are valid.");
+            }
         }
         return dd;
     }
