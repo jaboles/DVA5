@@ -1,7 +1,7 @@
 package jb.plasma.renderers;
 
 import jb.plasma.CityrailLine;
-import jb.plasma.data.DepartureData;
+import jb.plasma.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 import org.javatuples.Pair;
 
