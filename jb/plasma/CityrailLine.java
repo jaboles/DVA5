@@ -62,11 +62,11 @@ public class CityrailLine
         CUMBERLAND = new CityrailLine("Cumberland Line", pink, Color.white, "T5.png");
         CARLINGFORD = new CityrailLine("Carlingford Line", darkBlue, Color.white, "T6.png");
         OLYMPIC_PARK = new CityrailLine("Olympic Park Line", grey, Color.white, "T7.png");
-        BLUE_MOUNTAINS = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, null);
-        NEWCASTLE_CENTRAL_COAST = new CityrailLine("Newcastle & Central Coast Line", grey, red, Color.white, null);
-        SOUTH_COAST = new CityrailLine("South Coast Line", grey, blue, Color.white, null);
-        SOUTHERN_HIGHLANDS = new CityrailLine("Southern Highlands Line", grey, green, Color.white, null);
-        HUNTER = new CityrailLine("Hunter Line", grey, darkRed, Color.white, null);
+        BLUE_MOUNTAINS = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, "T.png");
+        NEWCASTLE_CENTRAL_COAST = new CityrailLine("Newcastle & Central Coast Line", grey, red, Color.white, "T.png");
+        SOUTH_COAST = new CityrailLine("South Coast Line", grey, blue, Color.white, "T.png");
+        SOUTHERN_HIGHLANDS = new CityrailLine("Southern Highlands Line", grey, green, Color.white, "T.png");
+        HUNTER = new CityrailLine("Hunter Line", grey, darkRed, Color.white, "T.png");
 
         CityrailLine[] lines = new CityrailLine[] {
                 NORTHERN, NORTH_SHORE, WESTERN, AIRPORT_EAST_HILLS, SOUTH, INNER_WEST, BANKSTOWN, EASTERN_SUBURBS_ILLAWARRA,
