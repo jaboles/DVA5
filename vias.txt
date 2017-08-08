@@ -9,11 +9,11 @@
 
 # Northern/North Shore line
 ,Gordon,Hornsby
-,Macquarie Park,Hornsby
+,Macquarie University,Hornsby
 ,Strathfield,Epping
-,Macquarie Park,Epping
+,Macquarie University,Epping
 ,Strathfield,Central
-,Macquarie Park,Chatswood
+,Macquarie University,Chatswood
 ,Gordon,Chatswood
 
 # Bankstown/South/Old Main South/East Hills lines
@@ -30,3 +30,4 @@
 ,East Hills,Sydenham
 ,East Hills,Wolli Creek
 
+,Strathfield,Homebush
