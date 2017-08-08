@@ -1,8 +1,6 @@
 package jb.plasma.ui;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JPanel;
@@ -45,8 +43,6 @@ public class PlasmaPanel extends JPanel
         renderingHints.clear();
         renderingHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         renderingHints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        renderingHints.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        renderingHints.put(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         renderingHints.put(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }
 
@@ -68,6 +64,7 @@ public class PlasmaPanel extends JPanel
             bg = buf.getGraphics();
         }
 
+        ((Graphics2D)bg).setRenderingHints(renderingHints);
         drawer.paint(bg);
         g.drawImage(buf, 0, 0, null);
 
