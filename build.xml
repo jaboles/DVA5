@@ -669,12 +669,12 @@
         <exec executable="sed" dir="${basedir}" osfamily="mac">
             <arg value="-i"/>
             <arg value=".bak"/>
-            <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
+            <arg value="s/[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/${DVAVersion}/"/>
             <arg value="linux${file.separator}debian${file.separator}control"/>
         </exec>
         <exec executable="powershell.exe" dir="${basedir}" osfamily="windows">
             <arg value="-command"/>
-            <arg value="(gc 'linux${file.separator}debian${file.separator}control' -raw) -replace '\d\.\d\.\d', '${DVAVersion}' | out-file 'linux${file.separator}debian${file.separator}control'"/>
+            <arg value="(gc 'linux${file.separator}debian${file.separator}control' -raw) -replace '\d*\.\d*\.\d*', '${DVAVersion}' | out-file 'linux${file.separator}debian${file.separator}control'"/>
         </exec>
         <exec executable="fakeroot" dir="${OutDir}">
             <arg value="dpkg"/>
