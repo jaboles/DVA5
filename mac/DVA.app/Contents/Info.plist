@@ -14,6 +14,8 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>DVA</string>
+	<key>CFBundleDisplayName</key>
+	<string>DVA</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -24,5 +26,7 @@
 	<string>1.0</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © Jonathan Boles 1999-2017</string>
 </dict>
 </plist>

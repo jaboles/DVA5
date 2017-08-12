@@ -243,6 +243,27 @@
             <arg value="${DVAVersion}"/>
             <arg value="DVA.app/Contents/Info.plist"/>
         </exec>
+        <exec executable="plutil" dir="${OutDir}">
+            <arg value="-replace"/>
+            <arg value="CFBundleShortVersionString"/>
+            <arg value="-string"/>
+            <arg value="${DVAVersion}"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
+        <exec executable="plutil" dir="${OutDir}">
+            <arg value="-replace"/>
+            <arg value="CFBundleVersion"/>
+            <arg value="-string"/>
+            <arg value="${DVAVersion}"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
+        <exec executable="plutil" dir="${OutDir}">
+            <arg value="-replace"/>
+            <arg value="NSHumanReadableCopyright"/>
+            <arg value="-string"/>
+            <arg value="Copyright © Jonathan Boles 1999-2017"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
     </target>
 
     <target name="BuildWinApp">
@@ -536,12 +557,13 @@
         <copy file="new.html" todir="${OutDir}"/>
         <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac">
             <arg value="-c"/>
-            <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\.\d\.\d&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
+            <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
         <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows">
             <arg value="-command"/>
             <arg value="(gc jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
         </exec>
+        <echo>Read version string: ${DVAVersion}</echo>
     </target>
     
     <!-- Build Mac setup -->
