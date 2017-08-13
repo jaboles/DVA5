@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import jb.common.IntPair;
 import jb.common.ObjectCache;
+import jb.common.StringUtilities;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +27,33 @@ public class TimetableTranslator
     final static Logger logger = LoggerFactory.getLogger(TimetableTranslator.class);
     private static Map<Pair<String, String>, List<Pair<String, String>>> continuations;
     private Timetable tt;
+    private static DateFormat TimeFormat = new SimpleDateFormat("HH:mm");
 
     static {
         continuations = new HashMap<>();
-        addContinuation("T1 North Shore & Northern",
-                "Berowra to City via Gordon, Hornsby to City via Macquarie University", "T1 Western",
+        // North Shore -> West
+        addContinuation(
+                "T1 North Shore & Northern",
+                "Berowra to City via Gordon, Hornsby to City via Macquarie University",
+                "T1 Western",
                 "City to Emu Plains, City to Richmond");
-        addContinuation("T1 Western", "Emu Plains to City, Richmond to City", "T1 North Shore & Northern",
+        // North Shore -> Northern
+        addContinuation(
+                "T1 North Shore & Northern",
+                "Berowra to City via Gordon, Hornsby to City via Macquarie University",
+                "T1 Northern",
+                "City to Epping and Hornsby via Strathfield");
+        // Western -> North Shore
+        addContinuation(
+                "T1 Western",
+                "Emu Plains to City, Richmond to City",
+                "T1 North Shore & Northern",
+                "City to Berowra via Gordon, City to Hornsby via Macquarie University");
+        // Northern -> North Shore
+        addContinuation(
+                "T1 Northern",
+                "Hornsby and Epping to City via Strathfield",
+                "T1 North Shore & Northern",
                 "City to Berowra via Gordon, City to Hornsby via Macquarie University");
     }
 
@@ -109,16 +132,37 @@ public class TimetableTranslator
     // Picks out a list of train departures given a line, direction, station,
     // and time.
     public List<DepartureData> getDepartureDataForStation(String lineName, String directionName, String stationName,
-            Calendar afterTime, int platform, int cars) throws Exception
+            Calendar time, int atOrAfterTime, int platform, int cars, int limit) throws Exception
     {
         List<DepartureData> dd = new LinkedList<>();
-        TimetableLineSchedule sched = tt.lines.get(lineName).directions.get(directionName);
+        TimetableLine ttLine = tt.lines.get(lineName);
+        if (ttLine == null) {
+            throw new Exception("Line " + lineName + " not found in the schedule");
+        }
+        TimetableLineSchedule sched = ttLine.directions.get(directionName);
+        if (sched == null) {
+            throw new Exception("Direction " + directionName + " not found in the schedule for line " + lineName);
+        }
 
         int stationIndex = sched.stations.indexOf(stationName);
         if (stationIndex < 0)
             throw new Exception("Station " + stationName + " not found in the schedule");
 
         int trainIndex;
+        int trainCount = 0;
+
+        Pair<String, String> continuationsKey = new Pair<>(lineName, directionName);
+        List<Pair<String, String>> continuationList = continuations.get(continuationsKey);
+        if (continuationList != null)
+        {
+            for (Pair<String, String> continuation : continuationList) {
+                logger.info("Found continuation for {} / {}: {} / {}", lineName, directionName, continuation.getValue0(), continuation.getValue1());
+            }
+        }
+        else
+        {
+            logger.info("No continuation for {} / {}", lineName, directionName);
+        }
 
         for (int i = 0; i < sched.convertedTimes.get(stationIndex).length; i++) {
             // Find the first departure that is after the given time. Want to
@@ -128,14 +172,17 @@ public class TimetableTranslator
                 continue;
 
             Calendar departure = departureRaw.asCalendar();
-            if (departure.compareTo(afterTime) > 0) {
+            if ((departure.compareTo(time) > 0 && atOrAfterTime == AtOrAfter.AFTER)
+              || departure.get(Calendar.HOUR_OF_DAY) == time.get(Calendar.HOUR_OF_DAY) && departure.get(Calendar.MINUTE) == time.get(Calendar.MINUTE) && atOrAfterTime == AtOrAfter.AT) {
                 // Found a train leaving the requested station after the
                 // requested time.
                 // Generate info for the indicator board from the remainder of
                 // the schedule.
                 trainIndex = i;
+                trainCount++;
 
                 String destination = null;
+                IntPair destinationTime = null;
                 List<String> stops = new LinkedList<>();
                 List<String> allStops = new LinkedList<>();
                 boolean isLimitedStops = false;
@@ -152,8 +199,10 @@ public class TimetableTranslator
                 // indicate whether it is limited
                 // or all stops.
                 for (int j = stationIndex + 1; j < sched.stations.size(); j++) {
-                    if (sched.convertedTimes.get(j)[trainIndex] != null) {
+                    IntPair stopTime = sched.convertedTimes.get(j)[trainIndex];
+                    if (stopTime != null) {
                         destination = sched.stations.get(j);
+                        destinationTime = stopTime;
                         stops.add(sched.stations.get(j));
                         allStops.add(sched.stations.get(j));
                         // Found another time in the schedule, but have already
@@ -167,6 +216,26 @@ public class TimetableTranslator
                 if (destination == null)
                 {
                     destination = "Terminates";
+                }
+
+                if (continuationList != null)
+                {
+                    for (Pair<String, String> continuation : continuationList) {
+                        logger.info("Looking for a continuation from {} at {}", destination, destinationTime.asCalendar().getTime());
+                        List<DepartureData> continuationDataList = getDepartureDataForStation(continuation.getValue0(),
+                                continuation.getValue1(), destination, destinationTime.asCalendar(), AtOrAfter.AT,
+                                0, 0, 1);
+                        if (continuationDataList.size() > 0) {
+                            DepartureData continuationData = continuationDataList.get(0);
+                            destination = continuationData.Destination;
+                            for (String s : continuationData.Stops) {
+                                stops.add(s);
+                            }
+                            // TODO: don't use string compare here
+                            isLimitedStops |= continuationData.Type.equals("Limited Stops");
+                            break;
+                        }
+                    }
                 }
 
                 // Create a DepartureData object to hold the info and add it to
@@ -184,15 +253,14 @@ public class TimetableTranslator
                 d.Stops = stops.toArray(new String[stops.size()]);
                 d.Destination2 = new Phraser().getVia(d);
                 dd.add(d);
+
+                logger.info("Found departure to {} at {} stopping at: {}", destination, TimeFormat.format(departure.getTime()), StringUtilities.join(", ", stops));
+                if (limit > 0 && trainCount >= limit) break;
             }
         }
 
+        logger.info("getDepartureData returning {} train(s)", trainCount);
         return dd;
-    }
-
-    public List<String> findContinuation(String lineName, String directionName, List<String> stops, List<Calendar> times)
-    {
-        return null;
     }
 
     public static void addContinuation(String fromLine, String fromDirection, String toLine, String toDirection)
@@ -207,5 +275,11 @@ public class TimetableTranslator
             continuations.put(key, valList);
         }
         valList.add(val);
+    }
+
+    public class AtOrAfter
+    {
+        public static final int AT = 1;
+        public static final int AFTER = 2;
     }
 }

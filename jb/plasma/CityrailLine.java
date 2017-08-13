@@ -96,11 +96,6 @@ public class CityrailLine
         this.LogoImageFilename = logoImageFilename;
     }
 
-    public void addContinuation(CityrailLine line)
-    {
-        this.Continuations.add(line);
-    }
-
     public static CityrailLine get(String name)
     {
         return allLines.get(name);

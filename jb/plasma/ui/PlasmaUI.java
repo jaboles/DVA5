@@ -284,8 +284,8 @@ public class PlasmaUI
             try {
                 dd = getActiveTimetable().getDepartureDataForStation(
                         (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
-                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(),
-                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue());
+                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(), TimetableTranslator.AtOrAfter.AFTER,
+                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue(), 0);
             } catch (Exception e) {
                 jb.common.ExceptionReporter.reportException(e);
             }
@@ -592,8 +592,8 @@ public class PlasmaUI
             try {
                 departureData = getActiveTimetable().getDepartureDataForStation(
                         (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
-                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(),
-                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue());
+                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(), TimetableTranslator.AtOrAfter.AFTER,
+                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue(), 0);
                 for (int i = 0; i < departurePanels.length; i++) {
                     if (departureData.size() > i) {
                         departurePanels[i].setData(departureData.get(i));
