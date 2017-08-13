@@ -110,11 +110,13 @@ public class CityrailV4Portrait extends CityrailV4
                 Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
                 int h = dueOut.getValue0();
                 int m = dueOut.getValue1();
-                dueOutString = Integer.toString(m) + " min";
-                if (h > 0) {
-                    dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                if (h > 0 || m > 0) {
+                    dueOutString = Integer.toString(m) + " min";
+                    if (h > 0) {
+                        dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                    }
+                    drawStringR(dueOutString, RightMargin, 0.83, OrangeTextColor, PlatformDepartsFont);
                 }
-                drawStringR(dueOutString, RightMargin, 0.83, OrangeTextColor, PlatformDepartsFont);
             }
             drawMiniTextBox(0.74, 0.32, Integer.toString(d0.Cars) + " carriages");
             if (d0.Type != null && !d0.Type.equals("")) {

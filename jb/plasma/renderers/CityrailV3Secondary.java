@@ -106,7 +106,7 @@ public class CityrailV3Secondary extends CityrailV3
                 drawString("hr", 0.094, timeOffset, TextBlue, TimeLabelsFontSmall);
                 drawStringR(m, 0.183, timeOffset, TextBlue, TimeFontSmall);
                 drawString("mins", 0.186, timeOffset, TextBlue, TimeLabelsFontSmall);
-            } else {
+            } else if (m > 0) {
                 drawStringR(m, 0.14, timeOffset, TextBlue, TimeFontLarge);
                 drawString("mins", 0.146, timeOffset, TextBlue, TimeLabelsFontLarge);
             }

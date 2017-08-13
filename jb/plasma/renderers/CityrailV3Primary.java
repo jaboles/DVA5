@@ -92,16 +92,18 @@ public class CityrailV3Primary extends CityrailV3
                     Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
                     int dueOutHours = dueOut.getValue0();
                     int dueOutMins = dueOut.getValue1();
-                    if (dueOutHours > 0) {
-                        hoursWidth = 0.07;
-                        if (dueOutHours >= 10) {
-                            hoursWidth += 0.03;
+                    if (dueOutHours > 0 || dueOutMins > 0) {
+                        if (dueOutHours > 0) {
+                            hoursWidth = 0.07;
+                            if (dueOutHours >= 10) {
+                                hoursWidth += 0.03;
+                            }
+                            drawStringR(dueOutHours, 0.16 + hoursWidth, 0.105, TextBlue, MainFont);
+                            drawString("hr", 0.162 + hoursWidth, 0.105, TextBlue, MicroFontBold);
                         }
-                        drawStringR(dueOutHours, 0.16 + hoursWidth, 0.105, TextBlue, MainFont);
-                        drawString("hr", 0.162 + hoursWidth, 0.105, TextBlue, MicroFontBold);
+                        drawStringR(dueOutMins, 0.28 + hoursWidth, 0.105, TextBlue, MainFont);
+                        drawString("mins", 0.285 + hoursWidth, 0.105, TextBlue, MicroFontBold);
                     }
-                    drawStringR(dueOutMins, 0.28 + hoursWidth, 0.105, TextBlue, MainFont);
-                    drawString("mins", 0.285 + hoursWidth, 0.105, TextBlue, MicroFontBold);
                 }
                 if (d0.Destination != null) {
                     drawString("to", 0.36 + hoursWidth, 0.105, TextBlue, MicroFont);

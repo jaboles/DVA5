@@ -81,8 +81,11 @@ public class CityrailV2 extends Cityrail
             drawString(d0.Type, 0.02, 0.24, TextWhite, SmallFont);
             drawStringC("Departs", 0.125, 0.34, TextWhite, SmallFont);
             if (d0.DueOut != null) {
-                drawStringC(getDueOut(d0.DueOut).getValue1(), 0.125, 0.39, TextWhite, DueOutFont);
-                drawStringC("mins", 0.125, 0.415, TextWhite, SmallFont);
+                int m = getDueOut(d0.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringC(m, 0.125, 0.39, TextWhite, DueOutFont);
+                    drawStringC("mins", 0.125, 0.415, TextWhite, SmallFont);
+                }
             }
 
             drawStringC(Integer.toString(d0.Cars), 0.125, 0.68, TextWhite, MainFont);
@@ -94,8 +97,11 @@ public class CityrailV2 extends Cityrail
         {
             DepartureData d1 = data.get(1);
             if (d1.DueOut != null) {
-                drawStringR(getDueOut(d1.DueOut).getValue1(), 0.077, 0.88, TextYellow, NextTrainFont);
-                drawString("mins", 0.09, 0.88, TextWhite, SmallFont);
+                int m = getDueOut(d1.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringR(m, 0.077, 0.88, TextYellow, NextTrainFont);
+                    drawString("mins", 0.09, 0.88, TextWhite, SmallFont);
+                }
             }
             drawString(d1.Destination, 0.21, 0.88, TextYellow, MainFont);
             drawString(d1.Type, 0.21, 0.91, TextWhite, SmallFont);
@@ -104,8 +110,11 @@ public class CityrailV2 extends Cityrail
         {
             DepartureData d2 = data.get(1);
             if (d2.DueOut != null) {
-                drawStringR(getDueOut(d2.DueOut).getValue1(), 0.077, 0.95, TextYellow, NextTrainFont);
-                drawString("mins", 0.09, 0.95, TextWhite, SmallFont);
+                int m = getDueOut(d2.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringR(m, 0.077, 0.95, TextYellow, NextTrainFont);
+                    drawString("mins", 0.09, 0.95, TextWhite, SmallFont);
+                }
             }
             drawString(d2.Destination, 0.21, 0.95, TextYellow, NextTrainFont);
             drawString(d2.Type, 0.21, 0.98, TextWhite, SmallFont);

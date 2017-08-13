@@ -95,7 +95,10 @@ public class CityrailV1Portrait extends CityrailV1
             if (d0.DueOut != null) {
                 Date dueOut = d0.DueOut.getTime();
                 drawString(DueOutFormat.format(dueOut), 0.012, 0.048, TextWhite, DepartureTimeFont);
-                drawStringR(Integer.toString((int) ((dueOut.getTime() - timeNow.getTime()) / 1000 / 60)), 0.089, 0.84, TextWhite, DepartureTimeFont);
+                int m = (int) ((dueOut.getTime() - timeNow.getTime()) / 1000 / 60);
+                if (m > 0) {
+                    drawStringR(Integer.toString(m), 0.089, 0.84, TextWhite, DepartureTimeFont);
+                }
             }
         }
 
@@ -103,8 +106,11 @@ public class CityrailV1Portrait extends CityrailV1
         if (d1 != null)
         {
             if (d1.DueOut != null) {
-                drawStringR(getDueOut(d1.DueOut).getValue1(), 0.077, 0.94, TextYellow, MainFont);
-                drawString("mins",  0.09, 0.94, TextWhite, SmallFont);
+                int m = getDueOut(d1.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringR(m, 0.077, 0.94, TextYellow, MainFont);
+                    drawString("mins", 0.09, 0.94, TextWhite, SmallFont);
+                }
             }
             drawString(d1.Destination, 0.21, 0.94, TextYellow, MainFont);
             drawString(d1.Type, 0.6, 0.94, TextWhite, SmallFont);
@@ -115,8 +121,11 @@ public class CityrailV1Portrait extends CityrailV1
         if (d2 != null)
         {
             if (d2.DueOut != null) {
-                drawStringR(getDueOut(d2.DueOut).getValue1(), 0.077, 0.98, TextYellow, MainFont);
-                drawString("mins", 0.09, 0.98, TextWhite, SmallFont);
+                int m = getDueOut(d2.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringR(m, 0.077, 0.98, TextYellow, MainFont);
+                    drawString("mins", 0.09, 0.98, TextWhite, SmallFont);
+                }
             }
             drawString(d2.Destination, 0.21, 0.98, TextYellow, MainFont);
             drawString(d2.Type, 0.6, 0.98, TextWhite, SmallFont);

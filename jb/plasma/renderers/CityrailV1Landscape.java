@@ -109,15 +109,21 @@ public class CityrailV1Landscape extends CityrailV1
             Calendar dueOut = d0.DueOut;
             if (dueOut != null) {
                 drawString(DueOutFormat.format(dueOut.getTime()), 0.012, 0.2, TextWhite, DepartureTimeFont);
-                drawStringR(getDueOut(d0.DueOut).getValue1(), 0.089, 0.77, TextWhite, DepartureTimeFont);
+                int m = getDueOut(d0.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringR(m, 0.089, 0.77, TextWhite, DepartureTimeFont);
+                }
             }
         }
 
         // 2nd departure
         if (d1 != null) {
             if (d1.DueOut != null) {
-                drawStringR(getDueOut(d1.DueOut).getValue1(), 0.077, 0.91, TextYellow, MainFont);
-                drawString("mins", 0.09, 0.91, TextWhite, SmallFont);
+                int m = getDueOut(d1.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringR(m, 0.077, 0.91, TextYellow, MainFont);
+                    drawString("mins", 0.09, 0.91, TextWhite, SmallFont);
+                }
             }
             drawString(d1.Destination, 0.21, 0.91, TextYellow, MainFont);
             drawString(d1.Type, 0.6, 0.91, TextWhite, SmallFont);
@@ -129,8 +135,11 @@ public class CityrailV1Landscape extends CityrailV1
         if (d2 != null)
         {
             if (d2.DueOut != null) {
-                drawStringR(getDueOut(d2.DueOut).getValue1(), 0.077, 0.98, TextYellow, MainFont);
-                drawString("mins", 0.09, 0.98, TextWhite, SmallFont);
+                int m = getDueOut(d2.DueOut).getValue1();
+                if (m > 0) {
+                    drawStringR(m, 0.077, 0.98, TextYellow, MainFont);
+                    drawString("mins", 0.09, 0.98, TextWhite, SmallFont);
+                }
             }
             drawString(d2.Destination, 0.21, 0.98, TextYellow, MainFont);
             drawString(d2.Type, 0.6, 0.98, TextWhite, SmallFont);
