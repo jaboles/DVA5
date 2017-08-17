@@ -15,6 +15,10 @@ if [ -d $JAVAHOME16 ]; then
 	JAVA=$JAVAHOME16/bin/java
 elif [ -d $JAVAHOME ]; then 
 	JAVA=$JAVAHOME/bin/java
+elif [ -f /usr/bin/java ]; then
+    JAVA=/usr/bin/java
+elif [ -f /bin/java ]; then
+    JAVA=/bin/java
 else
 	JAVA=java
 fi
