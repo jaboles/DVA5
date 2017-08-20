@@ -8,6 +8,7 @@
 package jb.dva;
 import java.net.URL;
 import java.util.ArrayList;
+
 import jb.common.sound.xuggle.MediaConcatenator2;
 
 // Represents a DVA announcement, and handles translation into a list of sounds.
@@ -144,7 +145,10 @@ public class Script {
                 } else if (preferredInflection == SoundInflection.FALLING && ref.falling != null) {
                     u = ref.falling;
                 } else if (ref.regular == null) {
-                    u = ref.rising;
+                    if (ref.rising != null)
+                        u = ref.rising;
+                    else
+                        u = ref.falling;
                 } else {
                     u = ref.regular;
                 }
