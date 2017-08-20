@@ -1,10 +1,11 @@
 # This file controls the addition of "... via X" to the destination when generating
 # an announcement from the indicator board.
 #
-# Entries format: A,B,C
+# Entries format: [A],B,C,[D]
 # If a train is routed A->B->C, "... via B" will be added to the destination.
 # A is optional. If omitted, any routing B->C will cause "... via B" will be added
 # to the destination.
+# If D (optional) is provided, "... via B" will be replaced with "... via D"
 
 
 # Northern/North Shore line
@@ -15,6 +16,10 @@
 ,Strathfield,Central
 ,Macquarie University,Chatswood
 ,Gordon,Chatswood
+
+# Airport Stations
+,Domestic Airport,International Airport,Airport stations
+,International Airport,Domestic Airport,Airport stations
 
 # Bankstown/South/Old Main South/East Hills lines
 ,Regents Park,Bankstown

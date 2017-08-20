@@ -5,9 +5,10 @@ import com.innahema.collections.query.queriables.Queryable;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.StringUtilities;
+import jb.dvacommon.DVA;
 import jb.plasma.announcers.CityrailStandard;
 import org.javatuples.Pair;
-import org.javatuples.Triplet;
+import org.javatuples.Quartet;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.List;
 public class Phraser
 {
     private Collection<String[]> substitutions;
-    private Collection<Triplet<String,String,String>> vias;
+    private Collection<Quartet<String,String,String,String>> vias;
     private Collection<List<String>> allStationsTos;
 
     public Phraser()
@@ -53,7 +54,7 @@ public class Phraser
         }
         else
         {
-            for (Triplet<String,String,String> via : vias)
+            for (Quartet<String,String,String,String> via : vias)
             {
                 List<String> stops = Queryable.from(d.Stops).map((Converter<String, String>) String::toLowerCase).toList();
                 int fromIndex = via.getValue0() != null && via.getValue0().length() > 0 ? stops.indexOf(via.getValue0().toLowerCase()) : 0;
@@ -61,7 +62,11 @@ public class Phraser
                 int destIndex = stops.indexOf(via.getValue2().toLowerCase());
                 if (viaIndex >= 0 && destIndex >= 0 && fromIndex >= 0 && destIndex > viaIndex)
                 {
-                    return "via " + via.getValue1();
+                    if (via.getValue3().length() > 0) {
+                        return "via " + via.getValue3();
+                    } else {
+                        return "via " + via.getValue1();
+                    }
                 }
             }
         }
@@ -110,7 +115,7 @@ public class Phraser
         for (String line : load("vias.txt"))
         {
             String[] pieces = Queryable.from(line.split(",")).map(String::trim).toArray();
-            vias.add(new Triplet<>(pieces[0], pieces[1], pieces[2]));
+            vias.add(new Quartet<>(pieces[0], pieces[1], pieces[2], pieces.length > 3 ? pieces[3] : ""));
         }
     }
 
