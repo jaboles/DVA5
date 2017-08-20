@@ -7,14 +7,14 @@
                 <hbox>
                     <label text="Destination:" />
                     <panel layout="BorderLayout">
-                        <label constraints="BorderLayout.EAST" id="destinationIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
+                        <label constraints="BorderLayout.EAST" id="destinationIndicatorIconLabel" icon="resources/indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
                     </panel>
                 </hbox>
                 <dvatextfield id="destinationValue" />
                 <hbox>
                     <label text="Destination line 2:" />
                     <panel layout="BorderLayout">
-                        <label constraints="BorderLayout.EAST" id="destination2IndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
+                        <label constraints="BorderLayout.EAST" id="destination2IndicatorIconLabel" icon="resources/indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
                     </panel>
                 </hbox>
                 <dvatextfield id="destination2Value" />
@@ -54,7 +54,7 @@
                     <panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEADING)">
                         <hbox constraints="BorderLayout.WEST">
                             <label text="Station List:"/>
-                            <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
+                            <label id="indicatorIconLabel" icon="resources/indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
                         </hbox>
                     </panel>
                     <scrollpane verticalScrollBarPolicy="VERTICAL_SCROLLBAR_ALWAYS" border="BevelBorder(1)">
@@ -65,7 +65,7 @@
             <panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
                 <label text="Custom announcement override:" constraints="BorderLayout.WEST"/>
                 <panel constraints="BorderLayout.CENTER" layout="BorderLayout">
-                    <label constraints="BorderLayout.WEST" id="customAnnouncementIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
+                    <label constraints="BorderLayout.WEST" id="customAnnouncementIndicatorIconLabel" icon="resources/indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
                     <filetextfield id="customAnnouncementText"/>
                 </panel>
                 <button id="customAnnouncementButton" text="..." action="customAnnouncementBrowseAction" constraints="BorderLayout.EAST"/>

@@ -38,11 +38,11 @@ public abstract class Drawer implements Cloneable
     {
         try
         {
-            ArialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arial.ttf"));
-            ArialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arialbd.ttf"));
-            TPFrankRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/tpfrank-regular-webfont.ttf"));
-            TPFrankMedium = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/tpfrank-medium-webfont.ttf"));
-            TPFrankBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/tpfrank-bold-webfont.ttf"));
+            ArialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/arial.ttf"));
+            ArialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/arialbd.ttf"));
+            TPFrankRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/tpfrank-regular-webfont.ttf"));
+            TPFrankMedium = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/tpfrank-medium-webfont.ttf"));
+            TPFrankBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/tpfrank-bold-webfont.ttf"));
         }
         catch (Exception ex)
         {

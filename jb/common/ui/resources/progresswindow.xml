@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dialog resizable="false" iconimage="dva_icon.png" title="Progress">
+<dialog resizable="false" iconimage="resources/dva_icon.png" title="Progress">
 	<panel constraints="BorderLayout.CENTER" layout="BorderLayout" border="EmptyBorder(10,10,10,10)">
 		<label id="descriptionLabel" constraints="BorderLayout.NORTH" text="Progress description ..."/>
         <panel constraints="BorderLayout.CENTER" layout="BorderLayout" border="EmptyBorder(10,0,10,0)" >

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<frame resizable="false" undecorated="true" iconimage="dva_icon.png">
+<frame resizable="false" undecorated="true" iconimage="resources/dva_icon.png">
 	<panel constraints="BorderLayout.CENTER" layout="BorderLayout" border="BevelBorder(0)">
-		<label constraints="BorderLayout.NORTH" icon="splash_with_pse_and_java.png"/>
+		<label constraints="BorderLayout.NORTH" icon="resources/splash_with_pse_and_java.png"/>
 		<panel constraints="BorderLayout.CENTER" layout="BorderLayout" border="EmptyBorder(0,0,0,0)" background="35,30,125">
 			<textpane editable="false" contenttype="text/html" background="35,30,125" id="aboutTextPane" constraints="BorderLayout.CENTER" text="&lt;html&gt;&lt;font color=&quot;#ffff00&quot; face=&quot;sans-serif&quot; size=&quot;3&quot;&gt;&lt;b&gt;DVA Version $VERSION$ Build $BUILDNUMBER$&lt;/b&gt; (Java $JAVAVERSION$ $JAVAARCH$)&lt;br&gt;$COPYRIGHT$. Contact: &lt;a href=&quot;mailto:$EMAIL$?subject=DVA&quot;&gt;$EMAIL$&lt;/a&gt;&lt;br&gt;Sounds copyright &#169;: Glenn Jackson-Bethell, Paul McCabe, Winston Yang, Ben Cousins,&lt;br&gt;PKBeam, Charlie Munns.&lt;br&gt;Used with permission. Original site: &lt;a href=&quot;$RAILWAVSURL$&quot;&gt;$RAILWAVSURL$&lt;/a&gt;&lt;br&gt;Splash screen design: Winston Yang&lt;/font&gt;&lt;/html&gt;" border="EmptyBorder(0,10,5,10)" />
 			<label foreground="255,255,0" font="dialog-PLAIN-12" id="loadLabel" constraints="BorderLayout.SOUTH" text="Loading" border="EmptyBorder(5,10,10,10)"/>

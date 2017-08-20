@@ -147,18 +147,12 @@
         	<fileset dir="${InDir}"/>
         	<fileset dir=".">
         		<patternset id="jar-resources">
-                    <include name="*.wav"/>
-                    <include name="*.mp3"/>
-                    <include name="*.jpg"/>
-                    <include name="*.png"/>
-                    <include name="*.gif"/>
-                    <include name="*.ttf"/>
-                    <include name="*.html"/>
                     <include name="*.tt"/>
                     <include name="buildnumber.txt"/>
                     <include name="**/*.xml"/>
                     <include name="jb/**/*.properties"/>
                     <include name="jb/**/*.png"/>
+                    <include name="resources/**"/>
           			<exclude name=".metadata/**"/>
         	    </patternset>
         	</fileset>
@@ -331,7 +325,7 @@
             <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
             <arg value="/I"/>
             <arg value="${WinOutDir32Wine}DVA.scr"/>
-            <arg value="${BaseDirWine}\pse.ico"/>
+            <arg value="${BaseDirWine}\resources\pse.ico"/>
         </exec>
         <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
@@ -362,7 +356,7 @@
             <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
             <arg value="/I"/>
             <arg value="${WinOutDir64Wine}DVA.scr"/>
-            <arg value="${BaseDirWine}\pse.ico"/>
+            <arg value="${BaseDirWine}\resources\pse.ico"/>
         </exec>
         <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
@@ -466,7 +460,7 @@
         <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
             <arg value="/I"/>
             <arg value="${WinOutDir32}DVA.scr"/>
-            <arg value="${basedir}\pse.ico"/>
+            <arg value="${basedir}\resources\pse.ico"/>
         </exec>
         <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
             <arg value="/N"/>
@@ -489,7 +483,7 @@
         <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
             <arg value="/I"/>
             <arg value="${WinOutDir64}DVA.scr"/>
-            <arg value="${basedir}\pse.ico"/>
+            <arg value="${basedir}\resources\pse.ico"/>
         </exec>
         <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
             <arg value="/N"/>
@@ -546,6 +540,7 @@
             <include name="*.sh"/>
             <include name="mac/**"/>
             <include name="win/**"/>
+            <include name="resources/**"/>
             <include name=".classpath"/>
             <include name=".project"/>
             <include name=".externalToolBuilders/**"/>
@@ -650,7 +645,7 @@
         <copy todir="${DpkgRoot}${file.separator}DEBIAN" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}debian${file.separator}control"/>
         <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}applications" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}debian${file.separator}dva.desktop"/>
         <copy todir="${DpkgRoot}${file.separator}usr${file.separator}bin" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}dva"/>
-        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true" file="${basedir}${file.separator}dva_icon.png"/>
+        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true" file="${basedir}${file.separator}resources${file.separator}dva_icon.png"/>
         <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true">
             <fileset dir="${OutDir}">
                 <include name="*.txt"/>

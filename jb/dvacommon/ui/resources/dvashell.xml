@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<frame title="DVA 5" size="1080,700" defaultcloseoperation="JFrame.EXIT_ON_CLOSE" bundle="jb.dvacommon.ui.resources.dvashell" locale="en" iconimage="dva_icon.png">
+<frame title="DVA 5" size="1080,700" defaultcloseoperation="JFrame.EXIT_ON_CLOSE" bundle="jb.dvacommon.ui.resources.dvashell" locale="en" iconimage="resources/dva_icon.png">
     <menubar>
         <menu text="Application" mnemonic="VK_A">
             <menuitem action="showDVAPanelAction" icon="null" mnemonic="VK_D" accelerator="MENU_DVA_SHOW_DVA_PANEL_ACCELERATOR"/>

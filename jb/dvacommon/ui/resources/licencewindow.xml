@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dialog title="Licence Agreement" resizable="true" locale="en" modal="true" iconimage="dva_icon.png">
+<dialog title="Licence Agreement" resizable="true" locale="en" modal="true" iconimage="resources/dva_icon.png">
     <panel name="Licence" layout="BorderLayout" border="EmptyBorder(10,10,10,10)">
         <panel id="labelPanel" constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEADING)" border="EmptyBorder(0,0,10,0)">
             <label text="You must accept the following licence terms in order to use DVA." />

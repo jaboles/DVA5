@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dialog title="Help" resizable="true" locale="en" modal="true" iconimage="dva_icon.png">
+<dialog title="Help" resizable="true" locale="en" modal="true" iconimage="resources/dva_icon.png">
     <panel layout="BorderLayout" border="EmptyBorder(10,10,10,10)">
         <scrollpane preferredsize="600,420" constraints="BorderLayout.CENTER" border="BevelBorder(1)">
             <textpane id="helpPane" editable="false" contenttype="text/html" border="EmptyBorder(2,2,2,2)"/>

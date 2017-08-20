@@ -137,7 +137,7 @@ public class DVA {
                     library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
                 }
             }
-            soundLibraryMap.put("All", new SoundLibrary("All", new LinkedList<>(soundLibraryMap.values()), SoundLibrary.shrinkIcon(DVA.class.getResource("/all.png"))));
+            soundLibraryMap.put("All", new SoundLibrary("All", new LinkedList<>(soundLibraryMap.values()), SoundLibrary.shrinkIcon(DVA.class.getResource("/resources/all.png"))));
             //if (p != null) p.join();
 
             if (showLoadingProgress) lw.setText("Analysing timetables... ");
