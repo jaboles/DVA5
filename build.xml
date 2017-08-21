@@ -21,7 +21,7 @@
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-    <property name="DmgSizeMb" value="27"/>
+    <property name="DmgSizeMb" value="28"/>
 	
 	<!-- Windows setup -->
     <!--<property name="Wine" value="wine"/>-->
