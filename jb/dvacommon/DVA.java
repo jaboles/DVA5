@@ -111,8 +111,8 @@ public class DVA {
         }
 
         try {
-            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>("dvatmp", "soundlibrarymap");
-            final ObjectCache<SoundLibrary> c = new ObjectCache<>("dvatmp", "soundlibrary0001");
+            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>("dvatmp", "soundlibrarymap" + VersionString);
+            final ObjectCache<SoundLibrary> c = new ObjectCache<>("dvatmp", "soundlibrary" + VersionString);
             populateSoundLibraries();
             
             // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
