@@ -16,6 +16,7 @@ import com.microsoft.azure.storage.blob.BlobContainerPublicAccessType;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.StringUtilities;
@@ -29,6 +30,7 @@ public class WAzureUpdater extends BaseUpdater
     public static final String SoundJarsList = "soundjarslist";
     public static final String MetadataContainerName = "metadata";
     public static final String SoundJarsContainerName = "soundjars";
+    public static final String ExceptionsContainerName = "exceptions";
 
     public static final String PersistedLastModifiedTimestamp = "PersistedLastModifiedTimestamp";
     
@@ -184,7 +186,9 @@ public class WAzureUpdater extends BaseUpdater
     private static String[] getVersions(CloudBlobClient serviceClient)
     {
         return Queryable.from(serviceClient.listContainers().iterator())
-                .filter(c -> c.getName().contains("-"))
+                .filter(c -> !c.getName().equals(MetadataContainerName))
+                .filter(c -> !c.getName().equals(SoundJarsContainerName))
+                .filter(c -> !c.getName().equals(ExceptionsContainerName))
                 .map(c -> c.getName().replace('-', '.')).toArray();
     }
 }
