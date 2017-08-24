@@ -132,21 +132,31 @@ public class TimetableTranslator
     // Picks out a list of train departures given a line, direction, station,
     // and time.
     public List<DepartureData> getDepartureDataForStation(String lineName, String directionName, String stationName,
-            Calendar time, int atOrAfterTime, int platform, int cars, int limit) throws Exception
+            Calendar time, int atOrAfterTime, int platform, int cars, int limit, boolean throwIfNotFound) throws Exception
     {
         List<DepartureData> dd = new LinkedList<>();
         TimetableLine ttLine = tt.lines.get(lineName);
         if (ttLine == null) {
-            throw new Exception("Line " + lineName + " not found in the schedule");
+            if (throwIfNotFound)
+                throw new Exception("Line " + lineName + " not found in the schedule");
+            else
+                return dd;
         }
         TimetableLineSchedule sched = ttLine.directions.get(directionName);
         if (sched == null) {
-            throw new Exception("Direction " + directionName + " not found in the schedule for line " + lineName);
+            if (throwIfNotFound)
+                throw new Exception("Direction " + directionName + " not found in the schedule for line " + lineName);
+            else
+                return dd;
         }
 
         int stationIndex = sched.stations.indexOf(stationName);
-        if (stationIndex < 0)
-            throw new Exception("Station " + stationName + " not found in the schedule");
+        if (stationIndex < 0) {
+            if (throwIfNotFound)
+                throw new Exception("Station " + stationName + " not found in the schedule");
+            else
+                return dd;
+        }
 
         int trainIndex;
         int trainCount = 0;
@@ -224,7 +234,7 @@ public class TimetableTranslator
                         logger.info("Looking for a continuation from {} at {}", destination, destinationTime.asCalendar().getTime());
                         List<DepartureData> continuationDataList = getDepartureDataForStation(continuation.getValue0(),
                                 continuation.getValue1(), destination, destinationTime.asCalendar(), AtOrAfter.AT,
-                                0, 0, 1);
+                                0, 0, 1, false);
                         if (continuationDataList.size() > 0) {
                             DepartureData continuationData = continuationDataList.get(0);
                             destination = continuationData.Destination;
