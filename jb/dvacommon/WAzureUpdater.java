@@ -29,8 +29,7 @@ public class WAzureUpdater extends BaseUpdater
     public static final String SoundJarsList = "soundjarslist";
     public static final String MetadataContainerName = "metadata";
     public static final String SoundJarsContainerName = "soundjars";
-    public static final String ExceptionsContainerName = "exceptions";
-    
+
     public static final String PersistedLastModifiedTimestamp = "PersistedLastModifiedTimestamp";
     
     public WAzureUpdater(URL baseUrl)
@@ -185,9 +184,7 @@ public class WAzureUpdater extends BaseUpdater
     private static String[] getVersions(CloudBlobClient serviceClient)
     {
         return Queryable.from(serviceClient.listContainers().iterator())
-                .filter(c -> !c.getName().equals(MetadataContainerName))
-                .filter(c -> !c.getName().equals(SoundJarsContainerName))
-                .filter(c -> !c.getName().equals(ExceptionsContainerName))
+                .filter(c -> c.getName().contains("-"))
                 .map(c -> c.getName().replace('-', '.')).toArray();
     }
 }
