@@ -40,7 +40,7 @@ public class ExceptionReporter
                     // Normalise line endings
                     String message = sw.toString().replace("\r\n", "\n").replace("\n", "\r\n");
 
-                    new WAzureExceptionSink("https://dvaupdate.blob.core.windows.net/exceptions?st=2017-08-23T22%3A38%3A00Z&se=2020-08-24T22%3A38%3A00Z&sp=w&sv=2015-12-11&sr=c&sig=OzzMa6Zj2KnjJIQB49LrrG10wCUI7c7fmBSd8%2BqgJK0%3D").store(message);
+                    new WAzureExceptionSink("https://dvaexceptions.blob.core.windows.net/exceptions?st=2017-08-26T03%3A15%3A00Z&se=2050-08-27T03%3A15%3A00Z&sp=w&sv=2015-12-11&sr=c&sig=W%2BlrXi8fft%2BMrrbrpTbIfXoZZ6Z%2BNCfEmoyY1tyZXng%3D").store(message);
                 } catch (Exception e2) {
                     e2.printStackTrace();
                     System.err.println("Could not report application exception. Original exception follows");

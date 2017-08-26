@@ -16,7 +16,6 @@ import com.microsoft.azure.storage.blob.BlobContainerPublicAccessType;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import com.sun.xml.internal.ws.api.addressing.WSEndpointReference;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.StringUtilities;
