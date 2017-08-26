@@ -303,6 +303,16 @@ public class PlasmaUI
         departureData = getDepartureData();
         if (departureData == null) return null;
 
+        for (DepartureData d : departureData)
+        {
+            if (d != null && d.CustomAnnouncementPath != null && !d.CustomAnnouncementPath.isEmpty()) {
+                if (!(new File(d.CustomAnnouncementPath).exists())) {
+                    JOptionPane.showMessageDialog(null, "File '" + d.CustomAnnouncementPath + "' not found.");
+                    return null;
+                }
+            }
+        }
+
         // Get all graphics devices (screens) and if set to run in full screen,
         // ensure there are enough.
         int maxScreens;
@@ -551,6 +561,16 @@ public class PlasmaUI
         public void actionPerformed(ActionEvent e)
         {
             departureData = getDepartureData();
+            for (DepartureData d : departureData)
+            {
+                if (d != null && d.CustomAnnouncementPath != null && !d.CustomAnnouncementPath.isEmpty()) {
+                    if (!(new File(d.CustomAnnouncementPath).exists())) {
+                        JOptionPane.showMessageDialog(null, "File '" + d.CustomAnnouncementPath + "' not found.");
+                        return;
+                    }
+                }
+            }
+
             announce();
         }
     };
