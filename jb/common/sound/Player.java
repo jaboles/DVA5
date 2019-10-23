@@ -48,6 +48,10 @@ public class Player extends Thread {
     }
 
     public Player(List<URL> urlList, Runnable longConcatCallback, Runnable afterConcatCallback, LevelMeterPanel levelMeterPanel) {
+        for (URL u : urlList)
+        {
+            logger.info(u.toString());
+        }
         audioClipList = urlList;
         this.longConcatCallback = longConcatCallback;
         this.afterConcatCallback = afterConcatCallback;

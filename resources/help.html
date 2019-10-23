@@ -32,5 +32,20 @@
 <p class="p3">As you edit the announcement, the indicator will change between green and red, to show you whether the current announcement can be played with the sounds available. A pink highlight in the editor will also show you the location of any error found.</p>
 <p class="p4"><br></p>
 <p class="p3">Some voice libraries (e.g. the Sydney ones) contain two sets of sounds with different voice inflections. If available, these will be shown underneath the sound list. The inflection used in an announcement is automatically determined from the sentence structure and punctuation, but can be overridden by preceding the station or sound bite name with a backtick (`) character to force a falling inflection, or a caret (^) to force a rising inflection. Example: "The train on platform number 1 goes to ^Central. First stop `Central only.</p>
+<p class="p4"><br></p>
+<p class="p3"><span class="s1"><b>Command-Line Operation</b></span></p>
+<p class="p4"><br></p>
+<p class="p3">Announcements can be played or exported to MP3 files on the command-line. On the DVA command line pass the '/play' or '/export' options, the MP3 filename (if exporting), the voice library to use, and the announcement text.</p>
+<p class="p4"><br></p>
+<p class="p3">Example: Playing an announcement</p>
+<p class="p4"><br></p>
+<p class="p3">Mac:<blockquote><code>/Applications/DVA.app/Contents/MacOS/dva /play Sydney-Female 'The train on platform number 5 is due to depart. Please stand clear.'</code></blockquote></p>
+<p class="p3">Windows:<blockquote><code>"C:\Program Files\DVA\dva.exe" /play "The train on platform number 5 is due to depart. Please stand clear."</code></blockquote></p>
+<p class="p4"><br></p>
+<p class="p3">Example: Exporting an announcement</p>
+<p class="p4"><br></p>
+<p class="p3">Mac:<blockquote><code>/Applications/DVA.app/Contents/MacOS/dva /export ~/Desktop/test.mp3 'The train on platform number 5 is due to depart. Please stand clear.'</code></blockquote></p>
+<p class="p3">Windows:<blockquote><code>"C:\Program Files\DVA\dva.exe" /export ~\Desktop\test.mp3 "The train on platform number 5 is due to depart. Please stand clear."</code></blockquote></p>
+<p class="p4"><br></p>
 </body>
 </html>

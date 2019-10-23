@@ -45,7 +45,7 @@ public class DVA {
     ArrayList<URL> verifiedUrlList;
     final static Logger logger = LoggerFactory.getLogger(DVA.class);
 
-    public static final String VersionString = "5.3.18";
+    public static final String VersionString = "5.3.19";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2017";
 
     // Keep track of the applications own jars so that they don't get treated as sound libraries.
@@ -98,13 +98,17 @@ public class DVA {
             FALLBACK_LIBRARIES.put(arr[0], arr[1]);
         }
     }
-    
-    public DVA(boolean showMainWindow, boolean showLoadingProgress) {
+
+    public DVA() {
         logger.info("DVA {}, Java {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
         logger.info("OS {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
         logger.info("Temp is " + System.getProperty("java.io.tmpdir"));
-        LoadWindow lw = null;
         Player.emptyCache();
+    }
+    
+    public DVA(boolean showMainWindow, boolean showLoadingProgress) {
+        this();
+        LoadWindow lw = null;
         if (showLoadingProgress) {
             lw = new LoadWindow();
             lw.show(false, showMainWindow, true);
@@ -162,6 +166,50 @@ public class DVA {
         }
     }
 
+    public DVA(String soundLibrary) {
+        this();
+
+        try {
+            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>("dvatmp", "soundlibrarymap" + VersionString);
+            final ObjectCache<SoundLibrary> c = new ObjectCache<>("dvatmp", "soundlibrary" + VersionString);
+            populateSoundLibraries();
+
+            // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
+            soundLibraryMap = mc.load(DVA.class, Integer.toString(soundLibraryMap.size()), () -> {
+                c.emptyCache();
+                return soundLibraryMap;
+            });
+
+            logger.info("Loading sound library '{}'", soundLibrary);
+            String fallbackLibraryName = FALLBACK_LIBRARIES.get(soundLibrary);
+
+            SoundLibrary singleLibrary = c.load(DVA.class, soundLibrary, () -> {
+                SoundLibrary l = soundLibraryMap.get(soundLibrary);
+                try {
+                    l.populate();
+                } catch (Exception ignored) {}
+                return l;
+            });
+            soundLibraryMap.put(soundLibrary, singleLibrary);
+            SoundLibrary fallbackLibrary = c.load(DVA.class, fallbackLibraryName, () -> {
+                SoundLibrary l = soundLibraryMap.get(fallbackLibraryName);
+                try {
+                    l.populate();
+                } catch (Exception ignored) {}
+                return l;
+            });
+            soundLibraryMap.put(fallbackLibraryName, fallbackLibrary);
+
+            for (SoundLibrary library : soundLibraryMap.values()) {
+                if (FALLBACK_LIBRARIES.keySet().contains(library.getName())) {
+                    library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
+                }
+            }
+        } catch (Exception e) {
+            ExceptionReporter.reportException(e);
+        }
+    }
+
     public Collection<SoundLibrary> getSoundLibraryList() {
         return soundLibraryMap.values();
     }
@@ -214,7 +262,10 @@ public class DVA {
     {
         // Convert to list of URLs to the wads
         ArrayList<URL> al = script.getTranslatedUrlList(getSoundLibrary(script.getVoice()));
-        (new File(targetFile)).getParentFile().mkdirs();
+        File parent = (new File(targetFile)).getParentFile();
+        if (parent != null) {
+            parent.mkdirs();
+        }
         MediaConcatenator2.concat(al, targetFile, null);
     }
 
@@ -296,11 +347,50 @@ public class DVA {
             // wtf?? Impossible situation
         }
 
+        logger.info("argc: {}", args.length);
+
         // Run the program in different ways depending on command line switches
         if (args.length > 0 && args[0].equalsIgnoreCase("/x"))
         {
             // Sound download during Windows installer -- exit
             fetchSoundJars();
+        }
+        else if (args.length >= 3 && args[0].equalsIgnoreCase("/play"))
+        {
+            String soundLibrary = args[1];
+            String announcementText = args[2];
+            Script announcement = new Script(soundLibrary, announcementText);
+            DVA dva = new DVA(soundLibrary);
+            dva.verify(announcement);
+            logger.info("Playing: '{}'", announcementText);
+            Player p = dva.play(null, announcement, null, null);
+            p.start();
+            new Thread() {
+                public void run() {
+                    try {
+                        p.join();
+                        logger.info("Success.");
+                        System.exit(0);
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            }.start();
+        }
+        else if (args.length >= 4 && args[0].equalsIgnoreCase("/export"))
+        {
+            String filename = args[1];
+            String soundLibrary = args[2];
+            String announcementText = args[3];
+            Script announcement = new Script(soundLibrary, announcementText);
+            DVA dva = new DVA(soundLibrary);
+            dva.verify(announcement);
+            logger.info("Exporting to '{}': '{}'", filename, announcementText);
+            try {
+                dva.export(announcement, filename);
+            } catch (Exception e) {
+                ExceptionReporter.reportException(e);
+            }
+            logger.info("Success.");
         }
         else
         {

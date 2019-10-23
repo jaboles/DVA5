@@ -1,4 +1,4 @@
 #!/bin/bash
 pushd build/Debug/DVA.app/Contents/MacOS/ >/dev/null
-./dva $*
+./dva "$@"
 popd >/dev/null

@@ -22,4 +22,4 @@ elif [ -f /bin/java ]; then
 else
 	JAVA=java
 fi
-exec $JAVA -Xdock:name=DVA -Xdock:icon=$DOCKICON -Djava.util.logging.config.file=logging.properties -jar DVA.jar $*
+exec $JAVA -Xdock:name=DVA -Xdock:icon=$DOCKICON -Djava.util.logging.config.file=logging.properties -jar DVA.jar "$@"
