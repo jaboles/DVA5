@@ -43,21 +43,21 @@ public class CityrailV4Portrait extends CityrailV4
 
     public void dimensionsChanged()
     {
-        HeaderFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.042));
-        HeaderTimeNowFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
-        TimeFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.035));
-        DestinationFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.074));
-        Destination2Font = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.03));
-        PlatformDepartsLabelFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
-        PlatformDepartsFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.065));
-        PlatformDepartsFontSmall = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        MainFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.043));
-        TextBoxFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.021));
+        HeaderFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.042));
+        HeaderTimeNowFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
+        TimeFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.035));
+        DestinationFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.074));
+        Destination2Font = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.03));
+        PlatformDepartsLabelFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
+        PlatformDepartsFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.065));
+        PlatformDepartsFontSmall = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        MainFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.043));
+        TextBoxFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.021));
 
-        NextPlatformDepartsLabelFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.022));
-        NextDestinationFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.026));
-        NextDestination2Font = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.019));
-        MiniTextBoxFont = TPFrankMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
+        NextPlatformDepartsLabelFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.022));
+        NextDestinationFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.026));
+        NextDestination2Font = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.019));
+        MiniTextBoxFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
     }
 
     public void dataChanged(java.util.List<DepartureData> data)

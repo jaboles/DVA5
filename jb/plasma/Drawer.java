@@ -26,9 +26,7 @@ public abstract class Drawer implements Cloneable
     // Fonts
     protected static Font ArialRegular;
     protected static Font ArialBold;
-    protected static Font TPFrankRegular;
-    protected static Font TPFrankMedium;
-    protected static Font TPFrankBold;
+    protected static Font RobotoMedium;
 
     protected Drawer()
     {
@@ -40,9 +38,7 @@ public abstract class Drawer implements Cloneable
         {
             ArialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/arial.ttf"));
             ArialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/arialbd.ttf"));
-            TPFrankRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/tpfrank-regular-webfont.ttf"));
-            TPFrankMedium = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/tpfrank-medium-webfont.ttf"));
-            TPFrankBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/tpfrank-bold-webfont.ttf"));
+            RobotoMedium = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/Roboto-Medium.ttf"));
         }
         catch (Exception ex)
         {
