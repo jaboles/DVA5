@@ -65,4 +65,14 @@ Filename: "{app}\DVA.exe"; Description: "{cm:LaunchProgram,DVA}"; Flags: nowait 
 Filename: "{app}\DVA.exe"; Parameters: "/x"; StatusMsg: "Updating sound libraries"
 
 [Code]
+function InitializeSetup() : Boolean;
+begin
+    if NeedToInstallJava() then
+    begin
+    	MsgBox('This application requires the Java Runtime Environment v1.6 or newer to run. As part of the installation of this software, the newest version of Java will be downloaded and installed. This may take several minutes.',
+    	  mbConfirmation, MB_OK);
+    end;
+    Result := true;    
+end;
+
 
