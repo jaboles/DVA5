@@ -5,7 +5,9 @@
 Filename: "{code:GetJavaDownloadPath}"; Parameters: "/s"; Description: "Install Java runtime"; StatusMsg: "Installing Java runtime"; Check: "NeedToInstallJava";
 
 [Code]
-function CheckJRE(MinVersion : String) : Boolean;
+const MinVersion = '1.6';
+
+function CheckJRE() : Boolean;
 var
   JavaVer : String;
 begin
@@ -22,11 +24,13 @@ begin
     if Length( JavaVer ) > 0 then
     begin
 	Log('An existing Java version ' + JavaVer + ' was found.')
-    	if CompareVersion(JavaVer,MinVersion) >= 0 then
+    	if CompareVersion(MinVersion, JavaVer) >= 0 then
     	begin
             Log('The found Java version is not new enough. Required minimum ' + MinVersion);
+    	    Result := false;
+    	end
+    	else
     	    Result := true;
-    	end;
     end
     else
         Log('No existing Java version was found.');
@@ -62,7 +66,17 @@ end;
 
 function NeedToInstallJava() : Boolean;
 begin
-    Result := (not CheckJRE('1.6'));
+    Result := (not CheckJRE);
+end;
+
+function InitializeSetup() : Boolean;
+begin
+    if NeedToInstallJava() then
+    begin
+    	MsgBox('This application requires the Java Runtime Environment v' + MinVersion + ' or newer to run. As part of the installation of this software, the newest version of Java will be downloaded and installed. This may take several minutes.',
+    	  mbConfirmation, MB_OK);
+    end;
+    Result := true;
 end;
 
 procedure InitializeWizard();
