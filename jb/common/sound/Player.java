@@ -28,8 +28,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.sound.xuggle.MediaConcatenator2;
-import jb.common.ui.ProgressWindow;
-import jb.dvacommon.ProgressAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

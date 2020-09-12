@@ -2,7 +2,6 @@ package jb.dvacommon;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import jb.common.FileUtilities;
 
 public class CloudSoundJarFetcher extends BaseUpdater
 {

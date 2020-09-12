@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import jb.common.ExceptionReporter;
-import jb.common.ui.ProgressWindow;
 import jb.dvacommon.ProgressAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

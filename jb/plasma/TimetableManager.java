@@ -1,7 +1,6 @@
 package jb.plasma;
 
 import jb.common.ObjectCache;
-import jb.common.Utilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,20 +62,31 @@ public class TimetableManager extends DefaultComboBoxModel<Timetable>
 
     private void loadFrom(String cacheId, final InputStream is) throws Exception
     {
-        ObjectCache<Timetable> c = new ObjectCache<>("dvatmp", "timetable2");
-        final Timetable tt = c.load(TimetableTranslator.class, cacheId, () -> {
-            Timetable t = null;
-            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is, 102400))) {
-                t = (Timetable) ois.readObject();
-            }
-            new TimetableTranslator(t).cleanUpTimetable();
-            return t;
-        });
+        try
+        {
+            ObjectCache<Timetable> c = new ObjectCache<>("dvatmp", "timetable2");
+            final Timetable tt = c.load(TimetableTranslator.class, cacheId, () -> {
+                Timetable t = null;
+                try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is, 102400))) {
+                    t = (Timetable) ois.readObject();
+                }
+                new TimetableTranslator(t).cleanUpTimetable();
+                return t;
+            });
 
-        logger.info("Loaded timetable: {} lines, {} directions, {} trains", tt.getLineCount(), tt.getDirectionCount(),
-                tt.getTrainCount());
+            logger.info("Loaded timetable: {} lines, {} directions, {} trains", tt.getLineCount(), tt.getDirectionCount(),
+                    tt.getTrainCount());
 
-        addElement(tt);
+            addElement(tt);
+        }
+        catch (ClassCastException e)
+        {
+            logger.warn("Could not load timetable.", e);
+        }
+        catch (NullPointerException e)
+        {
+            logger.warn("Could not load timetable.", e);
+        }
     }
 
     public void deleteTimetable(Timetable tt)

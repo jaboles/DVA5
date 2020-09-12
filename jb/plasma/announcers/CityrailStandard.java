@@ -1,23 +1,10 @@
 package jb.plasma.announcers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.innahema.collections.query.functions.Converter;
-import jb.common.ExceptionReporter;
-import jb.common.FileUtilities;
-import jb.common.StringUtilities;
 import jb.dva.SoundLibrary;
 import jb.plasma.Announcer;
 import jb.plasma.DepartureData;
 import jb.plasma.Phraser;
 import org.javatuples.Pair;
-import org.javatuples.Triplet;
-import com.innahema.collections.query.queriables.Queryable;
 
 public class CityrailStandard extends Announcer
 {

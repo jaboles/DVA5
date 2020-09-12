@@ -1,13 +1,6 @@
 package jb.plasma.renderers;
 
-import jb.common.ExceptionReporter;
-import jb.plasma.CityrailLine;
-
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
 public abstract class CityrailV4Landscape extends CityrailV4
 {

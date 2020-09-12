@@ -14,7 +14,6 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
-import javax.swing.text.Highlighter.Highlight;
 import jb.common.ExceptionReporter;
 import jb.common.ui.TextComponentHighlighter;
 import jb.dva.Script;
