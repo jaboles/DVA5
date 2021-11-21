@@ -108,7 +108,7 @@ public class CityrailV2 extends Cityrail
         }
         if (data.size() >= 3)
         {
-            DepartureData d2 = data.get(1);
+            DepartureData d2 = data.get(2);
             if (d2.DueOut != null) {
                 int m = getDueOut(d2.DueOut).getValue1();
                 if (m > 0) {
