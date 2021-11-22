@@ -1,7 +1,5 @@
 package jb.plasma;
 
-import com.innahema.collections.query.functions.Converter;
-import com.innahema.collections.query.queriables.Queryable;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.StringUtilities;
@@ -11,10 +9,9 @@ import org.javatuples.Quartet;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Phraser
 {
@@ -55,7 +52,7 @@ public class Phraser
         {
             for (Quartet<String,String,String,String> via : vias)
             {
-                List<String> stops = Queryable.from(d.Stops).map((Converter<String, String>) String::toLowerCase).toList();
+                List<String> stops = Arrays.stream(d.Stops).map(String::toLowerCase).collect(Collectors.toList());
                 int fromIndex = via.getValue0() != null && via.getValue0().length() > 0 ? stops.indexOf(via.getValue0().toLowerCase()) : 0;
                 int viaIndex =  stops.indexOf(via.getValue1().toLowerCase());
                 int destIndex = stops.indexOf(via.getValue2().toLowerCase());
@@ -75,10 +72,10 @@ public class Phraser
 
     public Pair<String,Integer> getAllStationsTo(String[] stops, int currentIndex)
     {
-        String[] stopsLower = Queryable.from(stops).map((Converter<String, String>) String::toLowerCase).toArray();
+        String[] stopsLower = Arrays.stream(stops).map(String::toLowerCase).toArray(String[]::new);
         for (List<String> allStationsTo : allStationsTos)
         {
-            List<String> allStationsToLower = Queryable.from(allStationsTo).map((Converter<String, String>) String::toLowerCase).toList();
+            List<String> allStationsToLower = allStationsTo.stream().map(String::toLowerCase).collect(Collectors.toList());
             int startIndex = allStationsToLower.indexOf(stopsLower[currentIndex]);
             int lastStationInSequence = currentIndex > 0 ? allStationsToLower.indexOf(stopsLower[currentIndex - 1]) : -1;
 
@@ -87,9 +84,9 @@ public class Phraser
                 int matches = 0;
                 for (int i = 0; (startIndex + i) < allStationsTo.size() && (currentIndex + i) < stops.length; i++)
                 {
-                    Queryable<String> items = Queryable.from(allStationsToLower.get(startIndex + i).split("\\|")).map(String::trim);
+                    Stream<String> items = Arrays.stream(allStationsToLower.get(startIndex + i).split("\\|")).map(String::trim);
                     String currentStop = stopsLower[currentIndex + i];
-                    if (items.any(currentStop::equals))
+                    if (items.anyMatch(currentStop::equals))
                     {
                         matches++;
                     }
@@ -113,7 +110,7 @@ public class Phraser
         vias = new LinkedList<>();
         for (String line : load("vias.txt"))
         {
-            String[] pieces = Queryable.from(line.split(",")).map(String::trim).toArray();
+            String[] pieces = Arrays.stream(line.split(",")).map(String::trim).toArray(String[]::new);
             vias.add(new Quartet<>(pieces[0], pieces[1], pieces[2], pieces.length > 3 ? pieces[3] : ""));
         }
     }
@@ -123,7 +120,7 @@ public class Phraser
         allStationsTos = new LinkedList<>();
         for (String line : load("allStationsTos.txt"))
         {
-            List<String> list = Queryable.from(line.split(",")).map(String::trim).toList();
+            List<String> list = Arrays.stream(line.split(",")).map(String::trim).collect(Collectors.toList());
             List<String> reverseList = new LinkedList<>(list);
             Collections.reverse(reverseList);
             allStationsTos.add(list);
@@ -136,7 +133,7 @@ public class Phraser
         substitutions = new LinkedList<>();
         for (String line : load("substitutions.txt"))
         {
-            substitutions.add(Queryable.from(line.split(",")).map(String::trim).toArray());
+            substitutions.add(Arrays.stream(line.split(",")).map(String::trim).toArray(String[]::new));
         }
     }
 
@@ -146,9 +143,10 @@ public class Phraser
         try
         {
             File f = new File(FileUtilities.getJarFolder(CityrailStandard.class), filename);
-            lines = Queryable.from(FileUtilities.readAllLines(f))
+            lines = FileUtilities.readAllLines(f)
+                    .stream()
                     .filter(line -> line.trim().length() > 0 && !line.trim().startsWith("#"))
-                    .toList();
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             ExceptionReporter.reportException(e);
         }

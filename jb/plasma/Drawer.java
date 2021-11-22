@@ -1,8 +1,8 @@
 package jb.plasma;
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.innahema.collections.query.queriables.Queryable;
 import jb.common.ExceptionReporter;
 import jb.plasma.ui.PlasmaPanel;
 
@@ -65,9 +65,9 @@ public abstract class Drawer implements Cloneable
     // of the list when its due-out time has passed)
     public void dataChanged(List<DepartureData> newData)
     {
-        List<DepartureData> filteredNewData = Queryable.from(newData)
-                .where(d -> d.Destination != null && !d.Destination.equals(""))
-                .toList();
+        List<DepartureData> filteredNewData = newData.stream()
+                .filter(d -> d.Destination != null && !d.Destination.equals(""))
+                .collect(Collectors.toList());
         newData.clear();
         newData.addAll(filteredNewData);
         DepartureData = newData;

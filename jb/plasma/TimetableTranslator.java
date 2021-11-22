@@ -2,17 +2,13 @@ package jb.plasma;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import jb.common.IntPair;
 import jb.common.StringUtilities;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.innahema.collections.query.queriables.Queryable;
 
 // Converts the CityRail timetable data into a format usable by DVA.
 public class TimetableTranslator
@@ -105,19 +101,19 @@ public class TimetableTranslator
 
     public String[] getLines()
     {
-        return Queryable.from(tt.lineNames).toArray();
+        return tt.lineNames.toArray(new String[0]);
     }
 
     public String[] getDirectionsForLine(String lineName)
     {
-        return Queryable.from(tt.lines.get(lineName).directionNames).toArray();
+        return tt.lines.get(lineName).directionNames.toArray(new String[0]);
     }
 
     public String[] getStationsForLineAndDirection(String lineName, String directionName)
     {
         TimetableLineSchedule sched = tt.lines.get(lineName).directions.get(directionName);
         if (sched != null && sched.stations.size() > 0)
-            return Queryable.from(sched.stations).toArray();
+            return sched.stations.toArray(new String[0]);
         else
             return new String[] {};
     }

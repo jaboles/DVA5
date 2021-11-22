@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import com.innahema.collections.query.queriables.Queryable;
 
 // TimetableLine object. Contains a list of TimetableLineSchedule objects, one for each direction on the line.
 // e.g. "Western Line" has two directions - Chatswood to Emu Plains/Richmond, and Emu Plains/Richmond to Chatswood
@@ -35,7 +34,10 @@ public class TimetableLine implements Serializable
 
     public int getTrainCount()
     {
-        return Queryable.from(directions.values()).where(s -> s != null).sum(TimetableLineSchedule::getTrainCount);
+        return directions.values().stream()
+                .filter(s -> s != null)
+                .map(TimetableLineSchedule::getTrainCount)
+                .reduce(0, Integer::sum);
     }
 
     public int hashCode()

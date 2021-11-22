@@ -8,4 +8,5 @@ azure.secret
 .settings
 *.bak
 Thumbs.db
-
+OpenJDK*
+jdk-*

@@ -1,11 +1,9 @@
 package jb.plasma;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
 import jb.common.StringUtilities;
-import com.innahema.collections.query.queriables.Queryable;
 
 // Represents info about a single departure being displayed on the indicator board
 public class DepartureData
@@ -37,12 +35,10 @@ public class DepartureData
     // Parses the list of stops from a comma-separated string
     public void stopsFromString(String stops)
     {
-        List<String> l = new LinkedList<String>();
-        for (String s : Queryable.from(stops.split(",")).map(String::trim))
-        {
-            if (s.length() > 0) l.add(s);
-        }
-        Stops = l.toArray(new String[0]);
+        Stops = Arrays.stream(stops.split(","))
+                .map(String::trim)
+                .filter(s -> s.length() > 0)
+                .toArray(String[]::new);
     }
 
     // Gets the due-out time as a string

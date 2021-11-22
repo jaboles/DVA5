@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import com.innahema.collections.query.queriables.Queryable;
 
 // Master timetable object. Contains a list of TimetableLine objects
 public class Timetable implements Serializable
@@ -43,12 +42,16 @@ public class Timetable implements Serializable
 
     public int getDirectionCount()
     {
-        return Queryable.from(lines.values()).sum(TimetableLine::getDirectionCount);
+        return lines.values().stream()
+                .map(TimetableLine::getDirectionCount)
+                .reduce(0, Integer::sum);
     }
 
     public int getTrainCount()
     {
-        return Queryable.from(lines.values()).sum(TimetableLine::getTrainCount);
+        return lines.values().stream()
+                .map(TimetableLine::getTrainCount)
+                .reduce(0, Integer::sum);
     }
 
     public String toString() { return getName(); }

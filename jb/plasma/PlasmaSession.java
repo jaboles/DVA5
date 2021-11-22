@@ -3,7 +3,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.List;
-import com.innahema.collections.query.queriables.Queryable;
 import jb.plasma.ui.PlasmaWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +40,7 @@ public class PlasmaSession
     // Stop session, close all windows, stop the timer.
     public void stop() {
         timer.stop();
-        Queryable.from(windows).forEachR(PlasmaWindow::close);
+        windows.forEach(PlasmaWindow::close);
         windows.clear();
     }
 

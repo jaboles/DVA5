@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -125,9 +126,9 @@ public class DVAShell
             {
                 public void run()
                 {
-                    final BaseUpdater updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
-                    if (updater != null)
-                        SwingUtilities.invokeLater(() -> promptToUpdate(updater, true));
+                    final Optional<BaseUpdater> updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
+                    if (updater.isPresent())
+                        SwingUtilities.invokeLater(() -> promptToUpdate(updater.get(), true));
                 }
             };
             t.start();
@@ -261,9 +262,9 @@ public class DVAShell
     @SuppressWarnings("serial")
     public Action checkForUpdateAction = new AbstractAction("Check for Update", null) {
         public void actionPerformed(ActionEvent e) {
-            final BaseUpdater updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
-            if (updater != null) {
-                promptToUpdate(updater, false);
+            final Optional<BaseUpdater> updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
+            if (updater.isPresent()) {
+                promptToUpdate(updater.get(), false);
             } else {
                 JOptionPane.showMessageDialog(window, "You already have the latest version (" + DVA.VersionString + ") installed.");
             }

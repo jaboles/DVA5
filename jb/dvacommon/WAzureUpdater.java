@@ -7,8 +7,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.InvalidKeyException;
+import java.util.Arrays;
 import java.util.HashMap;
-import com.innahema.collections.query.queriables.Queryable;
+import java.util.stream.StreamSupport;
+
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobContainerPermissions;
@@ -45,7 +47,7 @@ public class WAzureUpdater extends BaseUpdater
             try
             {
                 String[] versions = FileUtilities.readFromUrl(new URL(baseUrl, MetadataContainerName + "/" + VersionsListName)).split("\r?\n");
-                latestVersion = Queryable.from(versions).max(VersionComparator.Instance);
+                latestVersion = Arrays.stream(versions).max(VersionComparator.Instance).get();
             } catch (Exception e) {
                 ExceptionReporter.reportException(e);
             }
@@ -113,7 +115,7 @@ public class WAzureUpdater extends BaseUpdater
         }
         else if (cmd.equals("listversion"))
         {
-            Queryable.from(getVersions(serviceClient)).forEach(System.out::println);
+            Arrays.stream(getVersions(serviceClient)).forEach(System.out::println);
         }
         else if (cmd.equals("uploadsoundjars"))
         {
@@ -122,10 +124,10 @@ public class WAzureUpdater extends BaseUpdater
 
             File[] soundJarsFiles = new File("/Users/jb/Software/DVA/build/soundjars").listFiles();
             if (soundJarsFiles != null) {
-                File[] jars = Queryable.from(soundJarsFiles)
-                        .where(File::isFile)
-                        .where(f -> !f.getName().toLowerCase().equals(".ds_store"))
-                        .toArray();
+                File[] jars = Arrays.stream(soundJarsFiles)
+                        .filter(File::isFile)
+                        .filter(f -> !f.getName().toLowerCase().equals(".ds_store"))
+                        .toArray(File[]::new);
 
                 for (File jar : jars) {
                     uploadArtifact(jar, soundjarsContainer);
@@ -156,7 +158,7 @@ public class WAzureUpdater extends BaseUpdater
     {
         CloudBlockBlob listBlob = metadataContainer.getBlockBlobReference(listBlobName);
 
-        String[] artifactNames = Queryable.from(files).map(File::getName).toArray();
+        String[] artifactNames = Arrays.stream(files).map(File::getName).toArray(String[]::new);
 
         System.out.print("Uploading artifact list" + listBlob.getName() + " ... ");
         listBlob.deleteIfExists();
@@ -184,10 +186,10 @@ public class WAzureUpdater extends BaseUpdater
     }
     private static String[] getVersions(CloudBlobClient serviceClient)
     {
-        return Queryable.from(serviceClient.listContainers().iterator())
+        return StreamSupport.stream(serviceClient.listContainers().spliterator(), false)
                 .filter(c -> !c.getName().equals(MetadataContainerName))
                 .filter(c -> !c.getName().equals(SoundJarsContainerName))
                 .filter(c -> !c.getName().equals(ExceptionsContainerName))
-                .map(c -> c.getName().replace('-', '.')).toArray();
+                .map(c -> c.getName().replace('-', '.')).toArray(String[]::new);
     }
 }

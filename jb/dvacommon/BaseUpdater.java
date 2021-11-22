@@ -18,6 +18,7 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 import java.util.zip.GZIPInputStream;
 
 import jb.common.*;
@@ -25,7 +26,6 @@ import org.javatuples.Triplet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.swixml.SwingEngine;
-import com.innahema.collections.query.queriables.Queryable;
 
 public abstract class BaseUpdater
 {
@@ -172,7 +172,8 @@ public abstract class BaseUpdater
                 }
             }
             
-            int total = rv.size() > 0 ? Queryable.from(rv).sum(u -> u.getValue1().Size).intValue() : 0;
+            int total = rv.size() > 0 ? rv.stream().map(u -> u.getValue1().Size)
+                    .reduce(0L, Long::sum).intValue() : 0;
             int starting = 0;
             for (Triplet<URL,URLStat,File> updateFile : rv) {
                 URL url = updateFile.getValue0();
@@ -238,11 +239,13 @@ public abstract class BaseUpdater
         {
             // Run the installer quietly
             ProcessBuilder updater = new ProcessBuilder(installerPath, "/silent");
-            Queryable.from(RangeFactory.range(0, 5))
-            .map(n -> {
+            int attempts = 5;
+            while (attempts > 0)
+            {
                 try
                 {
-                    return updater.start();
+                    updater.start();
+                    break;
                 }
                 catch (IOException e)
                 {
@@ -250,9 +253,9 @@ public abstract class BaseUpdater
                         Thread.sleep(1000);
                     } catch (InterruptedException ignored) {
                     }
-                    return null;
+                    attempts--;
                 }
-            }).firstOrDefault(p -> p != null);
+            }
         }
         else if (OSDetection.isUnix())
         {

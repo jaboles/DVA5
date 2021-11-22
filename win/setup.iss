@@ -12,8 +12,7 @@ DefaultGroupName=DVA 5
 SourceDir=.
 OutputDir=..\build\Debug
 OutputBaseFilename=DVA5Setup
-Compression=lzma2/fast
-;max
+Compression=lzma2/max
 SolidCompression=yes
 UninstallDisplayIcon={app}\DVA.exe
 ArchitecturesInstallIn64BitMode=x64

@@ -4,12 +4,14 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.innahema.collections.query.queriables.Queryable;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.VersionComparator;
@@ -39,7 +41,7 @@ public class SimpleWebsiteUpdater extends BaseUpdater
             {
                 versions = getAllVersionsFromHttpBaseUrl(baseUrl);
             }
-            latestVersion = Queryable.from(versions).max(VersionComparator.Instance);
+            latestVersion = versions.stream().max(VersionComparator.Instance).get();
         }
         return latestVersion;
     }
@@ -74,7 +76,7 @@ public class SimpleWebsiteUpdater extends BaseUpdater
 
             File[] files = rootDir.listFiles();
             if (files != null) {
-                versions = Queryable.from(files).filter(File::isDirectory).map(File::getName).toList();
+                versions = Arrays.stream(files).filter(File::isDirectory).map(File::getName).collect(Collectors.toList());
             }
         } catch (Exception e) {
             ExceptionReporter.reportException(e);

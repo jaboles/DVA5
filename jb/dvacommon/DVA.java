@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import com.sun.jna.WString;
 import com.sun.jna.platform.win32.*;
 import jb.common.*;
 import jb.common.jna.windows.GDI32Ex;
@@ -35,8 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import com.sun.jna.WString;
-import org.swixml.SwingEngine;
 
 public class DVA {
     DVAShell mainWindow;
@@ -45,8 +44,8 @@ public class DVA {
     ArrayList<URL> verifiedUrlList;
     final static Logger logger = LoggerFactory.getLogger(DVA.class);
 
-    public static final String VersionString = "5.3.22";
-    public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2020";
+    public static final String VersionString = "5.4.0";
+    public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
 
     // Keep track of the applications own jars so that they don't get treated as sound libraries.
     public static final String[] OWN_JARS_Array = new String[] {
@@ -56,14 +55,10 @@ public class DVA {
         "jlfgr-1_0.jar",
         "tritonus_share.jar",
         "tritonus_remaining.jar",
-        "jacob.jar",
-        "jna.jar",
-        "jna-4.0.0.jar",
-        "jna-4.2.1.jar",
-        "jna-platform-4.2.1.jar",
+        "jna-5.10.0.jar",
+        "jna-platform-5.10.0.jar",
         "jl1.0.1.jar",
         "mp3spi1.9.5.jar",
-        "ObjCBridge.jar",
         "javatuples-1.2.jar",
         "xuggle-xuggler-5.4.jar",
         "slf4j-api-1.7.7.jar",
@@ -71,9 +66,6 @@ public class DVA {
         "swingx-all-1.6.4.jar",
         "azure-core-0.7.0.jar",
         "azure-storage-2.2.0.jar",
-        "jackson-core-2.2.3.jar",
-        "collections-query-0.2.9.jar",
-        "streamsupport-1.4.1.jar",
     };
     public static final Set<String> OWN_JARS = new HashSet<>(Arrays.asList(OWN_JARS_Array));
     
@@ -312,12 +304,11 @@ public class DVA {
         System.setProperty("com.apple.mrj.application.growbox.intrudes", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("apple.awt.brushMetalLook", "true");
-        
+
         // Set AUMI on Windows 7, to fix two separate DVA taskbar icons appearing during
         // launch (DVA.exe and java.exe)
         boolean isWindows = OSDetection.isWindows();
-        if (isWindows && VersionComparator.Instance.compare(System.getProperty("os.version"), "6.1") >= 0)
-        {
+        if (isWindows && VersionComparator.Instance.compare(System.getProperty("os.version"), "6.1") >= 0) {
             Shell32Ex.INSTANCE.SetCurrentProcessExplicitAppUserModelID(new WString("jb.DVA"));
         }
 
@@ -406,7 +397,7 @@ public class DVA {
                 }
                 showLicenceIfNotRead();
                 new ScreenSaverSettingsDialog().setVisible(true);
-            } else if (isWindows && args.length > 0 && args[0].toLowerCase().startsWith("/p") && args.length >= 2) {
+            } else if (OSDetection.isWindows() && args.length > 0 && args[0].toLowerCase().startsWith("/p") && args.length >= 2) {
                 //JOptionPane.showMessageDialog(null, args[1]);
                 // Windows screen saver preview mode
                 WinDef.HWND rvhwnd;
@@ -527,7 +518,7 @@ public class DVA {
     {
         if (OSDetection.isWindows())
         {
-            return new File(new File(Shell32Util.getSpecialFolderPath(ShlObj.CSIDL_COMMON_APPDATA, false)), "DVA");
+            return new File(FileUtilities.getUserApplicationDataFolder(), "DVA");
         }
         else if (OSDetection.isMac())
         {

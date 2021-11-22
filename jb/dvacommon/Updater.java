@@ -4,11 +4,12 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
+
 import jb.common.FileUtilities;
 import jb.common.VersionComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.innahema.collections.query.queriables.Queryable;
 
 public class Updater
 {
@@ -30,12 +31,12 @@ public class Updater
         } catch (MalformedURLException ignored) {}
     }
     
-    public static BaseUpdater updateAvailable(String currentVersion, String suppressedVersion)
+    public static Optional<BaseUpdater> updateAvailable(String currentVersion, String suppressedVersion)
     {
         logger.info("Checking available updaters for a version newer than {}, suppressed version {}", currentVersion, suppressedVersion);
         logger.info("Jar folder: {}", jarFolder != null ? jarFolder.getPath() : "<null>");
 
-        BaseUpdater latestUpdater = Queryable.from(AllUpdaters)
+        Optional<BaseUpdater> latestUpdater = AllUpdaters.stream()
             .map(u -> {
                 String uv = u.getLatestVersion(); 
                 logger.debug("Checked {}: latest is {}", u.getClass().getName(), uv);

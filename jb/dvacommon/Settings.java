@@ -8,7 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import com.innahema.collections.query.queriables.Queryable;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import jb.common.RangeFactory;
 import jb.common.Utilities;
 import jb.dva.Script;
@@ -123,8 +125,9 @@ public class Settings {
     }
 
     public static List<Script> loadAnnouncements(Collection<String> availableSoundLibraries) {
-        List<Script> savedAnnouncements = Queryable.from(RangeFactory.range(1, prefs.getInt("savedAnnouncementsCount", 0)))
-            .map(i -> loadAnnouncement("ann" + Integer.toString(i - 1))).toList();
+        List<Script> savedAnnouncements = StreamSupport.stream(RangeFactory.range(1, prefs.getInt("savedAnnouncementsCount", 0)).spliterator(), false)
+            .map(i -> loadAnnouncement("ann" + Integer.toString(i - 1)))
+                .collect(Collectors.toList());
 
         for (Script demo : DVA_DEMOS) {
             if (!savedAnnouncements.contains(demo) && !getDemoAdded(demo.getName()) && availableSoundLibraries.contains(demo.getVoice())) {
