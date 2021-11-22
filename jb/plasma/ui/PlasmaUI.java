@@ -322,7 +322,7 @@ public class PlasmaUI
             GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
             for (int i = 0; i < rendererComboBoxes.size(); i++) {
                 if (!(rendererComboBoxes.get(i).getSelectedItem() instanceof NullDrawer) && i >= screens.length) {
-                    JOptionPane.showMessageDialog(null, "Insufficient number of monitors detected.");
+                    JOptionPane.showMessageDialog(null, "Insufficient number of monitors detected to activate full screen with current settings. Set excess monitors' Indicator Style to 'None'.");
                     return null;
                 }
             }
