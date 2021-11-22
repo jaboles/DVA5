@@ -501,8 +501,8 @@ public class DVA {
         pw.show();
         try {
             new CloudSoundJarFetcher(
-                new URL(new URL("http://dvaupdate.blob.core.windows.net/"), WAzureUpdater.SoundJarsContainerName + "/"),
-                new URL(new URL("http://dvaupdate.blob.core.windows.net/"), WAzureUpdater.MetadataContainerName + "/" + WAzureUpdater.SoundJarsList))
+                new URL(new URL("https://dvaupdate.blob.core.windows.net/"), WAzureUpdater.SoundJarsContainerName + "/"),
+                new URL(new URL("https://dvaupdate.blob.core.windows.net/"), WAzureUpdater.MetadataContainerName + "/" + WAzureUpdater.SoundJarsList))
             .doFetch(pa)
             .join();
         } catch (MalformedURLException | InterruptedException ignored) {

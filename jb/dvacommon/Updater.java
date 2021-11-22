@@ -26,7 +26,7 @@ public class Updater
                 logger.info("Using the local drop source");
                 AllUpdaters.add(new SimpleWebsiteUpdater(new URL("file:///Users/jb/Software/DVA/build/TestUpdateDrop/")));
             }
-            AllUpdaters.add(new WAzureUpdater(new URL("http://dvaupdate.blob.core.windows.net/")));
+            AllUpdaters.add(new WAzureUpdater(new URL("https://dvaupdate.blob.core.windows.net/")));
             //AllUpdaters.add(new SimpleWebsiteUpdater(new URL("http://jonathanboles.com/dva/")));
         } catch (MalformedURLException ignored) {}
     }
