@@ -1,3 +1,3 @@
 #!/bin/bash
-ant DevBuild
+ant DevBuild -Dfastbuild=1
 ./r.sh "$@"

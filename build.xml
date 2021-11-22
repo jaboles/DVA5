@@ -10,6 +10,12 @@
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
 	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-5.10.0.jar${path.separator}jars/jna-platform-5.10.0.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/slf4j-api-1.7.7.jar"/>
+    <condition property="bzip2compression" value="fast" else="best">
+        <isset property="fast"/>
+    </condition>
+    <condition property="innosetupcompression" value="none" else="lzma2/max">
+        <isset property="fast"/>
+    </condition>
 
     <!-- Mac signing identity in Keychain -->
     <property name="SignIdentity" value="Jonathan Boles"/>
@@ -193,7 +199,7 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
-        <untar dest="${IntDir}\jre\mac" compression="gzip">
+        <untar dest="${IntDir}\jre\mac" compression="gzip" overwrite="false">
             <fileset dir=".">
                 <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
             </fileset>
@@ -542,17 +548,7 @@
             <arg value="${basedir}\win\ttfetch.ini"/>
         </exec>
 
-        <pathconvert property="macjredir">
-            <dirset dir="${IntDir}\jre\mac" includes="jdk-*-jre"/>
-        </pathconvert>
-        <copy todir="${AppBundleContents}\jre" preservelastmodified="true">
-            <fileset dir="${macjredir}">
-                <include name="**"/>
-            </fileset>
-        </copy>
-
-
-        <unzip dest="${IntDir}\jre\win32">
+        <unzip dest="${IntDir}\jre\win32" overwrite="false">
             <fileset dir=".">
                 <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
             </fileset>
@@ -565,7 +561,7 @@
                 <include name="**"/>
             </fileset>
         </copy>
-        <unzip dest="${IntDir}\jre\win64">
+        <unzip dest="${IntDir}\jre\win64" overwrite="false">
             <fileset dir=".">
                 <include name="OpenJDK*-jre_x64_windows_*.zip"/>
             </fileset>
@@ -635,8 +631,9 @@
         <exec executable="umount">
             <arg value="${DmgMountPoint}"/>
         </exec>
+        <echo>Bzip2 compression: ${bzip2compression}</echo>
         <exec executable="bzip2">
-            <arg line="--verbose --best ${OutDir}/${DmgName}.dmg"/>
+            <arg line="--verbose --${bzip2compression} ${OutDir}/${DmgName}.dmg"/>
         </exec>
     </target>
     
@@ -662,14 +659,19 @@
             <arg value="-command"/>
             <arg value="(gc '${WinResourcesDir}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file '${WinResourcesDir}setup.iss'"/>
         </exec>
+        <echo>Inno Setup compression: ${innosetupcompression}</echo>
         <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg value="${InnoSetupCompiler}"/>
             <arg value="/Qp"/>
+            <arg value="/Dinnosetupcompression=${innosetupcompression}"/>
+            <arg value="/Dversion=${DVAVersion}"/>
             <arg value="${WinResourcesDirWine}setup.iss"/>
         </exec>
         <exec executable="${InnoSetupCompiler}" osfamily="windows">
             <arg value="/Qp"/>
+            <arg value="/Dinnosetupcompression=${innosetupcompression}"/>
+            <arg value="/Dversion=${DVAVersion}"/>
             <arg value="${WinResourcesDir}setup.iss"/>
         </exec>
     </target>
