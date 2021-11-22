@@ -150,7 +150,7 @@ public class PlasmaUI
                 }
                 rendererComboBoxes.add(cb);
                 XHBox hb = new XHBox();
-                hb.add(new JLabel("Monitor " + (i + 1) + ":"));
+                hb.add(new JLabel("Monitor " + (i + 1) + " Renderer:"));
                 hb.add(cb);
                 rendererComboboxesPanel.add(hb);
             }
@@ -322,7 +322,7 @@ public class PlasmaUI
             GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
             for (int i = 0; i < rendererComboBoxes.size(); i++) {
                 if (!(rendererComboBoxes.get(i).getSelectedItem() instanceof NullDrawer) && i >= screens.length) {
-                    JOptionPane.showMessageDialog(null, "Insufficient number of monitors detected to activate full screen with current settings. Set excess monitors' Indicator Style to 'None'.");
+                    JOptionPane.showMessageDialog(null, "Insufficient number of monitors detected.");
                     return null;
                 }
             }

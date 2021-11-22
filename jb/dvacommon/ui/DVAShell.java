@@ -245,12 +245,12 @@ public class DVAShell
                 if (SwingEngine.isMacOSX())
                 {
                     File executable = new File(jar.getParent(), "dva");
+                    JOptionPane.showMessageDialog(null, executable.getPath());
                     new ProcessBuilder("open", "/Applications/Utilities/Terminal.app", executable.getPath()).start();
                 }
                 else
                 {
                     File executable = new File(jar.getParent(), "dva.exe");
-                    JOptionPane.showMessageDialog(null, executable.getPath());
                     Runtime.getRuntime().exec("cmd.exe /c start cmd /c \"" + executable.getPath() + "\" && pause");
                 }
             } catch (URISyntaxException | IOException ex) {
