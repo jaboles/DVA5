@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <panel layout="BorderLayout">
-    <panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.CENTER)">
-        <label text="Select Timetable to use the CityRail timetable, or Manual to enter your own information" />
-    </panel>
-    <tabbedpane id="tabbedPane" constraints="BorderLayout.CENTER">
-		<panel name="Manual" layout="FlowLayout">
+    <hbox constraints="BorderLayout.NORTH">
+        <panel border="TitledBorder(Indicator Style)">
+            <vbox id="rendererComboboxesPanel"/>
+        </panel>
+        <vbox border="TitledBorder(Announcement Style)">
+            <combobox id="playAnnouncementVoiceCombobox" />
+            <panel layout="BorderLayout">
+                <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
+                    <checkbox id="playAnnouncementCheckbox" text="Announce" />
+                    <textfield id="playAnnouncementTimes" />
+                    <label text="mins before departure:"/>
+                </panel>
+            </panel>
+            <panel layout="BorderLayout">
+                <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
+                    <checkbox id="coalesceStationSequencesCheckbox" text="Enable &quot;all stations to&quot; phrasing" selected="true"/>
+                </panel>
+            </panel>
+        </vbox>
+        <panel id="startButtonsPanel" border="TitledBorder(Show)" layout="FlowLayout(FlowLayout.TRAILING)">
+            <vbox>
+                <button id="windowButton" action="windowAction" text="Window" />
+                <button id="fullScreenButton" action="fullScreenAction" text="Full Screen" />
+            </vbox>
+        </panel>
+        <panel id="previewButtonPanel" border="TitledBorder(Preview)" layout="FlowLayout(FlowLayout.TRAILING)">
+            <button id="previewButton" action="previewAction"/>
+        </panel>
+    </hbox>
+    <tabbedpane id="tabbedPane" constraints="BorderLayout.CENTER" border="TitledBorder(Data Source)">
+        <panel name="Manual" layout="FlowLayout">
             <hbox>
                 <vbox id="departuresList" />
                 <label text=" "/>
@@ -18,7 +44,7 @@
                     </panel>
                 </vbox>
             </hbox>
-		</panel>
+        </panel>
         <panel name="Timetable" layout="FlowLayout">
             <vbox>
                 <panel constraints="BorderLayout.NORTH" layout="GridLayout(9,1,5,2)" border="EmptyBorder(0,0,0,2)">
@@ -54,35 +80,4 @@
             </vbox>
         </panel>
     </tabbedpane>
-	<panel constraints="BorderLayout.SOUTH">
-		<separator constraints="BorderLayout.NORTH"/>
-		<panel constraints="BorderLayout.CENTER" layout="FlowLayout(FlowLayout.LEADING)">
-            <vbox>
-                <panel layout="BorderLayout">
-                    <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
-                        <checkbox id="playAnnouncementCheckbox" text="Announce" />
-                        <textfield id="playAnnouncementTimes" />
-                        <label text="mins before departure:"/>
-                    </panel>
-                </panel>
-                <combobox id="playAnnouncementVoiceCombobox" />
-                <panel layout="BorderLayout">
-                    <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
-                        <checkbox id="coalesceStationSequencesCheckbox" text="Enable &quot;all stations to&quot; phrasing" selected="true"/>
-                    </panel>
-                </panel>
-            </vbox>
-			<vbox id="rendererComboboxesPanel"/>
-			<panel id="startButtonsPanel" layout="FlowLayout(FlowLayout.TRAILING)">
-				<label text="Show:" border="EmptyBorder(0,15,0,0)" />
-                <vbox>
-                    <button id="windowButton" action="windowAction" text="Window" />
-                    <button id="fullScreenButton" action="fullScreenAction" text="Full Screen" />
-                </vbox>
-			</panel>
-			<panel id="previewButtonPanel" layout="FlowLayout(FlowLayout.TRAILING)">
-				<button id="previewButton" action="previewAction"/>
-			</panel>
-		</panel>
-	</panel>
 </panel>

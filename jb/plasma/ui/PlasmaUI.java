@@ -150,7 +150,7 @@ public class PlasmaUI
                 }
                 rendererComboBoxes.add(cb);
                 XHBox hb = new XHBox();
-                hb.add(new JLabel("Monitor " + (i + 1) + " Renderer:"));
+                hb.add(new JLabel("Monitor " + (i + 1) + ":"));
                 hb.add(cb);
                 rendererComboboxesPanel.add(hb);
             }

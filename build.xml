@@ -272,7 +272,7 @@
         </exec>
     </target>
 
-    <target name="BuildWinApp">
+    <target name="BuildWinExes">
         <copy tofile="${WinOutDir32}DVA.exe" file="${WinRun4JDir}WinRun4J.exe"/>
         <copy tofile="${WinOutDir64}DVA.exe" file="${WinRun4JDir}WinRun4J64.exe"/>
         <copy tofile="${WinOutDir32}DVA.scr" file="${WinRun4JDir}WinRun4J.exe"/>
@@ -611,7 +611,7 @@
     </target>
     
     <!-- Build Mac setup -->
-    <target name="BuildMacSetup" description="Build Mac DMG" if="isMac" depends="RebuildMacApp,SourceArchive,SetupCommon">
+    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="RebuildMacApp,SourceArchive,SetupCommon">
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
         <exec executable="hdiutil">
@@ -627,6 +627,7 @@
             </fileset>
         </copy>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
+        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/bin/java"/>
         <exec executable="osascript">
             <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
         </exec>
@@ -650,7 +651,7 @@
     	<echo>Checking for ${InnoSetupCompiler}</echo>
         <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
     </target>
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SourceArchive,SetupCommon,BuildWinApp" if="InnoSetupCompilerExists">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SourceArchive,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
         <exec executable="sed" dir="${basedir}" osfamily="mac">
             <arg value="-i"/>
             <arg value=".bak"/>
@@ -728,7 +729,7 @@
         <move file="${OutDir}${file.separator}debian.deb" tofile="${OutDir}${file.separator}DVA5.deb"/>
     </target>
 
-    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacSetup,BuildWinSetup,SignWinSetup,BuildLinuxDeb">
+    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacDmg,BuildWinSetup,SignWinSetup,BuildLinuxDeb">
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>
