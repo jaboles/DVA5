@@ -7,19 +7,4 @@ realpath() {
 BASEDIR=`dirname "$0"`
 DOCKICON=`realpath $BASEDIR/../Resources/dva.icns`
 cd $BASEDIR
-
-# Prefer 1.6 due to Oracle fucking up the font rendering in 1.8
-JAVAHOME16=`/usr/libexec/java_home -v 1.6`
-JAVAHOME=`/usr/libexec/java_home`
-if [ -d $JAVAHOME16 ]; then 
-	JAVA=$JAVAHOME16/bin/java
-elif [ -d $JAVAHOME ]; then 
-	JAVA=$JAVAHOME/bin/java
-elif [ -f /usr/bin/java ]; then
-    JAVA=/usr/bin/java
-elif [ -f /bin/java ]; then
-    JAVA=/bin/java
-else
-	JAVA=java
-fi
-exec $JAVA -Xdock:name=DVA -Xdock:icon=$DOCKICON -Djava.util.logging.config.file=logging.properties -jar DVA.jar "$@"
+exec ./jre/Contents/Home/bin/java -Xdock:name=DVA -Xdock:icon=$DOCKICON -Djava.util.logging.config.file=logging.properties -jar DVA.jar "$@"

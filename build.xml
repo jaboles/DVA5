@@ -21,14 +21,14 @@
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-    <property name="DmgSizeMb" value="28"/>
+    <property name="DmgSizeMb" value="162"/>
 	
 	<!-- Windows setup -->
     <!--<property name="Wine" value="wine"/>-->
     <property name="Wine" value="wine"/>
     <property name="WinePrefix" value="${user.home}/.wine"/>
     <condition property="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"
-                                        else="${user.home}${file.separator}resource_hacker${file.separator}">
+                                        else="${user.home}${file.separator}resource_hacker${file.separa tor}">
         <os family="mac"/>
     </condition>
     <condition property="WinRun4JDir" value="${basedir}${file.separator}..${file.separator}winrun4j${file.separator}bin${file.separator}"
@@ -127,22 +127,20 @@
     </target>
 
     <target name="Clean" description="Clean output folder">
-        <delete failonerror="false" dir="${InDir}"/>
+        <delete failonerror="false" dir="${IntDir}"/>
         <delete failonerror="false" dir="${OutDir}"/>
     </target>
 	
 	<target name="Compile" description="Compile java code">
         <mkdir dir="${InDir}"/>
-		<javac srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
+        <javac fork="yes" srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
+            <compilerarg value="-J-Xbootclasspath/p:"/>
+        </javac>
+		<!--<javac srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>-->
 	</target>
 
     <!-- After Eclipse compile task, prepare JAR file -->
     <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
-        <java jar="retrolambda-2.0.6.jar" fork="true">
-            <sysproperty key="retrolambda.inputDir" value="${InDir}"/>
-            <sysproperty key="retrolambda.classpath" value="${Classpath}${path.separator}${InDir}"/>
-            <sysproperty key="retrolambda.bytecodeVersion" value="49"/>
-        </java>
         <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
         	<fileset dir="${InDir}"/>
         	<fileset dir=".">
@@ -195,7 +193,21 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
+        <untar dest="${IntDir}\jre\mac" compression="gzip">
+            <fileset dir=".">
+                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
+            </fileset>
+        </untar>
+        <pathconvert property="macjredir">
+            <dirset dir="${IntDir}\jre\mac" includes="jdk-*-jre"/>
+        </pathconvert>
+        <copy todir="${AppBundleContents}\jre" preservelastmodified="true">
+            <fileset dir="${macjredir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
         <chmod perm="u+x" file="${AppBundleContents}/dva"/>
+        <chmod perm="u+x" file="${AppBundleContents}/jre/Contents/Home/bin/java"/>
     </target>
 
     <target name="SignMacApp.Check">
@@ -529,6 +541,43 @@
             <arg value="${WinOutDir64}ttfetch.exe"/>
             <arg value="${basedir}\win\ttfetch.ini"/>
         </exec>
+
+        <pathconvert property="macjredir">
+            <dirset dir="${IntDir}\jre\mac" includes="jdk-*-jre"/>
+        </pathconvert>
+        <copy todir="${AppBundleContents}\jre" preservelastmodified="true">
+            <fileset dir="${macjredir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+
+
+        <unzip dest="${IntDir}\jre\win32">
+            <fileset dir=".">
+                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
+            </fileset>
+        </unzip>
+        <pathconvert property="win32jredir">
+            <dirset dir="${IntDir}\jre\win32" includes="jdk-*-jre"/>
+        </pathconvert>
+        <copy todir="${WinOutDir32}\jre" preservelastmodified="true">
+            <fileset dir="${win32jredir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
+        <unzip dest="${IntDir}\jre\win64">
+            <fileset dir=".">
+                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
+            </fileset>
+        </unzip>
+        <pathconvert property="win64jredir">
+            <dirset dir="${IntDir}\jre\win64" includes="jdk-*-jre"/>
+        </pathconvert>
+        <copy todir="${WinOutDir64}\jre" preservelastmodified="true">
+            <fileset dir="${win64jredir}">
+                <include name="**"/>
+            </fileset>
+        </copy>
     </target>
 
     <!-- Source code zip file -->
