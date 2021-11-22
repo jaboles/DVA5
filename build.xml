@@ -13,7 +13,7 @@
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
     </condition>
-    <condition property="innosetupcompression" value="none" else="lzma2/max">
+    <condition property="innosetupcompression" value="none" else="lzma2/ultra">
         <isset property="fast"/>
     </condition>
 
