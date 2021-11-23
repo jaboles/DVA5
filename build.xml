@@ -27,7 +27,7 @@
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-    <property name="DmgSizeMb" value="162"/>
+    <property name="DmgSizeMb" value="185"/>
 	
 	<!-- Windows setup -->
     <!--<property name="Wine" value="wine"/>-->
@@ -214,6 +214,7 @@
         </copy>
         <chmod perm="u+x" file="${AppBundleContents}/dva"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/Contents/Home/bin/java"/>
+        <chmod perm="u+x" file="${AppBundleContents}/jre/Contents/Home/lib/jspawnhelper"/>
     </target>
 
     <target name="SignMacApp.Check">
@@ -624,6 +625,7 @@
         </copy>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/bin/java"/>
+        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/lib/jspawnhelper"/>
         <exec executable="osascript">
             <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
         </exec>
