@@ -22,6 +22,8 @@ WindowVisible=no
 ;BackColor=$884422
 WindowShowCaption=no
 
+[InstallDelete]
+Type: filesandordirs; Name: "{app}\jre"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
