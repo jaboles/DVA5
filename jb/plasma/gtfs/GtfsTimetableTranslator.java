@@ -4,10 +4,10 @@ import jb.plasma.DepartureData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,32 +46,36 @@ public class GtfsTimetableTranslator
                 .toArray(String[]::new);
     }
 
-    public List<DepartureData> getDepartureDataForStation(int limit)
+    public List<DepartureData> getDepartureDataForStation(String stationLocationName, String stationPlatformLocationName, int limit)
     {
         List<DepartureData> dd = new LinkedList<DepartureData>();
 
-        Stop here = tt.Stops.get("207261");
+        Stop here = tt.StopsByName.get(stationPlatformLocationName);
         LocalDateTime now = LocalDateTime.now();
         List<StopTime> stopsHere = tt.StopTimesByStop.get(here);
-        List<TripInstance> nexts = stopsHere.stream()
+        Stream<TripInstance> upcoming = stopsHere.stream()
             .flatMap(st -> expandTrips(st.Trip, tt))
             .filter(t -> getTimeTripStopsAt(t, here).isAfter(now))
-            .sorted((t1, t2) -> getTimeTripStopsAt(t1, here).compareTo(getTimeTripStopsAt(t2, here)))
-                .limit(limit > 0 ? limit : Integer.MAX_VALUE)
-                .collect(Collectors.toList());
+            .filter(t -> getTimeTripStopsAt(t, here).isBefore(now.plusDays(7)))
+            .sorted((t1, t2) -> getTimeTripStopsAt(t1, here).compareTo(getTimeTripStopsAt(t2, here)));
 
-        logger.info("Next {} trips for {}:", limit > 0 ? Integer.toString(limit) : "(all)", here.Name);
-        for (TripInstance ti : nexts) {
-            logger.info("Trip {} to {} here at {}", ti.Trip.Id, ti.Trip.Headsign, getTimeTripStopsAt(ti, here));
+        //logger.info("Next {} trips for {}:", limit > 0 ? Integer.toString(limit) : "(all)", here.Name);
+        for (TripInstance ti : upcoming.collect(Collectors.toList())) {
+            //logger.info("Trip {} to {} here at {}", ti.Trip.Id, ti.Trip.Headsign, getTimeTripStopsAt(ti, here));
 
             DepartureData d = new DepartureData();
             String[] headsignParts = ti.Trip.Headsign.split(" via ");
             d.Destination = headsignParts[0];
-            d.Destination2 = headsignParts.length >= 2 ? headsignParts[1] : "";
+            d.Destination2 = headsignParts.length >= 2 ? "via " + headsignParts[1] : "";
             d.Line = ti.Trip.Route.Description;
             d.Stops = getStopsAfter(ti, here);
             d.Platform = Integer.parseInt(here.Name.split(" Station Platform ")[1]);
-            d.Cars = Integer.parseInt(ti.Trip.Id.split("\\.")[5]);
+            d.Cars = ti.Trip.Cars;
+            Calendar c = Calendar.getInstance();
+            c.setTime(Date.from(getTimeTripStopsAt(ti, here)
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant()));
+            d.DueOut = c;
             dd.add(d);
         }
 
@@ -82,12 +86,18 @@ public class GtfsTimetableTranslator
     {
         LinkedList<TripInstance> list = new LinkedList<TripInstance>();
 
-        if (t.Route.Id.equals("RTTA_REV") || t.Route.Id.equals("RTTA_DEF")) return Stream.empty();
-        if (t.ServicePeriod == null) {
-            System.out.println("Null service period for " + t.Id);
+        if (t.Route.Id.equals("RTTA_REV") || t.Route.Id.equals("RTTA_DEF"))
+        {
+            return Stream.empty();
+        }
+        else if (t.ServicePeriod.StartDate.isAfter(LocalDate.now().plusDays(14)))
+        {
+            return Stream.empty();
         }
 
-        for (LocalDate date = t.ServicePeriod.StartDate; !date.isAfter(t.ServicePeriod.EndDate); date = date.plusDays(1))
+        for (LocalDate date = t.ServicePeriod.StartDate;
+             !date.isAfter(t.ServicePeriod.EndDate);
+             date = date.plusDays(1))
         {
             if ((date.getDayOfWeek() == DayOfWeek.MONDAY && t.ServicePeriod.Monday) ||
                     (date.getDayOfWeek() == DayOfWeek.TUESDAY && t.ServicePeriod.Tuesday) ||
@@ -98,11 +108,43 @@ public class GtfsTimetableTranslator
                     (date.getDayOfWeek() == DayOfWeek.SUNDAY && t.ServicePeriod.Sunday))
             {
                 final LocalDate dateCopy = date;
-                List<NormalizedStopTime> normalizedStopTimes = tt.StopTimesByTrip.get(t).stream()
+                List<NormalizedStopTime> tripStopTimes = tt.StopTimesByTrip.get(t).stream()
                         .map(st -> new NormalizedStopTime(st, dateCopy))
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList());;
 
-                list.add(new TripInstance(t, date, normalizedStopTimes));
+                if (t.BlockId != null && t.BlockId.length() > 0)
+                {
+                    tripStopTimes = new LinkedList<NormalizedStopTime>(tripStopTimes);
+                    NormalizedStopTime tripLastStopTime = tripStopTimes.get(tripStopTimes.size() - 1);
+
+                    for (Trip blockTrip : tt.TripsByBlockId.get(t.BlockId).stream()
+                            // Only look at trips later in the same block
+                            .filter(bt -> bt != t)
+                            .filter(bt -> bt.Name.compareTo(t.Name) > 0)
+                            .sorted((bt1, bt2) -> bt1.Name.compareTo(bt2.Name))
+                            .collect(Collectors.toList()))
+                    {
+                        List<NormalizedStopTime> blockStopTimes = tt.StopTimesByTrip.get(blockTrip).stream()
+                                .map(st -> new NormalizedStopTime(st, dateCopy))
+                                .collect(Collectors.toList());;
+
+                        boolean found = false;
+                        for (NormalizedStopTime bst : blockStopTimes)
+                        {
+                            if (ChronoUnit.SECONDS.between(tripLastStopTime.NormalizedDeparture, bst.NormalizedDeparture) <= 1) {
+                                logger.info("Detected trip {} continuing from trip {} (block id {})",
+                                        blockTrip.Name, t.Name, t.BlockId);
+                                found = true;
+                            } else if (found) {
+                                tripStopTimes.add(bst);
+                            }
+                        }
+
+                        if (found) break;
+                    }
+                }
+
+                list.add(new TripInstance(t, date, tripStopTimes));
             }
         }
         return list.stream();
@@ -122,6 +164,7 @@ public class GtfsTimetableTranslator
             if (nst.Stop == stop) found = true;
             else if (found) stops.add(nst.Stop.Name);
         }
+
         return stops.stream()
                 .map(s -> s.split(" Station Platform ")[0])
                 .toArray(String[]::new);

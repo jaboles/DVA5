@@ -14,6 +14,8 @@ public class Trip implements Serializable
         Headsign = headsign;
         DirectionId = directionId;
         BlockId = blockId;
+        Cars = Integer.parseInt(Id.split("\\.")[5]);
+        Name = Id.split("\\.")[0];
     }
 
     public String Id;
@@ -22,4 +24,6 @@ public class Trip implements Serializable
     public String Headsign;
     public int DirectionId;
     public String BlockId;
+    public int Cars;
+    public String Name;
 }

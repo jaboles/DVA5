@@ -182,7 +182,7 @@ public class DVAShell
     }
     
     @SuppressWarnings("serial")
-    public Action showDVAPanelAction = new AbstractAction("Go to DVA") {
+    public Action showDVAPanelAction = new AbstractAction("Go to Announcements") {
         public void actionPerformed(ActionEvent e) {
             tabbedPane.setSelectedIndex(0);
         }

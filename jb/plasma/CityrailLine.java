@@ -101,6 +101,11 @@ public class CityrailLine
     // Given a line name (from the Cityrail timetable) and stop list try and guess the real line name
     public static CityrailLine find(String timetableLineName)
     {
+        // Existing demo
+        if (timetableLineName.equals("Newcastle & Central Coast Line")) {
+            return CCN;
+        }
+
         return allLines.get(timetableLineName);
     }
 }

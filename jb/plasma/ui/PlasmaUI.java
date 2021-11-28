@@ -249,7 +249,10 @@ public class PlasmaUI
             }
         } else {
             try {
-                dd = timetableTranslator.getDepartureDataForStation(0);
+                dd = timetableTranslator.getDepartureDataForStation(
+                        (String)gtfsStation.getSelectedItem(),
+                        (String)gtfsPlatform.getSelectedItem(),
+                        0);
             } catch (Exception e) {
                 jb.common.ExceptionReporter.reportException(e);
             }
@@ -559,7 +562,10 @@ public class PlasmaUI
         public void actionPerformed(ActionEvent e)
         {
             try {
-                departureData = timetableTranslator.getDepartureDataForStation(0);
+                departureData = timetableTranslator.getDepartureDataForStation(
+                        (String)gtfsStation.getSelectedItem(),
+                        (String)gtfsPlatform.getSelectedItem(),
+                        0);
                 for (int i = 0; i < departurePanels.length; i++) {
                     if (departureData.size() > i) {
                         departurePanels[i].setData(departureData.get(i));

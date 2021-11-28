@@ -40,7 +40,7 @@ public class Settings {
                 Cars = 8;
                 Stops = new String[] { "Redfern", "Strathfield", "Epping", "Hornsby", "Berowra", "Gosford", "Wyong", "Broadmeadow", "Newcastle" };
                 DueOut = PlasmaUI.inXMinutes(Calendar.getInstance(), 5);
-                Line = "Newcastle & Central Coast Line";
+                Line = "Central Coast & Newcastle Line";
                 Color1Override = CityrailLine.grey;
                 Color2Override = CityrailLine.red;
                 TextColorOverride = Color.white;
