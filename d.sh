@@ -1,2 +1,2 @@
 #!/bin/bash
-ant build.xml DevBuild
+ant DevBuild

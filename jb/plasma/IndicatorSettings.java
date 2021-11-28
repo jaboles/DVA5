@@ -6,18 +6,17 @@ public class IndicatorSettings
 {
     private List<DepartureData> departureData;
     private List<String> renderers;
-    private String line;
-    private String direction;
-    private String station;
-    private int platform;
-    private int cars;
+    private String gtfsStation;
+    private String gtfsPlatform;
     private boolean useSchedule;
     private boolean playAnnouncements;
     private String announcementTimes;
     private String announcementVoice;
     private boolean coalesceStationSequences;
 
-    public IndicatorSettings(boolean useSchedule, List<String> renderers, boolean playAnnouncements, String announcementTimes, String announcementVoice, boolean coalesceStationSequences, List<DepartureData> departureData, String line, String direction, String station, int platform, int cars)
+    public IndicatorSettings(boolean useSchedule, List<String> renderers, boolean playAnnouncements,
+                             String announcementTimes, String announcementVoice, boolean coalesceStationSequences,
+                             List<DepartureData> departureData, String gtfsStation, String gtfsPlatform)
     {
         this.useSchedule = useSchedule;
         this.departureData = departureData;
@@ -26,11 +25,8 @@ public class IndicatorSettings
         this.announcementVoice = announcementVoice;
         this.coalesceStationSequences = coalesceStationSequences;
         this.renderers = renderers;
-        this.line = line;
-        this.direction = direction;
-        this.station = station;
-        this.platform = platform;
-        this.cars = cars;
+        this.gtfsStation = gtfsStation;
+        this.gtfsPlatform = gtfsPlatform;
     }
 
     public List<DepartureData> getDepartureData() { return departureData; }
@@ -47,13 +43,7 @@ public class IndicatorSettings
 
     public List<String> getRenderers() { return renderers; }
 
-    public String getLine() { return line; }
+    public String getGtfsStation() { return gtfsStation; }
 
-    public String getDirection() { return direction; }
-
-    public String getStation() { return station; }
-
-    public int getPlatform() { return platform; }
-
-    public int getCars() { return cars; }
+    public String getGtfsPlatform() { return gtfsPlatform; }
 }

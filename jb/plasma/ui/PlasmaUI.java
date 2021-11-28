@@ -47,10 +47,11 @@ import jb.plasma.IndicatorSettings;
 import jb.plasma.NullDrawer;
 import jb.plasma.PlasmaSession;
 import jb.plasma.Timetable;
-import jb.plasma.TimetableManager;
 import jb.plasma.TimetableTranslator;
 import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
+import jb.plasma.gtfs.GtfsTimetableTranslator;
+import jb.plasma.gtfs.Stop;
 import jb.plasma.renderers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class PlasmaUI
     private DVA dva;
     private String settingsKey;
     private PlasmaSession session;
-    private TimetableManager timetableManager;
+    private GtfsTimetableTranslator timetableTranslator;
 
     private JPanel panel;
     public JTabbedPane tabbedPane;
@@ -85,12 +86,8 @@ public class PlasmaUI
     public JButton playStopButton;
     private List<DepartureData> departureData = new LinkedList<>();
 
-    public JBComboBox<Timetable> timetable;
-    public JBComboBox<String> scheduleLine;
-    public JBComboBox<String> scheduleDirection;
-    public JBComboBox<String> scheduleStation;
-    public JSpinner carsValue;
-    public JSpinner platformValue;
+    public JBComboBox<String> gtfsStation;
+    public JBComboBox<String> gtfsPlatform;
 
     public JCheckBox playAnnouncementCheckbox;
     public JTextField playAnnouncementTimes;
@@ -175,43 +172,21 @@ public class PlasmaUI
                 departuresList.add(departurePanels[i]);
             }
 
-            // Populate the timetables combobox
-            timetableManager = TimetableManager.getInstance();
-            timetable.setModel(timetableManager);
+            timetableTranslator = GtfsTimetableTranslator.getInstance();
+            gtfsStation.replaceItems(timetableTranslator.getStations());
 
-            // When the timetable is changed, update the list of lines
-            timetable.addActionListener(e -> {
-                TimetableTranslator tt = getActiveTimetable();
+            // When the station is changed, update the list of lines
+            gtfsStation.addActionListener(e -> {
+                String station = (String)gtfsStation.getSelectedItem();
 
-                scheduleLine.replaceItems(tt.getLines());
-            });
-
-            // When the line is changed, update the list of directions and
-            // stations
-            scheduleLine.addActionListener(e -> {
-                TimetableTranslator tt = getActiveTimetable();
-
-                String line = (String) scheduleLine.getSelectedItem();
-                if (line != null) {
-                    scheduleDirection.replaceItems(tt.getDirectionsForLine(line));
-                }
-            });
-
-            // When the direction is changed, update the list of stations
-            scheduleDirection.addActionListener(e -> {
-                TimetableTranslator tt = getActiveTimetable();
-
-                String line = (String) scheduleLine.getSelectedItem();
-                String direction = (String) scheduleDirection.getSelectedItem();
-                if (line != null && direction != null) {
-                    scheduleStation.replaceItems(tt.getStationsForLineAndDirection(line, direction));
+                if (station != null) {
+                    gtfsPlatform.replaceItems(timetableTranslator.getPlatformsForStation(station));
                 }
             });
 
             // Initially select the first line, and show/hide the
             // window/fullscreen/preview buttons depending
             // on whether running in regular mode or screen saver settings mode
-            timetable.setSelectedIndex(0);
             tabbedPane.setSelectedIndex(0);
             startButtonsPanel.setVisible(mode == Mode.REGULAR);
             previewButtonPanel.setVisible(mode == Mode.SCREENSAVER);
@@ -282,10 +257,7 @@ public class PlasmaUI
             }
         } else {
             try {
-                dd = getActiveTimetable().getDepartureDataForStation(
-                        (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
-                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(), TimetableTranslator.AtOrAfter.AFTER,
-                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue(), 0, true);
+                dd = timetableTranslator.getDepartureDataForStation(0);
             } catch (Exception e) {
                 jb.common.ExceptionReporter.reportException(e);
             }
@@ -448,11 +420,6 @@ public class PlasmaUI
         }        
     }
 
-    private TimetableTranslator getActiveTimetable()
-    {
-        return new TimetableTranslator((Timetable)timetableManager.getSelectedItem());
-    }
-
     // Get the indicator settings entered into the panels as an
     // IndicatorSettings object
     public IndicatorSettings getSettings()
@@ -473,11 +440,8 @@ public class PlasmaUI
                 dva != null ? ((Announcer) playAnnouncementVoiceCombobox.getSelectedItem()).getName() : null,
                 coalesceStationSequencesCheckbox.isSelected(),
                 data,
-                scheduleLine.getSelectedItem().toString(),
-                scheduleDirection.getSelectedItem().toString(),
-                scheduleStation.getSelectedItem().toString(),
-                (Integer) platformValue.getValue(),
-                (Integer) carsValue.getValue());
+                gtfsStation.getSelectedItem().toString(),
+                gtfsPlatform.getSelectedItem().toString());
     }
 
     // Set the indicator settings in the panels from an IndicatorSettings object
@@ -509,23 +473,16 @@ public class PlasmaUI
             departurePanels[i].setData(settings.getDepartureData().get(i));
         }
 
-        for (int i = 0; i < scheduleLine.getItemCount(); i++)
-            if (scheduleLine.getItemAt(i).equals(settings.getLine())) {
-                scheduleLine.setSelectedIndex(i);
+        for (int i = 0; i < gtfsStation.getItemCount(); i++)
+            if (gtfsStation.getItemAt(i).equals(settings.getGtfsStation())) {
+                gtfsStation.setSelectedIndex(i);
                 break;
             }
-        for (int i = 0; i < scheduleDirection.getItemCount(); i++)
-            if (scheduleDirection.getItemAt(i).equals(settings.getDirection())) {
-                scheduleDirection.setSelectedIndex(i);
+        for (int i = 0; i < gtfsPlatform.getItemCount(); i++)
+            if (gtfsPlatform.getItemAt(i).equals(settings.getGtfsPlatform())) {
+                gtfsPlatform.setSelectedIndex(i);
                 break;
             }
-        for (int i = 0; i < scheduleStation.getItemCount(); i++)
-            if (scheduleStation.getItemAt(i).equals(settings.getStation())) {
-                scheduleStation.setSelectedIndex(i);
-                break;
-            }
-        platformValue.setValue(settings.getPlatform());
-        carsValue.setValue(settings.getCars());
     }
 
     // Show the indicator in windowed mode
@@ -610,10 +567,7 @@ public class PlasmaUI
         public void actionPerformed(ActionEvent e)
         {
             try {
-                departureData = getActiveTimetable().getDepartureDataForStation(
-                        (String) scheduleLine.getSelectedItem(), (String) scheduleDirection.getSelectedItem(),
-                        (String) scheduleStation.getSelectedItem(), Calendar.getInstance(), TimetableTranslator.AtOrAfter.AFTER,
-                        (Integer) platformValue.getValue(), (Integer) carsValue.getValue(), 0, true);
+                departureData = timetableTranslator.getDepartureDataForStation(0);
                 for (int i = 0; i < departurePanels.length; i++) {
                     if (departureData.size() > i) {
                         departurePanels[i].setData(departureData.get(i));
@@ -644,58 +598,6 @@ public class PlasmaUI
     public Action editAllStationsTosAction = new AbstractAction("Edit \"All Stations To\" List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("allStationsTos.txt");
-        }
-    };
-
-    public Action downloadTimetableAction = new AbstractAction("Download new timetable") {
-        public void actionPerformed(ActionEvent e) {
-            Timetable activeTimetable = (Timetable)timetableManager.getSelectedItem();
-            String newName = activeTimetable.getName();
-            if (newName.indexOf('(') >= 0) {
-                newName = newName.substring(newName.indexOf('('));
-            }
-            newName += new SimpleDateFormat(" (MMM yyyy)").format(Calendar.getInstance().getTime());
-            List<String> existingNames = new LinkedList<>();
-            for (int i = 0; i < timetableManager.getSize(); i++) {
-                existingNames.add(timetableManager.getElementAt(i).getName());
-            }
-            DownloadTimetableDialog d = new DownloadTimetableDialog(newName, activeTimetable.type, existingNames);
-            if (d.accepted()) {
-                if (TimetableManager.getTimetablesDir().exists() || TimetableManager.getTimetablesDir().mkdirs())
-                {
-                    File tf = new File(TimetableManager.getTimetablesDir(), d.timetableName() + ".tt");
-                    ProgressAdapter pa = new ProgressAdapter(new ProgressWindow("Download timetable", "Downloading timetable..."), false);
-                    pa.show();
-                    File parentDir = new File(tf.getParent());
-                    if (parentDir.exists() || parentDir.mkdirs()) {
-                        String ttName = tf.getName().replaceFirst("[.][^.]+$", "");
-                        Generator g = new Generator(System.out, System.err, tf.getPath(), ttName, activeTimetable.type, true, pa);
-                        final Thread t = new Thread() {
-                            public void run() {
-                                try {
-                                    Timetable tt = g.run();
-                                    if (tt != null) {
-                                        timetableManager.addElement(tt);
-                                        timetableManager.setSelectedItem(tt);
-                                    }
-                                } catch (Exception e) {
-                                    ExceptionReporter.reportException(e);
-                                } finally {
-                                    pa.dispose();
-                                }
-                            }
-                        };
-                        t.start();
-                    }
-                }
-            }
-        }
-    };
-
-    public Action deleteTimetableAction = new AbstractAction("Delete timetable") {
-        public void actionPerformed(ActionEvent e) {
-            Timetable activeTimetable = (Timetable)timetableManager.getSelectedItem();
-            timetableManager.deleteTimetable(activeTimetable);
         }
     };
 

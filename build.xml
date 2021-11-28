@@ -750,4 +750,9 @@
     
     <target name="DevBuild" description="Fast dev build" depends="Clean,UpdateMacApp"/>
 
+    <target name="TimetableFetch" description="Fetch/generate timetable" depends="CreateJar">
+        <exec executable="/bin/bash" dir=".">
+            <arg value="ttfetch.sh"/>
+        </exec>
+    </target>
 </project>

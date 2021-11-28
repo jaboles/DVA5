@@ -18,23 +18,21 @@ public class CityrailLine
     public String LogoImageFilename;
     public List<CityrailLine> Continuations;
 
-    public static CityrailLine NORTHERN;
-    public static CityrailLine NORTH_SHORE;
-    public static CityrailLine WESTERN;
-    public static CityrailLine AIRPORT_EAST_HILLS;
-    public static CityrailLine SOUTH;
-    public static CityrailLine INNER_WEST;
-    public static CityrailLine BANKSTOWN;
-    public static CityrailLine EASTERN_SUBURBS_ILLAWARRA;
-    public static CityrailLine CUMBERLAND;
-    public static CityrailLine CARLINGFORD;
-    public static CityrailLine OLYMPIC_PARK;
+    public static CityrailLine T1_NORTH_SHORE;
+    public static CityrailLine T1_WESTERN;
+    public static CityrailLine T2;
+    public static CityrailLine T3;
+    public static CityrailLine T4;
+    public static CityrailLine T5;
+    public static CityrailLine T7;
+    public static CityrailLine T8;
+    public static CityrailLine T9;
 
-    public static CityrailLine BLUE_MOUNTAINS;
-    public static CityrailLine NEWCASTLE_CENTRAL_COAST;
-    public static CityrailLine SOUTH_COAST;
-    public static CityrailLine SOUTHERN_HIGHLANDS;
-    public static CityrailLine HUNTER;
+    public static CityrailLine BMT;
+    public static CityrailLine CCN;
+    public static CityrailLine SCO;
+    public static CityrailLine SHL;
+    public static CityrailLine HUN;
 
     // 'Official' Cityrail colours
     public static Color grey = new Color(154, 164, 168);
@@ -51,26 +49,25 @@ public class CityrailLine
 
     static
     {
-        NORTHERN = new CityrailLine("Northern Line", red, Color.white, "T1.png");
-        NORTH_SHORE = new CityrailLine("North Shore Line", yellow, Color.black, "T1.png");
-        WESTERN = new CityrailLine("Western Line", yellow, Color.black, "T1.png");
-        AIRPORT_EAST_HILLS = new CityrailLine("Airport & East Hills Line", green, Color.white, "T2.png");
-        SOUTH = new CityrailLine("South Line", lightBlue, Color.black, "T2.png");
-        INNER_WEST = new CityrailLine("Inner West Line", lightPurple, Color.white, "T2.png");
-        BANKSTOWN = new CityrailLine("Bankstown Line", brown, Color.black, "T3.png");
-        EASTERN_SUBURBS_ILLAWARRA = new CityrailLine("Eastern Suburbs & Illawarra Line", blue, Color.white, "T4.png");
-        CUMBERLAND = new CityrailLine("Cumberland Line", pink, Color.white, "T5.png");
-        CARLINGFORD = new CityrailLine("Carlingford Line", darkBlue, Color.white, "T6.png");
-        OLYMPIC_PARK = new CityrailLine("Olympic Park Line", grey, Color.white, "T7.png");
-        BLUE_MOUNTAINS = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, "T.png");
-        NEWCASTLE_CENTRAL_COAST = new CityrailLine("Newcastle & Central Coast Line", grey, red, Color.white, "T.png");
-        SOUTH_COAST = new CityrailLine("South Coast Line", grey, blue, Color.white, "T.png");
-        SOUTHERN_HIGHLANDS = new CityrailLine("Southern Highlands Line", grey, green, Color.white, "T.png");
-        HUNTER = new CityrailLine("Hunter Line", grey, darkRed, Color.white, "T.png");
+        T1_NORTH_SHORE = new CityrailLine("T1 North Shore Line", yellow, Color.black, "T1.png");
+        T1_WESTERN = new CityrailLine("T1 Western Line", yellow, Color.black, "T1.png");
+        T2 = new CityrailLine("T2 Inner West & Leppington Line", blue, Color.white, "T2.png");
+        T3 = new CityrailLine("T3 Bankstown Line", brown, Color.black, "T3.png");
+        T4 = new CityrailLine("T4 Eastern Suburbs & Illawarra Line", darkBlue, Color.white, "T4.png");
+        T5 = new CityrailLine("T5 Cumberland Line", pink, Color.white, "T5.png");
+        T7 = new CityrailLine("T7 Olympic Park Line", grey, Color.white, "T7.png");
+        T8 = new CityrailLine("T8 Airport & South Line", green, Color.white, "T2.png");
+        T9 = new CityrailLine("T9 Northern Line", red, Color.white, "T1.png");
+
+        BMT = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, "T.png");
+        CCN = new CityrailLine("Central Coast & Newcastle Line", grey, red, Color.white, "T.png");
+        SCO = new CityrailLine("South Coast Line", grey, blue, Color.white, "T.png");
+        SHL = new CityrailLine("Southern Highlands Line", grey, green, Color.white, "T.png");
+        HUN = new CityrailLine("Hunter Line", grey, darkRed, Color.white, "T.png");
 
         CityrailLine[] lines = new CityrailLine[] {
-                NORTHERN, NORTH_SHORE, WESTERN, AIRPORT_EAST_HILLS, SOUTH, INNER_WEST, BANKSTOWN, EASTERN_SUBURBS_ILLAWARRA,
-                CUMBERLAND, CARLINGFORD, OLYMPIC_PARK, BLUE_MOUNTAINS, NEWCASTLE_CENTRAL_COAST, SOUTH_COAST, SOUTHERN_HIGHLANDS, HUNTER
+                T1_NORTH_SHORE, T1_WESTERN, T2, T3, T4, T5, T7, T8, T9,
+                BMT, CCN, SCO, SHL, HUN
         };
         for (CityrailLine line : lines) {
             allLines.put(line.Name, line);
@@ -102,45 +99,8 @@ public class CityrailLine
     }
 
     // Given a line name (from the Cityrail timetable) and stop list try and guess the real line name
-    public static CityrailLine find(String timetableLineName, List<String> stops)
+    public static CityrailLine find(String timetableLineName)
     {
-        switch (timetableLineName) {
-            case "T1 North Shore & Northern":
-                // If stops at Epping, is Northern line
-                return stops.contains("Epping") ? CityrailLine.NORTHERN : CityrailLine.NORTH_SHORE;
-            case "T1 Northern":
-                return CityrailLine.NORTHERN;
-            case "T1 Western":
-                return CityrailLine.WESTERN;
-            case "T2 Airport":
-                return CityrailLine.AIRPORT_EAST_HILLS;
-            case "T2 Inner West & South":
-                // If stops at Croydon, assume Inner West, otherwise South
-                return stops.contains("Croydon") ? CityrailLine.INNER_WEST : CityrailLine.SOUTH;
-            case "T3 Bankstown":
-                return CityrailLine.BANKSTOWN;
-            case "T4 Eastern Suburbs & Illawarra":
-                return CityrailLine.EASTERN_SUBURBS_ILLAWARRA;
-            case "T5 Cumberland":
-                return CityrailLine.CUMBERLAND;
-            case "T6 Carlingford":
-                return CityrailLine.CARLINGFORD;
-            case "T7 Olympic Park":
-                return CityrailLine.OLYMPIC_PARK;
-            case "Blue Mountains":
-                return CityrailLine.BLUE_MOUNTAINS;
-            case "Newcastle & Central Coast":
-            case "Central Coast":
-            case "Central Coast & Newcastle":
-                return CityrailLine.NEWCASTLE_CENTRAL_COAST;
-            case "South Coast":
-                return CityrailLine.SOUTH_COAST;
-            case "Southern Highlands":
-                return CityrailLine.SOUTHERN_HIGHLANDS;
-            case "Hunter":
-                return CityrailLine.HUNTER;
-            default:
-                return null;
-        }
+        return allLines.get(timetableLineName);
     }
 }

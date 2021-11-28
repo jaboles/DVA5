@@ -48,28 +48,12 @@
         <panel name="Timetable" layout="FlowLayout">
             <vbox>
                 <panel constraints="BorderLayout.NORTH" layout="GridLayout(9,1,5,2)" border="EmptyBorder(0,0,0,2)">
-                    <label text="Timetable:"/>
-                    <panel layout="BorderLayout()">
-                        <jbcombobox constraints="BorderLayout.CENTER" id="timetable" size="400,10"/>
-                        <hbox constraints="BorderLayout.EAST">
-                            <button action="downloadTimetableAction" text="New..."/>
-                            <button action="deleteTimetableAction" text="Delete"/>
-                        </hbox>
-                    </panel>
-                    <label text="Select line:"/>
-                    <jbcombobox id="scheduleLine" size="400,10"/>
-                    <label text="Select direction:"/>
-                    <jbcombobox id="scheduleDirection" size="400,10" />
                     <label text="Select station:"/>
-                    <jbcombobox id="scheduleStation" size="400,10" />
+                    <jbcombobox id="gtfsStation" size="400,10"/>
+                    <label text="Select platform:"/>
+                    <jbcombobox id="gtfsPlatform" size="400,10" />
                     <label text=" "/>
                 </panel>
-                <hbox>
-                    <label text="Platform:" />
-                    <spinner id="platformValue" />
-                    <label text=" Cars:" />
-                    <spinner id="carsValue" />
-                </hbox>
                 <label text=" "/>
                 <panel layout="FlowLayout(FlowLayout.CENTER)">
                     <label text="&lt;html&gt;Use Window/Full Screen buttons at bottom of window to start&lt;br&gt;indicator, or use button below to load the Manual page.&lt;/html&gt;"/>

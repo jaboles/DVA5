@@ -30,7 +30,8 @@ import jb.dva.SoundLibrary;
 import jb.dvacommon.ui.DVAShell;
 import jb.dvacommon.ui.LicenceWindow;
 import jb.dvacommon.ui.LoadWindow;
-import jb.plasma.TimetableManager;
+import jb.plasma.gtfs.GtfsGenerator;
+import jb.plasma.gtfs.GtfsTimetableTranslator;
 import jb.plasma.ui.ScreenSaverSettingsDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,8 +137,11 @@ public class DVA {
             soundLibraryMap.put("All", new SoundLibrary("All", new LinkedList<>(soundLibraryMap.values()), SoundLibrary.shrinkIcon(DVA.class.getResource("/resources/all.png"))));
             //if (p != null) p.join();
 
-            if (showLoadingProgress) lw.setText("Analysing timetables... ");
-            TimetableManager.initialize();
+            if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
+            GtfsGenerator ttLoader = new GtfsGenerator(new File(DVA.getApplicationDataFolder(), "GtfsTimetable").toPath());
+            ttLoader.download();
+            if (showLoadingProgress) lw.setText("Analysing GTFS timetable... ");
+            GtfsTimetableTranslator.initialize(ttLoader.analyse());
 
             if (showMainWindow) {
                 if (lw != null) {

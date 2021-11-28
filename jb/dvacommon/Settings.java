@@ -232,13 +232,10 @@ public class Settings {
             }
         }
 
-        String line = prefs.get(key + "Line", "");
-        String direction = prefs.get(key + "Direction", "");
-        String station = prefs.get(key + "Station", "");
-        int platform = prefs.getInt(key + "Platform", 1);
-        int cars = prefs.getInt(key + "Cars", 4);
+        String gtfsStation = prefs.get(key + "GtfsStation", "");
+        String gtfsPlatform = prefs.get(key + "GtfsPlatform", "");
 
-        return new IndicatorSettings(useSchedule, renderers, playAnnouncements, announcementTimes, announcementVoice, coalesceStationSequences, departureData, line, direction, station, platform, cars);
+        return new IndicatorSettings(useSchedule, renderers, playAnnouncements, announcementTimes, announcementVoice, coalesceStationSequences, departureData, gtfsStation, gtfsPlatform);
     }
     
     public static DepartureData getIndicatorDepartureData(String key) {
@@ -284,11 +281,8 @@ public class Settings {
             setIndicatorDepartureData(key + "DepartureData" + Integer.toString(i), is.getDepartureData().get(i));
         }
 
-        prefs.put(key + "Line", is.getLine());
-        prefs.put(key + "Direction", is.getDirection());
-        prefs.put(key + "Station", is.getStation());
-        prefs.putInt(key + "Platform", is.getPlatform());
-        prefs.putInt(key + "Cars", is.getCars());
+        prefs.put(key + "GtfsStation", is.getGtfsStation());
+        prefs.put(key + "GtfsPlatform", is.getGtfsPlatform());
         prefs.putBoolean(key + "Indicator", true);
         try {
             prefs.flush();

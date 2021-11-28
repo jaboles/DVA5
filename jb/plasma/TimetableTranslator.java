@@ -241,7 +241,7 @@ public class TimetableTranslator
                 // the list.
                 DepartureData d = new DepartureData();
                 d.Destination = destination;
-                CityrailLine line = CityrailLine.find(lineName, allStops);
+                CityrailLine line = CityrailLine.find(lineName/*, allStops*/);
                 if (line != null) {
                     d.Line = line.Name;
                 }
