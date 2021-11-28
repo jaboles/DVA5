@@ -1,6 +1,5 @@
 package jb.plasma.gtfs;
 
-import jb.plasma.CityrailLine;
 import jb.plasma.DepartureData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
