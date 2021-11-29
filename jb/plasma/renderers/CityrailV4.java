@@ -35,7 +35,7 @@ public abstract class CityrailV4 extends Cityrail
     }
 
     protected BufferedImage TryLoadLineLogo(CityrailLine line) {
-        if (line.LogoImageFilename != null)
+        if (line != null && line.LogoImageFilename != null)
         {
             InputStream imageStream = CityrailV4Primary.class.getResourceAsStream("/jb/plasma/renderers/resources/" + line.LogoImageFilename);
             try {

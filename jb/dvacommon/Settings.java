@@ -207,16 +207,11 @@ public class Settings {
 
     public static IndicatorSettings getIndicator(String key) {
 
-        boolean useSchedule = prefs.getBoolean(key + "UseSchedule", false);
         List<String> renderers = new LinkedList<>();
         for (int i = 0; i < prefs.getInt(key + "RenderersCount", 0); i++)
         {
             renderers.add(prefs.get(key + "Renderer" + Integer.toString(i), ""));
         }
-        boolean playAnnouncements = prefs.getBoolean(key + "PlayAnnouncements", true);
-        String announcementTimes = prefs.get(key + "AnnouncementTimes", "5,3,1,0");
-        String announcementVoice = prefs.get(key + "AnnouncementVoice", "CityRail (Male)");
-        boolean coalesceStationSequences = prefs.getBoolean(key + "CoalesceStationSequences", true);
 
         List<DepartureData> departureData = new LinkedList<>();
         int departureDataCount = prefs.getInt(key + "DepartureDataCount", 0);
@@ -232,10 +227,19 @@ public class Settings {
             }
         }
 
-        String gtfsStation = prefs.get(key + "GtfsStation", "");
-        String gtfsPlatform = prefs.get(key + "GtfsPlatform", "");
-
-        return new IndicatorSettings(useSchedule, renderers, playAnnouncements, announcementTimes, announcementVoice, coalesceStationSequences, departureData, gtfsStation, gtfsPlatform);
+        return new IndicatorSettings(
+                prefs.getBoolean(key + "UseSchedule", false),
+                renderers,
+                prefs.getBoolean(key + "PlayAnnouncements", true),
+                prefs.get(key + "AnnouncementTimes", "5,3,1,0"),
+                prefs.get(key + "AnnouncementVoice", "CityRail (Male)"),
+                prefs.getBoolean(key + "CoalesceStationSequences", true),
+                departureData,
+                prefs.get(key + "GtfsStation", ""),
+                prefs.getBoolean(key + "FilterPlatform", true),
+                prefs.get(key + "GtfsPlatform", ""),
+                prefs.getBoolean(key + "FilterRoute", false),
+                prefs.get(key + "GtfsRoute", ""));
     }
     
     public static DepartureData getIndicatorDepartureData(String key) {
@@ -282,7 +286,10 @@ public class Settings {
         }
 
         prefs.put(key + "GtfsStation", is.getGtfsStation());
+        prefs.putBoolean(key + "FilterPlatform", is.filterPlatform());
         prefs.put(key + "GtfsPlatform", is.getGtfsPlatform());
+        prefs.putBoolean(key + "FilterRoute", is.filterRoute());
+        prefs.put(key + "GtfsRoute", is.getGtfsRoute());
         prefs.putBoolean(key + "Indicator", true);
         try {
             prefs.flush();

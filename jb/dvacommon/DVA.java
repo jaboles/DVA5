@@ -31,6 +31,7 @@ import jb.dvacommon.ui.DVAShell;
 import jb.dvacommon.ui.LicenceWindow;
 import jb.dvacommon.ui.LoadWindow;
 import jb.plasma.gtfs.GtfsGenerator;
+import jb.plasma.gtfs.GtfsTimetable;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
 import jb.plasma.ui.ScreenSaverSettingsDialog;
 import org.slf4j.Logger;
@@ -140,8 +141,16 @@ public class DVA {
             if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
             GtfsGenerator ttLoader = new GtfsGenerator(new File(DVA.getApplicationDataFolder(), "GtfsTimetable").toPath());
             ttLoader.download();
-            if (showLoadingProgress) lw.setText("Analysing GTFS timetable... ");
-            GtfsTimetableTranslator.initialize(ttLoader.analyse());
+
+            if (showLoadingProgress) lw.setText("Reading GTFS data... ");
+            GtfsTimetable tt = ttLoader.read();
+
+            int steps = GtfsTimetable.getAnalysisStepCount();
+            for (int i = 0; i < steps; i++)  {
+                if (showLoadingProgress) lw.setText("Analysing GTFS data... " + (i * 100 / 4) + "%");
+                tt.analyse(i);
+            }
+            GtfsTimetableTranslator.initialize(tt);
 
             if (showMainWindow) {
                 if (lw != null) {

@@ -31,7 +31,7 @@ public class GtfsGenerator {
         GtfsGenerator g = new GtfsGenerator(FileSystems.getDefault().getPath("./testing"));
         try {
             g.download();
-            g.analyse();
+            g.read().analyse();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class GtfsGenerator {
         }
     }
 
-    public GtfsTimetable analyse() throws Exception
+    public GtfsTimetable read() throws Exception
     {
         HashMap<String, Stop> stops = GtfsCsvReader.readStops(wd.resolve("stops.txt"));
         HashMap<String, Route> routes = GtfsCsvReader.readRoutes(wd.resolve("routes.txt"));

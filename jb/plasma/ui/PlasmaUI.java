@@ -79,7 +79,10 @@ public class PlasmaUI
     private List<DepartureData> departureData = new LinkedList<>();
 
     public JBComboBox<String> gtfsStation;
+    public JCheckBox filterPlatform;
     public JBComboBox<String> gtfsPlatform;
+    public JCheckBox filterRoute;
+    public JBComboBox<String> gtfsRoute;
 
     public JCheckBox playAnnouncementCheckbox;
     public JTextField playAnnouncementTimes;
@@ -167,12 +170,13 @@ public class PlasmaUI
             timetableTranslator = GtfsTimetableTranslator.getInstance();
             gtfsStation.replaceItems(timetableTranslator.getStations());
 
-            // When the station is changed, update the list of lines
+            // When the station is changed, update the list of platforms and routes
             gtfsStation.addActionListener(e -> {
                 String station = (String)gtfsStation.getSelectedItem();
 
                 if (station != null) {
                     gtfsPlatform.replaceItems(timetableTranslator.getPlatformsForStation(station));
+                    gtfsRoute.replaceItems(timetableTranslator.getRoutesForStation(station));
                 }
             });
 
@@ -247,17 +251,24 @@ public class PlasmaUI
                 JOptionPane.showMessageDialog(null,
                         "IndexOutOfBoundsException, check entered departure times are valid.");
             }
+            return dd;
         } else {
-            try {
-                dd = timetableTranslator.getDepartureDataForStation(
-                        (String)gtfsStation.getSelectedItem(),
-                        (String)gtfsPlatform.getSelectedItem(),
-                        0);
-            } catch (Exception e) {
-                jb.common.ExceptionReporter.reportException(e);
-            }
+            return getTimetableDepartureData();
         }
-        return dd;
+    }
+
+    private List<DepartureData> getTimetableDepartureData()
+    {
+        try {
+            return timetableTranslator.getDepartureDataForStation(
+                    (String)gtfsStation.getSelectedItem(),
+                    filterPlatform.isSelected() ? (String)gtfsPlatform.getSelectedItem() : null,
+                    filterRoute.isSelected()    ? (String)gtfsRoute.getSelectedItem()    : null,
+                    0);
+        } catch (Exception e) {
+            jb.common.ExceptionReporter.reportException(e);
+            return null;
+        }
     }
     
     // Show the indicator board, specifying whether to run in full screen,
@@ -436,7 +447,10 @@ public class PlasmaUI
                 coalesceStationSequencesCheckbox.isSelected(),
                 data,
                 gtfsStation.getSelectedItem().toString(),
-                gtfsPlatform.getSelectedItem().toString());
+                filterPlatform.isSelected(),
+                gtfsPlatform.getSelectedItem().toString(),
+                filterRoute.isSelected(),
+                gtfsRoute.getSelectedItem().toString());
     }
 
     // Set the indicator settings in the panels from an IndicatorSettings object
@@ -506,7 +520,15 @@ public class PlasmaUI
             showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER_PREVIEW, null);
         }
     };
-    
+
+    public Action filterPlatformAction = new AbstractAction("Filter") {
+        public void actionPerformed(ActionEvent e) { gtfsPlatform.setEnabled(filterPlatform.isSelected()); }
+    };
+
+    public Action filterRouteAction = new AbstractAction("Filter") {
+        public void actionPerformed(ActionEvent e) { gtfsRoute.setEnabled(filterRoute.isSelected()); }
+    };
+
     // Play an announcement from the indicator
     @SuppressWarnings("serial")
     public Action announceAction = new AbstractAction("Play", new ImageIcon(PlasmaUI.class.getResource("/toolbarButtonGraphics/media/Play24.gif"))) {
@@ -562,10 +584,7 @@ public class PlasmaUI
         public void actionPerformed(ActionEvent e)
         {
             try {
-                departureData = timetableTranslator.getDepartureDataForStation(
-                        (String)gtfsStation.getSelectedItem(),
-                        (String)gtfsPlatform.getSelectedItem(),
-                        0);
+                departureData = getTimetableDepartureData();
                 for (int i = 0; i < departurePanels.length; i++) {
                     if (departureData.size() > i) {
                         departurePanels[i].setData(departureData.get(i));
