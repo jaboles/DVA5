@@ -22,37 +22,39 @@ import java.util.zip.ZipInputStream;
 public class GtfsGenerator {
     private final String APIKEY = "3LP1iesTsBqiO2rzMGdmPJ3EJV1ubm3FqyP0";
     private Path wd;
+    private static GtfsGenerator instance;
 
     public static void main(String[] args) {
         System.out.println("TTFetch - timetable fetcher");
         System.out.println("DVA Version " + DVA.VersionString);
         System.out.println(DVA.CopyrightMessage);
 
-        GtfsGenerator g = new GtfsGenerator(FileSystems.getDefault().getPath("./testing"));
+        GtfsGenerator.initialize(FileSystems.getDefault().getPath("./testing"));
         try {
-            g.download();
-            g.read().analyse();
+            GtfsGenerator.getInstance().download();
+            GtfsGenerator.getInstance().read().analyse();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public GtfsGenerator(Path wd) { this.wd = wd; }
+    private GtfsGenerator(Path wd) { this.wd = wd; }
+
+    public static GtfsGenerator getInstance()
+    {
+        return instance;
+    }
+
+    public static void initialize(Path wd) {instance = new GtfsGenerator(wd);}
 
     public void download() throws IOException
     {
         if (Files.exists(wd))
         {
-            BasicFileAttributes attrs = Files.readAttributes(wd, BasicFileAttributes.class);
-            LocalDateTime timestamp = LocalDateTime.ofInstant(attrs.lastModifiedTime().toInstant(), ZoneId.systemDefault());
-            LocalDateTime weekAgo = LocalDateTime.now().minusDays(7);
-            if (timestamp.isBefore(weekAgo))
+            if (LocalDateTime.now().isAfter(expiryTime()))
             {
-                Files.walk(wd)
-                        .sorted(Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .forEach(File::delete);
+                delete();
             }
         }
 
@@ -60,6 +62,17 @@ public class GtfsGenerator {
         {
             getHTMLZip("https://api.transport.nsw.gov.au/v1/gtfs/schedule/sydneytrains", APIKEY, wd);
         }
+    }
+
+    public LocalDateTime downloadTimestamp() throws IOException
+    {
+        BasicFileAttributes attrs = Files.readAttributes(wd, BasicFileAttributes.class);
+        return LocalDateTime.ofInstant(attrs.lastModifiedTime().toInstant(), ZoneId.systemDefault());
+    }
+
+    public LocalDateTime expiryTime() throws IOException
+    {
+        return downloadTimestamp().plusDays(7);
     }
 
     public GtfsTimetable read() throws Exception
@@ -70,31 +83,18 @@ public class GtfsGenerator {
         HashMap<String, Trip> trips = GtfsCsvReader.readTrips(wd.resolve("trips.txt"), routes, servicePeriods);
         List<StopTime> stopTimes = GtfsCsvReader.readStopTimes(wd.resolve("stop_times.txt"), trips, stops);
 
-        return new GtfsTimetable(routes, servicePeriods, stops, stopTimes, trips);
+        return new GtfsTimetable(routes, servicePeriods, stops, stopTimes, trips, downloadTimestamp(), expiryTime());
     }
 
-    // Gets the content at the given URL
-    public String apiGet(String url, String apikey) {
-        try {
-            HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
-            con.setRequestMethod("GET");
-
-            try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine = null;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                System.out.println(response.toString());
-            }
-            return FileUtilities.readFromUrl(new URL(url));
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-        return null;
+    public void delete() throws IOException
+    {
+        Files.walk(wd)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
     }
 
-    public void getHTMLZip(String url, String apikey, Path targetDir) throws IOException {
+    private void getHTMLZip(String url, String apikey, Path targetDir) throws IOException {
         HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
         con.setRequestProperty("Authorization", "apikey " + apikey);
 

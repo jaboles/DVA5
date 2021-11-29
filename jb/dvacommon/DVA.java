@@ -139,16 +139,16 @@ public class DVA {
             //if (p != null) p.join();
 
             if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
-            GtfsGenerator ttLoader = new GtfsGenerator(new File(DVA.getApplicationDataFolder(), "GtfsTimetable").toPath());
-            ttLoader.download();
+            GtfsGenerator.initialize(new File(DVA.getApplicationDataFolder(), "GtfsTimetable").toPath());
+            GtfsGenerator.getInstance().download();
 
-            if (showLoadingProgress) lw.setText("Reading GTFS data... ");
-            GtfsTimetable tt = ttLoader.read();
+            if (showLoadingProgress) lw.setText("Reading timetable data... ");
+            GtfsTimetable tt = GtfsGenerator.getInstance().read();
 
             int steps = GtfsTimetable.getAnalysisStepCount();
+            if (showLoadingProgress) lw.setText("Analysing timetable... indexing locations");
             for (int i = 0; i < steps; i++)  {
-                if (showLoadingProgress) lw.setText("Analysing GTFS data... " + (i * 100 / 4) + "%");
-                tt.analyse(i);
+                if (showLoadingProgress) lw.setText("Analysing timetable... " + tt.analyse(i));
             }
             GtfsTimetableTranslator.initialize(tt);
 

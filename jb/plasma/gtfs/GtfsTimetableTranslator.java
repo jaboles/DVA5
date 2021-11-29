@@ -25,6 +25,9 @@ public class GtfsTimetableTranslator
 
     public static void initialize(GtfsTimetable tt) {instance = new GtfsTimetableTranslator(tt);}
 
+    public LocalDateTime downloadTimestamp() {return tt.DownloadTimestamp;}
+    public LocalDateTime expiryTime() {return tt.ExpiryTime;}
+
     public String[] getStations()
     {
         return tt.Stops.values().stream()

@@ -47,7 +47,16 @@
         </panel>
         <panel name="Timetable" layout="FlowLayout">
             <vbox>
-                <panel constraints="BorderLayout.NORTH" layout="GridLayout(9,1,5,2)" border="EmptyBorder(0,0,0,2)">
+                <panel layout="GridLayout(3,1,0,0)">
+                    <label id="gtfsInfo"/>
+                    <hbox>
+                        <label id="gtfsDownloadTimestamp"/>
+                        <button text="Clear" action="clearDownloadedGtfsAction"/>
+                    </hbox>
+                    <label id="gtfsExpiryTime"/>
+                </panel>
+                <label text=" "/>
+                <panel constraints="BorderLayout.NORTH" layout="GridLayout(7,1,5,2)" border="EmptyBorder(0,0,0,2)">
                     <label text="Select station:"/>
                     <jbcombobox id="gtfsStation" size="400,10"/>
                     <checkbox id="filterPlatform" action="filterPlatformAction" text="Filter by platform:"/>
@@ -58,7 +67,7 @@
                 </panel>
                 <label text=" "/>
                 <panel layout="FlowLayout(FlowLayout.CENTER)">
-                    <label text="&lt;html&gt;Use Window/Full Screen buttons at bottom of window to start&lt;br&gt;indicator, or use button below to load the Manual page.&lt;/html&gt;"/>
+                    <label text="&lt;html&gt;Use Window/Full Screen buttons at top of window to start&lt;br&gt;indicator, or use button below to load the Manual page.&lt;/html&gt;"/>
                 </panel>
                 <panel layout="FlowLayout(FlowLayout.CENTER)">
                     <button action="loadManualFromTimetable"/>

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import javax.swing.AbstractAction;
@@ -43,6 +44,7 @@ import jb.plasma.NullDrawer;
 import jb.plasma.PlasmaSession;
 import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
+import jb.plasma.gtfs.GtfsGenerator;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
 import jb.plasma.renderers.*;
 import org.slf4j.Logger;
@@ -78,6 +80,9 @@ public class PlasmaUI
     public JButton playStopButton;
     private List<DepartureData> departureData = new LinkedList<>();
 
+    public JLabel gtfsInfo;
+    public JLabel gtfsDownloadTimestamp;
+    public JLabel gtfsExpiryTime;
     public JBComboBox<String> gtfsStation;
     public JCheckBox filterPlatform;
     public JBComboBox<String> gtfsPlatform;
@@ -168,6 +173,11 @@ public class PlasmaUI
             }
 
             timetableTranslator = GtfsTimetableTranslator.getInstance();
+            gtfsInfo.setText("TfNSW GTFS timetable");
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            gtfsDownloadTimestamp.setText("Downloaded: " + timetableTranslator.downloadTimestamp().format(fmt));
+            gtfsExpiryTime.setText("Expiry & next download: " + timetableTranslator.expiryTime().format(fmt));
+
             gtfsStation.replaceItems(timetableTranslator.getStations());
 
             // When the station is changed, update the list of platforms and routes
@@ -525,6 +535,17 @@ public class PlasmaUI
         public void actionPerformed(ActionEvent e)
         {
             showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER_PREVIEW, null);
+        }
+    };
+
+    public Action clearDownloadedGtfsAction = new AbstractAction("Clear") {
+        public void actionPerformed(ActionEvent e) {
+            try {
+                GtfsGenerator.getInstance().delete();
+                JOptionPane.showMessageDialog(panel, "Data deleted. It will be downloaded again at next restart.");
+            } catch (Exception ex) {
+                jb.common.ExceptionReporter.reportException(ex);
+            }
         }
     };
 
