@@ -52,8 +52,8 @@ Source: "..\build\Debug\src.zip"; DestDir: "{app}"
 Name: "{commonappdata}\DVA"; Permissions: Users-modify
 
 [Icons]
-Name: "DVA 5"; Filename: "{app}\DVA.exe"; AppUserModelID: "jb.DVA"
-;Name: "{group}\{cm:UninstallProgram,DVA}"; Filename: "{uninstallexe}"
+Name: "{group}\DVA 5"; Filename: "{app}\DVA.exe"; AppUserModelID: "jb.DVA"
+Name: "{group}\{cm:UninstallProgram,DVA}"; Filename: "{uninstallexe}"
 Name: "{userdesktop}\DVA 5"; Filename: "{app}\DVA.exe"; Tasks: desktopicon; AppUserModelID: "jb.DVA"
 
 [Registry]
