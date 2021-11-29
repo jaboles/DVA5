@@ -72,7 +72,7 @@ public class GtfsGenerator {
 
     public LocalDateTime expiryTime() throws IOException
     {
-        return downloadTimestamp().plusDays(7);
+        return downloadTimestamp().plusDays(14);
     }
 
     public GtfsTimetable read() throws Exception
