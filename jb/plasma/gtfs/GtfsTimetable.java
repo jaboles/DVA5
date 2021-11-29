@@ -16,9 +16,11 @@ public class GtfsTimetable implements Serializable
         (Consumer<GtfsTimetable>)tt -> {tt.StopTimesByStop = tt.StopTimes.stream().collect(Collectors.groupingBy(st -> st.Stop));},
         (Consumer<GtfsTimetable>)tt -> {tt.StopTimesByTrip = tt.StopTimes.stream().collect(Collectors.groupingBy(st -> st.Trip));},
         (Consumer<GtfsTimetable>)tt -> {tt.TripsByBlockId = tt.Trips.values().stream().collect(Collectors.groupingBy(t -> t.BlockId));},
-        (Consumer<GtfsTimetable>)tt -> {tt.RoutesByStation = tt.StopTimes.stream().collect(Collectors.groupingBy(st -> st.Stop.Parent,
-            Collectors.mapping(st -> st.Trip.Route,
-                Collectors.toSet())));},
+        (Consumer<GtfsTimetable>)tt -> {tt.RoutesByStation = tt.StopTimes.stream()
+            .filter(st -> st.Pickup || st.Dropoff)
+            .collect(Collectors.groupingBy(st -> st.Stop.Parent,
+                Collectors.mapping(st -> st.Trip.Route,
+                    Collectors.toSet())));},
     };
 
     public GtfsTimetable(Map<String, Route> routes,

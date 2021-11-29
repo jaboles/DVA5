@@ -127,8 +127,8 @@ public class GtfsCsvReader
                     parts[1], // e.g. "04:46:06"
                     parts[2], // e.g. "04:46:06"
                     stops.get(parts[3]), // e.g. "2135234"
-                    Integer.parseInt(parts[6].trim()) > 0, // e.g. "0" or "1"
-                    Integer.parseInt(parts[7].trim()) > 0 // e.g. "0" or "1"
+                    Integer.parseInt(parts[6].trim()) == 0, // e.g. "0" or "1". 0 actually means "yes"
+                    Integer.parseInt(parts[7].trim()) == 0 // e.g. "0" or "1". 0 actually means "yes"
             );
             list.add(data);
         });

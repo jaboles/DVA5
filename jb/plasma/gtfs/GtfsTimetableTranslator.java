@@ -79,6 +79,7 @@ public class GtfsTimetableTranslator
 
         Stream<TripInstance> upcoming = platforms
             .flatMap(platform -> tt.StopTimesByStop.get(platform).stream())
+            .filter(st -> st.Pickup)
             .filter(st -> routes == null || routes.contains(st.Trip.Route))
             .flatMap(st -> expandTrips(st, tt))
             .sorted((t1, t2) -> t1.At.compareTo(t2.At))
@@ -137,7 +138,7 @@ public class GtfsTimetableTranslator
                 final LocalDate dateCopy = date;
                 List<NormalizedStopTime> tripStopTimes = tt.StopTimesByTrip.get(tripTimeAndPlace.Trip).stream()
                         .map(tst -> new NormalizedStopTime(tst, dateCopy))
-                        .collect(Collectors.toList());;
+                        .collect(Collectors.toList());
 
                 Trip blockContinuingTrip = null;
                 if (tripTimeAndPlace.Trip.BlockId != null && tripTimeAndPlace.Trip.BlockId.length() > 0)
@@ -167,7 +168,7 @@ public class GtfsTimetableTranslator
                                 // Detect train that terminates + returns
                                 // On a double track line it will likely be a different platform so Stop.Id will be
                                 // different so check Stop.Parent.Id instead.
-                                if (tripStopTimes.stream().anyMatch(tst -> tst.Stop.Parent == bst.Stop.Parent)) {
+                                if (tripStopTimes.stream().anyMatch(tst -> tst.StopTime.Stop.Parent == bst.StopTime.Stop.Parent)) {
                                     break;
                                 } else{
                                     tripStopTimes.add(bst);
@@ -179,7 +180,7 @@ public class GtfsTimetableTranslator
                     }
                 }
 
-                TripInstance ti = new TripInstance(tripTimeAndPlace.Trip, date, tripTimeAndPlace.Stop, tripStopTimes, blockContinuingTrip);
+                TripInstance ti = new TripInstance(tripTimeAndPlace, date, tripStopTimes, blockContinuingTrip);
 
                 if (ti.At.isAfter(now) && ti.At.isBefore(now.plusDays(7)))
                     list.add(ti);
@@ -191,18 +192,17 @@ public class GtfsTimetableTranslator
     // Represents a potential departure of a trip from a given place which will occur at a given time.
     private class TripInstance
     {
-        public TripInstance(Trip trip,
+        public TripInstance(StopTime tripTimeAndPlace,
                             LocalDate date,
-                            Stop platform,
                             List<NormalizedStopTime> stopTimes,
                             Trip blockContinuingTrip)
         {
-            Trip = trip;
+            Trip = tripTimeAndPlace.Trip;
             Date = date;
-            Platform = platform;
+            Platform = tripTimeAndPlace.Stop;
             NormalizedStopTimes = stopTimes;
             BlockContinuingTrip = blockContinuingTrip;
-            At = stopTimes.stream().filter(st -> st.Stop == platform).findFirst().get().NormalizedDeparture;
+            At = new NormalizedStopTime(tripTimeAndPlace, date).NormalizedDeparture;
         }
 
         public Trip Trip;
@@ -218,8 +218,8 @@ public class GtfsTimetableTranslator
             boolean found = false;
             for (NormalizedStopTime nst : NormalizedStopTimes)
             {
-                if (nst.Stop == Platform) found = true;
-                else if (found) stops.add(nst.Stop.Name);
+                if (nst.StopTime.Stop == Platform) found = true;
+                else if (found && nst.StopTime.Dropoff) stops.add(nst.StopTime.Stop.Name);
             }
 
             return stops.stream()
@@ -232,7 +232,7 @@ public class GtfsTimetableTranslator
     {
         public NormalizedStopTime(StopTime st, LocalDate date)
         {
-            Stop = st.Stop;
+            StopTime = st;
             LocalDate normalizedDate = LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth());
             String[] timeParts = st.Departure.split(":");
             int h = Integer.parseInt(timeParts[0]);
@@ -247,7 +247,7 @@ public class GtfsTimetableTranslator
             NormalizedDeparture = LocalDateTime.of(normalizedDate, LocalTime.of(h, m, s));
         }
 
-        public Stop Stop;
+        public StopTime StopTime;
         public LocalDateTime NormalizedDeparture;
     }
 }
