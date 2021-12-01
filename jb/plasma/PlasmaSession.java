@@ -1,6 +1,8 @@
 package jb.plasma;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.List;
 import jb.plasma.ui.PlasmaWindow;
@@ -45,8 +47,8 @@ public class PlasmaSession
     }
 
     // Determine whether two times are within half a second of each other.
-    private boolean withinOneSecondOf(Calendar time1, Calendar time2) {
-        long diff = Math.abs(time1.getTime().getTime() - time2.getTime().getTime());
+    private boolean withinOneSecondOf(LocalDateTime time1, LocalDateTime time2) {
+        long diff = Math.abs(ChronoUnit.MILLIS.between(time1, time2));
         return diff <= 500;
     }
 
@@ -64,25 +66,27 @@ public class PlasmaSession
             // Only need to do something if there's at least one departure in the list
             if (data.size() > 0)
             {
-                Calendar now = Calendar.getInstance();
-                // If due-out time has passed, pop off the first entry in the list and notify the renderers
-                if (data.get(0).DueOut != null && data.get(0).DueOut.compareTo(now) < 0)
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime dueOut = data.get(0).DueOut;
+                if (dueOut != null)
                 {
-                    trainDeparted();
-                }
-
-                // If a sound library has been specified, and it's time to play an announcement, play it
-                // using the given sound library.
-                if (announcementTimes != null && announce != null) {
-                    for (int announcementTime : announcementTimes) {
-                        Calendar c = Calendar.getInstance();
-                        c.add(Calendar.MINUTE, announcementTime);
-                        c.add(Calendar.SECOND, 30);
-                        Calendar dueOut = data.get(0).DueOut;
-                        if (dueOut != null && withinOneSecondOf(c, dueOut))
-                        {
-                            announce.run();
-                            break;
+                    // If due-out time has passed, pop off the first entry in the list and notify the renderers
+                    if (now.isAfter(dueOut))
+                    {
+                        trainDeparted();
+                    }
+                    // If a sound library has been specified, and it's time to play an announcement, play it
+                    // using the given sound library.
+                    else if (announcementTimes != null && announce != null) {
+                        for (int announcementTime : announcementTimes) {
+                            LocalDateTime announceAt = now
+                                    .plusMinutes(announcementTime)
+                                    .plusSeconds(30);
+                            if (withinOneSecondOf(announceAt, dueOut))
+                            {
+                                announce.run();
+                                break;
+                            }
                         }
                     }
                 }

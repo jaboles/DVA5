@@ -8,9 +8,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
@@ -36,12 +39,7 @@ import jb.common.ui.TextIcon;
 import jb.dva.Script;
 import jb.dvacommon.DVA;
 import jb.dvacommon.Settings;
-import jb.plasma.Announcer;
-import jb.plasma.DepartureData;
-import jb.plasma.Drawer;
-import jb.plasma.IndicatorSettings;
-import jb.plasma.NullDrawer;
-import jb.plasma.PlasmaSession;
+import jb.plasma.*;
 import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
 import jb.plasma.gtfs.GtfsGenerator;
@@ -225,13 +223,6 @@ public class PlasmaUI
         }
     }
     
-    public static Calendar inXMinutes(Calendar cal, int minutes)
-    {
-        Calendar c = (Calendar) cal.clone();
-        c.add(Calendar.MINUTE, minutes);
-        return c;
-    }
-
     public JPanel getPanel()
     {
         return panel;
@@ -252,10 +243,7 @@ public class PlasmaUI
             try {
                 dd = new LinkedList<>();
                 for (int i = 0; i < departurePanels.length; i++) {
-                    if (i >= dd.size()) {
-                        dd.add(new DepartureData());
-                    }
-                    dd.set(i, departurePanels[i].getData());
+                    dd.add(departurePanels[i].getData());
                 }
             } catch (IndexOutOfBoundsException ex) {
                 JOptionPane.showMessageDialog(null,
@@ -274,7 +262,8 @@ public class PlasmaUI
                     (String)gtfsStation.getSelectedItem(),
                     filterPlatform.isSelected() ? (String)gtfsPlatform.getSelectedItem() : null,
                     filterRoute.isSelected()    ? (String)gtfsRoute.getSelectedItem()    : null,
-                    0);
+                    0)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             jb.common.ExceptionReporter.reportException(e);
             return null;
@@ -334,7 +323,8 @@ public class PlasmaUI
             try {
                 d = (Drawer) (rendererComboBox.getItemAt(rendererComboBox.getSelectedIndex())).clone();
                 drawers.add(d);
-                PlasmaPanel p = new PlasmaPanel(d, departureData);
+                d.dataChanged(departureData);
+                PlasmaPanel p = new PlasmaPanel(d);
                 PlasmaWindow w = new PlasmaWindow(this, mode, i, d.toString(), size, d.getAspectRatio(), new ProportionalPanel(d
                         .getAspectRatio(), p));
                 w.paint(w.getGraphics());
@@ -399,8 +389,7 @@ public class PlasmaUI
             {
                 logger.info("Playing auto generated announcement");
                 Announcer announcer = (Announcer) playAnnouncementVoiceCombobox.getSelectedItem();
-                long millisToDeparture = departureData.get(0).DueOut.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
-                long minsToDeparture = TimeUnit.MILLISECONDS.toMinutes(millisToDeparture);
+                long minsToDeparture = ChronoUnit.MINUTES.between(LocalDateTime.now(), departureData.get(0).DueOut);
                 if (announcer instanceof CityrailStandard)
                 {
                     ((CityrailStandard)announcer).setCoalesceStationSequences(coalesceStationSequencesCheckbox.isSelected());
@@ -602,7 +591,7 @@ public class PlasmaUI
             if (departureData != null && departureData.size() > 2) {
                 departurePanels[departurePanels.length - 1].setData(departureData.get(2));
             } else {
-                departurePanels[departurePanels.length - 1].setData(new DepartureData());
+                departurePanels[departurePanels.length - 1].setData(new NullDepartureData());
             }
         }
     };

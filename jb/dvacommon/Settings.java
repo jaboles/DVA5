@@ -1,7 +1,7 @@
 package jb.dvacommon;
 import java.awt.Color;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,7 +17,7 @@ import jb.dva.Script;
 import jb.plasma.CityrailLine;
 import jb.plasma.DepartureData;
 import jb.plasma.IndicatorSettings;
-import jb.plasma.ui.PlasmaUI;
+import jb.plasma.ManualDepartureData;
 
 public class Settings {
     static Preferences prefs = Preferences.userNodeForPackage(Settings.class);
@@ -33,48 +33,51 @@ public class Settings {
             new Script("Inflection Demo 2", "Sydney-Male", "This train goes to `Central only. First stop ^Central."),
         };
         PLASMA_DEMOS = new DepartureData[] {
-            new DepartureData() {{
-                Destination = "Newcastle";
-                Type = DepartureData.DefaultServiceTypes[2];
-                Platform = 1;
-                Cars = 8;
-                Stops = new String[] { "Redfern", "Strathfield", "Epping", "Hornsby", "Berowra", "Gosford", "Wyong", "Broadmeadow", "Newcastle" };
-                DueOut = PlasmaUI.inXMinutes(Calendar.getInstance(), 5);
-                Line = "Central Coast & Newcastle Line";
-                Color1Override = CityrailLine.grey;
-                Color2Override = CityrailLine.red;
-                TextColorOverride = Color.white;
-            }},
-            new DepartureData() {{
-                Destination = "Lithgow";
-                Type = DepartureData.DefaultServiceTypes[1];
-                Platform = 1;
-                Cars = 8;
-                Stops = new String[] { "Redfern", "Strathfield", "Granville", "Parramatta", "Westmead", "Blacktown",
+            new ManualDepartureData(
+                    "Newcastle",
+                    null,
+                    "Central Coast & Newcastle Line",
+                    DepartureData.DefaultServiceTypes[2],
+                    8,
+                    1,
+                    new String[] { "Redfern", "Strathfield", "Epping", "Hornsby", "Berowra", "Gosford", "Wyong", "Broadmeadow", "Newcastle" },
+                    LocalDateTime.now().plusMinutes(5),
+                    CityrailLine.grey,
+                    CityrailLine.red,
+                    Color.white,
+                    null),
+            new ManualDepartureData(
+                    "Lithgow",
+                    null,
+                    "Blue Mountains Line",
+                    DepartureData.DefaultServiceTypes[1],
+                    8,
+                    1,
+                    new String[] { "Redfern", "Strathfield", "Granville", "Parramatta", "Westmead", "Blacktown",
                         "Penrith", "Emu Plains", "Lapstone", "Glenbrook", "Blaxland", "Warrimoo", "Valley Heights",
                         "Springwood", "Faulconbridge", "Linden", "Hazelbrook", "Lawson", "Bullaburra",
                         "Wentworth Falls", "Leura", "Katoomba", "Medlow Bath", "Blackheath", "Mount Victoria", "Bell",
-                        "Zig Zag", "Lithgow" };
-                DueOut = PlasmaUI.inXMinutes(Calendar.getInstance(), 9);
-                Line = "Blue Mountains Line";
-                Color1Override = CityrailLine.grey;
-                Color2Override = CityrailLine.yellow;
-                TextColorOverride = Color.white;
-            }},
-            new DepartureData() {{
-                Destination = "Nowra";
-                Type = DepartureData.DefaultServiceTypes[1];
-                Platform = 1;
-                Cars = 8;
-                Stops = new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul",
-                        "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama",
-                        "Berry", "Nowra" };
-                DueOut = PlasmaUI.inXMinutes(Calendar.getInstance(), 15);
-                Line = "South Coast Line";
-                Color1Override = CityrailLine.grey;
-                Color2Override = CityrailLine.blue;
-                TextColorOverride = Color.white;
-            }}
+                        "Zig Zag", "Lithgow" },
+                    LocalDateTime.now().plusMinutes(9),
+                    CityrailLine.grey,
+                    CityrailLine.yellow,
+                    Color.white,
+                    null),
+            new ManualDepartureData(
+                    "Nowra",
+                    null,
+                    "South Coast Line",
+                    DepartureData.DefaultServiceTypes[1],
+                    8,
+                    1,
+                    new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul",
+                            "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama",
+                            "Berry", "Nowra" },
+                    LocalDateTime.now().plusMinutes(15),
+                    CityrailLine.grey,
+                    CityrailLine.blue,
+                    Color.white,
+                    null)
         };
     }
     
@@ -243,24 +246,20 @@ public class Settings {
     }
     
     public static DepartureData getIndicatorDepartureData(String key) {
-        DepartureData dd = new DepartureData();
-        dd.Destination = prefs.get(key + "Destination", "");
-        dd.Destination2 = prefs.get(key + "Destination2", "");
-        dd.Line = prefs.get(key + "Line", "");
-        dd.Type = prefs.get(key + "Type", "");
-        dd.Cars = prefs.getInt(key + "Cars", 8);
-        dd.Platform = prefs.getInt(key + "Platform", 1);
-        try {
-            dd.dueOutFromString(prefs.get(key + "DueOut", ""));
-        } catch (NumberFormatException e) {
-            dd.DueOut = Calendar.getInstance();
-            dd.DueOut.add(Calendar.MINUTE, 5);
-        }
-        dd.stopsFromString(prefs.get(key + "Stops", ""));
-        dd.Color1Override = getColor(key + "Color1", null);
-        dd.Color2Override = getColor(key + "Color2", null);
-        dd.TextColorOverride = getColor(key + "TextColor", null);
-        dd.CustomAnnouncementPath = prefs.get(key + "CustomAnnouncement", null);
+        DepartureData dd = new ManualDepartureData(
+                prefs.get(key + "Destination", ""),
+                prefs.get(key + "Destination2", ""),
+                prefs.get(key + "Line", ""),
+                prefs.get(key + "Type", ""),
+                prefs.getInt(key + "Cars", 8),
+                prefs.getInt(key + "Platform", 1),
+                prefs.get(key + "Stops", ""),
+                prefs.get(key + "DueOut", ""),
+                getColor(key + "Color1", null),
+                getColor(key + "Color2", null),
+                getColor(key + "TextColor", null),
+                prefs.get(key + "CustomAnnouncement", null)
+        );
         return dd;
     }
 

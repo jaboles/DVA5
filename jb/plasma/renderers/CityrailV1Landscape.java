@@ -2,6 +2,7 @@ package jb.plasma.renderers;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import jb.plasma.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
@@ -106,9 +107,9 @@ public class CityrailV1Landscape extends CityrailV1
             } else {
                 drawString(d0.Type, 0.21, 0.265, TextWhite, MainFont);
             }
-            Calendar dueOut = d0.DueOut;
+            LocalDateTime dueOut = d0.DueOut;
             if (dueOut != null) {
-                drawString(DueOutFormat.format(dueOut.getTime()), 0.012, 0.2, TextWhite, DepartureTimeFont);
+                drawString(dueOut.format(DueOutFormat), 0.012, 0.2, TextWhite, DepartureTimeFont);
                 int m = getDueOut(d0.DueOut).getValue1();
                 if (m > 0) {
                     drawStringR(m, 0.089, 0.77, TextWhite, DepartureTimeFont);

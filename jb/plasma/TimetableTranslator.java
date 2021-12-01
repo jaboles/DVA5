@@ -2,6 +2,7 @@ package jb.plasma;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import jb.common.IntPair;
@@ -239,19 +240,21 @@ public class TimetableTranslator
 
                 // Create a DepartureData object to hold the info and add it to
                 // the list.
-                DepartureData d = new DepartureData();
-                d.Destination = destination;
                 CityrailLine line = CityrailLine.find(lineName/*, allStops*/);
-                if (line != null) {
-                    d.Line = line.Name;
-                }
-                d.Type = isLimitedStops ? "Limited Stops" : "All Stops";
-                d.Platform = platform;
-                d.Cars = cars;
-                d.DueOut = departure;
-                d.Stops = stops.toArray(new String[stops.size()]);
-                d.Destination2 = new Phraser().getVia(d);
-                dd.add(d);
+                dd.add(new ManualDepartureData(
+                        destination,
+                        null, // TODO - new Phraser().getVia(d)
+                        line != null ? line.Name : null,
+                        isLimitedStops ? "Limited Stops" : "All Stops",
+                        cars,
+                        platform,
+                        stops.toArray(new String[stops.size()]),
+                        LocalDateTime.now(), // TODO - departure,
+                        null,
+                        null,
+                        null,
+                        null
+                ));
 
                 logger.info("Found departure to {} at {} stopping at: {}", destination, TimeFormat.format(departure.getTime()), StringUtilities.join(", ", stops));
                 if (limit > 0 && trainCount >= limit) break;

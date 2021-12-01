@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import javax.swing.AbstractAction;
@@ -207,8 +208,7 @@ public class PlasmaWindow extends JFrame
                 Type = "Limited stops";
                 Cars = 4;
                 Platform = 2;
-                DueOut = Calendar.getInstance();
-                DueOut.add(Calendar.MINUTE, 5);
+                DueOut = LocalDateTime.now().plusMinutes(5);
                 Stops = new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul", "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama", "Berry", "Nowra" };
             }},
             new DepartureData()
@@ -218,8 +218,7 @@ public class PlasmaWindow extends JFrame
                 Type = "Limited stops";
                 Cars = 4;
                 Platform = 2;
-                DueOut = Calendar.getInstance();
-                DueOut.add(Calendar.MINUTE, 10);
+                DueOut = LocalDateTime.now().plusMinutes(10);
                 Stops = new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul", "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama", "Berry", "Nowra" };
             }},
             new DepartureData()
@@ -229,14 +228,14 @@ public class PlasmaWindow extends JFrame
                 Type = "Limited stops";
                 Cars = 4;
                 Platform = 2;
-                DueOut = Calendar.getInstance();
-                DueOut.add(Calendar.MINUTE, 15);
+                DueOut = LocalDateTime.now().plusMinutes(15);
                 Stops = new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul", "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama", "Berry", "Nowra" };
             }}
         };
 
         Drawer dr = new CityrailV3Secondary();
-        PlasmaPanel p = new PlasmaPanel(dr, Arrays.asList(dd));
+        dr.dataChanged(Arrays.asList(dd));
+        PlasmaPanel p = new PlasmaPanel(dr);
         new PlasmaWindow(null, PlasmaWindow.Mode.FULLSCREEN, 0, dr.toString(), null, dr.getAspectRatio(), new ProportionalPanel(dr.getAspectRatio(), p)).setVisible(true);
     }
 }

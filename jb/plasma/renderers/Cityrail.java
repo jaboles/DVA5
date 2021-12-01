@@ -1,9 +1,9 @@
 package jb.plasma.renderers;
 import java.awt.*;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import javax.imageio.ImageIO;
 import org.javatuples.Pair;
@@ -25,8 +25,8 @@ public abstract class Cityrail extends Drawer
     protected Font SmallFont = null;
     protected Font TypeSmallFont = null;
 
-    protected static SimpleDateFormat TimeFormat = new SimpleDateFormat("HH:mm:ss");
-    protected static SimpleDateFormat DueOutFormat = new SimpleDateFormat("HH:mm");
+    protected static DateTimeFormatter TimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+    protected static DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("HH:mm");
 
     protected double stationListInc = -0.1 / PlasmaPanel.FPS;
     protected double stationListPosInitial;
@@ -35,7 +35,7 @@ public abstract class Cityrail extends Drawer
 
     protected Image airportIcon;
     
-    protected Date timeNow;
+    protected LocalDateTime timeNow;
 
     public Cityrail()
     {
@@ -52,12 +52,12 @@ public abstract class Cityrail extends Drawer
     public void paint(Graphics g)
     {
         super.paint(g);
-        timeNow = new Date();
+        timeNow = LocalDateTime.now();
     }
 
-    protected Pair<Integer,Integer> getDueOut(Calendar dueOut)
+    protected Pair<Integer,Integer> getDueOut(LocalDateTime dueOut)
     {
-        int mins = (int)((dueOut.getTime().getTime() - timeNow.getTime()) / 1000 / 60);
+        int mins = (int)ChronoUnit.MINUTES.between(timeNow, dueOut);
         return new Pair<>((mins / 60), mins % 60);
     }
     

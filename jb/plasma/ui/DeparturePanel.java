@@ -23,6 +23,7 @@ import jb.dvacommon.ui.DVATextField;
 import jb.dvacommon.ui.FileTextField;
 import jb.plasma.CityrailLine;
 import jb.plasma.DepartureData;
+import jb.plasma.ManualDepartureData;
 import org.swixml.SwingEngine;
 
 // Panel for editing a train departure.
@@ -149,21 +150,20 @@ public class DeparturePanel extends JPanel
 
     public DepartureData getData()
     {
-        DepartureData d = new DepartureData();
-        d.Destination = destinationValue.getText();
-        d.Destination2 = destination2Value.getText();
-        d.Type = serviceTypeValue.getSelectedItem().toString();
-        d.Cars = (Integer)carsValue.getValue();
-        d.Platform = (Integer)platformValue.getValue();
-        if (departureTimeValue.getText() != null && departureTimeValue.getText().length() > 0)
-            d.dueOutFromString(departureTimeValue.getText());
-        d.stopsFromString(stationsValue.getText());
-        d.Line = lineValue.getSelectedItem().toString();
-        d.Color1Override = color1Value.getSelectedItem() instanceof Color? (Color)color1Value.getSelectedItem() : null;
-        d.Color2Override = color2Value.getSelectedItem() instanceof Color? (Color)color2Value.getSelectedItem() : null;
-        d.TextColorOverride = textColorValue.getSelectedItem() instanceof Color? (Color)textColorValue.getSelectedItem() : null;
-        d.CustomAnnouncementPath = (customAnnouncementText.getText() != null && customAnnouncementText.getText().length() > 0) ? customAnnouncementText.getText() : null;
-        return d;
+        return new ManualDepartureData(
+            destinationValue.getText(),
+            destination2Value.getText(),
+            lineValue.getSelectedItem().toString(),
+            serviceTypeValue.getSelectedItem() != null ? serviceTypeValue.getSelectedItem().toString() : "",
+            (Integer)carsValue.getValue(),
+            (Integer)platformValue.getValue(),
+            stationsValue.getText(),
+            departureTimeValue.getText(),
+            color1Value.getSelectedItem() instanceof Color? (Color)color1Value.getSelectedItem() : null,
+            color2Value.getSelectedItem() instanceof Color? (Color)color2Value.getSelectedItem() : null,
+            textColorValue.getSelectedItem() instanceof Color? (Color)textColorValue.getSelectedItem() : null,
+            (customAnnouncementText.getText() != null && customAnnouncementText.getText().length() > 0) ? customAnnouncementText.getText() : null
+        );
     }
     
     public void setScriptVoice(String voiceName)

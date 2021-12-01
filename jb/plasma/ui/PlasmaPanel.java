@@ -24,10 +24,9 @@ public class PlasmaPanel extends JPanel
     private Image buf = null;
     private Graphics bg = null;
 
-    public PlasmaPanel(Drawer drawer, List<DepartureData> data) {
+    public PlasmaPanel(Drawer drawer) {
         this.drawer = drawer;
         setDoubleBuffered(true);
-        drawer.dataChanged(data);
         new Timer(1000 / FPS, repaintAction).start();
         /*
         if (mouseDebug)

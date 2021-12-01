@@ -1,6 +1,5 @@
 package jb.plasma.announcers;
 
-import java.util.Calendar;
 import jb.dva.SoundLibrary;
 import jb.plasma.DepartureData;
 import jb.plasma.Phraser;
@@ -33,8 +32,8 @@ public class NswCountry extends CityrailStandard
         }
 
         s = s + " is the ";
-        s = s + Integer.toString(d.DueOut.get(Calendar.HOUR)) + " ";
-        s = s + Integer.toString(d.DueOut.get(Calendar.MINUTE)) + " ";
+        s = s + Integer.toString(d.DueOut.getHour()) + " ";
+        s = s + Integer.toString(d.DueOut.getMinute()) + " ";
         s = s + d.Destination + " stopping at ";
 
         s = s + stops[0];
