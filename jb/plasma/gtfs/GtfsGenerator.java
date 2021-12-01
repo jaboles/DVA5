@@ -1,26 +1,19 @@
 package jb.plasma.gtfs;
 
-import jb.common.FileUtilities;
 import jb.dvacommon.DVA;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class GtfsGenerator {
-    private final String APIKEY = "3LP1iesTsBqiO2rzMGdmPJ3EJV1ubm3FqyP0";
     private Path wd;
     private static GtfsGenerator instance;
 
@@ -60,7 +53,7 @@ public class GtfsGenerator {
 
         if (!Files.exists(wd))
         {
-            getHTMLZip("https://api.transport.nsw.gov.au/v1/gtfs/schedule/sydneytrains", APIKEY, wd);
+            GtfsHttpClient.getHTMLZip("https://api.transport.nsw.gov.au/v1/gtfs/schedule/sydneytrains", wd);
         }
     }
 
@@ -92,46 +85,5 @@ public class GtfsGenerator {
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
-    }
-
-    private void getHTMLZip(String url, String apikey, Path targetDir) throws IOException {
-        HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
-        con.setRequestProperty("Authorization", "apikey " + apikey);
-
-        try (ZipInputStream zis = new ZipInputStream(con.getInputStream())) {
-
-            // list files in zip
-            ZipEntry zipEntry = zis.getNextEntry();
-
-            while (zipEntry != null) {
-                boolean isDirectory = false;
-                if (zipEntry.getName().endsWith(File.separator)) {
-                    isDirectory = true;
-                }
-
-                Path newPath = targetDir.resolve(zipEntry.getName()).normalize();
-
-                if (isDirectory) {
-                    Files.createDirectories(newPath);
-                } else {
-
-                    // example 1.2
-                    // some zip stored file path only, need create parent directories
-                    // e.g data/folder/file.txt
-                    if (newPath.getParent() != null) {
-                        if (Files.notExists(newPath.getParent())) {
-                            Files.createDirectories(newPath.getParent());
-                        }
-                    }
-
-                    // copy files, nio
-                    Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING);
-                }
-
-                zipEntry = zis.getNextEntry();
-            }
-
-            zis.closeEntry();
-        }
     }
 }

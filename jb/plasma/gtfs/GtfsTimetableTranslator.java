@@ -62,7 +62,7 @@ public class GtfsTimetableTranslator
             String routeName,
             int limit)
     {
-        List<DepartureData> dd = new LinkedList<DepartureData>();
+        GtfsRealtime.get();
 
         Stream<Stop> platforms = null;
         if (stationPlatformLocationName != null)

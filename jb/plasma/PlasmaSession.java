@@ -56,9 +56,18 @@ public class PlasmaSession
     {
         logger.debug("Reached the departure time -- dequeuing first DepartureData");
         if (data.size() > 0)
+        {
             data.remove(0);
+            if (data.size() > 0)
+            {
+                data.get(0).logDetails();
+            }
+        }
+
         for (Drawer d : drawers)
+        {
             d.dataChanged(data);
+        }
     }
     
     ActionListener timerAction = new ActionListener() {

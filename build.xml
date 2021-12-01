@@ -9,7 +9,7 @@
     <property name="OutDir" value="build${file.separator}Debug"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
-	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-5.10.0.jar${path.separator}jars/jna-platform-5.10.0.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/slf4j-api-1.7.7.jar"/>
+	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-5.10.0.jar${path.separator}jars/jna-platform-5.10.0.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/slf4j-api-1.7.7.jar${path.separator}jars/protobuf-java-3.19.1.jar"/>
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
     </condition>
@@ -139,6 +139,11 @@
 	
 	<target name="Compile" description="Compile java code">
         <mkdir dir="${InDir}"/>
+        <exec executable="protoc" failonerror="true">
+            <arg value="--java_out=." />
+            <!--<arg value="-proto_path=${proto.srcs}" />-->
+            <arg line="gtfs-realtime_1007_extension.proto" />
+        </exec>
         <javac fork="yes" srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
             <compilerarg value="-J-Xbootclasspath/p:"/>
         </javac>

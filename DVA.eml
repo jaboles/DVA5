@@ -39,4 +39,7 @@
 	<lib name="jna-platform-5.10.0.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/jna-platform-5.10.0.jar!/"/>
 	</lib>
+	<lib name="protobuf-java-3.19.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/protobuf-java-3.19.1.jar!/"/>
+	</lib>
 </component>

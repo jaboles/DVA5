@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="jars/azure-storage-2.2.0.jar"/>
 	<classpathentry kind="lib" path="jars/jna-5.10.0.jar"/>
 	<classpathentry kind="lib" path="jars/jna-platform-5.10.0.jar"/>
+	<classpathentry kind="lib" path="jars/protobuf-java-3.19.1.jar"/>
 	<classpathentry kind="output" path="output"/>
 </classpath>

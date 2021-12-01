@@ -31,6 +31,7 @@ import jb.dvacommon.ui.DVAShell;
 import jb.dvacommon.ui.LicenceWindow;
 import jb.dvacommon.ui.LoadWindow;
 import jb.plasma.gtfs.GtfsGenerator;
+import jb.plasma.gtfs.GtfsRealtime;
 import jb.plasma.gtfs.GtfsTimetable;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
 import jb.plasma.ui.ScreenSaverSettingsDialog;
@@ -68,6 +69,7 @@ public class DVA {
         "swingx-all-1.6.4.jar",
         "azure-core-0.7.0.jar",
         "azure-storage-2.2.0.jar",
+        "protobuf-java-3.19.1.jar"
     };
     public static final Set<String> OWN_JARS = new HashSet<>(Arrays.asList(OWN_JARS_Array));
     

@@ -17,4 +17,8 @@ public class NullDepartureData extends DepartureData {
         this.TextColorOverride = null;
         this.CustomAnnouncementPath = null;
     }
+
+    public void logDetails()
+    {
+    }
 }

@@ -39,4 +39,6 @@ public abstract class DepartureData
     {
         return DueOut.format(DateEditFormat);
     }
+
+    public abstract void logDetails();
 }

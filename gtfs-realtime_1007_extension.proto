@@ -1,0 +1,282 @@
+syntax = "proto2";
+option java_package = "com.google.transit.realtime";
+package transit_realtime;
+
+message FeedMessage {
+  required FeedHeader header = 1;
+  repeated FeedEntity entity = 2;
+  
+  extensions 1000 to 1999;
+}
+
+message FeedHeader {
+  required string gtfs_realtime_version = 1;
+  enum Incrementality {
+    FULL_DATASET = 0;
+    DIFFERENTIAL = 1;
+  }
+  optional Incrementality incrementality = 2 [default = FULL_DATASET];
+  optional uint64 timestamp = 3;
+  extensions 1000 to 1999;
+}
+
+message FeedEntity {
+  required string id = 1;
+  optional bool is_deleted = 2 [default = false];
+  optional TripUpdate trip_update = 3;
+  optional VehiclePosition vehicle = 4;
+  optional Alert alert = 5;
+
+  extensions 1000 to 1999;
+}
+
+message TripUpdate {
+  required TripDescriptor trip = 1;
+  optional VehicleDescriptor vehicle = 3;
+
+  message StopTimeEvent {
+    optional int32 delay = 1;
+    optional int64 time = 2;
+    optional int32 uncertainty = 3;
+    extensions 1000 to 1999;
+  }
+
+  message StopTimeUpdate {
+    optional uint32 stop_sequence = 1;
+    optional string stop_id = 4;
+    optional StopTimeEvent arrival = 2;
+    optional StopTimeEvent departure = 3;
+
+    enum ScheduleRelationship {
+      SCHEDULED = 0;
+      SKIPPED = 1;
+      NO_DATA = 2;
+	  UNSCHEDULED = 3; // NEW
+    }
+    optional ScheduleRelationship schedule_relationship = 5
+        [default = SCHEDULED];
+
+    extensions 1000 to 1999;
+  }
+  repeated StopTimeUpdate stop_time_update = 2;
+  optional uint64 timestamp = 4;
+  optional int32 delay = 5; // NEW	
+
+  extensions 1000 to 1999;
+}
+
+message VehiclePosition {
+  optional TripDescriptor trip = 1;
+  optional VehicleDescriptor vehicle = 8;
+  optional Position position = 2;
+  optional uint32 current_stop_sequence = 3;
+  optional string stop_id = 7;
+  enum VehicleStopStatus {
+    INCOMING_AT = 0;
+    STOPPED_AT = 1;
+    IN_TRANSIT_TO = 2;
+  }
+  optional VehicleStopStatus current_status = 4 [default = IN_TRANSIT_TO];
+  optional uint64 timestamp = 5;
+  enum CongestionLevel {
+    UNKNOWN_CONGESTION_LEVEL = 0;
+    RUNNING_SMOOTHLY = 1;
+    STOP_AND_GO = 2;
+    CONGESTION = 3;
+	SEVERE_CONGESTION = 4; // NEW
+  }
+  optional CongestionLevel congestion_level = 6;
+  enum OccupancyStatus {
+    EMPTY = 0;
+    MANY_SEATS_AVAILABLE = 1;
+    FEW_SEATS_AVAILABLE = 2;
+    STANDING_ROOM_ONLY = 3;
+    CRUSHED_STANDING_ROOM_ONLY = 4;
+    FULL = 5;
+    NOT_ACCEPTING_PASSENGERS = 6;
+  }
+  optional OccupancyStatus occupancy_status = 9;
+
+  extensions 1000 to 1999;
+}
+
+message Alert {
+  repeated TimeRange active_period = 1;
+  repeated EntitySelector informed_entity = 5;
+
+  enum Cause {
+    UNKNOWN_CAUSE = 1;
+	OTHER_CAUSE = 2; // NEW
+    TECHNICAL_PROBLEM = 3;
+	STRIKE = 4; // NEW
+	DEMONSTRATION = 5; // NEW
+    ACCIDENT = 6;
+    HOLIDAY = 7;
+    WEATHER = 8;
+    MAINTENANCE = 9;
+    CONSTRUCTION = 10;
+    POLICE_ACTIVITY = 11;
+    MEDICAL_EMERGENCY = 12;
+  }
+  optional Cause cause = 6 [default = UNKNOWN_CAUSE];
+
+  enum Effect {
+    NO_SERVICE = 1;
+    REDUCED_SERVICE = 2;
+    SIGNIFICANT_DELAYS = 3;
+    DETOUR = 4;
+    ADDITIONAL_SERVICE = 5;
+    MODIFIED_SERVICE = 6;
+    OTHER_EFFECT = 7;
+    UNKNOWN_EFFECT = 8;
+    STOP_MOVED = 9;
+	NO_EFFECT = 10; // NEW
+	ACCESSIBILITY_ISSUE = 11; // NEW
+  }
+  optional Effect effect = 7 [default = UNKNOWN_EFFECT];
+  optional TranslatedString url = 8;
+  optional TranslatedString header_text = 10;
+  optional TranslatedString description_text = 11;
+  optional TranslatedString tts_header_text = 12; // NEW
+  optional TranslatedString tts_description_text = 13; // NEW
+  enum SeverityLevel { // NEW
+    UNKNOWN_SEVERITY = 1;
+    INFO = 2;
+    WARNING = 3;
+    SEVERE = 4;
+  }
+  optional SeverityLevel severity_level = 14; // NEW
+
+  extensions 1000 to 1999;
+}
+
+// NEW
+// An addition to the GTFS static bundle
+message UpdateBundle{
+ // the name of the bundle to be updated. This is to allow consumers to update the correct bundle
+ required string GTFSStaticBundle = 1;
+ // This field is the update sequence ID. It should commence at 1 for the first update to a static bundle and increment by 1 for each successive update
+ // The intent of this field is to allow the consumer to identify updates they may already have processed.
+ required int32 update_sequence = 2;
+ // repeated field to cancel scheduled trips in the bundle. This is the trip_id to cancel.
+ repeated string cancelled_trip =4;
+}
+
+message TimeRange {
+  optional uint64 start = 1;
+  optional uint64 end = 2;
+  
+  extensions 1000 to 1999;
+}
+
+message Position {
+  required float latitude = 1;
+  required float longitude = 2;
+  optional float bearing = 3;
+  optional double odometer = 4;
+  optional float speed = 5;
+
+  extensions 1000 to 1999;
+}
+
+message TripDescriptor {
+  optional string trip_id = 1;
+  optional string route_id = 5;
+  optional uint32 direction_id = 6; // NEW
+  optional string start_time = 2;
+  optional string start_date = 3;
+  enum ScheduleRelationship {
+    SCHEDULED = 0;
+    ADDED = 1;
+    UNSCHEDULED = 2;
+    CANCELED = 3;
+    REPLACEMENT = 5; // KEEP IT
+  }
+  optional ScheduleRelationship schedule_relationship = 4;
+
+  extensions 1000 to 1999;
+}
+
+message VehicleDescriptor {
+  optional string id = 1;
+  optional string label = 2;
+  optional string license_plate = 3; 
+
+  extensions 1000 to 1999;
+}
+
+// NEW
+message TfnswVehicleDescriptor {
+    optional bool air_conditioned = 1 [default = false];
+    optional int32 wheelchair_accessible = 2 [default = 0];
+    optional string vehicle_model = 3;
+    optional bool performing_prior_trip = 4 [default = false];
+    optional int32 special_vehicle_attributes = 5 [default = 0];
+}
+
+// NEW 
+message CarriageDescriptor {
+  optional string name = 1; 
+  required int32 position_in_consist=2;
+  enum OccupancyStatus {
+	EMPTY = 0;
+	MANY_SEATS_AVAILABLE = 1;
+	FEW_SEATS_AVAILABLE = 2;
+	STANDING_ROOM_ONLY = 3;
+	CRUSHED_STANDING_ROOM_ONLY = 4;
+	FULL = 5;
+  }
+  optional OccupancyStatus occupancy_status = 3;
+  optional bool quiet_carriage = 4 [default = false];
+  enum ToiletStatus {
+	NONE = 0;
+ 	NORMAL = 1;
+	ACCESSIBLE = 2;
+	}
+  optional ToiletStatus toilet = 5;
+  optional bool luggage_rack = 6 [default = false];
+  
+  extensions 1000 to 1999;
+}
+
+message EntitySelector {
+  optional string agency_id = 1;
+  optional string route_id = 2;
+  optional int32 route_type = 3;
+  optional TripDescriptor trip = 4;
+  optional string stop_id = 5;
+  optional uint32 direction_id = 6; // NEW
+  
+  extensions 1000 to 1999;
+}
+
+message TranslatedString {
+  message Translation {
+    required string text = 1;
+    optional string language = 2;
+	
+	extensions 1000 to 1999; // NEW
+  }
+  repeated Translation translation = 1;
+  
+  extensions 1000 to 1999; // NEW
+}
+
+/// --- TfNSW Extensions
+
+enum TrackDirection {
+  UP = 0;
+  DOWN = 1;
+}
+extend transit_realtime.FeedEntity {
+  optional UpdateBundle update = 1007; // NEW
+}
+extend transit_realtime.VehiclePosition {
+  repeated CarriageDescriptor consist = 1007; // NEW
+}
+extend transit_realtime.Position {
+  optional TrackDirection track_direction = 1007; // NEW
+}
+extend transit_realtime.VehicleDescriptor {
+  optional TfnswVehicleDescriptor tfnsw_vehicle_descriptor = 1007; // NEW
+}

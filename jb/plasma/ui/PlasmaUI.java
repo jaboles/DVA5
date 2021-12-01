@@ -280,6 +280,11 @@ public class PlasmaUI
         departureData = getDepartureData();
         if (departureData == null) return null;
 
+        if (departureData.size() > 0)
+        {
+            departureData.get(0).logDetails();
+        }
+
         for (DepartureData d : departureData)
         {
             if (d != null && d.CustomAnnouncementPath != null && !d.CustomAnnouncementPath.isEmpty()) {

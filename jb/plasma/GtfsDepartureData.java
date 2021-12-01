@@ -1,9 +1,14 @@
 package jb.plasma;
 
 import jb.plasma.gtfs.TripInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GtfsDepartureData extends DepartureData
 {
+    private static final Logger Logger = LoggerFactory.getLogger(GtfsDepartureData.class);
+    private TripInstance tripInstance;
+
     public GtfsDepartureData(TripInstance ti)
     {
         String[] headsignParts = ti.Trip.Headsign.split(" via ");
@@ -15,5 +20,18 @@ public class GtfsDepartureData extends DepartureData
         this.Platform = Integer.parseInt(ti.Platform.Name.split(" Station Platform ")[1]);
         this.Stops = ti.getRemainingStopList();
         this.DueOut = ti.At;
+
+        this.tripInstance = ti;
+    }
+
+    public void logDetails()
+    {
+        Logger.info("Trip: {} departs from '{}' at {} to '{}' with {} cars. Continues as {}",
+                tripInstance.Trip.Name,
+                tripInstance.Platform.Name,
+                tripInstance.At,
+                tripInstance.Trip.Headsign,
+                tripInstance.Trip.Cars,
+                tripInstance.BlockContinuingTrip != null ? tripInstance.BlockContinuingTrip.Name : "<no continuation>");
     }
 }

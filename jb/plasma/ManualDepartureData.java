@@ -110,4 +110,8 @@ public class ManualDepartureData extends DepartureData
         this.TextColorOverride = textColorOverride;
         this.CustomAnnouncementPath = customAnnouncementPath;
     }
+
+    public void logDetails()
+    {
+    }
 }

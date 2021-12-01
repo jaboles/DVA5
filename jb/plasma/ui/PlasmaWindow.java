@@ -197,45 +197,4 @@ public class PlasmaWindow extends JFrame
         return true;
     }
 
-    // Test entry point
-    public static void main(String[] args) {
-        DepartureData[] dd = new DepartureData[]
-        {
-            new DepartureData()
-            {{
-                Destination = "Nowra";
-                Destination2 = "via Wollongong";
-                Type = "Limited stops";
-                Cars = 4;
-                Platform = 2;
-                DueOut = LocalDateTime.now().plusMinutes(5);
-                Stops = new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul", "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama", "Berry", "Nowra" };
-            }},
-            new DepartureData()
-            {{
-                Destination = "Nowra";
-                Destination2 = "via Wollongong";
-                Type = "Limited stops";
-                Cars = 4;
-                Platform = 2;
-                DueOut = LocalDateTime.now().plusMinutes(10);
-                Stops = new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul", "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama", "Berry", "Nowra" };
-            }},
-            new DepartureData()
-            {{
-                Destination = "Nowra";
-                Destination2 = "via Wollongong";
-                Type = "Limited stops";
-                Cars = 4;
-                Platform = 2;
-                DueOut = LocalDateTime.now().plusMinutes(15);
-                Stops = new String[] { "Redfern", "Hurstville", "Sutherland", "Waterfall", "Thirroul", "North Wollongong", "Wollongong", "Coniston", "Unanderra", "Kembla Grange", "Dapto", "Kiama", "Berry", "Nowra" };
-            }}
-        };
-
-        Drawer dr = new CityrailV3Secondary();
-        dr.dataChanged(Arrays.asList(dd));
-        PlasmaPanel p = new PlasmaPanel(dr);
-        new PlasmaWindow(null, PlasmaWindow.Mode.FULLSCREEN, 0, dr.toString(), null, dr.getAspectRatio(), new ProportionalPanel(dr.getAspectRatio(), p)).setVisible(true);
-    }
 }
