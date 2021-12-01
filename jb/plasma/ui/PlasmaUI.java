@@ -487,12 +487,14 @@ public class PlasmaUI
                 break;
             }
         filterPlatform.setSelected(settings.filterPlatform());
+        gtfsPlatform.setEnabled(filterPlatform.isSelected());
         for (int i = 0; i < gtfsPlatform.getItemCount(); i++)
             if (gtfsPlatform.getItemAt(i).equals(settings.getGtfsPlatform())) {
                 gtfsPlatform.setSelectedIndex(i);
                 break;
             }
         filterRoute.setSelected(settings.filterRoute());
+        gtfsRoute.setEnabled(filterRoute.isSelected());
         for (int i = 0; i < gtfsRoute.getItemCount(); i++)
             if (gtfsRoute.getItemAt(i).equals(settings.getGtfsRoute())) {
                 gtfsRoute.setSelectedIndex(i);
