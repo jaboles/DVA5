@@ -226,19 +226,19 @@ public class GtfsTimetableTranslator
                 {
                     GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate stopTimeUpdate = tripUpdate.get(st.Stop);
 
-                    logger.info("Applying realtime update to {} at {}:", st.Trip.Name, st.Stop.Id);
+                    logger.debug("Applying realtime update to {} at {}:", st.Trip.Name, st.Stop.Id);
                     String newArrival = null;
                     String newDeparture = null;
                     if (stopTimeUpdate.hasArrival()) {
                         newArrival = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getArrival(), date);
                         if (newArrival != null) {
-                            logger.info("  Arrival time was {}, now {}", st.Arrival, newArrival);
+                            logger.debug("  Arrival time was {}, now {}", st.Arrival, newArrival);
                         }
                     }
                     if (stopTimeUpdate.hasDeparture()) {
                         newDeparture = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getDeparture(), date);
                         if (newDeparture != null) {
-                            logger.info("  Departure time was {}, now {}", st.Departure, newDeparture);
+                            logger.debug("  Departure time was {}, now {}", st.Departure, newDeparture);
                         }
                     }
 
@@ -256,7 +256,7 @@ public class GtfsTimetableTranslator
                     // Not stopping at the location anymore
                     if (st.Dropoff || st.Pickup)
                     {
-                        logger.info("Applying realtime update to {}: no longer stopping at {}",
+                        logger.debug("Applying realtime update to {}: no longer stopping at {}",
                                 st.Trip.Name,
                                 st.Stop.Name);
                     }
@@ -292,7 +292,6 @@ public class GtfsTimetableTranslator
         String formatted = DateTimeFormatter.ofPattern("HH:mm:ss").format(t);
         if (t.isAfter(midnight))
         {
-            System.out.println(formatted);
             return Integer.toString(Integer.parseInt(formatted.split(":")[0]) + 24) + formatted.substring(2);
         }
         else
