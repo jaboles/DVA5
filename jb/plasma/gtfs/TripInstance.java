@@ -14,7 +14,6 @@ public class TripInstance
                         Trip blockContinuingTrip)
     {
         Trip = tripTimeAndPlace.Trip;
-        Date = date;
         Platform = tripTimeAndPlace.Stop;
         NormalizedStopTimes = stopTimes;
         BlockContinuingTrip = blockContinuingTrip;
@@ -22,7 +21,6 @@ public class TripInstance
     }
 
     public Trip Trip;
-    public LocalDate Date;
     public Stop Platform;
     public List<NormalizedStopTime> NormalizedStopTimes;
     public Trip BlockContinuingTrip;

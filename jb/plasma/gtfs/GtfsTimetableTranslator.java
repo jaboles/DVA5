@@ -1,11 +1,16 @@
 package jb.plasma.gtfs;
 
+import com.google.transit.realtime.GtfsRealtime1007Extension;
+import jb.dvacommon.DVA;
 import jb.plasma.DepartureData;
 import jb.plasma.GtfsDepartureData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,11 +18,22 @@ import java.util.stream.Stream;
 
 public class GtfsTimetableTranslator
 {
-    final static Logger logger = LoggerFactory.getLogger(GtfsTimetableTranslator.class);
-    private GtfsTimetable tt;
+    private final static Logger logger = LoggerFactory.getLogger(GtfsTimetableTranslator.class);
+    private final static ZoneId SydneyTimeZone = TimeZone.getTimeZone("Australia/Sydney").toZoneId();
+    private final static long RealtimeUpdateIntervalSec = 120;
     private static GtfsTimetableTranslator instance;
 
-    private GtfsTimetableTranslator(GtfsTimetable tt) { this.tt = tt; }
+    private GtfsTimetable tt;
+    private Map<Trip, Map<Stop, GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate>> realtimeTripUpdates;
+
+    private GtfsTimetableTranslator(GtfsTimetable tt)
+    {
+        this.tt = tt;
+        new Timer().schedule(new TimerTask()
+        {
+            public void run() {refreshRealtimeInfo();}
+        }, 0, RealtimeUpdateIntervalSec * 1000);
+    }
 
     public static GtfsTimetableTranslator getInstance()
     {
@@ -62,8 +78,6 @@ public class GtfsTimetableTranslator
             String routeName,
             int limit)
     {
-        GtfsRealtime.get();
-
         Stream<Stop> platforms = null;
         if (stationPlatformLocationName != null)
         {
@@ -81,8 +95,9 @@ public class GtfsTimetableTranslator
                     .collect(Collectors.toSet())
                 : null;
 
+        LocalDate today = LocalDate.now();
         return platforms
-            .flatMap(platform -> tt.StopTimesByStop.get(platform).stream())
+            .flatMap(platform -> applyRealtimeInfo(tt.StopTimesByStop.get(platform).stream(), today))
             .filter(st -> st.Pickup)
             .filter(st -> routes == null || routes.contains(st.Trip.Route))
             .flatMap(st -> expandTrips(st, tt))
@@ -118,7 +133,7 @@ public class GtfsTimetableTranslator
                     (date.getDayOfWeek() == DayOfWeek.SUNDAY && tripTimeAndPlace.Trip.ServicePeriod.Sunday))
             {
                 final LocalDate dateCopy = date;
-                List<NormalizedStopTime> tripStopTimes = tt.StopTimesByTrip.get(tripTimeAndPlace.Trip).stream()
+                List<NormalizedStopTime> tripStopTimes = applyRealtimeInfo(tt.StopTimesByTrip.get(tripTimeAndPlace.Trip).stream(), dateCopy)
                         .map(tst -> new NormalizedStopTime(tst, dateCopy))
                         .collect(Collectors.toList());
 
@@ -136,7 +151,7 @@ public class GtfsTimetableTranslator
                             .limit(2)
                             .collect(Collectors.toList()))
                     {
-                        List<NormalizedStopTime> blockStopTimes = tt.StopTimesByTrip.get(blockTrip).stream()
+                        List<NormalizedStopTime> blockStopTimes = applyRealtimeInfo(tt.StopTimesByTrip.get(blockTrip).stream(), dateCopy)
                                 .map(bst -> new NormalizedStopTime(bst, dateCopy))
                                 .collect(Collectors.toList());;
 
@@ -171,4 +186,118 @@ public class GtfsTimetableTranslator
         return list.stream();
     }
 
+    public void refreshRealtimeInfo()
+    {
+        try
+        {
+            GtfsRealtime1007Extension.FeedMessage realtimeInfo = GtfsRealtime.get();
+            realtimeTripUpdates = realtimeInfo.getEntityList().stream()
+                    .map(e -> e.getTripUpdate())
+                    .collect(Collectors.toMap(
+                            tu -> tt.Trips.get(tu.getTrip().getTripId()),
+                            tu -> tu.getStopTimeUpdateList().stream()
+                                .collect(Collectors.toMap(stu -> tt.Stops.get(stu.getStopId()), stu -> stu))));
+
+            try (PrintWriter out = new PrintWriter(new File(DVA.getApplicationDataFolder(), "gtfsrealtime.txt"))) {
+                out.println(realtimeInfo.toString());
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public Stream<StopTime> applyRealtimeInfo(Stream<StopTime> stopTimes, LocalDate date)
+    {
+        if (realtimeTripUpdates == null)
+        {
+            return stopTimes;
+        }
+
+        return stopTimes.map(st ->
+        {
+            if (realtimeTripUpdates.containsKey(st.Trip))
+            {
+                Map<Stop, GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate> tripUpdate = realtimeTripUpdates.get(st.Trip);
+
+                // Time update at same stop
+                if (tripUpdate.containsKey(st.Stop))
+                {
+                    GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate stopTimeUpdate = tripUpdate.get(st.Stop);
+
+                    logger.info("Applying realtime update to {} at {}:", st.Trip.Name, st.Stop.Id);
+                    String newArrival = null;
+                    String newDeparture = null;
+                    if (stopTimeUpdate.hasArrival()) {
+                        newArrival = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getArrival(), date);
+                        if (newArrival != null) {
+                            logger.info("  Arrival time was {}, now {}", st.Arrival, newArrival);
+                        }
+                    }
+                    if (stopTimeUpdate.hasDeparture()) {
+                        newDeparture = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getDeparture(), date);
+                        if (newDeparture != null) {
+                            logger.info("  Departure time was {}, now {}", st.Departure, newDeparture);
+                        }
+                    }
+
+                    return new StopTime(
+                            st.Trip,
+                            newArrival != null ? newArrival : st.Arrival,
+                            newDeparture != null ? newDeparture : st.Departure,
+                            st.Stop,
+                            st.Pickup,
+                            st.Dropoff
+                    );
+                }
+                else
+                {
+                    // Not stopping at the location anymore
+                    if (st.Dropoff || st.Pickup)
+                    {
+                        logger.info("Applying realtime update to {}: no longer stopping at {}",
+                                st.Trip.Name,
+                                st.Stop.Name);
+                    }
+                    return null;
+                }
+            }
+            else
+            {
+                return st;
+            }
+        }).filter(st -> st != null);
+    }
+
+    private String timestampToTimeString(LocalDateTime originalNormalized,
+                                         GtfsRealtime1007Extension.TripUpdate.StopTimeEvent ste,
+                                         LocalDate date)
+    {
+        LocalDateTime t = null;
+        if (ste.hasTime() && ste.getTime() > 0)
+        {
+            t = LocalDateTime.ofInstant(Instant.ofEpochMilli(1000L * ste.getTime()), SydneyTimeZone);
+        }
+        else if (ste.hasDelay() && ste.getDelay() > 0)
+        {
+            t = originalNormalized.plusSeconds(ste.getDelay());
+        }
+        else
+        {
+            return null;
+        }
+
+        LocalDateTime midnight = date.plusDays(1).atStartOfDay();
+        String formatted = DateTimeFormatter.ofPattern("HH:mm:ss").format(t);
+        if (t.isAfter(midnight))
+        {
+            System.out.println(formatted);
+            return Integer.toString(Integer.parseInt(formatted.split(":")[0]) + 24) + formatted.substring(2);
+        }
+        else
+        {
+            return formatted;
+        }
+    }
 }
