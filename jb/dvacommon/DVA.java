@@ -46,7 +46,7 @@ public class DVA {
     ArrayList<URL> verifiedUrlList;
     final static Logger logger = LogManager.getLogger(DVA.class);
 
-    public static final String VersionString = "5.4.3";
+    public static final String VersionString = "5.4.4";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
 
     // Keep track of the applications own jars so that they don't get treated as sound libraries.
