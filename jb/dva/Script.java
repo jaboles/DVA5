@@ -10,12 +10,12 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import jb.common.sound.xuggle.MediaConcatenator2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // Represents a DVA announcement, and handles translation into a list of sounds.
 public class Script {
-    final static Logger logger = LoggerFactory.getLogger(SoundLibrary.class);
+    final static Logger logger = LogManager.getLogger(SoundLibrary.class);
     String defaultVoice;
     String script;
     String lscript;

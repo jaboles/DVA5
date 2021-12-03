@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -45,8 +44,8 @@ import jb.plasma.announcers.NswCountry;
 import jb.plasma.gtfs.GtfsGenerator;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
 import jb.plasma.renderers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.swixml.SwingEngine;
 import org.swixml.XHBox;
 import org.swixml.XVBox;
@@ -63,7 +62,7 @@ public class PlasmaUI
     }
     
     private static String[] departurePanelTitles = new String[] { "Next Train:", "2nd Train:", "3rd Train:" };
-    final static Logger logger = LoggerFactory.getLogger(PlasmaUI.class);
+    final static Logger logger = LogManager.getLogger(PlasmaUI.class);
     private DVA dva;
     private String settingsKey;
     private PlasmaSession session;

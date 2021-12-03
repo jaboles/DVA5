@@ -1,4 +1,6 @@
 #!/bin/sh
 
 cd /usr/share/dva
-exec java -jar DVA.jar $*
+exec java -jar DVA.jar \
+    -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
+    $*

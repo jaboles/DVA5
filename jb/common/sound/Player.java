@@ -28,14 +28,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.sound.xuggle.MediaConcatenator2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Player extends Thread {
     List<URL> audioClipList;
     LevelMeterThread levelMeterThread = null;
     BigClip clip = null;
-    final static Logger logger = LoggerFactory.getLogger(Player.class);
+    final static Logger logger = LogManager.getLogger(Player.class);
     Runnable longConcatCallback;
     Runnable afterConcatCallback;
     Timer timer;

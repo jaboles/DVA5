@@ -7,14 +7,14 @@ import java.util.*;
 
 import jb.common.IntPair;
 import jb.common.StringUtilities;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // Converts the CityRail timetable data into a format usable by DVA.
 public class TimetableTranslator
 {
-    final static Logger logger = LoggerFactory.getLogger(TimetableTranslator.class);
+    final static Logger logger = LogManager.getLogger(TimetableTranslator.class);
     private static Map<Pair<String, String>, List<Pair<String, String>>> continuations;
     private Timetable tt;
     private static DateFormat TimeFormat = new SimpleDateFormat("HH:mm");

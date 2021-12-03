@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import jb.common.ExceptionReporter;
 import jb.dvacommon.ProgressAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.MediaListenerAdapter;
@@ -19,10 +17,12 @@ import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IContainerFormat;
 import com.xuggle.xuggler.IStreamCoder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MediaConcatenator2
 {
-    final static Logger logger = LoggerFactory.getLogger(MediaConcatenator2.class);
+    final static Logger logger = LogManager.getLogger(MediaConcatenator2.class);
 
     public static void concat(List<URL> urlList, String outputFile, ProgressAdapter pa)
     {

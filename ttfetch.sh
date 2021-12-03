@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp build/Debug/DVA.jar:jars/slf4j-api-1.7.7.jar:jars/slf4j-jdk14-1.7.7.jar jb.plasma.gtfs.GtfsGenerator $*
+java -cp build/Debug/DVA.jar:jars/log4j-api-2.14.1.jar:jars/log4j-core-2.14.1.jar jb.plasma.gtfs.GtfsGenerator $*

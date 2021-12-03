@@ -10,15 +10,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.VersionComparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SimpleWebsiteUpdater extends BaseUpdater
 {
-    final static Logger logger = LoggerFactory.getLogger(SimpleWebsiteUpdater.class);
+    final static Logger logger = LogManager.getLogger(SimpleWebsiteUpdater.class);
     
     private String latestVersion = null;
     final static Pattern VersionPattern = Pattern.compile("<a href=\"(\\d+\\.\\d+\\.\\d+)/\">");

@@ -3,17 +3,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.List;
 import jb.plasma.ui.PlasmaWindow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // Runs while the indicator is displayed. Manages de-queuing the first departure from the list
 // once its due-out has passed, and playing periodic announcements.
 public class PlasmaSession
 {
-    final static Logger logger = LoggerFactory.getLogger(PlasmaSession.class);
+    final static Logger logger = LogManager.getLogger(PlasmaSession.class);
     // List of departures to display
     private List<DepartureData> data;
     // All active renderers, so they can be notified when a departure has been popped off the front of the list

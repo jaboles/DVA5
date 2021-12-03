@@ -1,12 +1,12 @@
 package jb.plasma;
 
 import jb.plasma.gtfs.TripInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class GtfsDepartureData extends DepartureData
 {
-    private static final Logger Logger = LoggerFactory.getLogger(GtfsDepartureData.class);
+    private static final Logger Logger = LogManager.getLogger(GtfsDepartureData.class);
     private TripInstance tripInstance;
 
     public GtfsDepartureData(TripInstance ti)

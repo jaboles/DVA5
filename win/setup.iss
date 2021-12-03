@@ -40,7 +40,7 @@ Source: "..\build\Debug\win\amd64\ttfetch.exe"; DestDir: "{app}"; Flags: replace
 Source: "..\build\Debug\win\amd64\jre\*"; DestDir: "{app}\jre"; Flags: recursesubdirs replacesameversion; Check: IsWin64
 Source: "..\build\Debug\win\i386\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: not IsWin64
 Source: "..\build\Debug\win\amd64\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: IsWin64
-Source: "..\logging.properties"; DestDir: "{app}"
+Source: "..\log4j2.xml"; DestDir: "{app}"
 Source: "..\jars\*.jar"; DestDir: "{app}"
 Source: "..\jars\win\*.jar"; DestDir: "{app}"
 Source: "..\build\Debug\*.jar"; DestDir: "{app}"

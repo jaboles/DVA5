@@ -9,15 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.AbstractListModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jb.dva.SoundInflection;
 import jb.dva.SoundLibrary;
 import jb.dva.SoundReference;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SoundListModel extends AbstractListModel<SoundReference> {
     private static final long serialVersionUID = 1L;
-    final static Logger logger = LoggerFactory.getLogger(SoundListModel.class);
+    final static Logger logger = LogManager.getLogger(SoundListModel.class);
     private List<String> translatedKeys = new ArrayList<>();
     private SoundLibrary library;
     private List<String> filters = new LinkedList<>();

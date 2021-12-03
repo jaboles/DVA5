@@ -18,18 +18,17 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 import java.util.zip.GZIPInputStream;
 
 import jb.common.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Triplet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.swixml.SwingEngine;
 
 public abstract class BaseUpdater
 {
-    final static Logger logger = LoggerFactory.getLogger(BaseUpdater.class);
+    final static Logger logger = LogManager.getLogger(BaseUpdater.class);
     protected URL baseUrl = null;
 
     public BaseUpdater(URL baseUrl)

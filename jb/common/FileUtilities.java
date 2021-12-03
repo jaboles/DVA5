@@ -1,5 +1,8 @@
 package jb.common;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,12 +23,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FileUtilities
 {
-    final static Logger logger = LoggerFactory.getLogger(FileUtilities.class);
+    final static Logger logger = LogManager.getLogger(FileUtilities.class);
 
     public static void fastChannelCopy(final ReadableByteChannel source, final WritableByteChannel destination) throws IOException {
         final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);

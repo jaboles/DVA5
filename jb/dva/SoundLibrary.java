@@ -6,6 +6,9 @@
 //  Copyright 2006 __MyCompanyName__. All rights reserved.
 //
 package jb.dva;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -27,8 +30,6 @@ import java.util.jar.JarFile;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SoundLibrary implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -43,7 +44,7 @@ public class SoundLibrary implements Serializable {
     Icon icon = null;
     int longestSoundName = 0;
     Properties properties;
-    final static Logger logger = LoggerFactory.getLogger(SoundLibrary.class);
+    final static Logger logger = LogManager.getLogger(SoundLibrary.class);
 
     public SoundLibrary(String name) {
         this.soundMap = new LinkedHashMap<>();

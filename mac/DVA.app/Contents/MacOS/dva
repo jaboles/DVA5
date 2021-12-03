@@ -7,4 +7,8 @@ realpath() {
 BASEDIR=`dirname "$0"`
 DOCKICON=`realpath $BASEDIR/../Resources/dva.icns`
 cd $BASEDIR
-exec ./jre/Contents/Home/bin/java -Xdock:name=DVA -Xdock:icon=$DOCKICON -Djava.util.logging.config.file=logging.properties -jar DVA.jar "$@"
+exec ./jre/Contents/Home/bin/java \
+    -Xdock:name=DVA \
+    -Xdock:icon=$DOCKICON \
+    -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
+    -jar DVA.jar "$@"

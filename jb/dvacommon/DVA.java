@@ -31,21 +31,20 @@ import jb.dvacommon.ui.DVAShell;
 import jb.dvacommon.ui.LicenceWindow;
 import jb.dvacommon.ui.LoadWindow;
 import jb.plasma.gtfs.GtfsGenerator;
-import jb.plasma.gtfs.GtfsRealtime;
 import jb.plasma.gtfs.GtfsTimetable;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
 import jb.plasma.ui.ScreenSaverSettingsDialog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DVA {
     DVAShell mainWindow;
     Map<String, SoundLibrary> soundLibraryMap = new LinkedHashMap<>();
     Player player;
     ArrayList<URL> verifiedUrlList;
-    final static Logger logger = LoggerFactory.getLogger(DVA.class);
+    final static Logger logger = LogManager.getLogger(DVA.class);
 
     public static final String VersionString = "5.4.3";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
@@ -66,6 +65,9 @@ public class DVA {
         "xuggle-xuggler-5.4.jar",
         "slf4j-api-1.7.7.jar",
         "slf4j-jdk14-1.7.7.jar",
+        "log4j-api-2.14.1.jar",
+        "log4j-core-2.14.1.jar",
+        "disruptor-3.4.4.jar",
         "swingx-all-1.6.4.jar",
         "azure-core-0.7.0.jar",
         "azure-storage-2.2.0.jar",

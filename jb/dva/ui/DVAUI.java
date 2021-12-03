@@ -66,9 +66,9 @@ import jb.dvacommon.DVA;
 import jb.dvacommon.Settings;
 import jb.dvacommon.ui.DVATextArea;
 import jb.dvacommon.ui.DVATextVerifyListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdesktop.swingx.JXBusyLabel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.swixml.SwingEngine;
 
 public class DVAUI {
@@ -112,7 +112,7 @@ public class DVAUI {
     
     public Script currentScript;
 
-    final static Logger logger = LoggerFactory.getLogger(DVAUI.class);
+    final static Logger logger = LogManager.getLogger(DVAUI.class);
 
     @SuppressWarnings("serial")
     public DVAUI(final DVA controller) {

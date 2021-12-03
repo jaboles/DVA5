@@ -1,7 +1,7 @@
 package jb.plasma.gtfs;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,7 +14,7 @@ import java.util.zip.ZipInputStream;
 
 public class GtfsHttpClient
 {
-    private static final Logger Logger = LoggerFactory.getLogger(GtfsHttpClient.class);
+    private static final Logger Logger = LogManager.getLogger(GtfsHttpClient.class);
     private static final String APIKEY = "3LP1iesTsBqiO2rzMGdmPJ3EJV1ubm3FqyP0";
 
     public static byte[] getByteArray(String url) throws IOException

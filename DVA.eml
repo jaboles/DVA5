@@ -15,9 +15,6 @@
 	<lib name="javatuples-1.2.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/javatuples-1.2.jar!/"/>
 	</lib>
-	<lib name="slf4j-api-1.7.7.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/slf4j-api-1.7.7.jar!/"/>
-	</lib>
 	<lib name="swixml.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/swixml.jar!/"/>
 	</lib>
@@ -41,5 +38,8 @@
 	</lib>
 	<lib name="protobuf-java-3.19.1.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/protobuf-java-3.19.1.jar!/"/>
+	</lib>
+	<lib name="log4j-api-2.14.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/log4j-api-2.14.1.jar!/"/>
 	</lib>
 </component>

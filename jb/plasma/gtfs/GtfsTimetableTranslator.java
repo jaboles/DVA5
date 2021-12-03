@@ -4,8 +4,8 @@ import com.google.transit.realtime.GtfsRealtime1007Extension;
 import jb.dvacommon.DVA;
 import jb.plasma.DepartureData;
 import jb.plasma.GtfsDepartureData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 public class GtfsTimetableTranslator
 {
-    private final static Logger logger = LoggerFactory.getLogger(GtfsTimetableTranslator.class);
+    private final static Logger logger = LogManager.getLogger(GtfsTimetableTranslator.class);
     private final static ZoneId SydneyTimeZone = TimeZone.getTimeZone("Australia/Sydney").toZoneId();
     private final static long RealtimeUpdateIntervalSec = 120;
     private static GtfsTimetableTranslator instance;
@@ -137,6 +137,11 @@ public class GtfsTimetableTranslator
                         .map(tst -> new NormalizedStopTime(tst, dateCopy))
                         .collect(Collectors.toList());
 
+                if (tripStopTimes.size() == 0)
+                {
+                    continue;
+                }
+
                 Trip blockContinuingTrip = null;
                 if (tripTimeAndPlace.Trip.BlockId != null && tripTimeAndPlace.Trip.BlockId.length() > 0)
                 {
@@ -226,19 +231,19 @@ public class GtfsTimetableTranslator
                 {
                     GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate stopTimeUpdate = tripUpdate.get(st.Stop);
 
-                    logger.debug("Applying realtime update to {} at {}:", st.Trip.Name, st.Stop.Id);
+                    logger.info("RT update {} at {} ({}):", st.Trip.Name, st.Stop.Id, st.Stop.Name);
                     String newArrival = null;
                     String newDeparture = null;
                     if (stopTimeUpdate.hasArrival()) {
                         newArrival = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getArrival(), date);
                         if (newArrival != null) {
-                            logger.debug("  Arrival time was {}, now {}", st.Arrival, newArrival);
+                            logger.info("  arr. time was {}, now {}", st.Arrival, newArrival);
                         }
                     }
                     if (stopTimeUpdate.hasDeparture()) {
                         newDeparture = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getDeparture(), date);
                         if (newDeparture != null) {
-                            logger.debug("  Departure time was {}, now {}", st.Departure, newDeparture);
+                            logger.info("  dep. time was {}, now {}", st.Departure, newDeparture);
                         }
                     }
 
@@ -256,8 +261,9 @@ public class GtfsTimetableTranslator
                     // Not stopping at the location anymore
                     if (st.Dropoff || st.Pickup)
                     {
-                        logger.debug("Applying realtime update to {}: no longer stopping at {}",
+                        logger.info("RT update {}: no longer stops at {} ({})",
                                 st.Trip.Name,
+                                st.Stop.Id,
                                 st.Stop.Name);
                     }
                     return null;
