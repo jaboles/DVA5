@@ -5,7 +5,7 @@
             <vbox id="rendererComboboxesPanel"/>
         </panel>
         <vbox border="TitledBorder(Announcement Style)">
-            <combobox id="playAnnouncementVoiceCombobox" />
+            <jbcombobox id="playAnnouncementVoiceCombobox" />
             <panel layout="BorderLayout">
                 <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
                     <checkbox id="playAnnouncementCheckbox" text="Announce" />

@@ -13,6 +13,8 @@ public class Route implements Serializable
         Description = description;
     }
 
+    public String toString() {return Description;}
+
     public String Id;
     public String Name;
     public String Description;

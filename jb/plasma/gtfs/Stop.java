@@ -13,6 +13,8 @@ public class Stop implements Serializable
         Parent = parent;
     }
 
+    public String toString() {return Name;}
+
     public String Id;
     public String Name;
     public Stop Parent;

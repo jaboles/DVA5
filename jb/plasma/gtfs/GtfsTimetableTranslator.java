@@ -45,27 +45,25 @@ public class GtfsTimetableTranslator
     public LocalDateTime downloadTimestamp() {return tt.DownloadTimestamp;}
     public LocalDateTime expiryTime() {return tt.ExpiryTime;}
 
-    public String[] getStations()
+    public Stop[] getStations()
     {
         return tt.Stops.values().stream()
                 .filter(s -> s.Parent == null)
-                .map(s -> s.Name)
-                .sorted()
-                .toArray(String[]::new);
+                .sorted((s1, s2) -> s1.Name.compareTo(s2.Name))
+                .toArray(Stop[]::new);
     }
 
-    public String[] getPlatformsForStation(String stationName)
+    public Stop[] getPlatformsForStation(Stop station)
     {
         return tt.Stops.values().stream()
-                .filter(s -> s.Parent != null && s.Parent.Name.equals(stationName))
-                .map(s -> s.Name)
-                .sorted()
-                .toArray(String[]::new);
+                .filter(s -> s.Parent == station)
+                .sorted((s1, s2) -> s1.Name.compareTo(s2.Name))
+                .toArray(Stop[]::new);
     }
 
-    public String[] getRoutesForStation(String stationName)
+    public String[] getRoutesForStation(Stop station)
     {
-        return tt.RoutesByStation.get(tt.StopsByName.get(stationName)).stream()
+        return tt.RoutesByStation.get(station).stream()
                 .map(r -> r.Description)
                 .distinct()
                 .sorted()
@@ -73,19 +71,18 @@ public class GtfsTimetableTranslator
     }
 
     public Stream<DepartureData> getDepartureDataForStation(
-            String stationLocationName,
-            String stationPlatformLocationName,
+            Stop station,
+            Stop platform,
             String routeName,
             int limit)
     {
         Stream<Stop> platforms = null;
-        if (stationPlatformLocationName != null)
+        if (platform != null)
         {
-            platforms = Arrays.stream(new Stop[] {tt.StopsByName.get(stationPlatformLocationName)});
+            platforms = Arrays.stream(new Stop[] {platform});
         }
         else
         {
-            Stop station = tt.StopsByName.get(stationLocationName);
             platforms = tt.Stops.values().stream()
                     .filter(s -> s.Parent == station);
         }
@@ -97,7 +94,7 @@ public class GtfsTimetableTranslator
 
         LocalDate today = LocalDate.now();
         return platforms
-            .flatMap(platform -> applyRealtimeInfo(tt.StopTimesByStop.get(platform).stream(), today))
+            .flatMap(p -> applyRealtimeInfo(tt.StopTimesByStop.get(p).stream(), today))
             .filter(st -> st.Pickup)
             .filter(st -> routes == null || routes.contains(st.Trip.Route))
             .flatMap(st -> expandTrips(st, tt))

@@ -43,6 +43,8 @@ import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
 import jb.plasma.gtfs.GtfsGenerator;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
+import jb.plasma.gtfs.Route;
+import jb.plasma.gtfs.Stop;
 import jb.plasma.renderers.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,15 +82,15 @@ public class PlasmaUI
     public JLabel gtfsInfo;
     public JLabel gtfsDownloadTimestamp;
     public JLabel gtfsExpiryTime;
-    public JBComboBox<String> gtfsStation;
+    public JBComboBox<Stop> gtfsStation;
     public JCheckBox filterPlatform;
-    public JBComboBox<String> gtfsPlatform;
+    public JBComboBox<Stop> gtfsPlatform;
     public JCheckBox filterRoute;
     public JBComboBox<String> gtfsRoute;
 
     public JCheckBox playAnnouncementCheckbox;
     public JTextField playAnnouncementTimes;
-    public JComboBox<Announcer> playAnnouncementVoiceCombobox;
+    public JBComboBox<Announcer> playAnnouncementVoiceCombobox;
     public JCheckBox coalesceStationSequencesCheckbox;
     public JPanel startButtonsPanel;
     public JPanel previewButtonPanel;
@@ -159,7 +161,7 @@ public class PlasmaUI
             for (int i = 0; i < departurePanels.length; i++) {
                 departurePanels[i] = new DeparturePanel(departurePanelTitles[i],
                     dva,
-                    dva != null ? ((Announcer) playAnnouncementVoiceCombobox.getSelectedItem()).getSoundLibrary().getName() : null);
+                    dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary().getName() : null);
 
                 if (i >= 1) {
                     JSeparator separator = new JSeparator();
@@ -179,7 +181,7 @@ public class PlasmaUI
 
             // When the station is changed, update the list of platforms and routes
             gtfsStation.addActionListener(e -> {
-                String station = (String)gtfsStation.getSelectedItem();
+                Stop station = gtfsStation.getSelectedItemTyped();
 
                 if (station != null) {
                     gtfsPlatform.replaceItems(timetableTranslator.getPlatformsForStation(station));
@@ -199,7 +201,7 @@ public class PlasmaUI
 
             playAnnouncementVoiceCombobox.addActionListener(e -> {
                 for (DeparturePanel departurePanel : departurePanels) {
-                    departurePanel.setScriptVoice(((Announcer) playAnnouncementVoiceCombobox.getSelectedItem()).getSoundLibrary().getName());
+                    departurePanel.setScriptVoice((playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary().getName());
                 }
             });
         } catch (Exception e) {
@@ -258,9 +260,9 @@ public class PlasmaUI
     {
         try {
             return timetableTranslator.getDepartureDataForStation(
-                    (String)gtfsStation.getSelectedItem(),
-                    filterPlatform.isSelected() ? (String)gtfsPlatform.getSelectedItem() : null,
-                    filterRoute.isSelected()    ? (String)gtfsRoute.getSelectedItem()    : null,
+                    gtfsStation.getSelectedItemTyped(),
+                    filterPlatform.isSelected() ? gtfsPlatform.getSelectedItemTyped() : null,
+                    filterRoute.isSelected()    ? gtfsRoute.getSelectedItemTyped()    : null,
                     0)
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -392,7 +394,7 @@ public class PlasmaUI
             else if (dva != null)
             {
                 logger.info("Playing auto generated announcement");
-                Announcer announcer = (Announcer) playAnnouncementVoiceCombobox.getSelectedItem();
+                Announcer announcer = playAnnouncementVoiceCombobox.getSelectedItemTyped();
                 long minsToDeparture = ChronoUnit.MINUTES.between(LocalDateTime.now(), departureData.get(0).DueOut);
                 if (announcer instanceof CityrailStandard)
                 {
@@ -446,14 +448,14 @@ public class PlasmaUI
                 renderers,
                 playAnnouncementCheckbox.isSelected(),
                 dva != null ? playAnnouncementTimes.getText() : null,
-                dva != null ? ((Announcer) playAnnouncementVoiceCombobox.getSelectedItem()).getName() : null,
+                dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getName() : null,
                 coalesceStationSequencesCheckbox.isSelected(),
                 data,
-                gtfsStation.getSelectedItem().toString(),
+                gtfsStation.getSelectedItemTyped().toString(),
                 filterPlatform.isSelected(),
-                gtfsPlatform.getSelectedItem().toString(),
+                gtfsPlatform.getSelectedItemTyped().toString(),
                 filterRoute.isSelected(),
-                gtfsRoute.getSelectedItem().toString());
+                gtfsRoute.getSelectedItemTyped().toString());
     }
 
     // Set the indicator settings in the panels from an IndicatorSettings object
@@ -486,14 +488,14 @@ public class PlasmaUI
         }
 
         for (int i = 0; i < gtfsStation.getItemCount(); i++)
-            if (gtfsStation.getItemAt(i).equals(settings.getGtfsStation())) {
+            if (gtfsStation.getItemAt(i).toString().equals(settings.getGtfsStation())) {
                 gtfsStation.setSelectedIndex(i);
                 break;
             }
         filterPlatform.setSelected(settings.filterPlatform());
         gtfsPlatform.setEnabled(filterPlatform.isSelected());
         for (int i = 0; i < gtfsPlatform.getItemCount(); i++)
-            if (gtfsPlatform.getItemAt(i).equals(settings.getGtfsPlatform())) {
+            if (gtfsPlatform.getItemAt(i).toString().equals(settings.getGtfsPlatform())) {
                 gtfsPlatform.setSelectedIndex(i);
                 break;
             }

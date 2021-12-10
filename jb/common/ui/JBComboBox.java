@@ -8,7 +8,7 @@ public class JBComboBox<T> extends JComboBox<T>
 
     public void replaceItems(T[] items)
     {
-        T selected = getItemAt(getSelectedIndex());
+        T selected = getSelectedItemTyped();
         T newSelected = null;
         removeAllItems();
         for (T o : items)
@@ -17,5 +17,10 @@ public class JBComboBox<T> extends JComboBox<T>
             if (o.equals(selected)) newSelected = o;
         }
         if (newSelected != null) setSelectedItem(newSelected);
+    }
+
+    public T getSelectedItemTyped()
+    {
+        return getItemAt(getSelectedIndex());
     }
 }

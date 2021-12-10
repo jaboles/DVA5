@@ -34,7 +34,7 @@
     <property name="Wine" value="wine"/>
     <property name="WinePrefix" value="${user.home}/.wine"/>
     <condition property="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"
-                                        else="${user.home}${file.separator}resource_hacker${file.separa tor}">
+                                        else="${user.home}${file.separator}resource_hacker${file.separator}">
         <os family="mac"/>
     </condition>
     <condition property="WinRun4JDir" value="${basedir}${file.separator}..${file.separator}winrun4j${file.separator}bin${file.separator}"
@@ -227,7 +227,7 @@
         <condition property="WillSignMacApp">
             <or>
                 <equals arg1="${hostname}" arg2="jb"/>
-                <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
+                <equals arg1="${hostname}" arg2="jb.local"/>
             </or>
         </condition>
     </target>
