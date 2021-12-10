@@ -7,6 +7,7 @@
     <property name="IntDir" value="build${file.separator}Intermediate"/>
     <property name="InDir" value="${IntDir}${file.separator}Debug"/>
     <property name="OutDir" value="build${file.separator}Debug"/>
+    <property name="ToolsDir" value="tools"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
 	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-5.10.0.jar${path.separator}jars/jna-platform-5.10.0.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/log4j-api-2.14.1.jar${path.separator}jars/protobuf-java-3.19.1.jar"/>
@@ -30,25 +31,12 @@
     <property name="DmgSizeMb" value="185"/>
 	
 	<!-- Windows setup -->
-    <!--<property name="Wine" value="wine"/>-->
     <property name="Wine" value="wine"/>
     <property name="WinePrefix" value="${user.home}/.wine"/>
-    <condition property="ResHackerDir" value="${basedir}${file.separator}..${file.separator}resource_hacker${file.separator}"
-                                        else="${user.home}${file.separator}resource_hacker${file.separator}">
-        <os family="mac"/>
-    </condition>
-    <condition property="WinRun4JDir" value="${basedir}${file.separator}..${file.separator}winrun4j${file.separator}bin${file.separator}"
-                                       else="${user.home}${file.separator}winrun4j${file.separator}bin${file.separator}">
-        <os family="mac"/>
-    </condition>
-    <condition property="WinOutDir32" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}i386${file.separator}"
-                                       else="${OutDir}${file.separator}win${file.separator}i386${file.separator}">
-        <os family="mac"/>
-    </condition>
-    <condition property="WinOutDir64" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}amd64${file.separator}"
-                                       else="${OutDir}${file.separator}win${file.separator}amd64${file.separator}">
-        <os family="mac"/>
-    </condition>
+    <property name="ResHackerDir" value="${basedir}${file.separator}${ToolsDir}${file.separator}resource_hacker${file.separator}"/>
+    <property name="WinRun4JDir" value="${basedir}${file.separator}${ToolsDir}${file.separator}winrun4j${file.separator}bin${file.separator}"/>
+    <property name="WinOutDir32" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
+    <property name="WinOutDir64" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
     <property name="WinResourcesDir" value="${basedir}${file.separator}win${file.separator}"/>
     <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files (x86)/Inno Setup 5/ISCC.exe"
                                              else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
@@ -59,66 +47,56 @@
     <!-- linux DEB -->
     <property name="DpkgRoot" value="${OutDir}${file.separator}debian"/>
 
-    <loadresource property="BaseDirTemp">
+    <loadresource property="BaseDirWine">
         <propertyresource name="basedir"/>
         <filterchain>
+            <prefixlines prefix="z:"/>
             <tokenfilter>
                 <filetokenizer/>
                 <replacestring from="/" to="\"/>
             </tokenfilter>
         </filterchain>
     </loadresource>
-    <property name="BaseDirWine" value="z:${BaseDirTemp}"/>
-    <loadresource property="WinResourcesDirTemp">
+    <loadresource property="WinResourcesDirWine">
         <propertyresource name="WinResourcesDir"/>
         <filterchain>
+            <prefixlines prefix="z:"/>
             <tokenfilter>
                 <filetokenizer/>
                 <replacestring from="/" to="\"/>
             </tokenfilter>
         </filterchain>
     </loadresource>
-    <property name="WinResourcesDirWine" value="z:${WinResourcesDirTemp}"/>
-    <loadresource property="WinRun4JDirTemp">
-        <propertyresource name="WinRun4JDir"/>
-        <filterchain>
-            <tokenfilter>
-                <filetokenizer/>
-                <replacestring from="/" to="\"/>
-            </tokenfilter>
-        </filterchain>
-    </loadresource>
-    <property name="WinRun4JDirWine" value="z:${WinRun4JDirTemp}"/>
-    <loadresource property="ResHackerDirTemp">
+    <loadresource property="ResHackerDirWine">
         <propertyresource name="ResHackerDir"/>
         <filterchain>
+            <prefixlines prefix="z:"/>
             <tokenfilter>
                 <filetokenizer/>
                 <replacestring from="/" to="\"/>
             </tokenfilter>
         </filterchain>
     </loadresource>
-    <property name="ResHackerDirWine" value="z:${ResHackerDirTemp}"/>
-    <loadresource property="WinOutDir32Temp">
+    <loadresource property="WinOutDir32Wine">
         <propertyresource name="WinOutDir32"/>
         <filterchain>
+            <prefixlines prefix="z:"/>
             <tokenfilter>
                 <filetokenizer/>
                 <replacestring from="/" to="\"/>
             </tokenfilter>
         </filterchain>
     </loadresource>
-    <property name="WinOutDir32Wine" value="z:${WinOutDir32Temp}"/>
-    <loadresource property="WinOutDir64Temp">
+    <loadresource property="WinOutDir64Wine">
         <propertyresource name="WinOutDir64"/>
         <filterchain>
+            <prefixlines prefix="z:"/>
             <tokenfilter>
                 <filetokenizer/>
                 <replacestring from="/" to="\"/>
             </tokenfilter>
         </filterchain>
     </loadresource>
-    <property name="WinOutDir64Wine" value="z:${WinOutDir64Temp}"/>
 
     <condition property="isMac">
         <os family="mac" />
@@ -126,6 +104,64 @@
     <condition property="isWindows">
         <os family="windows" />
     </condition>
+
+    <!-- Fetch build dependencies -->
+    <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Windows">
+
+    </target>
+    <target name="FetchDeps.Common">
+        <delete dir="${ToolsDir}"/>
+        <mkdir dir="${ToolsDir}"/>
+        <!-- Resource Hacker -->
+        <get src="http://www.angusj.com/resourcehacker/resource_hacker.zip" dest="." verbose="true"/>
+        <unzip src="resource_hacker.zip" dest="tools\resource_hacker"/>
+        <delete file="resource_hacker.zip"/>
+        <!-- WinRun4J -->
+        <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="." verbose="true"/>
+        <unzip src="download" dest="tools"/>
+        <delete file="download"/>
+        <!-- JRE -->
+        <!-- Win x64 -->
+        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_windows_hotspot_15.0.2_7.zip" dest="tools" verbose="true"/>
+        <!-- Win x86 -->
+        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x86-32_windows_hotspot_15.0.2_7.zip" dest="tools" verbose="true"/>
+        <!-- Mac x64 -->
+        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_mac_hotspot_15.0.2_7.tar.gz" dest="tools" verbose="true"/>
+    </target>
+    <target name="FetchDeps.Mac" if="isMac">
+        <!-- Wine -->
+        <exec executable="brew" failonerror="true">
+            <arg line="install xquartz"/>
+        </exec>
+        <exec executable="brew" failonerror="true">
+            <arg line="tap homebrew/cask-versions"/>
+        </exec>
+        <exec executable="brew" failonerror="true">
+            <arg line="install --cask --no-quarantine wine-stable"/>
+        </exec>
+        <!-- Inno Setup -->
+        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="is.exe" verbose="true"/>
+        <exec executable="wine" failonerror="true">
+            <arg line="is.exe /silent"/>
+        </exec>
+        <delete file="is.exe"/>
+        <!-- Dpkg -->
+        <exec executable="brew" failonerror="true">
+            <arg line="install dpkg"/>
+        </exec>
+        <!-- Fakeroot -->
+        <exec executable="brew" failonerror="true">
+            <arg line="install fakeroot"/>
+        </exec>
+    </target>
+    <target name="FetchDeps.Windows" if="isWindows">
+        <!-- Inno Setup -->
+        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="is.exe" verbose="true"/>
+        <exec executable="is.exe" failonerror="true">
+            <arg line="/silent"/>
+        </exec>
+        <delete file="is.exe"/>
+    </target>
 
     <!-- Increments the build number -->
     <target name="IncrementBuildNumber" description="Increment build number">
@@ -144,10 +180,7 @@
             <!--<arg value="-proto_path=${proto.srcs}" />-->
             <arg line="gtfs-realtime_1007_extension.proto" />
         </exec>
-        <javac fork="yes" srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
-            <compilerarg value="-J-Xbootclasspath/p:"/>
-        </javac>
-		<!--<javac srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>-->
+		<javac srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
 	</target>
 
     <!-- After Eclipse compile task, prepare JAR file -->
@@ -205,7 +238,7 @@
             </fileset>
         </copy>
         <untar dest="${IntDir}\jre\mac" compression="gzip" overwrite="false">
-            <fileset dir=".">
+            <fileset dir="tools">
                 <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
             </fileset>
         </untar>
@@ -227,7 +260,7 @@
         <condition property="WillSignMacApp">
             <or>
                 <equals arg1="${hostname}" arg2="jb"/>
-                <equals arg1="${hostname}" arg2="jb.local"/>
+                <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
             </or>
         </condition>
     </target>
@@ -284,278 +317,78 @@
         </exec>
     </target>
 
+    <target name="ResHack">
+        <!-- Params:
+            file: the path of the Windows binary to ResHack.
+            icon: the new icon to embed in the binary.
+            ini: the WinRun4J .ini to embed in the binary. -->
+        <echo>Processing with ResourceHacker: ${file}</echo>
+        <echo file="temp.rh">[FILENAMES]
+Open=   ${file}
+SaveAs= ${file}
+Log=    console
+[COMMANDS]
+-delete ICONGROUP,,
+-addoverwrite ${icon}, ICONGROUP,1,0
+-addoverwrite ${ini}, 687,1,0
+-addoverwrite ${stringtable}, STRINGTABLE,1,0
+</echo>
+        <exec executable="${Wine}" osfamily="mac">
+            <env key="WINEPREFIX" value="${WinePrefix}"/>
+            <arg line="${ResHackerDirWine}ResourceHacker.exe -script temp.rh -log console"/>
+        </exec>
+        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
+            <arg line="-script temp.rh -log console"/>
+        </exec>
+        <delete file="temp.rh"/>
+    </target>
     <target name="BuildWinExes">
-        <copy tofile="${WinOutDir32}DVA.exe" file="${WinRun4JDir}WinRun4J.exe"/>
-        <copy tofile="${WinOutDir64}DVA.exe" file="${WinRun4JDir}WinRun4J64.exe"/>
-        <copy tofile="${WinOutDir32}DVA.scr" file="${WinRun4JDir}WinRun4J.exe"/>
-        <copy tofile="${WinOutDir64}DVA.scr" file="${WinRun4JDir}WinRun4J64.exe"/>
-        <copy tofile="${WinOutDir32}ttfetch.exe" file="${WinRun4JDir}WinRun4J.exe"/>
-        <copy tofile="${WinOutDir64}ttfetch.exe" file="${WinRun4JDir}WinRun4J64.exe"/>
+        <copy tofile="${WinOutDir32}DVA.exe" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
+        <copy tofile="${WinOutDir64}DVA.exe" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
+        <copy tofile="${WinOutDir32}DVA.scr" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
+        <copy tofile="${WinOutDir64}DVA.scr" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
+        <copy tofile="${WinOutDir32}ttfetch.exe" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
+        <copy tofile="${WinOutDir64}ttfetch.exe" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
 
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-delete"/>
-            <arg value="${WinOutDir32Wine}DVA.exe,"/>
-            <arg value="${WinOutDir32Wine}DVA.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/I"/>
-            <arg value="${WinOutDir32Wine}DVA.exe"/>
-            <arg value="${BaseDirWine}\dva.ico"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/N"/>
-            <arg value="${WinOutDir32Wine}DVA.exe"/>
-            <arg value="${BaseDirWine}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-delete"/>
-            <arg value="${WinOutDir64Wine}DVA.exe,"/>
-            <arg value="${WinOutDir64Wine}DVA.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/I"/>
-            <arg value="${WinOutDir64Wine}DVA.exe"/>
-            <arg value="${BaseDirWine}\dva.ico"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/N"/>
-            <arg value="${WinOutDir64Wine}DVA.exe"/>
-            <arg value="${BaseDirWine}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-delete"/>
-            <arg value="${WinOutDir32Wine}DVA.scr,"/>
-            <arg value="${WinOutDir32Wine}DVA.scr,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/I"/>
-            <arg value="${WinOutDir32Wine}DVA.scr"/>
-            <arg value="${BaseDirWine}\resources\pse.ico"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/N"/>
-            <arg value="${WinOutDir32Wine}DVA.scr"/>
-            <arg value="${BaseDirWine}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-addoverwrite"/>
-            <arg value="${WinOutDir32Wine}DVA.scr,"/>
-            <arg value="${WinOutDir32Wine}DVA.scr,"/>
-            <arg value="${WinResourcesDirWine}ScreenSaverStringTable.res,"/>
-            <arg value="STRINGTABLE,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-delete"/>
-            <arg value="${WinOutDir64Wine}DVA.scr,"/>
-            <arg value="${WinOutDir64Wine}DVA.scr,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/I"/>
-            <arg value="${WinOutDir64Wine}DVA.scr"/>
-            <arg value="${BaseDirWine}\resources\pse.ico"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/N"/>
-            <arg value="${WinOutDir64Wine}DVA.scr"/>
-            <arg value="${BaseDirWine}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-addoverwrite"/>
-            <arg value="${WinOutDir64Wine}DVA.scr,"/>
-            <arg value="${WinOutDir64Wine}DVA.scr,"/>
-            <arg value="${WinResourcesDirWine}ScreenSaverStringTable.res,"/>
-            <arg value="STRINGTABLE,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-delete"/>
-            <arg value="${WinOutDir32Wine}ttfetch.exe,"/>
-            <arg value="${WinOutDir32Wine}ttfetch.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/I"/>
-            <arg value="${WinOutDir32Wine}ttfetch.exe"/>
-            <arg value="${BaseDirWine}\dva.ico"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/N"/>
-            <arg value="${WinOutDir32Wine}ttfetch.exe"/>
-            <arg value="${BaseDirWine}\win\ttfetch.ini"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${ResHackerDirWine}ResourceHacker.exe"/>
-            <arg value="-delete"/>
-            <arg value="${WinOutDir64Wine}ttfetch.exe,"/>
-            <arg value="${WinOutDir64Wine}ttfetch.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/I"/>
-            <arg value="${WinOutDir64Wine}ttfetch.exe"/>
-            <arg value="${BaseDirWine}\dva.ico"/>
-        </exec>
-        <exec executable="${Wine}" osfamily="mac">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${WinRun4JDirWine}RCEDIT.exe"/>
-            <arg value="/N"/>
-            <arg value="${WinOutDir64Wine}ttfetch.exe"/>
-            <arg value="${BaseDirWine}\win\ttfetch.ini"/>
-        </exec>
-
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-delete"/>
-            <arg value="${WinOutDir32}DVA.exe,"/>
-            <arg value="${WinOutDir32}DVA.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/I"/>
-            <arg value="${WinOutDir32}DVA.exe"/>
-            <arg value="${basedir}\dva.ico"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/N"/>
-            <arg value="${WinOutDir32}DVA.exe"/>
-            <arg value="${basedir}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-delete"/>
-            <arg value="${WinOutDir64}DVA.exe,"/>
-            <arg value="${WinOutDir64}DVA.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/I"/>
-            <arg value="${WinOutDir64}DVA.exe"/>
-            <arg value="${basedir}\dva.ico"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/N"/>
-            <arg value="${WinOutDir64}DVA.exe"/>
-            <arg value="${basedir}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-delete"/>
-            <arg value="${WinOutDir32}DVA.scr,"/>
-            <arg value="${WinOutDir32}DVA.scr,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/I"/>
-            <arg value="${WinOutDir32}DVA.scr"/>
-            <arg value="${basedir}\resources\pse.ico"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/N"/>
-            <arg value="${WinOutDir32}DVA.scr"/>
-            <arg value="${basedir}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-addoverwrite"/>
-            <arg value="${WinOutDir32}DVA.scr,"/>
-            <arg value="${WinOutDir32}DVA.scr,"/>
-            <arg value="${WinResourcesDir}ScreenSaverStringTable.res,"/>
-            <arg value="STRINGTABLE,,"/>
-        </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-delete"/>
-            <arg value="${WinOutDir64}DVA.scr,"/>
-            <arg value="${WinOutDir64}DVA.scr,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/I"/>
-            <arg value="${WinOutDir64}DVA.scr"/>
-            <arg value="${basedir}\resources\pse.ico"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/N"/>
-            <arg value="${WinOutDir64}DVA.scr"/>
-            <arg value="${basedir}\win\DVA.ini"/>
-        </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-addoverwrite"/>
-            <arg value="${WinOutDir64}DVA.scr,"/>
-            <arg value="${WinOutDir64}DVA.scr,"/>
-            <arg value="${WinResourcesDir}ScreenSaverStringTable.res,"/>
-            <arg value="STRINGTABLE,,"/>
-        </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-delete"/>
-            <arg value="${WinOutDir32}ttfetch.exe,"/>
-            <arg value="${WinOutDir32}ttfetch.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/I"/>
-            <arg value="${WinOutDir32}ttfetch.exe"/>
-            <arg value="${basedir}\dva.ico"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/N"/>
-            <arg value="${WinOutDir32}ttfetch.exe"/>
-            <arg value="${basedir}\win\ttfetch.ini"/>
-        </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
-            <arg value="-delete"/>
-            <arg value="${WinOutDir64}ttfetch.exe,"/>
-            <arg value="${WinOutDir64}ttfetch.exe,"/>
-            <arg value="ICONGROUP,,"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/I"/>
-            <arg value="${WinOutDir64}ttfetch.exe"/>
-            <arg value="${basedir}\dva.ico"/>
-        </exec>
-        <exec executable="${WinRun4JDir}RCEDIT.exe" osfamily="windows">
-            <arg value="/N"/>
-            <arg value="${WinOutDir64}ttfetch.exe"/>
-            <arg value="${basedir}\win\ttfetch.ini"/>
-        </exec>
+        <antcall target="ResHack">
+            <param name="file" value="${WinOutDir32Wine}DVA.exe" />
+            <param name="icon" value="${BaseDirWine}\dva.ico" />
+            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
+            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+        </antcall>
+        <antcall target="ResHack">
+            <param name="file" value="${WinOutDir64Wine}DVA.exe" />
+            <param name="icon" value="${BaseDirWine}\dva.ico" />
+            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
+            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+        </antcall>
+        <antcall target="ResHack">
+            <param name="file" value="${WinOutDir32Wine}DVA.scr" />
+            <param name="icon" value="${BaseDirWine}\resources\pse.ico" />
+            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
+            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+        </antcall>
+        <antcall target="ResHack">
+            <param name="file" value="${WinOutDir64Wine}DVA.scr" />
+            <param name="icon" value="${BaseDirWine}\resources\pse.ico" />
+            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
+            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+        </antcall>
+        <antcall target="ResHack">
+            <param name="file" value="${WinOutDir32Wine}ttfetch.exe" />
+            <param name="icon" value="${BaseDirWine}\dva.ico" />
+            <param name="ini" value="${BaseDirWine}\win\ttfetch.ini" />
+            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+        </antcall>
+        <antcall target="ResHack">
+            <param name="file" value="${WinOutDir64Wine}ttfetch.exe" />
+            <param name="icon" value="${BaseDirWine}\dva.ico" />
+            <param name="ini" value="${BaseDirWine}\win\ttfetch.ini" />
+            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+        </antcall>
 
         <unzip dest="${IntDir}\jre\win32" overwrite="false">
-            <fileset dir=".">
+            <fileset dir="tools">
                 <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
             </fileset>
         </unzip>
@@ -568,7 +401,7 @@
             </fileset>
         </copy>
         <unzip dest="${IntDir}\jre\win64" overwrite="false">
-            <fileset dir=".">
+            <fileset dir="tools">
                 <include name="OpenJDK*-jre_x64_windows_*.zip"/>
             </fileset>
         </unzip>
