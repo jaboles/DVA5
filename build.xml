@@ -130,7 +130,7 @@
 
     <!-- Increments the build number -->
     <target name="IncrementBuildNumber" description="Increment build number">
-        <buildnumber file="resources${file.seperator}buildnumber.txt"/>
+        <buildnumber file="resources${file.separator}buildnumber.txt"/>
     </target>
 
     <target name="Clean" description="Clean output folder">
@@ -162,23 +162,16 @@
                 <include name="*"/>
             </fileset>
     	</jar>
-    </target>
-    
-    <target name="BundledResources" description="Resources that are bundled with the app but not part of the jar">
         <copy todir="${OutDir}" preservelastmodified="true">
-            <fileset dir=".">
-            	<patternset id="bundled-resources">
-                    <include name="*.txt"/>
-            	</patternset>
-            </fileset>
+            <fileset dir="configs" includes="*" />
         </copy>
     </target>
-    
+
     <!-- Builds the Mac app bundle. Windows uses a stub .exe launcher so no need to update it. -->
     <target name="CleanMacApp" description="Clean the Mac DVA.app bundle">
         <delete failonerror="false" dir="${AppBundle}"/>
     </target>
-    <target name="UpdateMacApp" description="Update contents of the mac app" depends="CreateJar,BundledResources">
+    <target name="UpdateMacApp" description="Update contents of the mac app" depends="CreateJar">
         <copy todir="${OutDir}">
             <fileset dir="mac">
                 <include name="DVA.app/**"/>
@@ -391,7 +384,7 @@ Log=    console
     	<echo>Checking for ${InnoSetupCompiler}</echo>
         <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
     </target>
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
         <exec executable="sed" dir="${basedir}" osfamily="mac">
             <arg value="-i"/>
             <arg value=".bak"/>
@@ -425,7 +418,7 @@ Log=    console
     </target>
 
     <!-- Linux Debian Setup -->
-    <target name="BuildLinuxDeb" if="isMac" depends="CreateJar,BundledResources,SetupCommon">
+    <target name="BuildLinuxDeb" if="isMac" depends="CreateJar,SetupCommon">
         <delete failonerror="false" dir="${DpkgRoot}"/>
         <mkdir dir="${DpkgRoot}"/>
         <mkdir dir="${DpkgRoot}${file.separator}DEBIAN"/>
