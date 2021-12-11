@@ -306,37 +306,37 @@ Log=    console
 
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir32Wine}DVA.exe" />
-            <param name="icon" value="dva.ico" />
+            <param name="icon" value="win\dva.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir64Wine}DVA.exe" />
-            <param name="icon" value="dva.ico" />
+            <param name="icon" value="win\dva.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir32Wine}DVA.scr" />
-            <param name="icon" value="resources\pse.ico" />
+            <param name="icon" value="win\pse.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir64Wine}DVA.scr" />
-            <param name="icon" value="resources\pse.ico" />
+            <param name="icon" value="win\pse.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir32Wine}ttfetch.exe" />
-            <param name="icon" value="dva.ico" />
+            <param name="icon" value="win\dva.ico" />
             <param name="ini" value="win\ttfetch.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir64Wine}ttfetch.exe" />
-            <param name="icon" value="dva.ico" />
+            <param name="icon" value="win\dva.ico" />
             <param name="ini" value="win\ttfetch.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
