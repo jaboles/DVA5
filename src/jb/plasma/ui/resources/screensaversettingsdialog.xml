@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<dialog layout="BorderLayout" title="Screen Saver Settings" icon="resources/pse16.png" defaultcloseoperation="JFrame.EXIT_ON_CLOSE">
+<dialog layout="BorderLayout" title="Screen Saver Settings" icon="pse16.png" defaultcloseoperation="JFrame.EXIT_ON_CLOSE">
     <panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.TRAILING">
         <button action="okAction"/>
         <button action="cancelAction"/>

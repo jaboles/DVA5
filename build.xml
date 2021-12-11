@@ -351,15 +351,16 @@ Log=    console
         <zip destfile="${OutDir}/src.zip" basedir=".">
             <patternset refid="jar-resources"/>
             <patternset refid="bundled-resources"/>
-            <include name="**/*.java"/>
+            <include name="src/**"/>
             <include name="*.sh"/>
             <include name="mac/**"/>
             <include name="win/**"/>
             <include name="resources/**"/>
+            <include name="*.xml"/>
             <include name=".classpath"/>
             <include name=".project"/>
             <include name=".externalToolBuilders/**"/>
-            <include name=".svnignore"/>
+            <include name=".gitignore"/>
         </zip>
     </target>
     
