@@ -205,7 +205,6 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="jar://$MODULE_DIR$/jars/jlfgr-1_0.jar!/" recursive="false" />
       </library>
     </orderEntry>
   </component>

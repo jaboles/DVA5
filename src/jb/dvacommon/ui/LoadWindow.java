@@ -91,11 +91,11 @@ public class LoadWindow {
             Player p;
             try {
                 List<URL> startSoundList = new LinkedList<>();
-                startSoundList.add(new URL("jar:"+new File("DVA.jar").toURI().toURL()+"!/start4-CHIME.mp3"));
-                startSoundList.add(new URL("jar:"+new File("DVA.jar").toURI().toURL()+"!/start4-D.f.mp3"));
-                startSoundList.add(new URL("jar:"+new File("DVA.jar").toURI().toURL()+"!/start4-V.f.mp3"));
-                startSoundList.add(new URL("jar:"+new File("DVA.jar").toURI().toURL()+"!/start4-A.f.mp3"));
-                startSoundList.add(new URL("jar:"+new File("DVA.jar").toURI().toURL()+"!/start4-5.f.mp3"));
+                startSoundList.add(LoadWindow.class.getResource("/start4-CHIME.mp3"));
+                startSoundList.add(LoadWindow.class.getResource("/start4-D.f.mp3"));
+                startSoundList.add(LoadWindow.class.getResource("/start4-V.f.mp3"));
+                startSoundList.add(LoadWindow.class.getResource("/start4-A.f.mp3"));
+                startSoundList.add(LoadWindow.class.getResource("/start4-5.f.mp3"));
                 p = new Player(startSoundList, null);
                 p.start();
             } catch (Exception e) {

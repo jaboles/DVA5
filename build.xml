@@ -130,7 +130,7 @@
 
     <!-- Increments the build number -->
     <target name="IncrementBuildNumber" description="Increment build number">
-        <buildnumber file="buildnumber.txt"/>
+        <buildnumber file="resources${file.seprator}buildnumber.txt"/>
     </target>
 
     <target name="Clean" description="Clean output folder">
@@ -151,9 +151,6 @@
     <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
         <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
         	<fileset dir="${InDir}"/>
-        	<fileset dir=".">
-                <include name="buildnumber.txt"/>
-        	</fileset>
             <fileset dir="src">
                 <patternset>
                     <include name="**/*.xml"/>
@@ -172,7 +169,6 @@
             <fileset dir=".">
             	<patternset id="bundled-resources">
                     <include name="*.txt"/>
-                    <exclude name="buildnumber.txt"/>
             	</patternset>
             </fileset>
         </copy>
