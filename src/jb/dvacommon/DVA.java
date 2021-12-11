@@ -72,9 +72,10 @@ public class DVA {
     }
 
     public DVA() {
-        logger.info("DVA {}, Java {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
-        logger.info("OS {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
-        logger.info("Temp is " + System.getProperty("java.io.tmpdir"));
+        logger.info("DVA: {}, Java: {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
+        logger.info("OS: {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
+        logger.info("Temp is: {}", System.getProperty("java.io.tmpdir"));
+        logger.info("Xuggle.log: {}xuggle.log", System.getProperty("java.io.tmpdir"));
         Player.emptyCache();
     }
     
