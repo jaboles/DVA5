@@ -399,6 +399,7 @@ Log=    console
     <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
+            <arg value=".bak"/>
             <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
             <arg value="win${file.separator}setup.iss"/>
         </exec>
@@ -454,6 +455,7 @@ Log=    console
         <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}bin${file.separator}dva"/>
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
+            <arg value=".bak"/>
             <arg value="s/[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/${DVAVersion}/"/>
             <arg value="linux${file.separator}debian${file.separator}control"/>
         </exec>
