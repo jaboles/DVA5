@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
-public class ColorComboBox extends JComboBox
+public class ColorComboBox extends JComboBox<Object>
 {
     private static final long serialVersionUID = 1L;
     private Color lastSelected = Color.white;

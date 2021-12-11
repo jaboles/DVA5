@@ -70,7 +70,7 @@ public class DVATextManager
                 case KeyEvent.VK_UP:
                     shift = true;
                 case KeyEvent.VK_PAGE_UP:
-                    if (!shift || e.getModifiers() == KeyEvent.SHIFT_MASK) {
+                    if (!shift || e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK) {
                         if (suggestedSoundList.getSelectedIndex() > 0)
                             suggestedSoundList.setSelectedIndex(suggestedSoundList.getSelectedIndex() - 1);
                         e.consume();
@@ -79,7 +79,7 @@ public class DVATextManager
                 case KeyEvent.VK_DOWN:
                     shift = true;
                 case KeyEvent.VK_PAGE_DOWN:
-                    if (!shift || e.getModifiers() == KeyEvent.SHIFT_MASK) {
+                    if (!shift || e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK) {
                         if (suggestedSoundList.getSelectedIndex() < suggestedSoundList.getModel().getSize() - 1)
                             suggestedSoundList.setSelectedIndex(suggestedSoundList.getSelectedIndex() + 1);
                         e.consume();
@@ -90,7 +90,7 @@ public class DVATextManager
                     e.consume();
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (e.getModifiers() == KeyEvent.SHIFT_MASK) {
+                    if (e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK) {
                         autoComplete();
                         e.consume();
                     }
@@ -222,7 +222,7 @@ public class DVATextManager
                 int offset = translatedDataOffsets.get(i);
                 suggestedSoundListModel.addFilter(text.substring(offset, changePosition).toLowerCase());
             }
-        } else if (!text.equals("")) {
+        } else {
             boolean wholeDocumentReplaced = e != null && e.getOffset() == 0 && e.getLength() == text.length();
             if ((changePosition > 0 && text.charAt(changePosition - 1) == ' ') || wholeDocumentReplaced) {
                 suggestedSoundListModel.clearFilter();

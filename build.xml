@@ -152,7 +152,10 @@
             <arg value="--java_out=src" />
             <arg line="gtfs-realtime_1007_extension.proto" />
         </exec>
-		<javac srcdir="src" destdir="${ClassesDir}" classpath="${BuildClasspath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
+		<javac srcdir="src" destdir="${ClassesDir}" classpath="${BuildClasspath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
+            <compilerarg value="-Xlint:unchecked"/>
+            <compilerarg value="-Xlint:deprecation"/>
+        </javac>
 	</target>
 
     <!-- After Eclipse compile task, prepare JAR file -->

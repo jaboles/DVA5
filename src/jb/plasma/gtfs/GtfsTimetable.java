@@ -4,27 +4,24 @@ import org.javatuples.Pair;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GtfsTimetable implements Serializable
 {
     private static final long serialVersionUID = 1L;
-    private static Object[] AnalysisSteps = new Object[]
-    {
-        new Pair<String, Consumer<GtfsTimetable>>("indexing timepoints by stop", tt -> {tt.StopsByName = tt.Stops.values().stream().collect(Collectors.toMap(s -> s.Name, s -> s));}),
-        new Pair<String, Consumer<GtfsTimetable>>("indexing timepoints by trip", tt -> {tt.StopTimesByStop = tt.StopTimes.stream().collect(Collectors.groupingBy(st -> st.Stop));}),
-        new Pair<String, Consumer<GtfsTimetable>>("indexing trips by roster", tt -> {tt.StopTimesByTrip = tt.StopTimes.stream().collect(Collectors.groupingBy(st -> st.Trip));}),
-        new Pair<String, Consumer<GtfsTimetable>>("indexing routes by location", tt -> {tt.TripsByBlockId = tt.Trips.values().stream().collect(Collectors.groupingBy(t -> t.BlockId));}),
-        new Pair<String, Consumer<GtfsTimetable>>("", tt -> {tt.RoutesByStation = tt.StopTimes.stream()
+    private static final List<Pair<String, Consumer<GtfsTimetable>>> AnalysisSteps = Arrays.asList(
+        new Pair<String, Consumer<GtfsTimetable>>("indexing timepoints by stop", tt -> tt.StopsByName = tt.Stops.values().stream().collect(Collectors.toMap(s -> s.Name, s -> s))),
+        new Pair<String, Consumer<GtfsTimetable>>("indexing timepoints by trip", tt -> tt.StopTimesByStop = tt.StopTimes.stream().collect(Collectors.groupingBy(st -> st.Stop))),
+        new Pair<String, Consumer<GtfsTimetable>>("indexing trips by roster", tt -> tt.StopTimesByTrip = tt.StopTimes.stream().collect(Collectors.groupingBy(st -> st.Trip))),
+        new Pair<String, Consumer<GtfsTimetable>>("indexing routes by location", tt -> tt.TripsByBlockId = tt.Trips.values().stream().collect(Collectors.groupingBy(t -> t.BlockId))),
+        new Pair<String, Consumer<GtfsTimetable>>("", tt -> tt.RoutesByStation = tt.StopTimes.stream()
             .filter(st -> st.Pickup || st.Dropoff)
             .collect(Collectors.groupingBy(st -> st.Stop.Parent,
                 Collectors.mapping(st -> st.Trip.Route,
-                    Collectors.toSet())));}),
-    };
+                    Collectors.toSet()))))
+    );
 
     public GtfsTimetable(Map<String, Route> routes,
                          Map<String, ServicePeriod> calendar,
@@ -47,10 +44,10 @@ public class GtfsTimetable implements Serializable
         for (int i = 0; i < getAnalysisStepCount(); i++) {analyse(i);}
     }
 
-    public static int getAnalysisStepCount() {return AnalysisSteps.length;}
+    public static int getAnalysisStepCount() {return AnalysisSteps.size();}
     public String analyse(int stepIndex)
     {
-        Pair<String, Consumer<GtfsTimetable>> step = (Pair<String, Consumer<GtfsTimetable>>)AnalysisSteps[stepIndex];
+        Pair<String, Consumer<GtfsTimetable>> step = AnalysisSteps.get(stepIndex);
         step.getValue1().accept(this);
         return step.getValue0();
     }
