@@ -341,21 +341,6 @@ Log=    console
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
     </target>
-
-    <!-- Source code zip file -->
-    <target name="SourceArchive" description="Source code distribution">
-        <zip destfile="${OutDir}/src.zip" basedir=".">
-            <patternset refid="jar-resources"/>
-            <patternset refid="bundled-resources"/>
-            <include name="src/**"/>
-            <include name="*.sh"/>
-            <include name="mac/**"/>
-            <include name="win/**"/>
-            <include name="resources/**"/>
-            <include name="*.xml"/>
-            <include name=".gitignore"/>
-        </zip>
-    </target>
     
     <target name="SetupCommon" description="common setup crap">
         <copy file="new.html" todir="${OutDir}"/>
@@ -371,7 +356,7 @@ Log=    console
     </target>
     
     <!-- Build Mac setup -->
-    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="RebuildMacApp,SourceArchive,SetupCommon">
+    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="RebuildMacApp,SetupCommon">
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
         <exec executable="hdiutil">
@@ -383,7 +368,6 @@ Log=    console
         <copy todir="${DmgMountPoint}" preservelastmodified="true">
             <fileset dir="${OutDir}">
                 <include name="DVA.app/**"/>
-                <include name="src.zip"/>
             </fileset>
         </copy>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
@@ -407,7 +391,7 @@ Log=    console
     	<echo>Checking for ${InnoSetupCompiler}</echo>
         <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
     </target>
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SourceArchive,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,BundledResources,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
         <exec executable="sed" dir="${basedir}" osfamily="mac">
             <arg value="-i"/>
             <arg value=".bak"/>
@@ -441,7 +425,7 @@ Log=    console
     </target>
 
     <!-- Linux Debian Setup -->
-    <target name="BuildLinuxDeb" if="isMac" depends="CreateJar,BundledResources,SourceArchive,SetupCommon">
+    <target name="BuildLinuxDeb" if="isMac" depends="CreateJar,BundledResources,SetupCommon">
         <delete failonerror="false" dir="${DpkgRoot}"/>
         <mkdir dir="${DpkgRoot}"/>
         <mkdir dir="${DpkgRoot}${file.separator}DEBIAN"/>
@@ -454,9 +438,7 @@ Log=    console
         <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true">
             <fileset dir="${OutDir}">
                 <include name="*.txt"/>
-                <include name="src.zip"/>
                 <include name="DVA.jar"/>
-                <include name="*.jar"/>
             </fileset>
             <fileset dir="jars">
                 <include name="*.jar"/>
