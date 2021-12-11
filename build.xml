@@ -153,7 +153,6 @@
         	<fileset dir="${InDir}"/>
         	<fileset dir=".">
         		<patternset id="jar-resources">
-                    <include name="*.tt"/>
                     <include name="buildnumber.txt"/>
                     <include name="**/*.xml"/>
                     <include name="jb/**/*.properties"/>
