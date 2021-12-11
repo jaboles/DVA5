@@ -11,7 +11,7 @@ CloseApplicationsFilter=*.exe;*.dll;*.chm;*.jar
 DefaultDirName={pf}\DVA 5
 DefaultGroupName=DVA 5
 SourceDir=.
-OutputDir=..\build\Debug
+OutputDir=..\build\Output
 OutputBaseFilename=DVA5Setup
 Compression={#innosetupcompression}
 SolidCompression=yes
@@ -32,20 +32,18 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "..\build\Debug\win\i386\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
-Source: "..\build\Debug\win\i386\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
+Source: "..\build\Output\win\i386\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
+Source: "..\build\Output\win\i386\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: not IsWin64
 Source: "..\build\Tools\jre\win32\*"; DestDir: "{app}\jre"; Flags: recursesubdirs replacesameversion; Check: not IsWin64
-Source: "..\build\Debug\win\amd64\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
-Source: "..\build\Debug\win\amd64\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
+Source: "..\build\Output\win\amd64\DVA.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
+Source: "..\build\Output\win\amd64\ttfetch.exe"; DestDir: "{app}"; Flags: replacesameversion; Check: IsWin64
 Source: "..\build\Tools\jre\win64\*"; DestDir: "{app}\jre"; Flags: recursesubdirs replacesameversion; Check: IsWin64
-Source: "..\build\Debug\win\i386\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: not IsWin64
-Source: "..\build\Debug\win\amd64\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: IsWin64
-Source: "..\log4j2.xml"; DestDir: "{app}"
+Source: "..\build\Output\win\i386\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: not IsWin64
+Source: "..\build\Output\win\amd64\DVA.scr"; DestDir: "{sys}"; Flags: replacesameversion; Check: IsWin64
 Source: "..\jars\*.jar"; DestDir: "{app}"
 Source: "..\jars\win\*.jar"; DestDir: "{app}"
-Source: "..\build\Debug\*.jar"; DestDir: "{app}"
-Source: "..\build\Debug\*.txt"; DestDir: "{app}"
-Source: "..\build\Debug\src.zip"; DestDir: "{app}"
+Source: "..\build\Output\*.jar"; DestDir: "{app}"
+Source: "..\build\Output\*.txt"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]

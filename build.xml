@@ -148,6 +148,9 @@
     <!-- After Eclipse compile task, prepare JAR file -->
     <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
         <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
+            <fileset dir="${ClassesDir}">
+                <include name="**"/>
+            </fileset>
             <fileset dir="src">
                 <patternset>
                     <include name="**/*.xml"/>
@@ -336,11 +339,11 @@ Log=    console
         <copy file="resources/new.html" todir="${OutDir}"/>
         <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac">
             <arg value="-c"/>
-            <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
+            <arg value="cat src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
         <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows">
             <arg value="-command"/>
-            <arg value="(gc jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
+            <arg value="(gc src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
         </exec>
         <echo>Read version string: ${DVAVersion}</echo>
     </target>
