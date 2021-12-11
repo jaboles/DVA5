@@ -1,2 +1,0 @@
-Main-Class: jb.dvacommon.DVA
-Class-Path: . jdom.jar swixml.jar jlfgr-1_0.jar tritonus_share.jar tritonus_remaining.jar jna-4.2.1.jar jna-platform-4.2.1.jar mp3spi1.9.5.jar jl1.0.1.jar javatuples-1.2.jar xuggle-xuggler-5.4.jar log4j-api-2.14.1.jar log4j-core-2.14.1.jar disruptor-3.4.4.jar slf4j-api-1.7.7.jar slf4j-jdk14-1.7.7.jar swingx-all-1.6.4.jar azure-storage-2.2.0.jar protobuf-java-3.19.1.jar

@@ -8,7 +8,17 @@
     <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
-	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-5.10.0.jar${path.separator}jars/jna-platform-5.10.0.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/log4j-api-2.14.1.jar${path.separator}jars/protobuf-java-3.19.1.jar"/>
+    <path id="jars">
+        <fileset dir="jars">
+            <include name="*" />
+        </fileset>
+    </path>
+    <path id="jarsPlatformSpecific">
+        <fileset dir="jars${file.separator}mac">
+            <include name="*" />
+        </fileset>
+    </path>
+    <property name="BuildClasspath" value="${toString:jars}:${toString:jarsPlatformSpecific}" />
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
     </condition>
@@ -142,12 +152,23 @@
             <arg value="--java_out=src" />
             <arg line="gtfs-realtime_1007_extension.proto" />
         </exec>
-		<javac srcdir="src" destdir="${ClassesDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
+		<javac srcdir="src" destdir="${ClassesDir}" classpath="${BuildClasspath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
 	</target>
 
     <!-- After Eclipse compile task, prepare JAR file -->
     <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
-        <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
+        <manifestclasspath property="ManifestClasspath" jarfile="jars/dummy.jar">
+            <classpath refid="jars" />
+        </manifestclasspath>
+        <manifestclasspath property="ManifestClasspathPlatformSpecific" jarfile="jars/mac/dummy.jar">
+            <classpath refid="jarsPlatformSpecific" />
+        </manifestclasspath>
+        <echo message="Manifest Classpath: ${ManifestClasspath} ${ManifestClasspathPlatformSpecific}" />
+        <jar jarfile="${OutDir}/DVA.jar" level="0">
+            <manifest>
+                <attribute name="Main-Class" value="jb.dvacommon.DVA"/>
+                <attribute name="Class-Path" value="${ManifestClasspath} ${ManifestClasspathPlatformSpecific}"/>
+            </manifest>
             <fileset dir="${ClassesDir}">
                 <include name="**"/>
             </fileset>
