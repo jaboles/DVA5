@@ -3,7 +3,6 @@
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname"/>
-    <echo>Running on ${hostname} (${os.name})</echo>
     <property name="IntDir" value="build${file.separator}Intermediate"/>
     <property name="InDir" value="${IntDir}${file.separator}Debug"/>
     <property name="OutDir" value="build${file.separator}Debug"/>
@@ -407,12 +406,6 @@ Log=    console
         </exec>
     </target>
     
-    <target name="PrepareSoundJars">
-        <exec executable="/bin/bash" dir=".">
-            <arg value="makejars.sh"/>
-        </exec>
-    </target>
-
     <!-- Build windows setup -->
     <target name="BuildWinSetup.Check">
     	<echo>Checking for ${InnoSetupCompiler}</echo>
@@ -430,19 +423,13 @@ Log=    console
             <arg value="(gc 'win${file.separator}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file 'win${file.separator}setup.iss'"/>
         </exec>
         <echo>Inno Setup compression: ${innosetupcompression}</echo>
+        <property name="innosetupargs" value="/Qp /Dinnosetupcompression=${innosetupcompression} /Dversion=${DVAVersion} win\setup.iss"/>
         <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${InnoSetupCompiler}"/>
-            <arg value="/Qp"/>
-            <arg value="/Dinnosetupcompression=${innosetupcompression}"/>
-            <arg value="/Dversion=${DVAVersion}"/>
-            <arg value="win\setup.iss"/>
+            <arg line="&quot;${InnoSetupCompiler}&quot; ${innosetupargs}"/>
         </exec>
         <exec executable="${InnoSetupCompiler}" osfamily="windows">
-            <arg value="/Qp"/>
-            <arg value="/Dinnosetupcompression=${innosetupcompression}"/>
-            <arg value="/Dversion=${DVAVersion}"/>
-            <arg value="win${file.separator}setup.iss"/>
+            <arg line="${innosetupargs}"/>
         </exec>
     </target>
 
@@ -518,12 +505,6 @@ Log=    console
     
     <target name="DevBuild" description="Fast dev build" depends="Clean,UpdateMacApp"/>
 
-    <target name="TimetableFetch" description="Fetch/generate timetable" depends="CreateJar">
-        <exec executable="/bin/bash" dir=".">
-            <arg value="ttfetch.sh"/>
-        </exec>
-    </target>
-
     <target name="SoundJars">
         <foreach target="SoundJar" param="dir">
             <path>
@@ -535,7 +516,7 @@ Log=    console
         <basename property="name" file="${dir}"/>
         <echo>${name}</echo>
         <zip basedir="${dir}"
-             destfile="build${file.separator}soundjars2${file.separator}${name}.jar"
+             destfile="build${file.separator}soundjars${file.separator}${name}.jar"
              compress="false">
         </zip>
     </target>
