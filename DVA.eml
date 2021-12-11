@@ -3,14 +3,15 @@
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$">
 		<excludeFolder url="file://$MODULE_DIR$/.externalToolBuilders"/>
-		<excludeFolder url="file://$MODULE_DIR$/build"/>
-		<excludeFolder url="file://$MODULE_DIR$/jars"/>
 		<excludeFolder url="file://$MODULE_DIR$/jb/common/nativefilechooser"/>
-		<excludeFolder url="file://$MODULE_DIR$/mac"/>
-		<excludeFolder url="file://$MODULE_DIR$/sounds"/>
 		<excludeFolder url="file://$MODULE_DIR$/tools"/>
-		<excludeFolder url="file://$MODULE_DIR$/tools/winrun4j"/>
+		<excludeFolder url="file://$MODULE_DIR$/build"/>
 		<excludeFolder url="file://$MODULE_DIR$/win"/>
+		<excludeFolder url="file://$MODULE_DIR$/sounds"/>
+		<excludeFolder url="file://$MODULE_DIR$/resources"/>
+		<excludeFolder url="file://$MODULE_DIR$/mac"/>
+		<excludeFolder url="file://$MODULE_DIR$/linux"/>
+		<excludeFolder url="file://$MODULE_DIR$/jars"/>
 	</contentEntry>
 	<lib name="javatuples-1.2.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/jars/javatuples-1.2.jar!/"/>
