@@ -35,7 +35,6 @@ public class SoundLibrary implements Serializable {
     private static final long serialVersionUID = 1L;
     String name;
     List<File> files;
-    List<File> userFiles;
     Map<String, SoundReference> soundMap;
     Map<String, String> canonicalNameMap;
     Map<String, Integer> formatCounter;
@@ -52,7 +51,6 @@ public class SoundLibrary implements Serializable {
         this.name = name;
         this.formatCounter = new HashMap<>();
         this.files = new LinkedList<>();
-        this.userFiles = new LinkedList<>();
         this.properties = new Properties();
     }
 
@@ -142,10 +140,7 @@ public class SoundLibrary implements Serializable {
                 }
             }
 
-            if (populateUrlTable(urls))
-            {
-                userFiles.add(file);
-            }
+            populateUrlTable(urls);
 
             keys = new HashSet<>();
             keys.addAll(soundMap.keySet());
@@ -154,10 +149,8 @@ public class SoundLibrary implements Serializable {
         }
     }
 
-    private boolean populateUrlTable(List<URL> urls) throws UnsupportedAudioFileException, IOException
+    private void populateUrlTable(List<URL> urls) throws UnsupportedAudioFileException, IOException
     {
-        boolean isUserLibrary = true;
-
         logger.debug("Populating library {}", getName());
         for (URL u : urls)
         {
@@ -220,8 +213,7 @@ public class SoundLibrary implements Serializable {
             }
             else if (urlString.toLowerCase().endsWith("files.list"))
             {
-                logger.debug("files.list found -- is non-user library.");
-                isUserLibrary = false;
+                logger.debug("files.list found");
             }
             else if (urlString.toLowerCase().endsWith("properties.properties"))
             {
@@ -231,7 +223,6 @@ public class SoundLibrary implements Serializable {
             }
         }
         logger.info("Populated {} with {} items", getName(), canonicalNameMap.size());
-        return isUserLibrary;
     }
 
     public boolean contains(String s) {

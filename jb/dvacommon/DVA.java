@@ -71,7 +71,8 @@ public class DVA {
         "swingx-all-1.6.4.jar",
         "azure-core-0.7.0.jar",
         "azure-storage-2.2.0.jar",
-        "protobuf-java-3.19.1.jar"
+        "protobuf-java-3.19.1.jar",
+        "ant-contrib-1.0b3.jar"
     };
     public static final Set<String> OWN_JARS = new HashSet<>(Arrays.asList(OWN_JARS_Array));
     

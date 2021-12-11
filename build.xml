@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- Configuration of the Ant build system to generate a Jar file --> 
+<!-- Configuration of the Ant build system to generate a Jar file -->
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname"/>
@@ -7,7 +7,7 @@
     <property name="IntDir" value="build${file.separator}Intermediate"/>
     <property name="InDir" value="${IntDir}${file.separator}Debug"/>
     <property name="OutDir" value="build${file.separator}Debug"/>
-    <property name="ToolsDir" value="tools"/>
+    <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
 	<property name="Classpath" value="jars/azure-storage-2.2.0.jar${path.separator}jars/swingx-all-1.6.4.jar${path.separator}jars/jdom.jar${path.separator}jars/swixml.jar${path.separator}jars/jna-5.10.0.jar${path.separator}jars/jna-platform-5.10.0.jar${path.separator}jars/javatuples-1.2.jar${path.separator}jars/mac/xuggle-xuggler-5.4.jar${path.separator}jars/log4j-api-2.14.1.jar${path.separator}jars/protobuf-java-3.19.1.jar"/>
@@ -17,6 +17,8 @@
     <condition property="innosetupcompression" value="none" else="lzma2/ultra">
         <isset property="fast"/>
     </condition>
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
     <!-- Mac signing identity in Keychain -->
     <property name="SignIdentity" value="Jonathan Boles"/>
@@ -31,13 +33,15 @@
     <property name="DmgSizeMb" value="185"/>
 	
 	<!-- Windows setup -->
-    <property name="Wine" value="wine"/>
-    <property name="WinePrefix" value="${user.home}/.wine"/>
-    <property name="ResHackerDir" value="${basedir}${file.separator}${ToolsDir}${file.separator}resource_hacker${file.separator}"/>
-    <property name="WinRun4JDir" value="${basedir}${file.separator}${ToolsDir}${file.separator}winrun4j${file.separator}bin${file.separator}"/>
-    <property name="WinOutDir32" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
-    <property name="WinOutDir64" value="${basedir}${file.separator}${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
-    <property name="WinResourcesDir" value="${basedir}${file.separator}win${file.separator}"/>
+    <property name="Wine"            value="wine"/>
+    <property name="WinePrefix"      value="${user.home}/.wine"/>
+    <property name="ResHackerDir"    value="${ToolsDir}${file.separator}resource_hacker"/>
+    <property name="OutDirWine"      value="build\Debug"/>
+    <property name="WinRun4JDir"     value="${ToolsDir}${file.separator}winrun4j${file.separator}bin${file.separator}"/>
+    <property name="WinOutDir32"     value="${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
+    <property name="WinOutDir32Wine" value="${OutDirWine}\win\i386\"/>
+    <property name="WinOutDir64"     value="${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
+    <property name="WinOutDir64Wine" value="${OutDirWine}\win\amd64\"/>
     <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files (x86)/Inno Setup 5/ISCC.exe"
                                              else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
         <os family="mac"/>
@@ -46,57 +50,6 @@
 
     <!-- linux DEB -->
     <property name="DpkgRoot" value="${OutDir}${file.separator}debian"/>
-
-    <loadresource property="BaseDirWine">
-        <propertyresource name="basedir"/>
-        <filterchain>
-            <prefixlines prefix="z:"/>
-            <tokenfilter>
-                <filetokenizer/>
-                <replacestring from="/" to="\"/>
-            </tokenfilter>
-        </filterchain>
-    </loadresource>
-    <loadresource property="WinResourcesDirWine">
-        <propertyresource name="WinResourcesDir"/>
-        <filterchain>
-            <prefixlines prefix="z:"/>
-            <tokenfilter>
-                <filetokenizer/>
-                <replacestring from="/" to="\"/>
-            </tokenfilter>
-        </filterchain>
-    </loadresource>
-    <loadresource property="ResHackerDirWine">
-        <propertyresource name="ResHackerDir"/>
-        <filterchain>
-            <prefixlines prefix="z:"/>
-            <tokenfilter>
-                <filetokenizer/>
-                <replacestring from="/" to="\"/>
-            </tokenfilter>
-        </filterchain>
-    </loadresource>
-    <loadresource property="WinOutDir32Wine">
-        <propertyresource name="WinOutDir32"/>
-        <filterchain>
-            <prefixlines prefix="z:"/>
-            <tokenfilter>
-                <filetokenizer/>
-                <replacestring from="/" to="\"/>
-            </tokenfilter>
-        </filterchain>
-    </loadresource>
-    <loadresource property="WinOutDir64Wine">
-        <propertyresource name="WinOutDir64"/>
-        <filterchain>
-            <prefixlines prefix="z:"/>
-            <tokenfilter>
-                <filetokenizer/>
-                <replacestring from="/" to="\"/>
-            </tokenfilter>
-        </filterchain>
-    </loadresource>
 
     <condition property="isMac">
         <os family="mac" />
@@ -110,23 +63,29 @@
 
     </target>
     <target name="FetchDeps.Common">
-        <delete dir="${ToolsDir}"/>
         <mkdir dir="${ToolsDir}"/>
         <!-- Resource Hacker -->
-        <get src="http://www.angusj.com/resourcehacker/resource_hacker.zip" dest="." verbose="true"/>
-        <unzip src="resource_hacker.zip" dest="tools\resource_hacker"/>
-        <delete file="resource_hacker.zip"/>
+        <get src="http://www.angusj.com/resourcehacker/resource_hacker.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <unzip src="${ToolsDir}${file.separator}resource_hacker.zip" dest="${ResHackerDir}" overwrite="false"/>
         <!-- WinRun4J -->
-        <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="." verbose="true"/>
-        <unzip src="download" dest="tools"/>
-        <delete file="download"/>
-        <!-- JRE -->
-        <!-- Win x64 -->
-        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_windows_hotspot_15.0.2_7.zip" dest="tools" verbose="true"/>
-        <!-- Win x86 -->
-        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x86-32_windows_hotspot_15.0.2_7.zip" dest="tools" verbose="true"/>
-        <!-- Mac x64 -->
-        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_mac_hotspot_15.0.2_7.tar.gz" dest="tools" verbose="true"/>
+        <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}${file.separator}winrun4j.zip" verbose="true" skipexisting="true"/>
+        <unzip src="${ToolsDir}${file.separator}winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
+        <!-- JRE: Win x64 -->
+        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_windows_hotspot_15.0.2_7.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <unzip dest="${ToolsDir}\jre\win32" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </unzip>
+        <!-- JRE: Win x86 -->
+        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x86-32_windows_hotspot_15.0.2_7.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </unzip>
     </target>
     <target name="FetchDeps.Mac" if="isMac">
         <!-- Wine -->
@@ -140,11 +99,11 @@
             <arg line="install --cask --no-quarantine wine-stable"/>
         </exec>
         <!-- Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="is.exe" verbose="true"/>
-        <exec executable="wine" failonerror="true">
-            <arg line="is.exe /silent"/>
+        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}${file.separator}is.exe" verbose="true" skipexisting="true"/>
+        <exec executable="${Wine}" failonerror="true">
+            <env key="WINEPREFIX" value="${WinePrefix}"/>
+            <arg line="${ToolsDir}${file.separator}is.exe /silent"/>
         </exec>
-        <delete file="is.exe"/>
         <!-- Dpkg -->
         <exec executable="brew" failonerror="true">
             <arg line="install dpkg"/>
@@ -153,14 +112,21 @@
         <exec executable="brew" failonerror="true">
             <arg line="install fakeroot"/>
         </exec>
+        <!-- Mac x64 -->
+        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_mac_hotspot_15.0.2_7.tar.gz" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <untar dest="${ToolsDir}\jre\mac" compression="gzip" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </untar>
     </target>
-    <target name="FetchDeps.Windows" if="isWindows">
+    <target name="FetchDeps.Windows" depends="BuildWinSetup.Check" if="isWindows">
         <!-- Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="is.exe" verbose="true"/>
-        <exec executable="is.exe" failonerror="true">
+        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}${file.separator}is.exe" verbose="true" skipexisting="true"/>
+        <exec executable="${ToolsDir}${file.separator}is.exe" failonerror="true">
             <arg line="/silent"/>
         </exec>
-        <delete file="is.exe"/>
     </target>
 
     <!-- Increments the build number -->
@@ -177,7 +143,6 @@
         <mkdir dir="${InDir}"/>
         <exec executable="protoc" failonerror="true">
             <arg value="--java_out=." />
-            <!--<arg value="-proto_path=${proto.srcs}" />-->
             <arg line="gtfs-realtime_1007_extension.proto" />
         </exec>
 		<javac srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
@@ -237,16 +202,8 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
-        <untar dest="${IntDir}\jre\mac" compression="gzip" overwrite="false">
-            <fileset dir="tools">
-                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
-            </fileset>
-        </untar>
-        <pathconvert property="macjredir">
-            <dirset dir="${IntDir}\jre\mac" includes="jdk-*-jre"/>
-        </pathconvert>
         <copy todir="${AppBundleContents}\jre" preservelastmodified="true">
-            <fileset dir="${macjredir}">
+            <fileset dir="${ToolsDir}\jre\mac">
                 <include name="**"/>
             </fileset>
         </copy>
@@ -335,9 +292,9 @@ Log=    console
 </echo>
         <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg line="${ResHackerDirWine}ResourceHacker.exe -script temp.rh -log console"/>
+            <arg line="${ResHackerDir}${file.separator}ResourceHacker.exe -script temp.rh -log console"/>
         </exec>
-        <exec executable="${ResHackerDir}ResourceHacker.exe" osfamily="windows">
+        <exec executable="${ResHackerDir}${file.separator}ResourceHacker.exe" osfamily="windows">
             <arg line="-script temp.rh -log console"/>
         </exec>
         <delete file="temp.rh"/>
@@ -352,67 +309,40 @@ Log=    console
 
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir32Wine}DVA.exe" />
-            <param name="icon" value="${BaseDirWine}\dva.ico" />
-            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
-            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+            <param name="icon" value="dva.ico" />
+            <param name="ini" value="win\DVA.ini" />
+            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir64Wine}DVA.exe" />
-            <param name="icon" value="${BaseDirWine}\dva.ico" />
-            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
-            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+            <param name="icon" value="dva.ico" />
+            <param name="ini" value="win\DVA.ini" />
+            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir32Wine}DVA.scr" />
-            <param name="icon" value="${BaseDirWine}\resources\pse.ico" />
-            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
-            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+            <param name="icon" value="resources\pse.ico" />
+            <param name="ini" value="win\DVA.ini" />
+            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir64Wine}DVA.scr" />
-            <param name="icon" value="${BaseDirWine}\resources\pse.ico" />
-            <param name="ini" value="${BaseDirWine}\win\DVA.ini" />
-            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+            <param name="icon" value="resources\pse.ico" />
+            <param name="ini" value="win\DVA.ini" />
+            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir32Wine}ttfetch.exe" />
-            <param name="icon" value="${BaseDirWine}\dva.ico" />
-            <param name="ini" value="${BaseDirWine}\win\ttfetch.ini" />
-            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+            <param name="icon" value="dva.ico" />
+            <param name="ini" value="win\ttfetch.ini" />
+            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir64Wine}ttfetch.exe" />
-            <param name="icon" value="${BaseDirWine}\dva.ico" />
-            <param name="ini" value="${BaseDirWine}\win\ttfetch.ini" />
-            <param name="stringtable" value="${WinResourcesDirWine}ScreenSaverStringTable.res"/>
+            <param name="icon" value="dva.ico" />
+            <param name="ini" value="win\ttfetch.ini" />
+            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
-
-        <unzip dest="${IntDir}\jre\win32" overwrite="false">
-            <fileset dir="tools">
-                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
-            </fileset>
-        </unzip>
-        <pathconvert property="win32jredir">
-            <dirset dir="${IntDir}\jre\win32" includes="jdk-*-jre"/>
-        </pathconvert>
-        <copy todir="${WinOutDir32}\jre" preservelastmodified="true">
-            <fileset dir="${win32jredir}">
-                <include name="**"/>
-            </fileset>
-        </copy>
-        <unzip dest="${IntDir}\jre\win64" overwrite="false">
-            <fileset dir="tools">
-                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
-            </fileset>
-        </unzip>
-        <pathconvert property="win64jredir">
-            <dirset dir="${IntDir}\jre\win64" includes="jdk-*-jre"/>
-        </pathconvert>
-        <copy todir="${WinOutDir64}\jre" preservelastmodified="true">
-            <fileset dir="${win64jredir}">
-                <include name="**"/>
-            </fileset>
-        </copy>
     </target>
 
     <!-- Source code zip file -->
@@ -493,11 +423,11 @@ Log=    console
             <arg value="-i"/>
             <arg value=".bak"/>
             <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
-            <arg value="${WinResourcesDir}setup.iss"/>
+            <arg value="win${file.separator}setup.iss"/>
         </exec>
         <exec executable="powershell.exe" dir="${basedir}" osfamily="windows">
             <arg value="-command"/>
-            <arg value="(gc '${WinResourcesDir}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file '${WinResourcesDir}setup.iss'"/>
+            <arg value="(gc 'win${file.separator}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file 'win${file.separator}setup.iss'"/>
         </exec>
         <echo>Inno Setup compression: ${innosetupcompression}</echo>
         <exec executable="${Wine}" osfamily="mac">
@@ -506,13 +436,13 @@ Log=    console
             <arg value="/Qp"/>
             <arg value="/Dinnosetupcompression=${innosetupcompression}"/>
             <arg value="/Dversion=${DVAVersion}"/>
-            <arg value="${WinResourcesDirWine}setup.iss"/>
+            <arg value="win\setup.iss"/>
         </exec>
         <exec executable="${InnoSetupCompiler}" osfamily="windows">
             <arg value="/Qp"/>
             <arg value="/Dinnosetupcompression=${innosetupcompression}"/>
             <arg value="/Dversion=${DVAVersion}"/>
-            <arg value="${WinResourcesDir}setup.iss"/>
+            <arg value="win${file.separator}setup.iss"/>
         </exec>
     </target>
 
@@ -592,5 +522,21 @@ Log=    console
         <exec executable="/bin/bash" dir=".">
             <arg value="ttfetch.sh"/>
         </exec>
+    </target>
+
+    <target name="SoundJars">
+        <foreach target="SoundJar" param="dir">
+            <path>
+                <dirset dir="sounds" includes="*"/>
+            </path>
+        </foreach>
+    </target>
+    <target name="SoundJar">
+        <basename property="name" file="${dir}"/>
+        <echo>${name}</echo>
+        <zip basedir="${dir}"
+             destfile="build${file.separator}soundjars2${file.separator}${name}.jar"
+             compress="false">
+        </zip>
     </target>
 </project>

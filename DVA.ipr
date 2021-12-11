@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AntConfiguration">
-    <buildFile url="file://$PROJECT_DIR$/build.xml" />
+    <buildFile url="file://$PROJECT_DIR$/build.xml">
+      <additionalClassPath>
+        <entry path="file://$PROJECT_DIR$/jars/ant-contrib-1.0b3.jar" />
+      </additionalClassPath>
+    </buildFile>
   </component>
   <component name="CopyrightManager" default="" />
   <component name="Encoding">
@@ -193,7 +197,7 @@
       <module fileurl="file://$PROJECT_DIR$/DVA.iml" filepath="$PROJECT_DIR$/DVA.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SvnBranchConfigurationManager">
