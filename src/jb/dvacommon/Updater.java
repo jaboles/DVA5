@@ -22,7 +22,7 @@ public class Updater
         jarFolder = FileUtilities.getJarFolder(Updater.class);
         try {
             AllUpdaters = new ArrayList<>();
-            if (jarFolder != null && jarFolder.getPath().toLowerCase().startsWith("/Users/jb/Software/DVA/build/Debug".toLowerCase())) {
+            if (jarFolder != null && jarFolder.getPath().toLowerCase().startsWith("/Users/jb/Software/DVA/build".toLowerCase())) {
                 logger.info("Using the local drop source");
                 AllUpdaters.add(new SimpleWebsiteUpdater(new URL("file:///Users/jb/Software/DVA/build/TestUpdateDrop/")));
             }

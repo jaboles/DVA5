@@ -3,9 +3,8 @@
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname"/>
-    <property name="IntDir" value="build${file.separator}Intermediate"/>
-    <property name="InDir" value="${IntDir}${file.separator}Debug"/>
-    <property name="OutDir" value="build${file.separator}Debug"/>
+    <property name="ClassesDir" value="build${file.separator}classes"/>
+    <property name="OutDir" value="build${file.separator}Output"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="AppBundle" value="${OutDir}/DVA.app"/>
     <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
@@ -35,7 +34,7 @@
     <property name="Wine"            value="wine"/>
     <property name="WinePrefix"      value="${user.home}/.wine"/>
     <property name="ResHackerDir"    value="${ToolsDir}${file.separator}resource_hacker"/>
-    <property name="OutDirWine"      value="build\Debug"/>
+    <property name="OutDirWine"      value="build\Output"/>
     <property name="WinRun4JDir"     value="${ToolsDir}${file.separator}winrun4j${file.separator}bin${file.separator}"/>
     <property name="WinOutDir32"     value="${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
     <property name="WinOutDir32Wine" value="${OutDirWine}\win\i386\"/>
@@ -134,23 +133,21 @@
     </target>
 
     <target name="Clean" description="Clean output folder">
-        <delete failonerror="false" dir="${IntDir}"/>
         <delete failonerror="false" dir="${OutDir}"/>
     </target>
 	
 	<target name="Compile" description="Compile java code">
-        <mkdir dir="${InDir}"/>
+        <mkdir dir="${ClassesDir}"/>
         <exec executable="protoc" failonerror="true">
             <arg value="--java_out=src" />
             <arg line="gtfs-realtime_1007_extension.proto" />
         </exec>
-		<javac srcdir="src" destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
+		<javac srcdir="src" destdir="${ClassesDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
 	</target>
 
     <!-- After Eclipse compile task, prepare JAR file -->
     <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
         <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
-        	<fileset dir="${InDir}"/>
             <fileset dir="src">
                 <patternset>
                     <include name="**/*.xml"/>
@@ -336,7 +333,7 @@ Log=    console
     </target>
     
     <target name="SetupCommon" description="common setup crap">
-        <copy file="new.html" todir="${OutDir}"/>
+        <copy file="resources/new.html" todir="${OutDir}"/>
         <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac">
             <arg value="-c"/>
             <arg value="cat jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
