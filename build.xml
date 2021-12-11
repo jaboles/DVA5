@@ -149,7 +149,7 @@
         <mkdir dir="${ClassesDir}"/>
         <exec executable="protoc" failonerror="true">
             <arg value="--java_out=src" />
-            <arg line="gtfs-realtime_1007_extension.proto" />
+            <arg value="src${file.separator}jb${file.separator}plasma${file.separator}gtfs${file.separator}gtfs-realtime_1007_extension.proto" />
         </exec>
 		<javac srcdir="src" destdir="${ClassesDir}" classpath="${BuildClasspath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
             <compilerarg value="-Xlint:unchecked"/>
