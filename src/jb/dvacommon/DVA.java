@@ -49,33 +49,6 @@ public class DVA {
     public static final String VersionString = "5.4.4";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
 
-    // Keep track of the applications own jars so that they don't get treated as sound libraries.
-    public static final String[] OWN_JARS_Array = new String[] {
-        "DVA.jar",
-        "jdom.jar",
-        "swixml.jar",
-        "jlfgr-1_0.jar",
-        "tritonus_share.jar",
-        "tritonus_remaining.jar",
-        "jna-5.10.0.jar",
-        "jna-platform-5.10.0.jar",
-        "jl1.0.1.jar",
-        "mp3spi1.9.5.jar",
-        "javatuples-1.2.jar",
-        "xuggle-xuggler-5.4.jar",
-        "slf4j-api-1.7.7.jar",
-        "slf4j-jdk14-1.7.7.jar",
-        "log4j-api-2.14.1.jar",
-        "log4j-core-2.14.1.jar",
-        "disruptor-3.4.4.jar",
-        "swingx-all-1.6.4.jar",
-        "azure-core-0.7.0.jar",
-        "azure-storage-2.2.0.jar",
-        "protobuf-java-3.19.1.jar",
-        "ant-contrib-1.0b3.jar"
-    };
-    public static final Set<String> OWN_JARS = new HashSet<>(Arrays.asList(OWN_JARS_Array));
-    
     // 'Special' sounds which are only shown after enabling the option
     public static final String[] SPECIAL_SOUNDS_Array = new String[] {
         "dTrog remix",
@@ -483,11 +456,9 @@ public class DVA {
                         }
                     } else if (path.toLowerCase().endsWith(".jar")) {
                         String jarFilename = path.substring(path.lastIndexOf(File.separatorChar) + 1);
-                        if (!OWN_JARS.contains(jarFilename)) {
-                            name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.length() - 4);
-                            if (!SPECIAL_SOUNDS.contains(name) || Settings.specialSoundsEnabled()) {
-                                getOrCreateSoundLibrary(name).addFile(soundDir);
-                            }
+                        name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.length() - 4);
+                        if (!SPECIAL_SOUNDS.contains(name) || Settings.specialSoundsEnabled()) {
+                            getOrCreateSoundLibrary(name).addFile(soundDir);
                         }
                     }
                 }
