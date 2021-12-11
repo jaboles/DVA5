@@ -1,13 +1,7 @@
 .DS_Store
 build
 output
-tools
 azure.secret
-.svn
 *.iws
-.metadata
-.settings
 *.bak
 Thumbs.db
-OpenJDK*
-jdk-*

@@ -2,12 +2,11 @@
 <!-- Configuration of the Ant build system to generate a Jar file -->
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
-    <exec executable="hostname" outputproperty="hostname"/>
+    <exec executable="hostname" outputproperty="hostname" failonerror="true"/>
     <property name="ClassesDir" value="build${file.separator}classes"/>
     <property name="OutDir" value="build${file.separator}Output"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
-    <property name="AppBundle" value="${OutDir}/DVA.app"/>
-    <property name="AppBundleContents" value="${AppBundle}/Contents/MacOS"/>
+    <property name="AppBundleContents" value="${OutDir}/DVA.app/Contents/MacOS"/>
     <path id="jars">
         <fileset dir="jars">
             <include name="*" />
@@ -129,7 +128,7 @@
             <cutdirsmapper dirs="1"/>
         </untar>
     </target>
-    <target name="FetchDeps.Windows" depends="BuildWinSetup.Check" if="isWindows">
+    <target name="FetchDeps.Windows" if="isWindows">
         <!-- Inno Setup -->
         <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}${file.separator}is.exe" verbose="true" skipexisting="true"/>
         <exec executable="${ToolsDir}${file.separator}is.exe" failonerror="true">
@@ -191,15 +190,40 @@
     </target>
 
     <!-- Builds the Mac app bundle. Windows uses a stub .exe launcher so no need to update it. -->
-    <target name="CleanMacApp" description="Clean the Mac DVA.app bundle">
-        <delete failonerror="false" dir="${AppBundle}"/>
-    </target>
-    <target name="UpdateMacApp" description="Update contents of the mac app" depends="CreateJar">
+    <target name="BuildMacApp" description="Update contents of the mac app" if="isMac" depends="CreateJar,SetupCommon">
         <copy todir="${OutDir}">
             <fileset dir="mac">
                 <include name="DVA.app/**"/>
             </fileset>
         </copy>
+        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+            <arg value="-replace"/>
+            <arg value="CFBundleGetInfoString"/>
+            <arg value="-string"/>
+            <arg value="${DVAVersion}"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
+        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+            <arg value="-replace"/>
+            <arg value="CFBundleShortVersionString"/>
+            <arg value="-string"/>
+            <arg value="${DVAVersion}"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
+        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+            <arg value="-replace"/>
+            <arg value="CFBundleVersion"/>
+            <arg value="-string"/>
+            <arg value="${DVAVersion}"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
+        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+            <arg value="-replace"/>
+            <arg value="NSHumanReadableCopyright"/>
+            <arg value="-string"/>
+            <arg value="Copyright © Jonathan Boles 1999-2021"/>
+            <arg value="DVA.app/Contents/Info.plist"/>
+        </exec>
         <copy todir="${AppBundleContents}" preservelastmodified="true">
         	<fileset dir=".">
                 <include name="log4j2.xml"/>
@@ -234,7 +258,7 @@
             </or>
         </condition>
     </target>
-    <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,UpdateMacApp" if="WillSignMacApp">
+    <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,BuildMacApp" if="WillSignMacApp">
         <apply executable="codesign">
             <arg line="-v -f -s '${SignIdentity}'"/>
             <fileset dir="${OutDir}/DVA.app/Contents/MacOS">
@@ -243,7 +267,7 @@
                 <include name="*.properties"/> <!-- TODO: user space -->
             </fileset>
         </apply>
-        <exec executable="codesign" dir="${OutDir}">
+        <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v -f -s '${SignIdentity}' DVA.app"/>
         </exec>
         <!-- verify codesign -->
@@ -251,39 +275,8 @@
             <arg line="-vv DVA.app"/>
         </exec>
         <!-- verify gatekeeper -->
-        <exec executable="spctl" dir="${OutDir}" failonerror="false">
+        <exec executable="spctl" dir="${OutDir}" failonerror="true">
             <arg line="-vv --assess --type execute DVA.app"/>
-        </exec>
-    </target>
-
-    <target name="RebuildMacApp" description="Clean/rebuild the mac app" if="isMac" depends="CleanMacApp,UpdateMacApp,SignMacApp,SetupCommon">
-        <exec executable="plutil" dir="${OutDir}">
-            <arg value="-replace"/>
-            <arg value="CFBundleGetInfoString"/>
-            <arg value="-string"/>
-            <arg value="${DVAVersion}"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
-        </exec>
-        <exec executable="plutil" dir="${OutDir}">
-            <arg value="-replace"/>
-            <arg value="CFBundleShortVersionString"/>
-            <arg value="-string"/>
-            <arg value="${DVAVersion}"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
-        </exec>
-        <exec executable="plutil" dir="${OutDir}">
-            <arg value="-replace"/>
-            <arg value="CFBundleVersion"/>
-            <arg value="-string"/>
-            <arg value="${DVAVersion}"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
-        </exec>
-        <exec executable="plutil" dir="${OutDir}">
-            <arg value="-replace"/>
-            <arg value="NSHumanReadableCopyright"/>
-            <arg value="-string"/>
-            <arg value="Copyright © Jonathan Boles 1999-2017"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
         </exec>
     </target>
 
@@ -303,11 +296,11 @@ Log=    console
 -addoverwrite ${ini}, 687,1,0
 -addoverwrite ${stringtable}, STRINGTABLE,1,0
 </echo>
-        <exec executable="${Wine}" osfamily="mac">
+        <exec executable="${Wine}" osfamily="mac" failonerror="true">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg line="${ResHackerDir}${file.separator}ResourceHacker.exe -script temp.rh -log console"/>
         </exec>
-        <exec executable="${ResHackerDir}${file.separator}ResourceHacker.exe" osfamily="windows">
+        <exec executable="${ResHackerDir}${file.separator}ResourceHacker.exe" osfamily="windows" failonerror="true">
             <arg line="-script temp.rh -log console"/>
         </exec>
         <delete file="temp.rh"/>
@@ -360,11 +353,11 @@ Log=    console
     
     <target name="SetupCommon" description="common setup crap">
         <copy file="resources/new.html" todir="${OutDir}"/>
-        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac">
+        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac" failonerror="true">
             <arg value="-c"/>
             <arg value="cat src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
-        <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows">
+        <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows" failonerror="true">
             <arg value="-command"/>
             <arg value="(gc src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
         </exec>
@@ -372,13 +365,13 @@ Log=    console
     </target>
     
     <!-- Build Mac setup -->
-    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="RebuildMacApp,SetupCommon">
+    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="BuildMacApp">
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
-        <exec executable="hdiutil">
+        <exec executable="hdiutil" failonerror="true">
             <arg line="create -megabytes ${DmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${OutDir}/${DmgName}.dmg"/>
         </exec>
-        <exec executable="hdiutil">
+        <exec executable="hdiutil" failonerror="true">
             <arg line="attach ${OutDir}/${DmgName}.dmg"/>
         </exec>
         <copy todir="${DmgMountPoint}" preservelastmodified="true">
@@ -389,42 +382,37 @@ Log=    console
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/bin/java"/>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/lib/jspawnhelper"/>
-        <exec executable="osascript">
+        <exec executable="osascript" failonerror="true">
             <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
         </exec>
         <sleep seconds="1"/>
-        <exec executable="umount">
+        <exec executable="umount" failonerror="true">
             <arg value="${DmgMountPoint}"/>
         </exec>
         <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
-        <exec executable="bzip2">
+        <exec executable="bzip2" failonerror="true">
             <arg line="--verbose --${bzip2compression} ${OutDir}/${DmgName}.dmg"/>
         </exec>
     </target>
     
     <!-- Build windows setup -->
-    <target name="BuildWinSetup.Check">
-    	<echo level="info">Checking for ${InnoSetupCompiler}</echo>
-        <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
-    </target>
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
-        <exec executable="sed" dir="${basedir}" osfamily="mac">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
+        <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
-            <arg value=".bak"/>
             <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
             <arg value="win${file.separator}setup.iss"/>
         </exec>
-        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows">
+        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows" failonerror="true">
             <arg value="-command"/>
             <arg value="(gc 'win${file.separator}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file 'win${file.separator}setup.iss'"/>
         </exec>
         <echo level="info">Inno Setup compression: ${innosetupcompression}</echo>
         <property name="innosetupargs" value="/Qp /Dinnosetupcompression=${innosetupcompression} /Dversion=${DVAVersion} win\setup.iss"/>
-        <exec executable="${Wine}" osfamily="mac">
+        <exec executable="${Wine}" osfamily="mac" failonerror="true">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg line="&quot;${InnoSetupCompiler}&quot; ${innosetupargs}"/>
         </exec>
-        <exec executable="${InnoSetupCompiler}" osfamily="windows">
+        <exec executable="${InnoSetupCompiler}" osfamily="windows" failonerror="true">
             <arg line="${innosetupargs}"/>
         </exec>
     </target>
@@ -435,7 +423,7 @@ Log=    console
         <available file="${SignKey}" property="SignKeyExists"/>
     </target>
     <target name="SignWinSetup" depends="SignWinSetup.Check" if="SignKeyExists">
-        <exec executable="signcode" dir="${OutDir}">
+        <exec executable="signcode" dir="${OutDir}" failonerror="true">
             <arg line="signcode -a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; DVA5Setup.exe"/>
         </exec>
     </target>
@@ -464,17 +452,16 @@ Log=    console
             </fileset>
         </copy>
         <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}bin${file.separator}dva"/>
-        <exec executable="sed" dir="${basedir}" osfamily="mac">
+        <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
-            <arg value=".bak"/>
             <arg value="s/[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/${DVAVersion}/"/>
             <arg value="linux${file.separator}debian${file.separator}control"/>
         </exec>
-        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows">
+        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows" failonerror="true">
             <arg value="-command"/>
             <arg value="(gc 'linux${file.separator}debian${file.separator}control' -raw) -replace '\d*\.\d*\.\d*', '${DVAVersion}' | out-file 'linux${file.separator}debian${file.separator}control'"/>
         </exec>
-        <exec executable="fakeroot" dir="${OutDir}">
+        <exec executable="fakeroot" dir="${OutDir}" failonerror="true">
             <arg value="dpkg"/>
             <arg value="--build"/>
             <arg value="debian"/>
@@ -497,7 +484,7 @@ Log=    console
         </copy>
     </target>
     
-    <target name="DevBuild" description="Fast dev build" depends="Clean,UpdateMacApp"/>
+    <target name="DevBuild" description="Fast dev build" depends="Clean,BuildMacApp"/>
 
     <target name="SoundJars">
         <foreach target="SoundJar" param="dir">
