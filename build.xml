@@ -486,7 +486,9 @@ Log=    console
         </copy>
     </target>
     
-    <target name="DevBuild" description="Fast dev build" depends="Clean,BuildMacApp"/>
+    <target name="Run" description="Fast dev build" depends="BuildMacApp">
+        <exec executable="build/Output/DVA.app/Contents/MacOS/dva"/>
+    </target>
 
     <target name="SoundJars">
         <foreach target="SoundJar" param="dir">
