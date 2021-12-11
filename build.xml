@@ -130,7 +130,7 @@
 
     <!-- Increments the build number -->
     <target name="IncrementBuildNumber" description="Increment build number">
-        <buildnumber file="resources${file.seprator}buildnumber.txt"/>
+        <buildnumber file="resources${file.seperator}buildnumber.txt"/>
     </target>
 
     <target name="Clean" description="Clean output folder">
@@ -353,9 +353,6 @@ Log=    console
             <include name="win/**"/>
             <include name="resources/**"/>
             <include name="*.xml"/>
-            <include name=".classpath"/>
-            <include name=".project"/>
-            <include name=".externalToolBuilders/**"/>
             <include name=".gitignore"/>
         </zip>
     </target>
