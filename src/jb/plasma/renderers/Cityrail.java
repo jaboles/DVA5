@@ -41,7 +41,7 @@ public abstract class Cityrail extends Drawer
     {
         try
         {
-            airportIcon = ImageIO.read(Cityrail.class.getResourceAsStream("/resources/dva_icon.png"));
+            airportIcon = ImageIO.read(Cityrail.class.getResourceAsStream("/dva_icon.png"));
         }
         catch (IOException ex)
         {

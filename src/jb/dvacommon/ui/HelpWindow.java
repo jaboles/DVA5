@@ -36,7 +36,7 @@ public class HelpWindow {
     {
         frame.setTitle("Help");
         try {
-            helpPane.setPage(HelpWindow.class.getResource("/resources/help.html"));
+            helpPane.setPage(HelpWindow.class.getResource("/help.html"));
         } catch (IOException ex) {
             ExceptionReporter.reportException(ex);
         }
@@ -47,7 +47,7 @@ public class HelpWindow {
     {
         frame.setTitle("Version History");
         try {
-            helpPane.setPage(HelpWindow.class.getResource("/resources/versionhistory.html"));
+            helpPane.setPage(HelpWindow.class.getResource("/versionhistory.html"));
         } catch (IOException ex) {
             ExceptionReporter.reportException(ex);
         }

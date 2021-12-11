@@ -141,10 +141,10 @@
 	<target name="Compile" description="Compile java code">
         <mkdir dir="${InDir}"/>
         <exec executable="protoc" failonerror="true">
-            <arg value="--java_out=." />
+            <arg value="--java_out=src" />
             <arg line="gtfs-realtime_1007_extension.proto" />
         </exec>
-		<javac srcdir="." destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
+		<javac srcdir="src" destdir="${InDir}" classpath="${Classpath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no"/>
 	</target>
 
     <!-- After Eclipse compile task, prepare JAR file -->
@@ -152,15 +152,18 @@
         <jar jarfile="${OutDir}/DVA.jar" manifest="Manifest" level="1">
         	<fileset dir="${InDir}"/>
         	<fileset dir=".">
-        		<patternset id="jar-resources">
-                    <include name="buildnumber.txt"/>
-                    <include name="**/*.xml"/>
-                    <include name="jb/**/*.properties"/>
-                    <include name="jb/**/*.png"/>
-                    <include name="resources/**"/>
-          			<exclude name=".metadata/**"/>
-        	    </patternset>
+                <include name="buildnumber.txt"/>
         	</fileset>
+            <fileset dir="src">
+                <patternset>
+                    <include name="**/*.xml"/>
+                    <include name="**/*.properties"/>
+                    <include name="**/*.png"/>
+                </patternset>
+            </fileset>
+            <fileset dir="resources">
+                <include name="*"/>
+            </fileset>
     	</jar>
     </target>
     

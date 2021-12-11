@@ -25,7 +25,7 @@ public class LicenceWindow {
         SwingEngine renderer = new SwingEngine(this);
         try {
             frame = (JDialog) renderer.render(LicenceWindow.class.getResource("/jb/dvacommon/ui/resources/licencewindow.xml"));
-            licencePane.setPage(LicenceWindow.class.getResource("/resources/licence.html"));
+            licencePane.setPage(LicenceWindow.class.getResource("/licence.html"));
         } catch (Exception e) {
             ExceptionReporter.reportException(e);
         }

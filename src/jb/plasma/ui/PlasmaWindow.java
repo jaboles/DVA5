@@ -72,7 +72,7 @@ public class PlasmaWindow extends JFrame
         
         // Set some window properties (icon, title, background)
         setDefaultCloseOperation(mode.TerminateOnClose ? WindowConstants.EXIT_ON_CLOSE : WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(getToolkit().getImage(PlasmaWindow.class.getResource("/resources/pse16.png")));
+        setIconImage(getToolkit().getImage(PlasmaWindow.class.getResource("/pse16.png")));
         setTitle(title);
         getContentPane().setBackground(Color.black);
         getContentPane().add(plasmaPanel);

@@ -11,7 +11,7 @@ import jb.dva.ui.DVAUI;
 public class SoundListCellRenderer extends DefaultListCellRenderer {
     private static final long serialVersionUID = 1L;
 
-    private Icon inheritedIcon = new ImageIcon(DVAUI.class.getResource("/resources/inherited.gif"));
+    private Icon inheritedIcon = new ImageIcon(DVAUI.class.getResource("/inherited.gif"));
 
     public Component getListCellRendererComponent(
             JList<?> list,

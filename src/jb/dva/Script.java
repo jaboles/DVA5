@@ -115,9 +115,9 @@ public class Script {
             String token = findNextToken(pos, library);
             if (token.length() == 1 && isPunctuation(token.charAt(0))) {
                 if (token.charAt(0) == ',') {
-                    translatedData.add(MediaConcatenator2.class.getResource("/resources/silence50msec.wav"));
+                    translatedData.add(MediaConcatenator2.class.getResource("/silence50msec.wav"));
                 } else {
-                    translatedData.add(MediaConcatenator2.class.getResource("/resources/silence200msec.wav"));
+                    translatedData.add(MediaConcatenator2.class.getResource("/silence200msec.wav"));
                 }
                 canonical.append(token);
             } else if (token.length() == 1 && token.charAt(0) == '`') {

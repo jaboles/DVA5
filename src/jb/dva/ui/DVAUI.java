@@ -634,7 +634,7 @@ public class DVAUI {
 
     public void failSound()
     {
-        new Player(Collections.singletonList(DVAUI.class.getResource("/resources/Basso.wav")), null).start();
+        new Player(Collections.singletonList(DVAUI.class.getResource("/Basso.wav")), null).start();
     }
 
     private boolean abortDestructiveAction(ActionEvent e) {

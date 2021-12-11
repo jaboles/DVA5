@@ -36,9 +36,9 @@ public abstract class Drawer implements Cloneable
     {
         try
         {
-            ArialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/arial.ttf"));
-            ArialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/arialbd.ttf"));
-            RobotoMedium = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/resources/Roboto-Medium.ttf"));
+            ArialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arial.ttf"));
+            ArialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arialbd.ttf"));
+            RobotoMedium = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/Roboto-Medium.ttf"));
         }
         catch (Exception ex)
         {
