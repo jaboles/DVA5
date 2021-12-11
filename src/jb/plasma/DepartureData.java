@@ -1,10 +1,7 @@
 package jb.plasma;
 import java.awt.Color;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Calendar;
 import jb.common.StringUtilities;
 
 // Represents info about a single departure being displayed on the indicator board
@@ -13,7 +10,7 @@ public abstract class DepartureData
     // Default list of service types shown in the combo box
     public static String[] DefaultServiceTypes = new String[] { "All Stops", "Limited Stops", "Express" };
     // Format string for editing departure time
-    private static DateTimeFormatter DateEditFormat = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DateEditFormat = DateTimeFormatter.ofPattern("HH:mm");
 
     public String Destination = "";  // Destination e.g. "Central"
     public String Destination2 = ""; // Optional secondary destination e.g. "via City Circle"

@@ -30,9 +30,9 @@ public class RotatedIcon implements Icon
         ABOUT_CENTER
     }
 
-    private Icon icon;
+    private final Icon icon;
 
-    private Rotate rotate;
+    private final Rotate rotate;
 
     private double angle;
 

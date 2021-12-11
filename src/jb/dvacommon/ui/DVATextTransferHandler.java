@@ -22,7 +22,7 @@ public class DVATextTransferHandler extends TransferHandler
 {
     private static final long serialVersionUID = 1L;
 
-    private Script currentScript;
+    private final Script currentScript;
     
     public DVATextTransferHandler(Script currentScript)
     {
@@ -46,8 +46,7 @@ public class DVATextTransferHandler extends TransferHandler
         {
             JTextComponent component = (JTextComponent)supp.getComponent();
             int index = ((JTextComponent.DropLocation)supp.getDropLocation()).getIndex();
-            ArrayList<Integer> insertPositions = new ArrayList<>();
-            insertPositions.addAll(currentScript.getTranslatedDataOffsets());
+            ArrayList<Integer> insertPositions = new ArrayList<>(currentScript.getTranslatedDataOffsets());
             insertPositions.add(component.getText().length());
 
             // Find nearest possible insert position to the TransferSupport's index.
@@ -159,7 +158,7 @@ public class DVATextTransferHandler extends TransferHandler
     
     Highlighter.HighlightPainter insertHighlightPainter = new InsertHighlightPainter();
 
-    class InsertHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
+    private static class InsertHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
         public InsertHighlightPainter() {
             super(new Color(0, 0, 255, 150));
         }

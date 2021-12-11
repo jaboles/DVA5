@@ -49,10 +49,7 @@ public class GtfsHttpClient
             ZipEntry zipEntry = zis.getNextEntry();
 
             while (zipEntry != null) {
-                boolean isDirectory = false;
-                if (zipEntry.getName().endsWith(File.separator)) {
-                    isDirectory = true;
-                }
+                boolean isDirectory = zipEntry.getName().endsWith(File.separator);
 
                 Path newPath = targetDir.resolve(zipEntry.getName()).normalize();
 

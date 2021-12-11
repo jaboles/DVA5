@@ -43,16 +43,11 @@ public class TextIcon implements Icon, PropertyChangeListener
         VERTICAL
     }
 
-    private JComponent component;
-
-    private Layout layout;
-
+    private final JComponent component;
+    private final Layout layout;
     private String text;
-
     private Font font;
-
     private Color foreground;
-
     private int padding;
 
     //  Used for the implementation of Icon interface
@@ -283,7 +278,7 @@ public class TextIcon implements Icon, PropertyChangeListener
         //  The "desktophints" is supported in JDK6
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Map<?,?> map = Map.class.cast(toolkit.getDesktopProperty("awt.font.desktophints"));
+        Map<?,?> map = (Map)toolkit.getDesktopProperty("awt.font.desktophints");
 
         if (map != null)
         {

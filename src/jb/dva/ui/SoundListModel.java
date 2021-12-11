@@ -20,7 +20,7 @@ public class SoundListModel extends AbstractListModel<SoundReference> {
     final static Logger logger = LogManager.getLogger(SoundListModel.class);
     private List<String> translatedKeys = new ArrayList<>();
     private SoundLibrary library;
-    private List<String> filters = new LinkedList<>();
+    private final List<String> filters = new LinkedList<>();
 
     public void setSoundLibrary(SoundLibrary l) {
         this.library = l;
@@ -50,8 +50,7 @@ public class SoundListModel extends AbstractListModel<SoundReference> {
         {
             while (it.hasNext()) {
                 String s = it.next();
-                for (int i = 0; i < filters.size(); i++) {
-                    String filter = filters.get(i);
+                for (String filter : filters) {
                     int filterScore = matchesFilter(filter, s);
                     /*if (!filterMatches.containsKey(filterScore)) {
                         filterMatches.put(filterScore, new HashSet<String>());
@@ -66,8 +65,7 @@ public class SoundListModel extends AbstractListModel<SoundReference> {
                         // If found exact match, bail.
                         if (i == 0 && highestScore == filter.length()) break;
                     }*/
-                    if (filterScore == filter.length())
-                    {
+                    if (filterScore == filter.length()) {
                         bestFilterMatches.add(s);
                     }
                 }

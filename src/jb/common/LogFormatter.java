@@ -30,7 +30,7 @@ public class LogFormatter extends Formatter
                 PrintWriter pw = new PrintWriter(sw);
                 record.getThrown().printStackTrace(pw);
                 pw.close();
-                builder.append(sw.toString());
+                builder.append(sw);
             } catch (Exception ignored) {
             }
         }

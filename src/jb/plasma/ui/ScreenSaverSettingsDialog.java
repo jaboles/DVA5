@@ -19,7 +19,7 @@ import org.swixml.SwingEngine;
 public class ScreenSaverSettingsDialog
 {
     private JDialog dialog;
-    private PlasmaUI ui;
+    private final PlasmaUI ui;
 
     public ScreenSaverSettingsDialog()
     {
@@ -50,7 +50,7 @@ public class ScreenSaverSettingsDialog
         return dialog;
     }
     
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action okAction = new AbstractAction("OK", null) {
         public void actionPerformed(ActionEvent e)
         {
@@ -60,7 +60,6 @@ public class ScreenSaverSettingsDialog
         }
     };
     
-    @SuppressWarnings("serial")
     public Action cancelAction = new AbstractAction("Cancel", null) {
         public void actionPerformed(ActionEvent e)
         {

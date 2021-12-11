@@ -15,10 +15,10 @@ public class Resources
     public static Icon redIcon = new ImageIcon(DVAUI.class.getResource("/indicatorIconRed4.png"));
 
     // An instance of the private subclass of the default highlight painter
-    public static Highlighter.HighlightPainter errorHighlightPainter = new Resources().new ErrorHighlightPainter();
+    public static Highlighter.HighlightPainter errorHighlightPainter = new ErrorHighlightPainter();
     
     // A private subclass of the default highlight painter
-    public class ErrorHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
+    public static class ErrorHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
         public ErrorHighlightPainter() {
             super(new Color(255, 0, 0, 60));
         }

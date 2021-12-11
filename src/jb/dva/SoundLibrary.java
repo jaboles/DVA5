@@ -15,19 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -61,7 +52,7 @@ public class SoundLibrary implements Serializable {
         keys = new HashSet<>();
         sortedKeys = new LinkedList<>();
 
-        Collections.sort(librariesToCombine, (o1, o2) -> o1.size() - o2.size());
+        librariesToCombine.sort(Comparator.comparingInt(SoundLibrary::size));
         for (SoundLibrary lib : librariesToCombine)
         {
             addFallback(lib);
@@ -117,7 +108,7 @@ public class SoundLibrary implements Serializable {
         return this.icon;
     }
 
-    public void populate() throws IOException, UnsupportedAudioFileException {
+    public void populate() throws IOException {
         List<URL> urls = new LinkedList<>();
         for (File file : this.files) {
             if (file.isFile() && file.getPath().toLowerCase().endsWith(".jar")) {
@@ -149,7 +140,7 @@ public class SoundLibrary implements Serializable {
         }
     }
 
-    private void populateUrlTable(List<URL> urls) throws UnsupportedAudioFileException, IOException
+    private void populateUrlTable(List<URL> urls) throws IOException
     {
         logger.debug("Populating library {}", getName());
         for (URL u : urls)

@@ -3,8 +3,8 @@ package jb.common;
 import java.util.Iterator;
 
 public class Range implements Iterable<Integer> {
-    private int min;
-    private int count;
+    private final int min;
+    private final int count;
 
     public Range(int min, int count) {
         this.min = min;

@@ -17,7 +17,7 @@ public class Timetable implements Serializable
     public Map<String, TimetableLine> lines;
     public List<String> lineNames;
     public int type;
-    private String name;
+    private final String name;
 
     public Timetable(String name, int type)
     {

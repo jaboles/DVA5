@@ -15,11 +15,11 @@ import javax.sound.sampled.AudioInputStream;
 
 public class GetDataLineLevelAudioInputStream extends AudioInputStream {
     public static final int REFRESHES_PER_SEC = 35;
-    private int BYTES_PER_SAMPLE;
+    private final int BYTES_PER_SAMPLE;
     private double[] levels;
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    private int frameSize;
-    private boolean isBigEndian;
+    private final int frameSize;
+    private final boolean isBigEndian;
 
     public GetDataLineLevelAudioInputStream(InputStream is, AudioFormat format, long length) {
         super(is, format, length);
@@ -59,7 +59,7 @@ public class GetDataLineLevelAudioInputStream extends AudioInputStream {
         levels = new double[sampleCount];
 
         // Select a bunch of data from the sample range, and round it to the frame size.
-        int actualBytesUsedPerSample = BYTES_PER_SAMPLE > 200 ? 200 : BYTES_PER_SAMPLE;
+        int actualBytesUsedPerSample = Math.min(BYTES_PER_SAMPLE, 200);
         actualBytesUsedPerSample -= (actualBytesUsedPerSample % frameSize);
 
         for (int i = 0; i < sampleCount; i++) {
@@ -69,13 +69,13 @@ public class GetDataLineLevelAudioInputStream extends AudioInputStream {
             for (int j = 0; j < actualBytesUsedPerSample; j += frameSize) {
                 if (frameSize == 1) {
                     sampleValue = data[startOfSample+j];
-                } else if (frameSize == 2 && isBigEndian) {
-                    sampleValue = (data[startOfSample+j]) << 8 + data[startOfSample + j + 1];
+                } else if (frameSize == 2) {
+                    if (isBigEndian) {
+                        sampleValue = (data[startOfSample+j]) << 8 + data[startOfSample + j + 1];
+                    } else {
+                        sampleValue = data[startOfSample+j] + (data[startOfSample + j + 1]) << 8;
+                    }
                     sampleValue /= 256.0;
-                } else if (frameSize == 2 && !isBigEndian) {
-                    sampleValue = data[startOfSample+j] + (data[startOfSample + j + 1]) << 8;
-                    sampleValue /= 256.0;
-                    //System.out.println(sampleValue);
                 }
                 sum += Math.pow(sampleValue, 2);
             }

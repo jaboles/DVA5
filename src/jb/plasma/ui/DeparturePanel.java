@@ -27,7 +27,6 @@ import jb.plasma.ManualDepartureData;
 import org.swixml.SwingEngine;
 
 // Panel for editing a train departure.
-@SuppressWarnings("serial")
 public class DeparturePanel extends JPanel
 {
     private Script script;
@@ -173,6 +172,7 @@ public class DeparturePanel extends JPanel
         stationsValue.verify();
     }
 
+    @SuppressWarnings("unused")
     public Action customAnnouncementBrowseAction = new AbstractAction("Choose custom announcement", null) {
         public void actionPerformed(ActionEvent e) {
             JFileChooser dlg = new JFileChooser();

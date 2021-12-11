@@ -16,7 +16,6 @@ public class CityrailLine
     public Color Color2;
     public Color TextColor;
     public String LogoImageFilename;
-    public List<CityrailLine> Continuations;
 
     public static CityrailLine T1_NORTH_SHORE;
     public static CityrailLine T1_WESTERN;
@@ -44,8 +43,8 @@ public class CityrailLine
     public static Color pink = new Color(204, 0, 160);
     public static Color darkBlue = new Color(0, 43, 127);
     public static Color darkRed = new Color(129, 47, 51);
-    public static Color lightBlue = new Color(121, 213, 242);
-    public static Color lightPurple = new Color(140, 127, 179);
+    //public static Color lightBlue = new Color(121, 213, 242);
+    //public static Color lightPurple = new Color(140, 127, 179);
 
     static
     {

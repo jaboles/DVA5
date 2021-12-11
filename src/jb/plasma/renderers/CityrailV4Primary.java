@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 public class CityrailV4Primary extends CityrailV4Landscape
 {
     public BufferedImage LineLogo;
-    private String dueOutString;
 
     public CityrailV4Primary() {
         stationListInc = 0.0528 / PlasmaPanel.FPS;
@@ -72,14 +71,14 @@ public class CityrailV4Primary extends CityrailV4Landscape
                 int h = dueOut.getValue0();
                 int m = dueOut.getValue1();
                 if (h > 0 || m > 0) {
-                    dueOutString = Integer.toString(m) + " min";
+                    String dueOutString = m + " min";
                     if (h > 0) {
-                        dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                        dueOutString = h + " hr " + dueOutString;
                     }
                     drawStringR(dueOutString, RightMargin, 0.95, OrangeTextColor, PlatformDepartsFont);
                 }
             }
-            drawMiniTextBox(0.77, 0.39, Integer.toString(d0.Cars) + " carriages");
+            drawMiniTextBox(0.77, 0.39, d0.Cars + " carriages");
             if (d0.Type != null && !d0.Type.equals("")) {
                 drawMiniTextBox(0.77, 0.46, d0.Type);
             }
@@ -90,13 +89,11 @@ public class CityrailV4Primary extends CityrailV4Landscape
             fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
             String[] stationList = d0.Stops;
             for (int i = 0; i < stationList.length; i++) {
-                double y = stationListPos + (i * stationListSeparation);
                 int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
                 drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
 
                 // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
                 if (shouldScroll) {
-                    y = stationListPos + ((i + stationList.length + 5) * stationListSeparation);
                     yAbs = round(stationListPos * height) + round((i + stationList.length + 5) * stationListSeparation * height);
                     drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
                 }

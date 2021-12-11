@@ -2,7 +2,7 @@ package jb.common;
 
 public class OSDetection {
 
-    private static String OS = System.getProperty("os.name").toLowerCase();
+    private static final String OS = System.getProperty("os.name").toLowerCase();
 
     public static void main(String[] args) {
 

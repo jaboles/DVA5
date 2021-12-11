@@ -10,12 +10,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import jb.common.sound.xuggle.MediaConcatenator2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 // Represents a DVA announcement, and handles translation into a list of sounds.
 public class Script {
-    final static Logger logger = LogManager.getLogger(SoundLibrary.class);
     String defaultVoice;
     String script;
     String lscript;
@@ -24,8 +21,8 @@ public class Script {
     ArrayList<URL> translatedData;
     ArrayList<Integer> translatedDataOffsets;
 
-    private static char[] punctuation = { '.', ',', ':', ';' };
-    private static char[] whitespace = { ' ', '\r', '\n', '\t' };
+    private static final char[] punctuation = { '.', ',', ':', ';' };
+    private static final char[] whitespace = { ' ', '\r', '\n', '\t' };
 
     public Script(String voice, String script) {
         this.defaultVoice = voice;
@@ -138,8 +135,6 @@ public class Script {
                         preferredInflection = SoundInflection.FALLING;
                     } else if (nextToken == null) {
                         preferredInflection = SoundInflection.FALLING;
-                    } else {
-                        preferredInflection = SoundInflection.NONE;
                     }
                 }
                 URL u;

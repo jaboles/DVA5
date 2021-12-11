@@ -73,7 +73,7 @@ import org.swixml.SwingEngine;
 
 public class DVAUI {
     private JPanel panel;
-    private DVA controller;
+    private final DVA controller;
     private boolean documentModified = false;
 
     // Outlets
@@ -114,7 +114,6 @@ public class DVAUI {
 
     final static Logger logger = LogManager.getLogger(DVAUI.class);
 
-    @SuppressWarnings("serial")
     public DVAUI(final DVA controller) {
         this.controller = controller;
         this.suggestedSoundListModel = new SoundListModel();
@@ -139,7 +138,7 @@ public class DVAUI {
             dvaTextArea.initialize(controller, currentScript, indicatorIconLabel, verifyHandler, suggestedSoundList, suggestedSoundListModel);
 
             Collection<SoundLibrary> soundLibraryList = controller.getSoundLibraryList();
-            voiceComboBox.setListData(soundLibraryList.toArray(new SoundLibrary[soundLibraryList.size()]));
+            voiceComboBox.setListData(soundLibraryList.toArray(new SoundLibrary[0]));
             voiceComboBox.setSelectedIndex(0);
             voiceComboBox.setCellRenderer(new SoundLibraryListCellRenderer());
             
@@ -366,7 +365,6 @@ public class DVAUI {
         }
     }
 
-    @SuppressWarnings("serial")
     public Action voiceLibraryToggleAction = new AbstractAction("Show/Hide Voice Library List", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/History16.gif"))) {
         public void actionPerformed(ActionEvent e) {
             boolean visible = voicePane.isVisible();
@@ -375,21 +373,18 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action soundInfoAction = new AbstractAction("Show/Hide Sound Info", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Information16.gif"))) {
         public void actionPerformed(ActionEvent e) {
             soundInfoPanel.setVisible(!soundInfoPanel.isVisible());
         }
     };
 
-    @SuppressWarnings("serial")
     public Action playSavedAction = new AbstractAction("Play", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/media/Volume24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             play(this, true);
         }
     };
 
-    @SuppressWarnings("serial")
     public Action playCurrentAction = new AbstractAction("Play", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/media/Volume24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             play(this, false);
@@ -439,27 +434,24 @@ public class DVAUI {
             });
 
             final Player p = controller.play(levelMeterPanel, script, longConcatCallback, afterConcatCallback);
-            new Thread() {
-                public void run() {
-                    try {
-                        p.join();
+            new Thread(() -> {
+                try {
+                    p.join();
 
-                        stopAction.setEnabled(false);
-                        playSavedAction.setEnabled(true);
-                        playCurrentAction.setEnabled(true);
-                        afterConcatCallback.run();
-                        playStopButton.setAction(action);
-                    } catch (InterruptedException ignored) {
-                    }
+                    stopAction.setEnabled(false);
+                    playSavedAction.setEnabled(true);
+                    playCurrentAction.setEnabled(true);
+                    afterConcatCallback.run();
+                    playStopButton.setAction(action);
+                } catch (InterruptedException ignored) {
                 }
-            }.start();
+            }).start();
             p.start();
         } else {
             JOptionPane.showMessageDialog(panel, "Sound library named '" + script.getVoice() + "' was not found.");
         }
     }
 
-    @SuppressWarnings("serial")
     public Action stopAction = new AbstractAction("Stop", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/media/Stop24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
@@ -471,7 +463,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action newAction = new AbstractAction("New", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/New24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             if (documentModified && abortDestructiveAction(e)) return;
@@ -483,7 +474,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action openAction = new AbstractAction("Load", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Open24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             if (documentModified && abortDestructiveAction(e)) return;
@@ -497,7 +487,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action moveUpAction = new AbstractAction("Up", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/navigation/Up24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             int index = announcementComboBox.getSelectedIndex();
@@ -510,7 +499,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action moveDownAction = new AbstractAction("Down", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/navigation/Down24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             int index = announcementComboBox.getSelectedIndex();
@@ -523,7 +511,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action renameAction = new AbstractAction("Rename", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/SaveAs24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog("Choose a name for this announcement");
@@ -531,7 +518,7 @@ public class DVAUI {
 
             for (int i = 0; i < announcementListModel.size(); i++)
             {
-                if ((announcementListModel.getElementAt(i)).getName().toLowerCase().equals(name.toLowerCase()))
+                if ((announcementListModel.getElementAt(i)).getName().equalsIgnoreCase(name))
                 {
                     if (confirmOverwrite())
                     {
@@ -551,7 +538,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action deleteAction = new AbstractAction("Delete", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Delete24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             Object ann = announcementComboBox.getSelectedValue();
@@ -563,7 +549,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action exportAction = new AbstractAction("Export", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/SaveAs24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             int errorPos = controller.verify(currentScript);
@@ -604,7 +589,6 @@ public class DVAUI {
         }
     };
 
-    @SuppressWarnings("serial")
     public Action saveAction = new AbstractAction("Save", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Save24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog("Choose a name for this announcement");
@@ -612,7 +596,7 @@ public class DVAUI {
 
             for (int i = 0; i < announcementListModel.size(); i++)
             {
-                if ((announcementListModel.getElementAt(i)).getName().toLowerCase().equals(name.toLowerCase()))
+                if ((announcementListModel.getElementAt(i)).getName().equalsIgnoreCase(name))
                 {
                     if (confirmOverwrite())
                     {
@@ -642,11 +626,7 @@ public class DVAUI {
         if (retval == JOptionPane.YES_OPTION) {
             saveAction.actionPerformed(e);
             return false;
-        } else if (retval == JOptionPane.NO_OPTION) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return retval != JOptionPane.NO_OPTION;
     }
 
     private boolean confirmDelete() {
@@ -665,7 +645,7 @@ public class DVAUI {
         if (updateAnnouncementStatsTask != null) {
             updateAnnouncementStatsTask.cancel(true);
         }
-        updateAnnouncementStatsTask = updateAnnouncementStatsWorker.schedule((Runnable) () -> {
+        updateAnnouncementStatsTask = updateAnnouncementStatsWorker.schedule(() -> {
             int soundCount = 0;
             float duration = 0;
             for (Object o : al) {
@@ -682,14 +662,13 @@ public class DVAUI {
             }
 
             String durationString = new DecimalFormat("0.##").format(duration) + " s";
-            announcementStatsLabel.setText(Integer.toString(soundCount) + " sounds (" + durationString + ")");
+            announcementStatsLabel.setText(soundCount + " sounds (" + durationString + ")");
         }, 300, TimeUnit.MILLISECONDS);
     }
 
     public static void flattenJSplitPane(JSplitPane splitPane) {
         splitPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         BasicSplitPaneUI flatDividerSplitPaneUI = new BasicSplitPaneUI() {
-            @SuppressWarnings("serial")
             public BasicSplitPaneDivider createDefaultDivider() {
                 return new BasicSplitPaneDivider(this) {
                     public void setBorder(Border b) {
@@ -724,7 +703,7 @@ public class DVAUI {
             }
             bin.reset();
 
-            float duration = size / decodedFormat.getFrameSize() / decodedFormat.getFrameRate();
+            float duration = (float)size / decodedFormat.getFrameSize() / decodedFormat.getFrameRate();
             in.close();
             return duration;
         } catch (UnsupportedAudioFileException | IOException e) {

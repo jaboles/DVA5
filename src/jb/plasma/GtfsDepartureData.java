@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 public class GtfsDepartureData extends DepartureData
 {
     private static final Logger Logger = LogManager.getLogger(GtfsDepartureData.class);
-    private TripInstance tripInstance;
+    private final TripInstance tripInstance;
 
     public GtfsDepartureData(TripInstance ti)
     {

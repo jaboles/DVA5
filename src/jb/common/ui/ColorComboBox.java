@@ -12,7 +12,7 @@ public class ColorComboBox extends JComboBox<Object>
 {
     private static final long serialVersionUID = 1L;
     private Color lastSelected = Color.white;
-    private LinkedList<Color> addedColors = new LinkedList<Color>();
+    private final LinkedList<Color> addedColors = new LinkedList<>();
 
     public ColorComboBox()
     {
@@ -59,7 +59,7 @@ public class ColorComboBox extends JComboBox<Object>
         }
     }
 
-    public class ColorComboBoxRenderer extends BasicComboBoxRenderer
+    public static class ColorComboBoxRenderer extends BasicComboBoxRenderer
     {
         private static final long serialVersionUID = 1L;
 

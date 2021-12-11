@@ -29,7 +29,7 @@ import org.swixml.SwingEngine;
 public abstract class BaseUpdater
 {
     final static Logger logger = LogManager.getLogger(BaseUpdater.class);
-    protected URL baseUrl = null;
+    protected URL baseUrl;
 
     public BaseUpdater(URL baseUrl)
     {
@@ -59,7 +59,8 @@ public abstract class BaseUpdater
                         File downloaded = downloadToTemp(getDownloadUrl(version), pw);
                         logger.debug("Downloaded update to {}", downloaded != null ? downloaded.getAbsolutePath() : "<null>");
                         pw.updateProgressComplete("Download complete - " + (OSDetection.isMac() ? "installing" : "launching installer"));
-                        launchInstaller(downloaded);
+                        if (downloaded != null)
+                            launchInstaller(downloaded);
                     }
                 }
                 catch (InterruptedException ex)
@@ -95,27 +96,20 @@ public abstract class BaseUpdater
         final int contentLength = uc.getContentLength();
         if (totalProgress == null) totalProgress = contentLength;
 
-        byte data[] = new byte[102400];
+        byte[] data = new byte[102400];
         int totalRead = 0;
 
-        InputStream in = null;
         try (
-            OutputStream fout = new BufferedOutputStream(new FileOutputStream(destination), 1048576)
-        )
-        {
-            in = new BufferedInputStream(url.getPath().toLowerCase().endsWith(".gz")
-                    ? new GZIPInputStream(uc.getInputStream())
-                    : uc.getInputStream());
-            for (int count; (count = in.read(data, 0, data.length)) != -1; totalRead += count)
-            {
+            OutputStream fout = new BufferedOutputStream(new FileOutputStream(destination), 1048576);
+            InputStream in = new BufferedInputStream(url.getPath().toLowerCase().endsWith(".gz")
+                ? new GZIPInputStream(uc.getInputStream())
+                : uc.getInputStream())) {
+            for (int count; (count = in.read(data, 0, data.length)) != -1; totalRead += count) {
                 if (Thread.interrupted()) return false;
                 fout.write(data, 0, count);
                 pw.updateProgress(startingProgressPosition + totalRead, totalProgress, "Downloading", currentFile);
             }
             pw.disableCancel();
-        }
-        finally {
-            if (in != null) in.close();
         }
 
         return totalRead == contentLength;
@@ -129,7 +123,7 @@ public abstract class BaseUpdater
     
     public URL getDownloadUrl(String version) throws MalformedURLException
     {
-        String filename = null;
+        String filename;
         if (OSDetection.isMac())
             filename = "DVA5.dmg.bz2";
         else if (OSDetection.isWindows())
@@ -190,7 +184,7 @@ public abstract class BaseUpdater
             if (dest != null && dest.exists()) {
                 dest.delete();
             }
-            logger.info("Caught exception doing incremental update: {}", e);
+            logger.info("Caught exception doing incremental update:", e);
             e.printStackTrace(System.err);
         }
         return -1;

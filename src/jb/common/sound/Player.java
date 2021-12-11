@@ -107,8 +107,8 @@ public class Player extends Thread {
                         }
                     }
                 }
-                File cacheFile = new File(cacheDir, Long.toString(combinedHash) + ".mp3");
-                File tempCacheFile = new File(cacheDir, Long.toString(combinedHash) + ".temp.mp3");
+                File cacheFile = new File(cacheDir, combinedHash + ".mp3");
+                File tempCacheFile = new File(cacheDir, combinedHash + ".temp.mp3");
                 logger.debug("Using cache file: {}", cacheFile.getPath());
                 
                 final TimerTask longConcatTimerTask = new TimerTask() {
@@ -308,10 +308,10 @@ public class Player extends Thread {
         interrupt();
     }
 
-    public class LevelMeterThread extends Thread
+    public static class LevelMeterThread extends Thread
     {
         private double[] levels;
-        private LevelMeterPanel levelMeterPanel;
+        private final LevelMeterPanel levelMeterPanel;
 
         public LevelMeterThread(LevelMeterPanel levelMeterPanel)
         {

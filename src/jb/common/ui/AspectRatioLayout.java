@@ -10,7 +10,7 @@ import java.awt.Rectangle;
 // A layout manager that supports a locked aspect ratio for its only component.
 public class AspectRatioLayout implements LayoutManager {
 
-    private float ratio;
+    private final float ratio;
     private int compCount = 0;
 
     public AspectRatioLayout(float ratio) {

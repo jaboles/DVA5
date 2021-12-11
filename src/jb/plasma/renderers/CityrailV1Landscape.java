@@ -3,7 +3,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import jb.plasma.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 
@@ -95,7 +94,7 @@ public class CityrailV1Landscape extends CityrailV1
             if (isConcourse) {
                 drawStringC(Integer.toString(d0.Platform), 0.9, 0.25, TextWhite, MainFont);
             } else if (d0.Cars > 0) {
-                drawStringC(Integer.toString(d0.Cars) + " car", 0.9, 0.18, TextWhite, MainFont);
+                drawStringC(d0.Cars + " car", 0.9, 0.18, TextWhite, MainFont);
                 drawStringC("train", 0.9, 0.245, TextWhite, MainFont);
             }
             drawString(d0.Destination,  0.21, 0.2, TextYellow, DestinationFont);

@@ -28,7 +28,7 @@ public class TripInstance
 
     public String[] getRemainingStopList()
     {
-        List<String> stops = new LinkedList<String>();
+        List<String> stops = new LinkedList<>();
         boolean found = false;
         for (NormalizedStopTime nst : NormalizedStopTimes)
         {

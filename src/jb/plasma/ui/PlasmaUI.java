@@ -43,7 +43,6 @@ import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
 import jb.plasma.gtfs.GtfsGenerator;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
-import jb.plasma.gtfs.Route;
 import jb.plasma.gtfs.Stop;
 import jb.plasma.renderers.*;
 import org.apache.logging.log4j.LogManager;
@@ -56,17 +55,17 @@ import org.swixml.XVBox;
 // can exist outside of it, which is used by the screen saver mode.
 public class PlasmaUI
 {
-    public class Mode
+    public static class Mode
     {
         public static final int REGULAR = 0;
         public static final int SCREENSAVER = 1;
         public static final int SCREENSAVER_PREVIEW = 2;
     }
     
-    private static String[] departurePanelTitles = new String[] { "Next Train:", "2nd Train:", "3rd Train:" };
+    private static final String[] departurePanelTitles = new String[] { "Next Train:", "2nd Train:", "3rd Train:" };
     final static Logger logger = LogManager.getLogger(PlasmaUI.class);
-    private DVA dva;
-    private String settingsKey;
+    private final DVA dva;
+    private final String settingsKey;
     private PlasmaSession session;
     private GtfsTimetableTranslator timetableTranslator;
 
@@ -75,7 +74,7 @@ public class PlasmaUI
 
     public JButton promoteDeparturesButton;
     public XVBox departuresList;
-    private DeparturePanel[] departurePanels = new DeparturePanel[3];
+    private final DeparturePanel[] departurePanels = new DeparturePanel[3];
     public JButton playStopButton;
     private List<DepartureData> departureData = new LinkedList<>();
 
@@ -243,8 +242,8 @@ public class PlasmaUI
         if (tabbedPane.getSelectedIndex() == 0) {
             try {
                 dd = new LinkedList<>();
-                for (int i = 0; i < departurePanels.length; i++) {
-                    dd.add(departurePanels[i].getData());
+                for (DeparturePanel departurePanel : departurePanels) {
+                    dd.add(departurePanel.getData());
                 }
             } catch (IndexOutOfBoundsException ex) {
                 JOptionPane.showMessageDialog(null,
@@ -414,18 +413,16 @@ public class PlasmaUI
                 playStopButton.setAction(stopAction);
                 announceAction.setEnabled(false);
                 
-                new Thread() {
-                    public void run() {
-                        try {
-                            p.join();
-    
-                            stopAction.setEnabled(false);
-                            announceAction.setEnabled(true);
-                            playStopButton.setAction(announceAction);
-                        } catch (InterruptedException ignored) {
-                        }
+                new Thread(() -> {
+                    try {
+                        p.join();
+
+                        stopAction.setEnabled(false);
+                        announceAction.setEnabled(true);
+                        playStopButton.setAction(announceAction);
+                    } catch (InterruptedException ignored) {
                     }
-                }.start();
+                }).start();
                 player.start();
             }
         }        
@@ -455,7 +452,7 @@ public class PlasmaUI
                 filterPlatform.isSelected(),
                 gtfsPlatform.getSelectedItemTyped().toString(),
                 filterRoute.isSelected(),
-                gtfsRoute.getSelectedItemTyped().toString());
+                gtfsRoute.getSelectedItemTyped());
     }
 
     // Set the indicator settings in the panels from an IndicatorSettings object
@@ -509,7 +506,6 @@ public class PlasmaUI
     }
 
     // Show the indicator in windowed mode
-    @SuppressWarnings("serial")
     public Action windowAction = new AbstractAction("Open in Window") {
         public void actionPerformed(ActionEvent e)
         {
@@ -518,7 +514,6 @@ public class PlasmaUI
     };
 
     // Show the indicator in fullscreen mode
-    @SuppressWarnings("serial")
     public Action fullScreenAction = new AbstractAction("Open in Full Screen") {
         public void actionPerformed(ActionEvent e)
         {
@@ -527,7 +522,7 @@ public class PlasmaUI
     };
 
     // Show the indicator in screen saver preview mode
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action previewAction = new AbstractAction("Preview") {
         public void actionPerformed(ActionEvent e)
         {
@@ -535,6 +530,7 @@ public class PlasmaUI
         }
     };
 
+    @SuppressWarnings("unused")
     public Action clearDownloadedGtfsAction = new AbstractAction("Clear") {
         public void actionPerformed(ActionEvent e) {
             try {
@@ -546,16 +542,18 @@ public class PlasmaUI
         }
     };
 
+    @SuppressWarnings("unused")
     public Action filterPlatformAction = new AbstractAction("Filter") {
         public void actionPerformed(ActionEvent e) { gtfsPlatform.setEnabled(filterPlatform.isSelected()); }
     };
 
+    @SuppressWarnings("unused")
     public Action filterRouteAction = new AbstractAction("Filter") {
         public void actionPerformed(ActionEvent e) { gtfsRoute.setEnabled(filterRoute.isSelected()); }
     };
 
     // Play an announcement from the indicator
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action announceAction = new AbstractAction("Play", new ImageIcon(PlasmaUI.class.getResource("/toolbarButtonGraphics/media/Play24.gif"))) {
         public void actionPerformed(ActionEvent e)
         {
@@ -574,7 +572,6 @@ public class PlasmaUI
         }
     };
     
-    @SuppressWarnings("serial")
     public Action stopAction = new AbstractAction("Stop", new ImageIcon(PlasmaUI.class.getResource("/toolbarButtonGraphics/media/Stop24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
@@ -584,7 +581,7 @@ public class PlasmaUI
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action promoteDepartures = new AbstractAction("Shift Departures Upwards") {
         public void actionPerformed(ActionEvent e)
         {
@@ -604,7 +601,7 @@ public class PlasmaUI
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action loadManualFromTimetable = new AbstractAction("<< Transfer to Manual Page") {
         public void actionPerformed(ActionEvent e)
         {
@@ -622,21 +619,18 @@ public class PlasmaUI
         }
     };
     
-    @SuppressWarnings("serial")
     public Action editSubstitutionsAction = new AbstractAction("Edit Substitution List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("substitutions.txt");
         }
     };
 
-    @SuppressWarnings("serial")
     public Action editViasAction = new AbstractAction("Edit \"Via\" List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("vias.txt");
         }
     };
 
-    @SuppressWarnings("serial")
     public Action editAllStationsTosAction = new AbstractAction("Edit \"All Stations To\" List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("allStationsTos.txt");

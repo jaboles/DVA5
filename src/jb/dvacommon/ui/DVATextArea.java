@@ -12,7 +12,7 @@ public class DVATextArea extends JTextArea
 {
     private static final long serialVersionUID = 1L;
     
-    private DVATextManager textManager;
+    private final DVATextManager textManager;
     
     public DVATextArea()
     {

@@ -17,39 +17,39 @@ public class NswCountry extends CityrailStandard
         String[] stops = d.Stops.clone();
         phraser.doSubstitutions(stops, getSoundLibrary().getName());
 
-        String s = getSoundLibrary().initialSoundName();
-        s = s + " The train on platform";
+        StringBuilder s = new StringBuilder(getSoundLibrary().initialSoundName());
+        s.append(" The train on platform");
         if (isMale) {
-            s = s + " number";
+            s.append(" number");
         }
-        s = s + " " + d.Platform;
+        s.append(" ").append(d.Platform);
 
         // "... terminates here"
         if (stops.length == 0)
         {
-            s = s + " terminates here. Please do not join this train.";
+            s.append(" terminates here. Please do not join this train.");
             return s.toString();
         }
 
-        s = s + " is the ";
-        s = s + Integer.toString(d.DueOut.getHour()) + " ";
-        s = s + Integer.toString(d.DueOut.getMinute()) + " ";
-        s = s + d.Destination + " stopping at ";
+        s.append(" is the ");
+        s.append(d.DueOut.getHour()).append(" ");
+        s.append(d.DueOut.getMinute()).append(" ");
+        s.append(d.Destination).append(" stopping at ");
 
-        s = s + stops[0];
+        s.append(stops[0]);
         if (stops.length > 1) {
             if (stops.length > 2) {
-                s = s + " then";
+                s.append(" then");
                 for (int i = 1; i < stops.length - 1; i++) {
-                    s = s + " " + stops[i];
+                    s.append(" ").append(stops[i]);
                 }
             }
-            s = s + " then " + stops[stops.length - 1] + ".";
+            s.append(" then ").append(stops[stops.length - 1]).append(".");
         } else {
-            s = s + " only.";
+            s.append(" only.");
         }
-        s = s + " All aboard please.";
+        s.append(" All aboard please.");
 
-        return s;
+        return s.toString();
     }
 }

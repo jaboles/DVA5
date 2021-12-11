@@ -76,7 +76,6 @@ public class ProgressWindow {
         return progressBar.getMaximum();
     }
 
-    @SuppressWarnings("serial")
     public Action cancelActionInternal = new AbstractAction("Cancel", null) {
         public void actionPerformed(ActionEvent e) {
             if (cancelAction != null)

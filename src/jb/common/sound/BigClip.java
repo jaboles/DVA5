@@ -74,13 +74,13 @@ class BigClip implements Clip, LineListener {
     /** Stores the last time bytes were dumped to the audio stream. */
     private long timelastPositionSet;
 
-    private int bufferUpdateFactor = 2;
+    private final int bufferUpdateFactor = 2;
 
     /** The parent Component for the loading progress dialog.    */
     Component parent = null;
 
     /** Used for reporting messages. */
-    private Logger logger = Logger.getAnonymousLogger();
+    private static final Logger logger = Logger.getAnonymousLogger();
 
     /** Default constructor for a BigClip.    Does nothing.    Information from the
      AudioInputStream passed in open() will be used to get an appropriate SourceDataLine. */
@@ -531,7 +531,7 @@ class BigClip implements Clip, LineListener {
         byte[] b = new byte[length];
         //byte[] frame = new byte[4];
         for (int ii=0; ii<b.length/4; ii++) {
-            b[ii*4+0] = data[ii*skip*4+0];
+            b[ii*4] = data[ii*skip*4];
             b[ii*4+1] = data[ii*skip*4+1];
             b[ii*4+2] = data[ii*skip*4+2];
             b[ii*4+3] = data[ii*skip*4+3];
@@ -643,14 +643,11 @@ class BigClip implements Clip, LineListener {
                 for (int cc = 0; cc < samples; cc++) {
                     if ( audioData[cc]>0 ) {
                         current = (audioData[cc] - 0x80);
-                        if (Math.abs(current)>largest) {
-                            largest = Math.abs(current);
-                        }
                     } else {
                         current = (audioData[cc] + 0x80);
-                        if (Math.abs(current)>largest) {
-                            largest = Math.abs(current);
-                        }
+                    }
+                    if (Math.abs(current)>largest) {
+                        largest = Math.abs(current);
                     }
                 }
             }

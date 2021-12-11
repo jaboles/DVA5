@@ -15,9 +15,9 @@ import org.javatuples.Pair;
 public class TimetableTranslator
 {
     final static Logger logger = LogManager.getLogger(TimetableTranslator.class);
-    private static Map<Pair<String, String>, List<Pair<String, String>>> continuations;
-    private Timetable tt;
-    private static DateFormat TimeFormat = new SimpleDateFormat("HH:mm");
+    private static final Map<Pair<String, String>, List<Pair<String, String>>> continuations;
+    private final Timetable tt;
+    private static final DateFormat TimeFormat = new SimpleDateFormat("HH:mm");
 
     static {
         continuations = new HashMap<>();
@@ -67,7 +67,7 @@ public class TimetableTranslator
                 for (int i = 0; i < sched.stations.size(); i++) {
                     String stationName = sched.stations.get(i);
                     // Sort out the 'arr' and 'dep' stations.
-                    if (stationName.endsWith(" arr") && sched.stations.size() >= i
+                    if (stationName.endsWith(" arr") && sched.stations.size() >= (i + 1)
                             && sched.stations.get(i + 1).endsWith(" dep")) {
                         // If there is 'arr' followed by 'dep'
 
@@ -228,9 +228,7 @@ public class TimetableTranslator
                         if (continuationDataList.size() > 0) {
                             DepartureData continuationData = continuationDataList.get(0);
                             destination = continuationData.Destination;
-                            for (String s : continuationData.Stops) {
-                                stops.add(s);
-                            }
+                            stops.addAll(Arrays.asList(continuationData.Stops));
                             // TODO: don't use string compare here
                             isLimitedStops |= continuationData.Type.equals("Limited Stops");
                             break;
@@ -248,7 +246,7 @@ public class TimetableTranslator
                         isLimitedStops ? "Limited Stops" : "All Stops",
                         cars,
                         platform,
-                        stops.toArray(new String[stops.size()]),
+                        stops.toArray(new String[0]),
                         LocalDateTime.now(), // TODO - departure,
                         null,
                         null,
@@ -279,7 +277,7 @@ public class TimetableTranslator
         valList.add(val);
     }
 
-    public class AtOrAfter
+    public static class AtOrAfter
     {
         public static final int AT = 1;
         public static final int AFTER = 2;

@@ -115,9 +115,9 @@ public class Settings {
         } catch (BackingStoreException e) { e.printStackTrace(System.err); }
     }
 
-    public static boolean isSoundJarsDownloaded() {
+    public static boolean soundJarsNotDownloaded() {
         String soundJarsDownloadedAtVersion = prefs.get("soundJarsDownloadedAtVersion", "");
-        return !soundJarsDownloadedAtVersion.isEmpty() && Utilities.compareVersion(DVA.VersionString, soundJarsDownloadedAtVersion) <= 0;
+        return soundJarsDownloadedAtVersion.isEmpty() || Utilities.compareVersion(DVA.VersionString, soundJarsDownloadedAtVersion) > 0;
     }
 
     public static void setSoundJarsDownloaded() {
@@ -129,7 +129,7 @@ public class Settings {
 
     public static List<Script> loadAnnouncements(Collection<String> availableSoundLibraries) {
         List<Script> savedAnnouncements = StreamSupport.stream(RangeFactory.range(1, prefs.getInt("savedAnnouncementsCount", 0)).spliterator(), false)
-            .map(i -> loadAnnouncement("ann" + Integer.toString(i - 1)))
+            .map(i -> loadAnnouncement("ann" + (i - 1)))
                 .collect(Collectors.toList());
 
         for (Script demo : DVA_DEMOS) {
@@ -154,7 +154,7 @@ public class Settings {
         prefs.putInt("savedAnnouncementsCount", anns.size());
         Iterator<Script> it = anns.iterator();
         for (int i = 0; it.hasNext(); i++) {
-            saveAnnouncement("ann" + Integer.toString(i), it.next());
+            saveAnnouncement("ann" + i, it.next());
         }
         setAnyAnnouncementsEverSaved();
         try {
@@ -213,7 +213,7 @@ public class Settings {
         List<String> renderers = new LinkedList<>();
         for (int i = 0; i < prefs.getInt(key + "RenderersCount", 0); i++)
         {
-            renderers.add(prefs.get(key + "Renderer" + Integer.toString(i), ""));
+            renderers.add(prefs.get(key + "Renderer" + i, ""));
         }
 
         List<DepartureData> departureData = new LinkedList<>();
@@ -226,7 +226,7 @@ public class Settings {
         {
             for (int i = 0; i < departureDataCount; i++)
             {
-                departureData.add(getIndicatorDepartureData(key + "DepartureData" + Integer.toString(i)));
+                departureData.add(getIndicatorDepartureData(key + "DepartureData" + i));
             }
         }
 
@@ -246,7 +246,7 @@ public class Settings {
     }
     
     public static DepartureData getIndicatorDepartureData(String key) {
-        DepartureData dd = new ManualDepartureData(
+        return new ManualDepartureData(
                 prefs.get(key + "Destination", ""),
                 prefs.get(key + "Destination2", ""),
                 prefs.get(key + "Line", ""),
@@ -260,7 +260,6 @@ public class Settings {
                 getColor(key + "TextColor", null),
                 prefs.get(key + "CustomAnnouncement", null)
         );
-        return dd;
     }
 
     public static void setIndicator(String key, IndicatorSettings is) {
@@ -268,7 +267,7 @@ public class Settings {
         prefs.putInt(key + "RenderersCount", is.getRenderers().size());
         for (int i = 0; i < is.getRenderers().size(); i++)
         {
-            prefs.put(key + "Renderer" + Integer.toString(i), is.getRenderers().get(i));
+            prefs.put(key + "Renderer" + i, is.getRenderers().get(i));
         }
         prefs.putBoolean(key + "PlayAnnouncements", is.playAnnouncements());
 
@@ -281,7 +280,7 @@ public class Settings {
         prefs.putInt(key + "DepartureDataCount", is.getDepartureData().size());
         for (int i = 0; i < is.getDepartureData().size(); i++)
         {
-            setIndicatorDepartureData(key + "DepartureData" + Integer.toString(i), is.getDepartureData().get(i));
+            setIndicatorDepartureData(key + "DepartureData" + i, is.getDepartureData().get(i));
         }
 
         prefs.put(key + "GtfsStation", is.getGtfsStation());

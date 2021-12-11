@@ -45,18 +45,18 @@ public class CityrailStandard extends Announcer
             s.append(" number");
 
         // "... 4 ..."
-        s = s.append(" ").append(d.Platform);
+        s.append(" ").append(d.Platform);
 
         // "... terminates here"
         if (stops.length == 0)
         {
-            s = s.append(" terminates here. Please do not join this train.");
+            s.append(" terminates here. Please do not join this train.");
             return s.toString();
         }
 
         // "... goes to X ..."
-        s = s.append(" goes to ").append(d.Destination);
-        
+        s.append(" goes to ").append(d.Destination);
+
         // "... via Y. ..."
         if (via != null)
             s.append(" ").append(via);

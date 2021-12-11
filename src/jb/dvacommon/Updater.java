@@ -15,7 +15,7 @@ public class Updater
 {
     public static ArrayList<BaseUpdater> AllUpdaters;
     final static Logger logger = LogManager.getLogger(Updater.class);
-    private static File jarFolder;
+    private static final File jarFolder;
     
     static
     {
@@ -37,17 +37,16 @@ public class Updater
         logger.info("Jar folder: {}", jarFolder != null ? jarFolder.getPath() : "<null>");
 
         Optional<BaseUpdater> latestUpdater = AllUpdaters.stream()
-            .map(u -> {
+            .peek(u -> {
                 String uv = u.getLatestVersion(); 
                 logger.debug("Checked {}: latest is {}", u.getClass().getName(), uv);
-                return u;
             })
             .filter(u -> u.getLatestVersion() != null)
             .filter(u -> suppressedVersion == null || VersionComparator.Instance.compare(u.getLatestVersion(), suppressedVersion) > 0)
             .filter(u -> VersionComparator.Instance.compare(u.getLatestVersion(), currentVersion) > 0)
             .max((u1, u2) -> VersionComparator.Instance.compare(u1.getLatestVersion(), u2.getLatestVersion()));
          
-        if (latestUpdater != null)
+        if (latestUpdater.isPresent())
             logger.info("Newer version found using updater {}", latestUpdater.getClass().getName());
         else
             logger.info("No new version");

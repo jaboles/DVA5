@@ -5,9 +5,9 @@ import jb.common.ui.ProgressWindow;
 
 public class ProgressAdapter
 {
-    private ProgressWindow pw;
+    private final ProgressWindow pw;
     private long lastProgressUpdate;
-    private boolean download;
+    private final boolean download;
 
     public ProgressAdapter(ProgressWindow pw)
     {

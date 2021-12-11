@@ -9,7 +9,7 @@ import jb.dvacommon.DVA;
 // Currently unused
 public class AnnouncementListCellRenderer extends DefaultListCellRenderer {
     private static final long serialVersionUID = 1L;
-    private DVA controller;
+    private final DVA controller;
 
     public AnnouncementListCellRenderer(DVA controller) {
         this.controller = controller;

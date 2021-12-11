@@ -11,10 +11,10 @@ import javax.swing.Timer;
 public class WindowFader
 {
     private Timer t;
-    private float fadeDelta;
+    private final float fadeDelta;
     private float opacity;
-    private JFrame frame;
-    private int delayMs;
+    private final JFrame frame;
+    private final int delayMs;
     
     public WindowFader(JFrame frame, int durationMs, int fps)
     {
@@ -80,10 +80,7 @@ public class WindowFader
             try
             {
                 Class<?> awtUtilsClass = Class.forName("com.sun.awt.AWTUtilities");
-                if (awtUtilsClass != null)
-                {
-                    AWTUtilities_setWindowOpacity = awtUtilsClass.getMethod("setWindowOpacity", Window.class, boolean.class);
-                }
+                AWTUtilities_setWindowOpacity = awtUtilsClass.getMethod("setWindowOpacity", Window.class, boolean.class);
             }
             catch (ClassNotFoundException | NoSuchMethodException ignored) {}
             AWTUtilities_setWindowOpacity_loaded = true;

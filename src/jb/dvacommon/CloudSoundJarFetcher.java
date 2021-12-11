@@ -1,11 +1,10 @@
 package jb.dvacommon;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class CloudSoundJarFetcher extends BaseUpdater
 {
-    private URL artifactListUrl;
+    private final URL artifactListUrl;
     
     public CloudSoundJarFetcher(URL baseUrl, URL artifactListUrl) {
         super(baseUrl);
@@ -13,18 +12,15 @@ public class CloudSoundJarFetcher extends BaseUpdater
     }
     
     public Thread doFetch(ProgressAdapter pw) {
-        final Thread t = new Thread() {
-            public void run()
-            {
-                try {
-                    if (downloadIncrementalJarUpdates(baseUrl, artifactListUrl, DVA.getSoundJarsFolder(), pw) >= 0) {
-                        Settings.setSoundJarsDownloaded();
-                    }
-                } finally {
-                    pw.dispose();
+        final Thread t = new Thread(() -> {
+            try {
+                if (downloadIncrementalJarUpdates(baseUrl, artifactListUrl, DVA.getSoundJarsFolder(), pw) >= 0) {
+                    Settings.setSoundJarsDownloaded();
                 }
+            } finally {
+                pw.dispose();
             }
-        };
+        });
         pw.enableCancel(t);
         t.start();
         return t;
@@ -37,7 +33,7 @@ public class CloudSoundJarFetcher extends BaseUpdater
     }
 
     @Override
-    public URL getBaseUrl(String version) throws MalformedURLException
+    public URL getBaseUrl(String version)
     {
         return null;
     }

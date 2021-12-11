@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class WAzureExceptionSink implements IExceptionSink
 {
-    private String containerSharedAccessString;
+    private final String containerSharedAccessString;
 
     public WAzureExceptionSink(String containerSharedAccessString)
     {
@@ -20,7 +20,7 @@ public class WAzureExceptionSink implements IExceptionSink
 
     public void store(String message) throws IOException, URISyntaxException, InvalidKeyException, StorageException {
         CloudBlobContainer container = new CloudBlobContainer(new URI(containerSharedAccessString));
-        CloudBlockBlob b = container.getBlockBlobReference(new Date().toString() + ".txt");
+        CloudBlockBlob b = container.getBlockBlobReference(new Date() + ".txt");
         b.uploadText(message);
     }
 }

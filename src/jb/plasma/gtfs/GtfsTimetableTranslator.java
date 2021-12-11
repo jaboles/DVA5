@@ -23,7 +23,7 @@ public class GtfsTimetableTranslator
     private final static long RealtimeUpdateIntervalSec = 120;
     private static GtfsTimetableTranslator instance;
 
-    private GtfsTimetable tt;
+    private final GtfsTimetable tt;
     private Map<Trip, Map<Stop, GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate>> realtimeTripUpdates;
 
     private GtfsTimetableTranslator(GtfsTimetable tt)
@@ -49,7 +49,7 @@ public class GtfsTimetableTranslator
     {
         return tt.Stops.values().stream()
                 .filter(s -> s.Parent == null)
-                .sorted((s1, s2) -> s1.Name.compareTo(s2.Name))
+                .sorted(Comparator.comparing(s -> s.Name))
                 .toArray(Stop[]::new);
     }
 
@@ -57,7 +57,7 @@ public class GtfsTimetableTranslator
     {
         return tt.Stops.values().stream()
                 .filter(s -> s.Parent == station)
-                .sorted((s1, s2) -> s1.Name.compareTo(s2.Name))
+                .sorted(Comparator.comparing(s -> s.Name))
                 .toArray(Stop[]::new);
     }
 
@@ -76,7 +76,7 @@ public class GtfsTimetableTranslator
             String routeName,
             int limit)
     {
-        Stream<Stop> platforms = null;
+        Stream<Stop> platforms;
         if (platform != null)
         {
             platforms = Arrays.stream(new Stop[] {platform});
@@ -98,14 +98,14 @@ public class GtfsTimetableTranslator
             .filter(st -> st.Pickup)
             .filter(st -> routes == null || routes.contains(st.Trip.Route))
             .flatMap(st -> expandTrips(st, tt))
-            .sorted((t1, t2) -> t1.At.compareTo(t2.At))
+            .sorted(Comparator.comparing(t -> t.At))
             .limit(limit > 0 ? limit : Integer.MAX_VALUE)
-            .map(ti -> new GtfsDepartureData(ti));
+            .map(GtfsDepartureData::new);
     }
 
     private Stream<TripInstance> expandTrips(StopTime tripTimeAndPlace, GtfsTimetable tt)
     {
-        LinkedList<TripInstance> list = new LinkedList<TripInstance>();
+        LinkedList<TripInstance> list = new LinkedList<>();
         LocalDateTime now = LocalDateTime.now();
 
         if (tripTimeAndPlace.Trip.Route.Id.equals("RTTA_REV") || tripTimeAndPlace.Trip.Route.Id.equals("RTTA_DEF") || tripTimeAndPlace.Trip.Headsign.equals("Empty Train"))
@@ -142,20 +142,20 @@ public class GtfsTimetableTranslator
                 Trip blockContinuingTrip = null;
                 if (tripTimeAndPlace.Trip.BlockId != null && tripTimeAndPlace.Trip.BlockId.length() > 0)
                 {
-                    tripStopTimes = new LinkedList<NormalizedStopTime>(tripStopTimes);
+                    tripStopTimes = new LinkedList<>(tripStopTimes);
                     NormalizedStopTime tripLastStopTime = tripStopTimes.get(tripStopTimes.size() - 1);
 
                     for (Trip blockTrip : tt.TripsByBlockId.get(tripTimeAndPlace.Trip.BlockId).stream()
                             // Only look at up to 2 following trips later in the same block
                             .filter(bt -> bt != tripTimeAndPlace.Trip)
                             .filter(bt -> bt.Name.compareTo(tripTimeAndPlace.Trip.Name) > 0)
-                            .sorted((bt1, bt2) -> bt1.Name.compareTo(bt2.Name))
+                            .sorted(Comparator.comparing(bt -> bt.Name))
                             .limit(2)
                             .collect(Collectors.toList()))
                     {
                         List<NormalizedStopTime> blockStopTimes = applyRealtimeInfo(tt.StopTimesByTrip.get(blockTrip).stream(), dateCopy)
                                 .map(bst -> new NormalizedStopTime(bst, dateCopy))
-                                .collect(Collectors.toList());;
+                                .collect(Collectors.toList());
 
                         for (NormalizedStopTime bst : blockStopTimes)
                         {
@@ -194,14 +194,14 @@ public class GtfsTimetableTranslator
         {
             GtfsRealtime1007Extension.FeedMessage realtimeInfo = GtfsRealtime.get();
             realtimeTripUpdates = realtimeInfo.getEntityList().stream()
-                    .map(e -> e.getTripUpdate())
+                    .map(GtfsRealtime1007Extension.FeedEntity::getTripUpdate)
                     .collect(Collectors.toMap(
                             tu -> tt.Trips.get(tu.getTrip().getTripId()),
                             tu -> tu.getStopTimeUpdateList().stream()
                                 .collect(Collectors.toMap(stu -> tt.Stops.get(stu.getStopId()), stu -> stu))));
 
             try (PrintWriter out = new PrintWriter(new File(DVA.getApplicationDataFolder(), "gtfsrealtime.txt"))) {
-                out.println(realtimeInfo.toString());
+                out.println(realtimeInfo);
             }
         }
         catch (Exception e)
@@ -270,14 +270,14 @@ public class GtfsTimetableTranslator
             {
                 return st;
             }
-        }).filter(st -> st != null);
+        }).filter(Objects::nonNull);
     }
 
     private String timestampToTimeString(LocalDateTime originalNormalized,
                                          GtfsRealtime1007Extension.TripUpdate.StopTimeEvent ste,
                                          LocalDate date)
     {
-        LocalDateTime t = null;
+        LocalDateTime t;
         if (ste.hasTime() && ste.getTime() > 0)
         {
             t = LocalDateTime.ofInstant(Instant.ofEpochMilli(1000L * ste.getTime()), SydneyTimeZone);
@@ -295,7 +295,7 @@ public class GtfsTimetableTranslator
         String formatted = DateTimeFormatter.ofPattern("HH:mm:ss").format(t);
         if (t.isAfter(midnight))
         {
-            return Integer.toString(Integer.parseInt(formatted.split(":")[0]) + 24) + formatted.substring(2);
+            return Integer.parseInt(formatted.split(":")[0]) + 24 + formatted.substring(2);
         }
         else
         {

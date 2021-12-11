@@ -2,10 +2,8 @@ package jb.plasma.ui;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import jb.plasma.DepartureData;
 import jb.plasma.Drawer;
 
 public class PlasmaPanel extends JPanel

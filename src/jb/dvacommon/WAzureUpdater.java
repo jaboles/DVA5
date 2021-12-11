@@ -47,7 +47,7 @@ public class WAzureUpdater extends BaseUpdater
             try
             {
                 String[] versions = FileUtilities.readFromUrl(new URL(baseUrl, MetadataContainerName + "/" + VersionsListName)).split("\r?\n");
-                latestVersion = Arrays.stream(versions).max(VersionComparator.Instance).get();
+                Arrays.stream(versions).max(VersionComparator.Instance).ifPresent(s -> latestVersion = s);
             } catch (Exception e) {
                 ExceptionReporter.reportException(e);
             }
@@ -126,7 +126,7 @@ public class WAzureUpdater extends BaseUpdater
             if (soundJarsFiles != null) {
                 File[] jars = Arrays.stream(soundJarsFiles)
                         .filter(File::isFile)
-                        .filter(f -> !f.getName().toLowerCase().equals(".ds_store"))
+                        .filter(f -> !f.getName().equalsIgnoreCase(".ds_store"))
                         .toArray(File[]::new);
 
                 for (File jar : jars) {

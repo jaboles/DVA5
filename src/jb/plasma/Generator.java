@@ -29,17 +29,17 @@ public class Generator
     ProgressAdapter pa;
     // Object to hold the data
     Timetable timetable;
-    private static DateFormat CityRailDateFormat = new SimpleDateFormat("d/MM/yyyy");
+    private static final DateFormat CityRailDateFormat = new SimpleDateFormat("d/MM/yyyy");
     // Search for line infos on the main timetable page
-    private static Pattern LinePattern = Pattern.compile("<option value=\"(\\w{2})\"(?:[^>]*)>(.*?) Line</option>");
+    private static final Pattern LinePattern = Pattern.compile("<option value=\"(\\w{2})\"(?:[^>]*)>(.*?) Line</option>");
     // Search for direction infos from the ajax response
-    private static Pattern DirectionPattern = Pattern.compile("\"value\":\"([0-9A-F]+)\",\"label\":\"([^\"]+)\"");
+    private static final Pattern DirectionPattern = Pattern.compile("\"value\":\"([0-9A-F]+)\",\"label\":\"([^\"]+)\"");
     // Search for station infos on the line page
-    private static Pattern StationPattern = Pattern.compile("stationId=[^>]+>(.+?)\\s?<");
+    private static final Pattern StationPattern = Pattern.compile("stationId=[^>]+>(.+?)\\s?<");
     // Get a row of timetable data from the line page
-    private static Pattern StationRowPattern = Pattern.compile("<tr class=\"(?:odd|even)\"><td>[^<]+?<[^<]+?hintText\">(?!Proceeds).*?((?:<td>.+?</td>){2,})");
+    private static final Pattern StationRowPattern = Pattern.compile("<tr class=\"(?:odd|even)\"><td>[^<]+?<[^<]+?hintText\">(?!Proceeds).*?((?:<td>.+?</td>){2,})");
     // Get an individual timetable data cell from a timetable row
-    private static Pattern StopPattern = Pattern.compile("<td>(.+?)</td>");
+    private static final Pattern StopPattern = Pattern.compile("<td>(.+?)</td>");
 
     // Entry point
     public static void main(String[] args)
@@ -54,11 +54,11 @@ public class Generator
             System.exit(1);
         }
         int ttType = 0;
-        if (args[1].toLowerCase().equals("weekday"))
+        if (args[1].equalsIgnoreCase("weekday"))
         {
             ttType = Timetable.TIMETABLE_WEEKDAY;
         }
-        else if (args[1].toLowerCase().equals("weekend"))
+        else if (args[1].equalsIgnoreCase("weekend"))
         {
             ttType = Timetable.TIMETABLE_WEEKEND;
         }
@@ -165,7 +165,7 @@ public class Generator
     // Gets the timetable data for a single line and direction.
     public TimetableLineSchedule getDirectionData(String lineId, String directionId, Calendar date) throws Exception
     {
-        Map<String,String> params = new HashMap<String,String>();
+        Map<String,String> params = new HashMap<>();
         params.put("selLine", lineId);
         params.put("hiddenDirection", directionId);
         params.put("leaveArrive", "true");
@@ -206,15 +206,14 @@ public class Generator
                 }
             }
 
-            allStopMatches.add(stopMatches.toArray(new String[stopMatches.size()]));
+            allStopMatches.add(stopMatches.toArray(new String[0]));
         }
 
         // Error checking. Make sure the count of stations and rows match, and make sure the table is 'rectangular'
         // i.e. all rows have the same length
-        String[] stations = stationMatches.toArray(new String[stationMatches.size()]);
+        String[] stations = stationMatches.toArray(new String[0]);
         String[] stationRows = stationMatches.toArray(new String[stationRowMatches.size()]);
         String[][] allStops = allStopMatches.toArray(new String[allStopMatches.size()][]);
-        if (stations.length != stationRows.length) throw new Exception("Station row mismatch: " + stations.length + " stations, " + stationRows.length + " station rows");
         if (stations.length != allStops.length) throw new Exception("Station stop count mismatch");
         for (String[] row : allStops)
         {

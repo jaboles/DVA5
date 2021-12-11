@@ -14,9 +14,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Calendar;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -26,10 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import org.swixml.SwingEngine;
-import jb.common.ui.ProportionalPanel;
-import jb.plasma.DepartureData;
-import jb.plasma.Drawer;
-import jb.plasma.renderers.CityrailV3Secondary;
 
 // Custom window to display indicator in
 public class PlasmaWindow extends JFrame
@@ -53,7 +46,6 @@ public class PlasmaWindow extends JFrame
     
     public Action announceAction;
     
-    @SuppressWarnings("serial")
     public PlasmaWindow(final PlasmaUI controller, final Mode mode, int index, String title, Dimension size, Dimension aspectRatio, JPanel plasmaPanel) {
         super(mode.IsFullScreen ? (GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[index]).getDefaultConfiguration() : null);
 
@@ -170,13 +162,12 @@ public class PlasmaWindow extends JFrame
 
             if (size == null)
             {
-                Dimension ar = aspectRatio;
                 int width = 1000;
                 int height = 700;
-                if (ar.getWidth() > ar.getHeight()) {
-                    height = (int)(width * ar.getHeight() / ar.getWidth());
+                if (aspectRatio.getWidth() > aspectRatio.getHeight()) {
+                    height = (int)(width * aspectRatio.getHeight() / aspectRatio.getWidth());
                 } else {
-                    width = (int)(height * ar.getWidth() / ar.getHeight());
+                    width = (int)(height * aspectRatio.getWidth() / aspectRatio.getHeight());
                 }
                 plasmaPanel.setPreferredSize(new Dimension(width, height));
                 pack();

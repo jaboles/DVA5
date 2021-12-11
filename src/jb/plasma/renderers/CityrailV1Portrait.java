@@ -80,7 +80,7 @@ public class CityrailV1Portrait extends CityrailV1
             if (isConcourse) {
                 drawString(Integer.toString(d0.Platform), 0.88, 0.09, TextWhite, MainFont);
             } else if (d0.Cars > 0) {
-                drawString(Integer.toString(d0.Cars) + " car", 0.84, 0.06, TextWhite, MainFont);
+                drawString(d0.Cars + " car", 0.84, 0.06, TextWhite, MainFont);
                 drawString("train", 0.85, 0.12, TextWhite, MainFont);
             }
             drawString(d0.Destination,  0.21, 0.048, TextYellow, DestinationFont);
@@ -95,7 +95,7 @@ public class CityrailV1Portrait extends CityrailV1
             LocalDateTime dueOut = d0.DueOut;
             if (dueOut != null) {
                 drawString(DueOutFormat.format(dueOut), 0.012, 0.048, TextWhite, DepartureTimeFont);
-                int m = (int) getDueOut(dueOut).getValue1();
+                int m = getDueOut(dueOut).getValue1();
                 if (m > 0) {
                     drawStringR(Integer.toString(m), 0.089, 0.84, TextWhite, DepartureTimeFont);
                 }

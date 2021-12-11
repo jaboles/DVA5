@@ -11,8 +11,8 @@ import java.util.concurrent.Callable;
 
 public class ObjectCache<T>
 {
-    private String cacheRootName;
-    private String cacheUniverse;
+    private final String cacheRootName;
+    private final String cacheUniverse;
     
     public ObjectCache(String cacheRootName, String cacheUniverse)
     {
@@ -22,7 +22,7 @@ public class ObjectCache<T>
     
     public T load(Class<?> cls, String cacheId, Callable<T> generator) throws Exception
     {
-        return load(Long.toString(new File(cls.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).lastModified()) + "_" + cacheId, generator);        
+        return load(new File(cls.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).lastModified() + "_" + cacheId, generator);
     }
     
     @SuppressWarnings("unchecked")
@@ -69,9 +69,12 @@ public class ObjectCache<T>
     {
         File cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + cacheRootName);
         if (cacheDir.exists()) {
-            for (File f : cacheDir.listFiles()) {
-                if (f.getName().toLowerCase().startsWith(cacheUniverse + "_"))
-                    f.delete();
+            File[] files = cacheDir.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if (f.getName().toLowerCase().startsWith(cacheUniverse + "_"))
+                        f.delete();
+                }
             }
         }
     }

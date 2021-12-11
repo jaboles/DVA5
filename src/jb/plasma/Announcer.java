@@ -5,8 +5,8 @@ import jb.dva.SoundLibrary;
 
 public abstract class Announcer
 {
-    private String name;
-    private SoundLibrary soundLibrary;
+    private final String name;
+    private final SoundLibrary soundLibrary;
 
     protected Announcer(String name, SoundLibrary soundLibrary)
     {

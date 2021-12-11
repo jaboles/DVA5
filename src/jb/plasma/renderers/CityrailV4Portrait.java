@@ -11,12 +11,11 @@ import java.awt.image.BufferedImage;
 public class CityrailV4Portrait extends CityrailV4
 {
     public BufferedImage LineLogo;
-    private String dueOutString;
     private Font NextPlatformDepartsLabelFont;
     private Font NextDestinationFont;
     private Font NextDestination2Font;
     private Font MiniTextBoxFont;
-    private boolean isConcourse = false;
+    private final boolean isConcourse;
     private double top = 0;
 
     public CityrailV4Portrait(boolean isConcourse) {
@@ -94,6 +93,7 @@ public class CityrailV4Portrait extends CityrailV4
         drawStringR("Platform", RightMargin, top + 0.16, TextColor, PlatformDepartsLabelFont);
         drawStringR("Departs", RightMargin,  0.77, TextColor, PlatformDepartsLabelFont);
 
+        String dueOutString;
         if (d0 != null) {
             double departureLeft = LeftMargin;
             if (LineLogo != null) {
@@ -111,14 +111,14 @@ public class CityrailV4Portrait extends CityrailV4
                 int h = dueOut.getValue0();
                 int m = dueOut.getValue1();
                 if (h > 0 || m > 0) {
-                    dueOutString = Integer.toString(m) + " min";
+                    dueOutString = m + " min";
                     if (h > 0) {
-                        dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                        dueOutString = h + " hr " + dueOutString;
                     }
                     drawStringR(dueOutString, RightMargin, 0.83, OrangeTextColor, PlatformDepartsFont);
                 }
             }
-            drawMiniTextBox(0.74, 0.32, Integer.toString(d0.Cars) + " carriages");
+            drawMiniTextBox(0.74, 0.32, d0.Cars + " carriages");
             if (d0.Type != null && !d0.Type.equals("")) {
                 drawMiniTextBox(LeftMargin, 0.8, d0.Type);
             }
@@ -129,13 +129,11 @@ public class CityrailV4Portrait extends CityrailV4
             fillRect(LeftMargin, top + 0.14, 0.7, top + 0.74, Color.white);
             String[] stationList = d0.Stops;
             for (int i = 0; i < stationList.length; i++) {
-                double y = stationListPos + (i * stationListSeparation);
                 int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
                 drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
 
                 // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
                 if (shouldScroll) {
-                    y = stationListPos + ((i + stationList.length + 5) * stationListSeparation);
                     yAbs = round(stationListPos * height) + round((i + stationList.length + 5) * stationListSeparation * height);
                     drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
                 }
@@ -163,9 +161,9 @@ public class CityrailV4Portrait extends CityrailV4
                 Pair<Integer, Integer> dueOut = getDueOut(d1.DueOut);
                 int h = dueOut.getValue0();
                 int m = dueOut.getValue1();
-                dueOutString = Integer.toString(m) + " min";
+                dueOutString = m + " min";
                 if (h > 0) {
-                    dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                    dueOutString = h + " hr " + dueOutString;
                 }
                 drawStringR(dueOutString, RightMargin, 0.93, TextColor, NextDestinationFont);
             }

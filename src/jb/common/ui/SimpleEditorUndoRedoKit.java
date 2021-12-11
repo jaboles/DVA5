@@ -12,7 +12,7 @@ import javax.swing.undo.UndoManager;
 
 public class SimpleEditorUndoRedoKit
 {
-    private static Map<JTextComponent, UndoManager> _undoManagers = new HashMap<>();
+    private static final Map<JTextComponent, UndoManager> _undoManagers = new HashMap<>();
     
     public static void enableUndo(final JTextComponent c) {
         final UndoManager manager = new UndoManager();
@@ -39,7 +39,6 @@ public class SimpleEditorUndoRedoKit
         });
     }
     
-    @SuppressWarnings("serial")
     public static final Action UndoAction = new TextAction("Undo") {
         public void actionPerformed(ActionEvent e) {
             JTextComponent c = getFocusedComponent();
@@ -53,7 +52,6 @@ public class SimpleEditorUndoRedoKit
         }
     };
 
-    @SuppressWarnings("serial")
     public static final Action RedoAction = new TextAction("Redo") {
         public void actionPerformed(ActionEvent e) {
             JTextComponent c = getFocusedComponent();

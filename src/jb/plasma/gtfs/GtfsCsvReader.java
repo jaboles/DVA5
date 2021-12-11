@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -12,7 +11,7 @@ public class GtfsCsvReader
 {
     public static HashMap<String, Stop> readStops(Path stopsTxt) throws IOException
     {
-        HashMap<String, Stop> map = new HashMap<String, Stop>();
+        HashMap<String, Stop> map = new HashMap<>();
         Files.lines(stopsTxt).skip(1).forEach(line ->
         {
             String[] parts = line.split(",");
@@ -33,7 +32,7 @@ public class GtfsCsvReader
 
     public static HashMap<String, Route> readRoutes(Path routesTxt) throws IOException
     {
-        HashMap<String, Route> map = new HashMap<String, Route>();
+        HashMap<String, Route> map = new HashMap<>();
         Files.lines(routesTxt).skip(1).forEach(line ->
         {
             String[] parts = line.split(",");
@@ -54,7 +53,7 @@ public class GtfsCsvReader
 
     public static HashMap<String, ServicePeriod> readServicePeriods(Path calendarTxt) throws IOException
     {
-        HashMap<String, ServicePeriod> map = new HashMap<String, ServicePeriod>();
+        HashMap<String, ServicePeriod> map = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.ENGLISH);
 
         Files.lines(calendarTxt).skip(1).forEach(line ->
@@ -84,7 +83,7 @@ public class GtfsCsvReader
 
     public static HashMap<String, Trip> readTrips(Path tripsTxt, Map<String, Route> routes, Map<String, ServicePeriod> calendars) throws IOException
     {
-        HashMap<String, Trip> map = new HashMap<String, Trip>();
+        HashMap<String, Trip> map = new HashMap<>();
 
         Files.lines(tripsTxt).skip(1).forEach(line ->
         {
@@ -112,7 +111,7 @@ public class GtfsCsvReader
 
     public static List<StopTime> readStopTimes(Path stoptimesTxt, Map<String, Trip> trips, Map<String, Stop> stops) throws IOException
     {
-        List<StopTime> list = new LinkedList<StopTime>();
+        List<StopTime> list = new LinkedList<>();
 
         Files.lines(stoptimesTxt).skip(1).forEach(line ->
         {

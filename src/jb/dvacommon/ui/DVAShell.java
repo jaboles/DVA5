@@ -36,9 +36,9 @@ import org.swixml.SwingEngine;
 
 public class DVAShell
 {
-    private SwingEngine renderer;
+    private final SwingEngine renderer;
     private JFrame window;
-    private DVA controller;
+    private final DVA controller;
     public PlasmaUI plasmaUI;
     public JPanel dvaPanel;
     public JPanel indicatorsPanel;
@@ -122,15 +122,10 @@ public class DVAShell
         if (visible)
         {
             // If about to show the main UI, do version check.
-            Thread t = new Thread()
-            {
-                public void run()
-                {
-                    final Optional<BaseUpdater> updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
-                    if (updater.isPresent())
-                        SwingUtilities.invokeLater(() -> promptToUpdate(updater.get(), true));
-                }
-            };
+            Thread t = new Thread(() -> {
+                final Optional<BaseUpdater> updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
+                updater.ifPresent(baseUpdater -> SwingUtilities.invokeLater(() -> promptToUpdate(baseUpdater, true)));
+            });
             t.start();
         }
 
@@ -180,15 +175,15 @@ public class DVAShell
             Settings.markUpdateSuppressed(updater.getLatestVersion());
         }
     }
-    
-    @SuppressWarnings("serial")
+
+    @SuppressWarnings("unused")
     public Action showDVAPanelAction = new AbstractAction("Go to Announcements") {
         public void actionPerformed(ActionEvent e) {
             tabbedPane.setSelectedIndex(0);
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action showIndicatorsManualPanelAction = new AbstractAction("Go to Indicators, Manual") {
         public void actionPerformed(ActionEvent e) {
             tabbedPane.setSelectedIndex(1);
@@ -196,7 +191,7 @@ public class DVAShell
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action showIndicatorsTimetablePanelAction = new AbstractAction("Go to Indicators, Timetable") {
         public void actionPerformed(ActionEvent e) {
             tabbedPane.setSelectedIndex(1);
@@ -204,7 +199,7 @@ public class DVAShell
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action specialSoundsAction = new AbstractAction("Enable/Disable Special Sounds") {
         public void actionPerformed(ActionEvent e) {
             boolean specialSoundsEnabled = Settings.specialSoundsEnabled();
@@ -213,8 +208,8 @@ public class DVAShell
             controller.quit();
         }
     };
-    
-    @SuppressWarnings("serial")
+
+    @SuppressWarnings("unused")
     public Action aboutAction = new AbstractAction("About", null) {
         public void actionPerformed(ActionEvent e) {
             LoadWindow lw = new LoadWindow();
@@ -222,21 +217,21 @@ public class DVAShell
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action helpAction = new AbstractAction("Help", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Help24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             new HelpWindow().showHelp();
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action versionHistoryAction = new AbstractAction("Version History", null) {
         public void actionPerformed(ActionEvent e) {
             new HelpWindow().showVersionHistory();
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action relaunchWithLogging = new AbstractAction("Relaunch with Logging", null) {
         public void actionPerformed(ActionEvent e)
         {
@@ -259,7 +254,7 @@ public class DVAShell
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action checkForUpdateAction = new AbstractAction("Check for Update", null) {
         public void actionPerformed(ActionEvent e) {
             final Optional<BaseUpdater> updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
@@ -271,18 +266,21 @@ public class DVAShell
         }
     };
     
-    @SuppressWarnings("serial")
+    @SuppressWarnings("unused")
     public Action quitAction = new AbstractAction("Quit", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Stop24.gif"))) {
         public void actionPerformed(ActionEvent e) {
             controller.quit();
         }
     };
-    
+
+    @SuppressWarnings("unused")
     public Action cutAction = new DefaultEditorKit.CutAction();
+    @SuppressWarnings("unused")
     public Action copyAction = new DefaultEditorKit.CopyAction();
+    @SuppressWarnings("unused")
     public Action pasteAction = new DefaultEditorKit.PasteAction();
-    
-    @SuppressWarnings("serial")
+
+    @SuppressWarnings("unused")
     public Action selectAllAction = new TextAction("Select All") {
         public void actionPerformed(ActionEvent e) {
             getFocusedComponent().selectAll();

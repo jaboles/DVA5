@@ -1,10 +1,7 @@
 package jb.plasma;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // TimetableLine object. Contains a list of TimetableLineSchedule objects, one for each direction on the line.
 // e.g. "Western Line" has two directions - Chatswood to Emu Plains/Richmond, and Emu Plains/Richmond to Chatswood
@@ -35,7 +32,7 @@ public class TimetableLine implements Serializable
     public int getTrainCount()
     {
         return directions.values().stream()
-                .filter(s -> s != null)
+                .filter(Objects::nonNull)
                 .map(TimetableLineSchedule::getTrainCount)
                 .reduce(0, Integer::sum);
     }

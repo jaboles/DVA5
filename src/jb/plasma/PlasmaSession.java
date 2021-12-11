@@ -14,17 +14,17 @@ public class PlasmaSession
 {
     final static Logger logger = LogManager.getLogger(PlasmaSession.class);
     // List of departures to display
-    private List<DepartureData> data;
+    private final List<DepartureData> data;
     // All active renderers, so they can be notified when a departure has been popped off the front of the list
-    private List<Drawer> drawers;
+    private final List<Drawer> drawers;
     // All open plasma windows, so they can be all closed when the session is stopped
-    private List<PlasmaWindow> windows;
+    private final List<PlasmaWindow> windows;
     // Timer to manage de-queueing and playing announcements
-    private javax.swing.Timer timer;
+    private final javax.swing.Timer timer;
     // When announcements should be played (in minutes) before the due-out time
-    private int[] announcementTimes;
+    private final int[] announcementTimes;
     // Functor to play the announcement
-    private Runnable announce;
+    private final Runnable announce;
     
     public PlasmaSession(List<PlasmaWindow> windows, final Runnable announce, List<DepartureData> data, List<Drawer> drawers, int[] announcementTimes)
     {

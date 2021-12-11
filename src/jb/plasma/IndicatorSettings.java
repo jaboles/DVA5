@@ -4,18 +4,18 @@ import java.util.List;
 // Class used to store settings on the Indicators page for saving/loading
 public class IndicatorSettings
 {
-    private List<DepartureData> departureData;
-    private List<String> renderers;
-    private String gtfsStation;
-    private boolean filterPlatform;
-    private String gtfsPlatform;
-    private boolean filterRoute;
-    private String gtfsRoute;
-    private boolean useSchedule;
-    private boolean playAnnouncements;
-    private String announcementTimes;
-    private String announcementVoice;
-    private boolean coalesceStationSequences;
+    private final List<DepartureData> departureData;
+    private final List<String> renderers;
+    private final String gtfsStation;
+    private final boolean filterPlatform;
+    private final String gtfsPlatform;
+    private final boolean filterRoute;
+    private final String gtfsRoute;
+    private final boolean useSchedule;
+    private final boolean playAnnouncements;
+    private final String announcementTimes;
+    private final String announcementVoice;
+    private final boolean coalesceStationSequences;
 
     public IndicatorSettings(boolean useSchedule,
                              List<String> renderers,

@@ -48,7 +48,7 @@ public class Phraser
         {
             return d.Destination2;
         }
-        else
+        else if (d != null)
         {
             for (Quartet<String,String,String,String> via : vias)
             {

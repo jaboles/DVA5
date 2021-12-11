@@ -88,14 +88,14 @@ public class CityrailV4Secondary extends CityrailV4Landscape
                 int h = dueOut.getValue0();
                 int m = dueOut.getValue1();
                 if (h > 0 || m > 0) {
-                    dueOutString = Integer.toString(m) + " min";
+                    dueOutString = m + " min";
                     if (h > 0) {
-                        dueOutString = Integer.toString(h) + " hr " + dueOutString;
+                        dueOutString = h + " hr " + dueOutString;
                     }
                     drawStringR(dueOutString, RightMargin, y + 0.38, OrangeTextColor, PlatformDepartsFontSmall);
                 }
             }
-            drawMiniTextBox(LeftMargin, y + 0.24, Integer.toString(d.Cars) + " carriages");
+            drawMiniTextBox(LeftMargin, y + 0.24, d.Cars + " carriages");
             if (d.Type != null && !d.Type.equals("")) {
                 drawMiniTextBox(0.25, y + 0.24, d.Type);
             }

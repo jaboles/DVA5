@@ -16,14 +16,15 @@ public class SoundInflection
     }
 
     public static int getInflectionForName(String name) {
-        if (name.trim().equals("None")) {
-            return NONE;
-        } else if (name.trim().equals("Rising")) {
-            return RISING;
-        } else if (name.trim().equals("Falling")) {
-            return FALLING;
-        } else {
-            return -1;
+        switch (name.trim()) {
+            case "None":
+                return NONE;
+            case "Rising":
+                return RISING;
+            case "Falling":
+                return FALLING;
+            default:
+                return -1;
         }
     }
 }

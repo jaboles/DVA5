@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class FileUtilities
             postData.append('=');
             postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
         }
-        byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+        byte[] postDataBytes = postData.toString().getBytes(StandardCharsets.UTF_8);
 
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setRequestMethod("POST");
@@ -126,7 +127,7 @@ public class FileUtilities
 
     public static URLStat statUrl(URL url) throws IOException, URISyntaxException
     {
-        if (url.getProtocol().toLowerCase().equals("http") || url.getProtocol().toLowerCase().equals("https")) {
+        if (url.getProtocol().equalsIgnoreCase("http") || url.getProtocol().equalsIgnoreCase("https")) {
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("HEAD");
             int status = conn.getResponseCode();
@@ -138,7 +139,7 @@ public class FileUtilities
             } else {
                 logger.debug("stat {} failed: code {}", url, status);
             }
-        } else if (url.getProtocol().toLowerCase().equals("file")) {
+        } else if (url.getProtocol().equalsIgnoreCase("file")) {
             File f = new File(url.toURI());
             return new URLStat(f.length(), new Date(f.lastModified()), null);
         }

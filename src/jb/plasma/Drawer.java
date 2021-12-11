@@ -11,7 +11,6 @@ public abstract class Drawer implements Cloneable
 {
     protected int width = 0;
     protected int height = 0;
-    protected boolean paintInfrequent = false;
     private Graphics g;
     protected double realFPSAdjustment;
     private long lastFrame = 0;
@@ -172,11 +171,6 @@ public abstract class Drawer implements Cloneable
             drawStringC(str[i], x, y + (i * sep), c, f);
         }
     }
-    
-    public void drawImage(Image image, double x, double y, double w, double h)
-    {
-        g.drawImage(image, round(x * width), round(y * height), round(w * width), round(h * height), null);
-    }
 
     public void drawImageSquare(Image image, double x, double y, double w)
     {
@@ -207,10 +201,4 @@ public abstract class Drawer implements Cloneable
         }
         return adj;
     }
-    
-    /*private boolean paintInfrequent()
-    {
-        boolean isNewSecond = (System.currentTimeMillis() % 1000) < (lastFrame % 1000);
-        return (isNewSecond || lastFrame == 0);
-    }*/
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
@@ -31,17 +32,20 @@ public class SimpleWebsiteUpdater extends BaseUpdater
     public String getLatestVersion() {
         if (latestVersion == null)
         {
-            List<String> versions = null;
+            Stream<String> versions = null;
             String protocol = baseUrl.getProtocol().toLowerCase();
             if (protocol.equals("file"))
             {
-                versions = getAllVersionsFromFileBaseUrl(baseUrl);
+                versions = getAllVersionsFromFileBaseUrl(baseUrl).stream();
             }
             else if (protocol.equals("http") || protocol.equals("https"))
             {
-                versions = getAllVersionsFromHttpBaseUrl(baseUrl);
+                versions = getAllVersionsFromHttpBaseUrl(baseUrl).stream();
             }
-            latestVersion = versions.stream().max(VersionComparator.Instance).get();
+            if (versions != null)
+            {
+                versions.max(VersionComparator.Instance).ifPresent(s -> latestVersion = s);
+            }
         }
         return latestVersion;
     }

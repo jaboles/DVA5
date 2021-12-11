@@ -109,7 +109,7 @@ public class DVA {
                 soundLibraryMap.put(entry.getKey(), library);
             }
             for (SoundLibrary library : soundLibraryMap.values()) {
-                if (FALLBACK_LIBRARIES.keySet().contains(library.getName())) {
+                if (FALLBACK_LIBRARIES.containsKey(library.getName())) {
                     library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
                 }
             }
@@ -184,7 +184,7 @@ public class DVA {
             soundLibraryMap.put(fallbackLibraryName, fallbackLibrary);
 
             for (SoundLibrary library : soundLibraryMap.values()) {
-                if (FALLBACK_LIBRARIES.keySet().contains(library.getName())) {
+                if (FALLBACK_LIBRARIES.containsKey(library.getName())) {
                     library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
                 }
             }
@@ -347,16 +347,14 @@ public class DVA {
             logger.info("Playing: '{}'", announcementText);
             Player p = dva.play(null, announcement, null, null);
             p.start();
-            new Thread() {
-                public void run() {
-                    try {
-                        p.join();
-                        logger.info("Success.");
-                        System.exit(0);
-                    } catch (InterruptedException ignored) {
-                    }
+            new Thread(() -> {
+                try {
+                    p.join();
+                    logger.info("Success.");
+                    System.exit(0);
+                } catch (InterruptedException ignored) {
                 }
-            }.start();
+            }).start();
         }
         else if (args.length >= 4 && args[0].equalsIgnoreCase("/export"))
         {
@@ -382,7 +380,7 @@ public class DVA {
             } else if (args.length > 0 && (args[0].equalsIgnoreCase("/c") || args[0].startsWith("/c:") || args[0].startsWith("/C:"))) {
                 // Run the plasma UI in screen saver setting mode, outside of the regular
                 // application.
-                if (!Settings.isSoundJarsDownloaded())
+                if (Settings.soundJarsNotDownloaded())
                 {
                     fetchSoundJars();
                 }
@@ -429,7 +427,7 @@ public class DVA {
             } else {
                 showLicenceIfNotRead();
                 
-                if (!Settings.isSoundJarsDownloaded())
+                if (Settings.soundJarsNotDownloaded())
                 {
                     fetchSoundJars();
                 }
@@ -455,7 +453,6 @@ public class DVA {
                             getOrCreateSoundLibrary(name).addFile(soundDir);
                         }
                     } else if (path.toLowerCase().endsWith(".jar")) {
-                        String jarFilename = path.substring(path.lastIndexOf(File.separatorChar) + 1);
                         name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.length() - 4);
                         if (!SPECIAL_SOUNDS.contains(name) || Settings.specialSoundsEnabled()) {
                             getOrCreateSoundLibrary(name).addFile(soundDir);
