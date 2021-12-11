@@ -163,7 +163,6 @@
         <manifestclasspath property="ManifestClasspathPlatformSpecific" jarfile="jars/mac/dummy.jar">
             <classpath refid="jarsPlatformSpecific" />
         </manifestclasspath>
-        <echo message="Manifest Classpath: ${ManifestClasspath} ${ManifestClasspathPlatformSpecific}" />
         <jar jarfile="${OutDir}/DVA.jar" level="0">
             <manifest>
                 <attribute name="Main-Class" value="jb.dvacommon.DVA"/>
@@ -224,7 +223,7 @@
     </target>
 
     <target name="SignMacApp.Check">
-    	<echo>Running on ${hostname}</echo>
+    	<echo level="info">Running on ${hostname}</echo>
         <condition property="WillSignMacApp">
             <or>
                 <equals arg1="${hostname}" arg2="jb"/>
@@ -290,7 +289,7 @@
             file: the path of the Windows binary to ResHack.
             icon: the new icon to embed in the binary.
             ini: the WinRun4J .ini to embed in the binary. -->
-        <echo>Processing with ResourceHacker: ${file}</echo>
+        <echo level="info">Processing with ResourceHacker: ${file}</echo>
         <echo file="temp.rh">[FILENAMES]
 Open=   ${file}
 SaveAs= ${file}
@@ -366,7 +365,7 @@ Log=    console
             <arg value="-command"/>
             <arg value="(gc src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
         </exec>
-        <echo>Read version string: ${DVAVersion}</echo>
+        <echo level="info">Read version string: ${DVAVersion}</echo>
     </target>
     
     <!-- Build Mac setup -->
@@ -394,7 +393,7 @@ Log=    console
         <exec executable="umount">
             <arg value="${DmgMountPoint}"/>
         </exec>
-        <echo>Bzip2 compression: ${bzip2compression}</echo>
+        <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
         <exec executable="bzip2">
             <arg line="--verbose --${bzip2compression} ${OutDir}/${DmgName}.dmg"/>
         </exec>
@@ -402,7 +401,7 @@ Log=    console
     
     <!-- Build windows setup -->
     <target name="BuildWinSetup.Check">
-    	<echo>Checking for ${InnoSetupCompiler}</echo>
+    	<echo level="info">Checking for ${InnoSetupCompiler}</echo>
         <available file="${InnoSetupCompiler}" property="InnoSetupCompilerExists"/>
     </target>
     <target name="BuildWinSetup" description="Build Windows setup EXE" depends="BuildWinSetup.Check,CreateJar,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
@@ -416,7 +415,7 @@ Log=    console
             <arg value="-command"/>
             <arg value="(gc 'win${file.separator}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file 'win${file.separator}setup.iss'"/>
         </exec>
-        <echo>Inno Setup compression: ${innosetupcompression}</echo>
+        <echo level="info">Inno Setup compression: ${innosetupcompression}</echo>
         <property name="innosetupargs" value="/Qp /Dinnosetupcompression=${innosetupcompression} /Dversion=${DVAVersion} win\setup.iss"/>
         <exec executable="${Wine}" osfamily="mac">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
@@ -429,7 +428,7 @@ Log=    console
 
     <!-- Sign windows setup -->
     <target name="SignWinSetup.Check">
-    	<echo>Checking for ${SignKey}</echo>
+    	<echo level="info">Checking for ${SignKey}</echo>
         <available file="${SignKey}" property="SignKeyExists"/>
     </target>
     <target name="SignWinSetup" depends="SignWinSetup.Check" if="SignKeyExists">
@@ -484,7 +483,7 @@ Log=    console
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>
-        <echo>Version ${DVAVersion}</echo>
+        <echo level="info">Version ${DVAVersion}</echo>
         <copy todir="build/TestUpdateDrop/${DVAVersion}">
             <fileset dir="${OutDir}">
                 <include name="${DmgName}.dmg.bz2"/>
@@ -506,7 +505,6 @@ Log=    console
     </target>
     <target name="SoundJar">
         <basename property="name" file="${dir}"/>
-        <echo>${name}</echo>
         <zip basedir="${dir}"
              destfile="build${file.separator}soundjars${file.separator}${name}.jar"
              compress="false">
