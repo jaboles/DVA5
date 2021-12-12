@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 public class Player extends Thread {
     List<URL> audioClipList;
     LevelMeterThread levelMeterThread = null;
-    BigClip clip = null;
+    BigClip clip;
     final static Logger logger = LogManager.getLogger(Player.class);
     Runnable longConcatCallback;
     Runnable afterConcatCallback;
@@ -136,22 +136,23 @@ public class Player extends Thread {
                             cacheFile.delete();
                     }
                 }
-                
-                if (cacheFile.exists()) {
-                    audioClipList = new LinkedList<>();
-                    audioClipList.add(cacheFile.toURI().toURL());
-                    logger.debug("Playing cache file");
-                }
-                
+
                 if (longConcatCallback != null)
                     longConcatTimerTask.cancel();
                 if (afterConcatCallback != null)
                     afterConcatCallback.run();
-                
+
+                if (cacheFile.exists()) {
+                    logger.debug("Playing cache file");
+                    if (!isInterrupted())
+                        run1(cacheFile.toURI().toURL());
+                }
+
+            } else if (audioClipList.size() == 1) {
+                if (!isInterrupted())
+                    run1(audioClipList.get(0));
             }
-            
-            if (!isInterrupted())
-                run1();
+
         } catch (IOException e) {
             ExceptionReporter.reportException(e);
             /*} catch (InterruptedException e) {
@@ -160,97 +161,49 @@ public class Player extends Thread {
 
     }
 
-    // This code is a fucking mess, but it is meant to play through a sequence of sound files
-    // with as small a gap between them as possible. As much processing of the next file as possible
-    // is done while each sound file is playing.
-    public void run1() {
+    private void run1(URL u) {
         try {
-            /*
-
-            URL url = new URL("http://pscode.org/media/leftright.wav");
-            BigClip clip = new BigClip();
-            AudioInputStream ais = AudioSystem.getAudioInputStream(url);
-            clip.open(ais);
-            clip.start();
-            JOptionPane.showMessageDialog(null, "BigClip.start()");
-            clip.loop(4);
-            JOptionPane.showMessageDialog(null, "BigClip.loop(4)");
-            clip.setFastForward(true);
-            clip.loop(8);
-            // the looping/FF combo. reveals a bug..
-            // there is a slight 'click' in the sound that should not be audible
-            JOptionPane.showMessageDialog(null, "Are you on speed?");
-
-             */
-            Iterator<URL> it = audioClipList.iterator();
             GetDataLineLevelAudioInputStream ais;
-            clip = null;
-            BigClip nextClip = null;
-            double[] nextLevels = null;
+            double[] levels = null;
 
-            while (true) {
-                if (clip != null)
-                {
-                    // Block til the clip started earlier is done.
-                    //clip.drain();
+            //System.out.println("Processing url: " + u.toString());
+            InputStream istream = new BufferedInputStream(u.openStream(), 102400);
+            AudioInputStream in= AudioSystem.getAudioInputStream(istream);
 
-                    playClipAsync(nextClip);
-                    clip = nextClip;
-                    nextClip = null;
-                    if (levelMeterThread != null)
-                    {
-                        this.levelMeterThread.next(nextLevels);
-                    }
-                }
+            //AudioInputStream in= AudioSystem.getAudioInputStream(u);
+            AudioInputStream din;
+            AudioFormat baseFormat = in.getFormat();
+            AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+                    baseFormat.getSampleRate(),
+                    16,
+                    baseFormat.getChannels(),
+                    baseFormat.getChannels() * 2,
+                    baseFormat.getSampleRate(),
+                    false);
+            din = AudioSystem.getAudioInputStream(decodedFormat, in);
+            ais = new GetDataLineLevelAudioInputStream(din, decodedFormat, din.getFrameLength());
 
+            // Create the clip
+            clip = new BigClip();
 
-                // Process the next file while the current one is playing in the background.
-                //if (it.hasNext())
-                {
-                    // Start processing the next file.
-                    if (it.hasNext())
-                    {
-                        URL u = it.next();
-                        //System.out.println("Processing url: " + u.toString());
-                        InputStream istream = new BufferedInputStream(u.openStream(), 102400);
-                        AudioInputStream in= AudioSystem.getAudioInputStream(istream);
+            // This method does not return until the audio file is completely loaded
+            clip.open(ais);
 
-                        //AudioInputStream in= AudioSystem.getAudioInputStream(u);
-                        AudioInputStream din;
-                        AudioFormat baseFormat = in.getFormat();
-                        AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                                baseFormat.getSampleRate(),
-                                16,
-                                baseFormat.getChannels(),
-                                baseFormat.getChannels() * 2,
-                                baseFormat.getSampleRate(),
-                                false);
-                        din = AudioSystem.getAudioInputStream(decodedFormat, in);
-                        ais = new GetDataLineLevelAudioInputStream(din, decodedFormat, din.getFrameLength());
+            // Calc the sound power levels
+            ais.process();
+            levels = ais.getLevels();
+            //System.out.println("done processing");
 
-                        // Create the clip
-                        nextClip = new BigClip();
+            if (levelMeterThread != null)
+            {
+                this.levelMeterThread.next(levels);
+            }
+            playClipAsync(clip);
 
-                        // This method does not return until the audio file is completely loaded
-                        nextClip.open(ais);
-
-                        // Calc the sound power levels
-                        ais.process();
-                        nextLevels = ais.getLevels();
-                        //System.out.println("done processing");
-                    }
-                }
-
-                // Done processing the next file. Block on the current one, if there's one playing.
-                if (clip != null)
-                {
-                    blockOnSound();
-                }
-
-                if (nextClip == null)
-                    break;
-
-                clip = nextClip;
+            // Done processing the next file. Block on the current one, if there's one playing.
+            if (clip != null)
+            {
+                blockOnSound();
             }
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             ExceptionReporter.reportException(e);
