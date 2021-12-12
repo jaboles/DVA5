@@ -19,6 +19,9 @@
     <condition property="innosetupcompression" value="none" else="lzma2/ultra">
         <isset property="fast"/>
     </condition>
+    <condition property="dpkgcompression" value="none" else="xz">
+        <isset property="fast"/>
+    </condition>
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
@@ -32,7 +35,7 @@
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-    <property name="DmgSizeMb" value="185"/>
+    <property name="DmgSizeMb" value="255"/>
 	
 	<!-- Windows setup -->
     <property name="Wine"            value="wine"/>
@@ -237,6 +240,7 @@
             </fileset>
         </copy>
         <chmod perm="u+x" file="${AppBundleContents}/dva"/>
+        <chmod perm="u+x" file="${AppBundleContents}/ffmpeg"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/Contents/Home/bin/java"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/Contents/Home/lib/jspawnhelper"/>
     </target>
@@ -302,8 +306,6 @@ Log=    console
         <copy tofile="${WinOutDir64}DVA.exe" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
         <copy tofile="${WinOutDir32}DVA.scr" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
         <copy tofile="${WinOutDir64}DVA.scr" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
-        <copy tofile="${WinOutDir32}ttfetch.exe" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
-        <copy tofile="${WinOutDir64}ttfetch.exe" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
 
         <antcall target="ResHack">
             <param name="file" value="${WinOutDir32Wine}DVA.exe" />
@@ -327,18 +329,6 @@ Log=    console
             <param name="file" value="${WinOutDir64Wine}DVA.scr" />
             <param name="icon" value="win\pse.ico" />
             <param name="ini" value="win\DVA.ini" />
-            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
-        </antcall>
-        <antcall target="ResHack">
-            <param name="file" value="${WinOutDir32Wine}ttfetch.exe" />
-            <param name="icon" value="win\dva.ico" />
-            <param name="ini" value="win\ttfetch.ini" />
-            <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
-        </antcall>
-        <antcall target="ResHack">
-            <param name="file" value="${WinOutDir64Wine}ttfetch.exe" />
-            <param name="icon" value="win\dva.ico" />
-            <param name="ini" value="win\ttfetch.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
     </target>
@@ -372,6 +362,7 @@ Log=    console
             </fileset>
         </copy>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
+        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/ffmpeg"/>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/bin/java"/>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/lib/jspawnhelper"/>
         <exec executable="osascript" failonerror="true">
@@ -388,7 +379,7 @@ Log=    console
     </target>
     
     <!-- Build windows setup -->
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes" if="InnoSetupCompilerExists">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes">
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
             <arg value=".bak"/>
@@ -403,7 +394,8 @@ Log=    console
         <property name="innosetupargs" value="/Qp /Dinnosetupcompression=${innosetupcompression} /Dversion=${DVAVersion} win\setup.iss"/>
         <exec executable="${Wine}" osfamily="mac" failonerror="true">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg line="&quot;${InnoSetupCompiler}&quot; ${innosetupargs}"/>
+            <arg value="${InnoSetupCompiler}"/>
+            <arg line="${innosetupargs}"/>
         </exec>
         <exec executable="${InnoSetupCompiler}" osfamily="windows" failonerror="true">
             <arg line="${innosetupargs}"/>
@@ -445,6 +437,7 @@ Log=    console
             </fileset>
         </copy>
         <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}bin${file.separator}dva"/>
+        <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}ffmpeg"/>
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
             <arg value=".bak"/>
@@ -457,6 +450,7 @@ Log=    console
         </exec>
         <exec executable="fakeroot" dir="${OutDir}" failonerror="true">
             <arg value="dpkg"/>
+            <arg value="-Z${dpkgcompression}"/>
             <arg value="--build"/>
             <arg value="debian"/>
         </exec>
