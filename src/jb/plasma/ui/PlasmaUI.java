@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import jb.common.ExceptionReporter;
+import jb.common.FileUtilities;
 import jb.common.sound.Player;
 import jb.common.ui.ColorComboBox;
 import jb.common.ui.JBComboBox;
@@ -641,8 +642,7 @@ public class PlasmaUI
     {
         try
         {
-            File jarFolder = new File(PlasmaUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile();
-            File f = new File(jarFolder, filename);
+            File f = new File(FileUtilities.getJarFolder(PlasmaUI.class), filename);
             if (SwingEngine.isMacOSX())
             {
                 new ProcessBuilder("open", "-a", "TextEdit", f.getPath()).start();
@@ -653,7 +653,7 @@ public class PlasmaUI
                 
             }
         }
-        catch (URISyntaxException | IOException e) {
+        catch (IOException e) {
             ExceptionReporter.reportException(e);
         }
     }

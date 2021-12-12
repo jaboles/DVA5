@@ -236,19 +236,18 @@ public class DVAShell
         public void actionPerformed(ActionEvent e)
         {
             try {
-                File jar = new File(DVA.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
                 if (SwingEngine.isMacOSX())
                 {
-                    File executable = new File(jar.getParent(), "dva");
+                    File executable = new File(FileUtilities.getJarFolder(DVA.class), "dva");
                     JOptionPane.showMessageDialog(null, executable.getPath());
                     new ProcessBuilder("open", "/Applications/Utilities/Terminal.app", executable.getPath()).start();
                 }
                 else
                 {
-                    File executable = new File(jar.getParent(), "dva.exe");
+                    File executable = new File(FileUtilities.getJarFolder(DVA.class), "dva.exe");
                     Runtime.getRuntime().exec("cmd.exe /c start cmd /c \"" + executable.getPath() + "\" && pause");
                 }
-            } catch (URISyntaxException | IOException ex) {
+            } catch (IOException ex) {
                 ExceptionReporter.reportException(ex);
             }
         }

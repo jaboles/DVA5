@@ -13,8 +13,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,7 +25,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
-import jb.common.sound.xuggle.MediaConcatenator2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -124,7 +121,7 @@ public class Player extends Thread {
                     if (longConcatCallback != null) {
                         timer.schedule(longConcatTimerTask, LongConcatThreshold);
                     }
-                    MediaConcatenator2.concat(audioClipList, tempCacheFile.getPath(), null);
+                    MediaConcatenatorFfmpeg.concat(audioClipList, tempCacheFile.getPath(), null);
                     
                     try {
                         if (tempCacheFile.exists())

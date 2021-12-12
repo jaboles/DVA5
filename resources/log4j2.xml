@@ -7,17 +7,18 @@
         <File name="DvaLog" fileName="${sys:java.io.tmpdir}DVA/dva.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger - %msg%n"/>
         </File>
-        <File name="XuggleLog" fileName="${sys:java.io.tmpdir}DVA/xuggle.log">
+        <File name="FfmpegLog" fileName="${sys:java.io.tmpdir}DVA/ffmpeg.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger - %msg%n"/>
         </File>
     </Appenders>
     <Loggers>
         <Root level="trace">
             <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="DvaLog" level="trace"/>
+            <AppenderRef ref="DvaLog" level="debug"/>
         </Root>
-        <Logger name="com.xuggle" level="trace" additivity="false">
-            <AppenderRef ref="XuggleLog"/>
+        <Logger name="jb.common.sound.MediaConcatenatorFfmpeg" level="debug" additivity="false">
+            <AppenderRef ref="Console" level="debug"/>
+            <AppenderRef ref="FfmpegLog" level="debug"/>
         </Logger>
     </Loggers>
 </Configuration>

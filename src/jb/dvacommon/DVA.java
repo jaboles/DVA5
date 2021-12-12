@@ -23,7 +23,7 @@ import jb.common.jna.windows.Shell32Ex;
 import jb.common.jna.windows.User32Ex;
 import jb.common.sound.LevelMeterPanel;
 import jb.common.sound.Player;
-import jb.common.sound.xuggle.MediaConcatenator2;
+import jb.common.sound.MediaConcatenatorFfmpeg;
 import jb.common.ui.ProgressWindow;
 import jb.dva.Script;
 import jb.dva.SoundLibrary;
@@ -75,7 +75,7 @@ public class DVA {
         logger.info("DVA: {}, Java: {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
         logger.info("OS: {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
         logger.info("Temp is: {}", System.getProperty("java.io.tmpdir"));
-        logger.info("Xuggle.log: {}xuggle.log", System.getProperty("java.io.tmpdir"));
+        logger.info("FFmpeg.log: {}ffmpeg.log", System.getProperty("java.io.tmpdir"));
         Player.emptyCache();
     }
     
@@ -250,7 +250,7 @@ public class DVA {
         if (parent != null) {
             parent.mkdirs();
         }
-        MediaConcatenator2.concat(al, targetFile, null);
+        MediaConcatenatorFfmpeg.concat(al, targetFile, null);
     }
 
     public String getCanonicalScript(Script script) {

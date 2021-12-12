@@ -12,12 +12,7 @@
             <include name="*" />
         </fileset>
     </path>
-    <path id="jarsPlatformSpecific">
-        <fileset dir="jars${file.separator}mac">
-            <include name="*" />
-        </fileset>
-    </path>
-    <property name="BuildClasspath" value="${toString:jars}:${toString:jarsPlatformSpecific}" />
+    <property name="BuildClasspath" value="${toString:jars}" />
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
     </condition>
@@ -162,13 +157,10 @@
         <manifestclasspath property="ManifestClasspath" jarfile="jars/dummy.jar">
             <classpath refid="jars" />
         </manifestclasspath>
-        <manifestclasspath property="ManifestClasspathPlatformSpecific" jarfile="jars/mac/dummy.jar">
-            <classpath refid="jarsPlatformSpecific" />
-        </manifestclasspath>
         <jar jarfile="${OutDir}/DVA.jar" level="0">
             <manifest>
                 <attribute name="Main-Class" value="jb.dvacommon.DVA"/>
-                <attribute name="Class-Path" value="${ManifestClasspath} ${ManifestClasspathPlatformSpecific}"/>
+                <attribute name="Class-Path" value="${ManifestClasspath}"/>
             </manifest>
             <fileset dir="${ClassesDir}">
                 <include name="**"/>
@@ -235,8 +227,8 @@
             <fileset dir="jars">
             	<include name="*.jar"/>
             </fileset>
-            <fileset dir="jars/mac">
-                <include name="*.jar"/>
+            <fileset dir="ffmpeg/mac">
+                <include name="*"/>
             </fileset>
         </copy>
         <copy todir="${AppBundleContents}\jre" preservelastmodified="true">
@@ -448,8 +440,8 @@ Log=    console
             <fileset dir="jars">
                 <include name="*.jar"/>
             </fileset>
-            <fileset dir="jars/linux">
-                <include name="*.jar"/>
+            <fileset dir="ffmpeg/linux/amd64">
+                <include name="*"/>
             </fileset>
         </copy>
         <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}bin${file.separator}dva"/>

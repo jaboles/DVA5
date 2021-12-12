@@ -9,8 +9,6 @@ package jb.dva;
 import java.net.URL;
 import java.util.ArrayList;
 
-import jb.common.sound.xuggle.MediaConcatenator2;
-
 // Represents a DVA announcement, and handles translation into a list of sounds.
 public class Script {
     String defaultVoice;
@@ -112,9 +110,9 @@ public class Script {
             String token = findNextToken(pos, library);
             if (token.length() == 1 && isPunctuation(token.charAt(0))) {
                 if (token.charAt(0) == ',') {
-                    translatedData.add(MediaConcatenator2.class.getResource("/silence50msec.wav"));
+                    translatedData.add(Script.class.getResource("/silence50msec.wav"));
                 } else {
-                    translatedData.add(MediaConcatenator2.class.getResource("/silence200msec.wav"));
+                    translatedData.add(Script.class.getResource("/silence200msec.wav"));
                 }
                 canonical.append(token);
             } else if (token.length() == 1 && token.charAt(0) == '`') {
