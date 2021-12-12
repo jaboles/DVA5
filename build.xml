@@ -35,7 +35,7 @@
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-    <property name="DmgSizeMb" value="255"/>
+    <property name="DmgSizeMb" value="175"/>
 	
 	<!-- Windows setup -->
     <property name="Wine"            value="wine"/>
@@ -76,18 +76,18 @@
         <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}${file.separator}winrun4j.zip" verbose="true" skipexisting="true"/>
         <unzip src="${ToolsDir}${file.separator}winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
         <!-- JRE: Win x64 -->
-        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_windows_hotspot_15.0.2_7.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
-        <unzip dest="${ToolsDir}\jre\win32" overwrite="false">
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
+                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
         <!-- JRE: Win x86 -->
-        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x86-32_windows_hotspot_15.0.2_7.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
-        <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x86-32_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <unzip dest="${ToolsDir}\jre\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
+                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
@@ -117,8 +117,8 @@
         <exec executable="brew" failonerror="true">
             <arg line="install fakeroot"/>
         </exec>
-        <!-- Mac x64 -->
-        <get src="https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_mac_hotspot_15.0.2_7.tar.gz" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <!-- JRE: Mac x64 -->
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
         <untar dest="${ToolsDir}\jre\mac" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
@@ -432,7 +432,7 @@ Log=    console
             <fileset dir="jars">
                 <include name="*.jar"/>
             </fileset>
-            <fileset dir="ffmpeg/linux/amd64">
+            <fileset dir="ffmpeg/linux">
                 <include name="*"/>
             </fileset>
         </copy>
@@ -449,7 +449,7 @@ Log=    console
             <arg value="(gc 'linux${file.separator}debian${file.separator}control' -raw) -replace '\d*\.\d*\.\d*', '${DVAVersion}' | out-file 'linux${file.separator}debian${file.separator}control'"/>
         </exec>
         <exec executable="fakeroot" dir="${OutDir}" failonerror="true">
-            <arg value="dpkg"/>
+            <arg value="dpkg-deb"/>
             <arg value="-Z${dpkgcompression}"/>
             <arg value="--build"/>
             <arg value="debian"/>
