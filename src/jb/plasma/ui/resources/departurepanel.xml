@@ -57,7 +57,7 @@
                             <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
                         </hbox>
                     </panel>
-                    <scrollpane verticalScrollBarPolicy="VERTICAL_SCROLLBAR_ALWAYS" border="BevelBorder(1)">
+                    <scrollpane verticalScrollBarPolicy="VERTICAL_SCROLLBAR_ALWAYS">
                         <dvatextarea id="stationsValue" linewrap="true" wrapstyleword="true" rows="3" cols="20" border="EmptyBorder(1,1,1,1)"/>
                     </scrollpane>
                 </panel>

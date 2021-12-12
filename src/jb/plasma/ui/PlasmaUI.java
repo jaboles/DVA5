@@ -6,7 +6,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -39,6 +37,7 @@ import jb.common.ui.TextIcon;
 import jb.dva.Script;
 import jb.dvacommon.DVA;
 import jb.dvacommon.Settings;
+import jb.dvacommon.ui.ThemedFlatSVGIcon;
 import jb.plasma.*;
 import jb.plasma.announcers.CityrailStandard;
 import jb.plasma.announcers.NswCountry;
@@ -507,7 +506,7 @@ public class PlasmaUI
     }
 
     // Show the indicator in windowed mode
-    public Action windowAction = new AbstractAction("Open in Window") {
+    public Action windowAction = new AbstractAction("Open in Window", new ThemedFlatSVGIcon("showwindow")) {
         public void actionPerformed(ActionEvent e)
         {
             showIndicatorBoard(PlasmaWindow.Mode.WINDOWED, null);
@@ -515,7 +514,7 @@ public class PlasmaUI
     };
 
     // Show the indicator in fullscreen mode
-    public Action fullScreenAction = new AbstractAction("Open in Full Screen") {
+    public Action fullScreenAction = new AbstractAction("Open in Full Screen", new ThemedFlatSVGIcon("show")) {
         public void actionPerformed(ActionEvent e)
         {
             showIndicatorBoard(PlasmaWindow.Mode.FULLSCREEN, null);
@@ -555,7 +554,7 @@ public class PlasmaUI
 
     // Play an announcement from the indicator
     @SuppressWarnings("unused")
-    public Action announceAction = new AbstractAction("Play", new ImageIcon(PlasmaUI.class.getResource("/toolbarButtonGraphics/media/Play24.gif"))) {
+    public Action announceAction = new AbstractAction("Play", new ThemedFlatSVGIcon("play")) {
         public void actionPerformed(ActionEvent e)
         {
             departureData = getDepartureData();
@@ -573,7 +572,7 @@ public class PlasmaUI
         }
     };
     
-    public Action stopAction = new AbstractAction("Stop", new ImageIcon(PlasmaUI.class.getResource("/toolbarButtonGraphics/media/Stop24.gif"))) {
+    public Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
             announceAction.setEnabled(true);

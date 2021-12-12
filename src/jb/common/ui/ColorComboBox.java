@@ -72,10 +72,6 @@ public class ColorComboBox extends JComboBox<Object>
                 setBackground((Color)value);
                 setText(" ");
             }
-            else if (value instanceof String)
-            {
-                setBackground(Color.white);
-            }
 
             return this;
         }

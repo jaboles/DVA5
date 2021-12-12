@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.*;
 import jb.common.*;
@@ -46,7 +47,7 @@ public class DVA {
     ArrayList<URL> verifiedUrlList;
     final static Logger logger = LogManager.getLogger(DVA.class);
 
-    public static final String VersionString = "5.4.4";
+    public static final String VersionString = "5.4.5";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
 
     // 'Special' sounds which are only shown after enabling the option
@@ -329,7 +330,7 @@ public class DVA {
 
         try {
             // Set native look and feel
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(DVAShell.getLookAndFeelClassName(Settings.getLookAndFeelName()));
         } catch (Exception e) {
             // wtf?? Impossible situation
         }

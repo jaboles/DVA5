@@ -51,6 +51,8 @@ import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import jb.common.ExceptionReporter;
 import jb.common.sound.LevelMeterPanel;
 import jb.common.sound.Player;
@@ -66,6 +68,7 @@ import jb.dvacommon.DVA;
 import jb.dvacommon.Settings;
 import jb.dvacommon.ui.DVATextArea;
 import jb.dvacommon.ui.DVATextVerifyListener;
+import jb.dvacommon.ui.ThemedFlatSVGIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdesktop.swingx.JXBusyLabel;
@@ -365,7 +368,7 @@ public class DVAUI {
         }
     }
 
-    public Action voiceLibraryToggleAction = new AbstractAction("Show/Hide Voice Library List", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/History16.gif"))) {
+    public Action voiceLibraryToggleAction = new AbstractAction("Show/Hide Voice Library List", new ThemedFlatSVGIcon("togglelibraries")) {
         public void actionPerformed(ActionEvent e) {
             boolean visible = voicePane.isVisible();
             voicePane.setVisible(!visible);
@@ -373,19 +376,19 @@ public class DVAUI {
         }
     };
 
-    public Action soundInfoAction = new AbstractAction("Show/Hide Sound Info", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Information16.gif"))) {
+    public Action soundInfoAction = new AbstractAction("Show/Hide Sound Info", new ThemedFlatSVGIcon("info")) {
         public void actionPerformed(ActionEvent e) {
             soundInfoPanel.setVisible(!soundInfoPanel.isVisible());
         }
     };
 
-    public Action playSavedAction = new AbstractAction("Play", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/media/Volume24.gif"))) {
+    public Action playSavedAction = new AbstractAction("Play", new ThemedFlatSVGIcon("play")) {
         public void actionPerformed(ActionEvent e) {
             play(this, true);
         }
     };
 
-    public Action playCurrentAction = new AbstractAction("Play", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/media/Volume24.gif"))) {
+    public Action playCurrentAction = new AbstractAction("Play", new ThemedFlatSVGIcon("play")) {
         public void actionPerformed(ActionEvent e) {
             play(this, false);
         }
@@ -452,7 +455,7 @@ public class DVAUI {
         }
     }
 
-    public Action stopAction = new AbstractAction("Stop", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/media/Stop24.gif"))) {
+    public Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
             playCurrentAction.setEnabled(true);
@@ -463,7 +466,7 @@ public class DVAUI {
         }
     };
 
-    public Action newAction = new AbstractAction("New", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/New24.gif"))) {
+    public Action newAction = new AbstractAction("New", new ThemedFlatSVGIcon("new")) {
         public void actionPerformed(ActionEvent e) {
             if (documentModified && abortDestructiveAction(e)) return;
 
@@ -474,7 +477,7 @@ public class DVAUI {
         }
     };
 
-    public Action openAction = new AbstractAction("Load", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Open24.gif"))) {
+    public Action openAction = new AbstractAction("Edit", new ThemedFlatSVGIcon("edit")) {
         public void actionPerformed(ActionEvent e) {
             if (documentModified && abortDestructiveAction(e)) return;
 
@@ -487,7 +490,7 @@ public class DVAUI {
         }
     };
 
-    public Action moveUpAction = new AbstractAction("Up", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/navigation/Up24.gif"))) {
+    public Action moveUpAction = new AbstractAction("Up", new ThemedFlatSVGIcon("up")) {
         public void actionPerformed(ActionEvent e) {
             int index = announcementComboBox.getSelectedIndex();
             if (index > 0)
@@ -499,7 +502,7 @@ public class DVAUI {
         }
     };
 
-    public Action moveDownAction = new AbstractAction("Down", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/navigation/Down24.gif"))) {
+    public Action moveDownAction = new AbstractAction("Down", new ThemedFlatSVGIcon("down")) {
         public void actionPerformed(ActionEvent e) {
             int index = announcementComboBox.getSelectedIndex();
             if (index < announcementListModel.size() - 1)
@@ -511,7 +514,7 @@ public class DVAUI {
         }
     };
 
-    public Action renameAction = new AbstractAction("Rename", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/SaveAs24.gif"))) {
+    public Action renameAction = new AbstractAction("Rename", new ThemedFlatSVGIcon("rename")) {
         public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog("Choose a name for this announcement");
             if (name == null || name.trim().isEmpty()) return;
@@ -538,7 +541,7 @@ public class DVAUI {
         }
     };
 
-    public Action deleteAction = new AbstractAction("Delete", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Delete24.gif"))) {
+    public Action deleteAction = new AbstractAction("Delete", new ThemedFlatSVGIcon("delete")) {
         public void actionPerformed(ActionEvent e) {
             Object ann = announcementComboBox.getSelectedValue();
             if (announcementComboBox.getSelectedValue() != null)
@@ -549,7 +552,7 @@ public class DVAUI {
         }
     };
 
-    public Action exportAction = new AbstractAction("Export", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/SaveAs24.gif"))) {
+    public Action exportAction = new AbstractAction("Export", new ThemedFlatSVGIcon("saveas")) {
         public void actionPerformed(ActionEvent e) {
             int errorPos = controller.verify(currentScript);
             if (errorPos >= 0) {
@@ -589,7 +592,7 @@ public class DVAUI {
         }
     };
 
-    public Action saveAction = new AbstractAction("Save", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Save24.gif"))) {
+    public Action saveAction = new AbstractAction("Save", new ThemedFlatSVGIcon("save")) {
         public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog("Choose a name for this announcement");
             if (name == null || name.trim().isEmpty()) return;

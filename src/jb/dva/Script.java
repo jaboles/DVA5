@@ -78,7 +78,7 @@ public class Script {
 
     public String toString()
     {
-        return "<html><body>" + this.name + "<br><i><span style=\"font-size: 80%\">" + this.script + "</span></i></body></html>";
+        return "<html><body><span style=\"font-size: 105%\">" + this.name + "</span><br><i><span style=\"font-size: 90%\">" + this.script + "</span></i></body></html>";
     }
 
     public ArrayList<URL> getTranslatedUrlList(SoundLibrary library) throws Exception {

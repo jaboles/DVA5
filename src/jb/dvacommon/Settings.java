@@ -313,4 +313,12 @@ public class Settings {
         if (d.CustomAnnouncementPath != null)
             prefs.put(k + "CustomAnnouncement", d.CustomAnnouncementPath);
     }
+
+    public static String getLookAndFeelName() {
+        return prefs.get("lookAndFeelName", "light");
+    }
+
+    public static void setLookAndFeelName(String value) {
+        prefs.put("lookAndFeelName", value);
+    }
 }

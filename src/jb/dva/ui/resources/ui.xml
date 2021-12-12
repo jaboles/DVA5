@@ -8,21 +8,21 @@
 	                       <label id="voiceLabel" constraints="BorderLayout.WEST" text="Voice Library: "/>
 	                       <button action="voiceLibraryToggleAction" tooltiptext="Show/Hide Voice Library" constraints="BorderLayout.EAST" text="" contentareafilled="false" focuspainted="false" Border="EmptyBorder(2,2,2,2)"/>
 	                   </panel>
-	                   <scrollpane id="voicePane" border="BevelBorder(1)" horizontalScrollBarPolicy="HORIZONTAL_SCROLLBAR_NEVER">
+	                   <scrollpane id="voicePane" horizontalScrollBarPolicy="HORIZONTAL_SCROLLBAR_NEVER">
 	                       <tooltiplist id="voiceComboBox" dragenabled="true" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
 	                   </scrollpane>
 	               </panel>
 	               <panel layout="BorderLayout">
-	                   <scrollpane border="BevelBorder(1)">
+	                   <scrollpane>
 	                       <tooltiplist id="suggestedSoundList" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
 	                   </scrollpane>
 					<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
 	                       <panel constraints="BorderLayout.NORTH" layout="BorderLayout">
 	                           <panel id="inflectionPanel" constraints="BorderLayout.NORTH" layout="BorderLayout" border="EmptyBorder(5,0,5,0)" visible="false">
 	                               <label text="Inflection:" constraints="BorderLayout.WEST" />
-	                               <list id="inflectionList" constraints="BorderLayout.CENTER" border="BevelBorder(1)" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
+	                               <list id="inflectionList" constraints="BorderLayout.CENTER" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
 	                           </panel>
-	                           <panel id="soundInfoPanel" constraints="BorderLayout.SOUTH" layout="FlowLayout" border="BevelBorder(1)" visible="false" background="WHITE">
+	                           <panel id="soundInfoPanel" constraints="BorderLayout.SOUTH" layout="FlowLayout" visible="false">
 	                               <panel layout="GridLayout(7,2)" background="WHITE">
 	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Size : "/>
 	                                   <label font="dialog-BOLD-11" id="soundInfoSizeLabel" />
@@ -73,7 +73,7 @@
 	                           </hbox>
 	                       </panel>
 	                   </vbox>
-	                   <scrollpane border="BevelBorder(1)">
+	                   <scrollpane>
 	                       <tooltiplist id="announcementComboBox" constraints="BorderLayout.CENTER" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
 	                   </scrollpane>
 	               </panel>
@@ -101,7 +101,7 @@
 	                           </hbox>
 	                       </panel>
 	                   </vbox>
-	                   <scrollpane constraints="BorderLayout.CENTER" border="BevelBorder(1)">
+	                   <scrollpane constraints="BorderLayout.CENTER">
 	                       <dvatextarea id="dvaTextArea" linewrap="true" wrapstyleword="true" border="EmptyBorder(1,1,1,1)"/>
 	                   </scrollpane>
 	               </panel>

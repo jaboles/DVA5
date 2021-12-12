@@ -1,25 +1,17 @@
 package jb.dvacommon.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.Optional;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.TextAction;
+
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.ui.ProgressWindow;
@@ -32,6 +24,7 @@ import jb.dvacommon.ProgressAdapter;
 import jb.dvacommon.Settings;
 import jb.dvacommon.Updater;
 import jb.plasma.ui.PlasmaUI;
+import org.swixml.ConverterLibrary;
 import org.swixml.SwingEngine;
 
 public class DVAShell
@@ -39,9 +32,11 @@ public class DVAShell
     private final SwingEngine renderer;
     private JFrame window;
     private final DVA controller;
+    private final static Font DefaultFont = new Font("Dialog", Font.PLAIN, 13);
     public PlasmaUI plasmaUI;
     public JPanel dvaPanel;
     public JPanel indicatorsPanel;
+    public JMenu themeMenu;
 
     public JTabbedPane tabbedPane;
     public JLabel updateInfoLabel;
@@ -72,6 +67,8 @@ public class DVAShell
 
     public DVAShell(final DVA controller) {
         this.controller = controller;
+        ConverterLibrary.getInstance().register(ImageIcon.class, new SvgIconConverter());
+        UIManager.getLookAndFeelDefaults().put("defaultFont", DefaultFont);
         renderer = new SwingEngine(this);
 
         try {
@@ -109,7 +106,15 @@ public class DVAShell
             }
             dvaPanel.add(dvaUI.getPanel(), BorderLayout.CENTER);
             indicatorsPanel.add(plasmaUI.getPanel(), BorderLayout.CENTER);
-            
+
+            for (int i = 0; i < themeMenu.getItemCount(); i++) {
+                JCheckBoxMenuItem themeMenuItem = (JCheckBoxMenuItem)themeMenu.getItem(i);
+                if (Settings.getLookAndFeelName().equals(themeMenuItem.getActionCommand())) {
+                    themeMenuItem.setSelected(true);
+                    break;
+                }
+            }
+
             WindowUtils.center(window);
         }
         catch (Exception e) {
@@ -210,6 +215,27 @@ public class DVAShell
     };
 
     @SuppressWarnings("unused")
+    public Action themeAction = new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+            String laf = UIManager.getSystemLookAndFeelClassName();
+            JCheckBoxMenuItem selectedMenuItem = (JCheckBoxMenuItem)e.getSource();
+            Settings.setLookAndFeelName(selectedMenuItem.getActionCommand());
+            for (int i = 0; i < themeMenu.getItemCount(); i++)
+            {
+                if (selectedMenuItem != themeMenu.getItem(i)) themeMenu.getItem(i).setSelected(false);
+            }
+            selectedMenuItem.setSelected(true);
+            try {
+                UIManager.setLookAndFeel(getLookAndFeelClassName(selectedMenuItem.getActionCommand()));
+                UIManager.getLookAndFeelDefaults().put("defaultFont", DefaultFont);
+            } catch (Exception ex) {
+                ExceptionReporter.reportException(ex);
+            }
+            SwingUtilities.updateComponentTreeUI(window);
+        }
+    };
+
+    @SuppressWarnings("unused")
     public Action aboutAction = new AbstractAction("About", null) {
         public void actionPerformed(ActionEvent e) {
             LoadWindow lw = new LoadWindow();
@@ -218,7 +244,7 @@ public class DVAShell
     };
 
     @SuppressWarnings("unused")
-    public Action helpAction = new AbstractAction("Help", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Help24.gif"))) {
+    public Action helpAction = new AbstractAction("Help", null) {
         public void actionPerformed(ActionEvent e) {
             new HelpWindow().showHelp();
         }
@@ -266,7 +292,7 @@ public class DVAShell
     };
     
     @SuppressWarnings("unused")
-    public Action quitAction = new AbstractAction("Quit", new ImageIcon(DVAUI.class.getResource("/toolbarButtonGraphics/general/Stop24.gif"))) {
+    public Action quitAction = new AbstractAction("Quit", null) {
         public void actionPerformed(ActionEvent e) {
             controller.quit();
         }
@@ -285,4 +311,13 @@ public class DVAShell
             getFocusedComponent().selectAll();
         }
     };
+
+    public static String getLookAndFeelClassName(String lookAndFeelName) {
+        switch (lookAndFeelName)
+        {
+            case "light": return FlatLightLaf.class.getName();
+            case "dark": return FlatDarkLaf.class.getName();
+            default: return UIManager.getSystemLookAndFeelClassName();
+        }
+    }
 }

@@ -176,7 +176,7 @@
                 </patternset>
             </fileset>
             <fileset dir="resources">
-                <include name="*"/>
+                <include name="**"/>
             </fileset>
     	</jar>
         <copy todir="${OutDir}" preservelastmodified="true">
