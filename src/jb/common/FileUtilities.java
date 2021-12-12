@@ -190,22 +190,6 @@ public class FileUtilities
         return getJarFolder(runtimeObj.getClass());
     }
 
-    public static File getApplicationDataFolder()
-    {
-        if (OSDetection.isMac())
-        {
-            return new File("/Library/Application Support");
-        }
-        else if (OSDetection.isWindows())
-        {
-            return new File(new File(System.getenv("ALLUSERSPROFILE")), "Application Data");
-        }
-        else
-        {
-            return new File("/");
-        }
-    }
-
     public static File getUserApplicationDataFolder()
     {
         if (OSDetection.isMac())
@@ -223,13 +207,9 @@ public class FileUtilities
                 return new File(System.getenv("HOMEPATH"));
             }
         }
-        else if (OSDetection.isUnix())
-        {
-            return new File(System.getProperty("user.home"));
-        }
         else
         {
-            return new File("/");
+            return new File(System.getProperty("user.home"));
         }
     }
 }

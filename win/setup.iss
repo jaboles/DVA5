@@ -47,9 +47,6 @@ Source: "..\build\Output\*.jar"; DestDir: "{app}"
 Source: "..\build\Output\*.txt"; DestDir: "{app}"
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
-[Dirs]
-Name: "{commonappdata}\DVA"; Permissions: Users-modify
-
 [Icons]
 Name: "{group}\DVA 5"; Filename: "{app}\DVA.exe"; AppUserModelID: "jb.DVA"
 Name: "{group}\{cm:UninstallProgram,DVA}"; Filename: "{uninstallexe}"

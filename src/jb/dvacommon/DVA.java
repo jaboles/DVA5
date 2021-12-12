@@ -76,7 +76,7 @@ public class DVA {
         logger.info("OS: {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
         logger.info("Temp is: {}", System.getProperty("java.io.tmpdir"));
         logger.info("FFmpeg.log: {}ffmpeg.log", System.getProperty("java.io.tmpdir"));
-        Player.emptyCache();
+        Player.emptyCache(getTemp());
     }
     
     public DVA(boolean showMainWindow, boolean showLoadingProgress) {
@@ -88,8 +88,8 @@ public class DVA {
         }
 
         try {
-            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>("dvatmp", "soundlibrarymap" + VersionString);
-            final ObjectCache<SoundLibrary> c = new ObjectCache<>("dvatmp", "soundlibrary" + VersionString);
+            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(getTemp(), "soundlibrarymap" + VersionString);
+            final ObjectCache<SoundLibrary> c = new ObjectCache<>(getTemp(), "soundlibrary" + VersionString);
             populateSoundLibraries();
             
             // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
@@ -118,7 +118,7 @@ public class DVA {
             //if (p != null) p.join();
 
             if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
-            GtfsGenerator.initialize(new File(DVA.getApplicationDataFolder(), "GtfsTimetable").toPath());
+            GtfsGenerator.initialize(new File(getTemp(), "GtfsTimetable").toPath());
             GtfsGenerator.getInstance().download();
 
             if (showLoadingProgress) lw.setText("Reading timetable data... ");
@@ -154,8 +154,8 @@ public class DVA {
         this();
 
         try {
-            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>("dvatmp", "soundlibrarymap" + VersionString);
-            final ObjectCache<SoundLibrary> c = new ObjectCache<>("dvatmp", "soundlibrary" + VersionString);
+            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(getTemp(), "soundlibrarymap" + VersionString);
+            final ObjectCache<SoundLibrary> c = new ObjectCache<>(getTemp(), "soundlibrary" + VersionString);
             populateSoundLibraries();
 
             // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
@@ -209,7 +209,7 @@ public class DVA {
     public Player play(LevelMeterPanel levelMeterPanel, Script s, Runnable longConcatCallback, Runnable afterConcatCallback) {
         try {
             ArrayList<URL> al = s.getTranslatedUrlList(getSoundLibrary(s.getVoice()));
-            player = new Player(al, longConcatCallback, afterConcatCallback, levelMeterPanel);
+            player = new Player(al, longConcatCallback, afterConcatCallback, levelMeterPanel, getTemp());
 
             return player;
         } catch (Exception e) {
@@ -250,7 +250,7 @@ public class DVA {
         if (parent != null) {
             parent.mkdirs();
         }
-        MediaConcatenatorFfmpeg.concat(al, targetFile, null);
+        MediaConcatenatorFfmpeg.concat(al, targetFile, null, getTemp());
     }
 
     public String getCanonicalScript(Script script) {
@@ -289,6 +289,10 @@ public class DVA {
             // Delete settings
             Settings.deleteAll();
             System.exit(0);
+        }
+
+        if (!getTemp().exists()) {
+            getTemp().mkdirs();
         }
 
         // Apple UI stuff
@@ -496,9 +500,9 @@ public class DVA {
         }
     }
 
-    public static File getApplicationDataFolder()
+    public static File getTemp()
     {
-        return new File(FileUtilities.getUserApplicationDataFolder(), "DVA");
+        return new File(System.getProperty("java.io.tmpdir"), "DVA");
     }
 
     public static File getSoundJarsFolder()
@@ -511,13 +515,9 @@ public class DVA {
         {
             return new File("/Users/Shared/Library/Application Support/DVA");
         }
-        else if (OSDetection.isUnix())
-        {
-            return new File(FileUtilities.getUserApplicationDataFolder(), ".dva");
-        }
         else
         {
-            return getApplicationDataFolder();
+            return new File(FileUtilities.getUserApplicationDataFolder(), ".dva");
         }
     }
 }

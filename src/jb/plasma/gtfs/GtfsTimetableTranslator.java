@@ -200,7 +200,7 @@ public class GtfsTimetableTranslator
                             tu -> tu.getStopTimeUpdateList().stream()
                                 .collect(Collectors.toMap(stu -> tt.Stops.get(stu.getStopId()), stu -> stu))));
 
-            try (PrintWriter out = new PrintWriter(new File(DVA.getApplicationDataFolder(), "gtfsrealtime.txt"))) {
+            try (PrintWriter out = new PrintWriter(new File(DVA.getTemp(), "gtfsrealtime.txt"))) {
                 out.println(realtimeInfo);
             }
         }

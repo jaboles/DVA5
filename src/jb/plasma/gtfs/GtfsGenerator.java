@@ -1,6 +1,8 @@
 package jb.plasma.gtfs;
 
 import jb.dvacommon.DVA;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class GtfsGenerator {
+    private final static Logger logger = LogManager.getLogger(GtfsGenerator.class);
     private final Path wd;
     private static GtfsGenerator instance;
 
@@ -45,14 +48,17 @@ public class GtfsGenerator {
     {
         if (Files.exists(wd))
         {
+            logger.info("GTFS data {} exists", wd);
             if (LocalDateTime.now().isAfter(expiryTime()))
             {
+                logger.info("GTFS data expired, deleting.");
                 delete();
             }
         }
 
         if (!Files.exists(wd))
         {
+            logger.info("GTFS data doesn't exist, downloading new data.");
             GtfsHttpClient.getHTMLZip("https://api.transport.nsw.gov.au/v1/gtfs/schedule/sydneytrains", wd);
         }
     }

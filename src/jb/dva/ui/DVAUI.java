@@ -330,7 +330,7 @@ public class DVAUI {
 
     public void previewSound(int index, int inflection)
     {
-        new Player(Collections.singletonList(suggestedSoundListModel.getURLAt(index, inflection)), levelMeterPanelCurrentAnnouncement).start();
+        new Player(Collections.singletonList(suggestedSoundListModel.getURLAt(index, inflection)), levelMeterPanelCurrentAnnouncement, DVA.getTemp()).start();
     }
 
     public void showSoundInfo(int index, int inflection)
@@ -618,7 +618,7 @@ public class DVAUI {
 
     public void failSound()
     {
-        new Player(Collections.singletonList(DVAUI.class.getResource("/Basso.wav")), null).start();
+        new Player(Collections.singletonList(DVAUI.class.getResource("/Basso.wav")), null, DVA.getTemp()).start();
     }
 
     private boolean abortDestructiveAction(ActionEvent e) {

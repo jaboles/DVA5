@@ -385,7 +385,7 @@ public class PlasmaUI
                 try {
                     ArrayList<URL> al = new ArrayList<>();
                     al.add(new File(departureData.get(0).CustomAnnouncementPath).toURI().toURL());
-                    player = new Player(al, null);
+                    player = new Player(al, null, DVA.getTemp());
                     player.start();
                 } catch (Exception e) {
                     ExceptionReporter.reportException(e);

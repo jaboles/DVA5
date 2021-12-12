@@ -147,7 +147,7 @@ public class DVAShell
         try {
             panel = (JPanel)renderer.render(DVAShell.class.getResource("/jb/dvacommon/ui/resources/updateinfopanel.xml"));
             updateInfoLabel.setText("<html>A newer version of DVA is available. <br><br>It is recommended that you update DVA to the latest version to ensure<br>the most reliable and stable experience, as well as any improvements<br>made to it.<br><br>Installed version: " + DVA.VersionString + "<br>New version: " + updater.getLatestVersion());
-            File tempHtml = File.createTempFile("dvatmp", ".html");
+            File tempHtml = new File(DVA.getTemp(), "new.html");
             FileUtilities.copyStream(updater.getVersionHistoryUrl(updater.getLatestVersion()).openStream(), tempHtml);
             updateVersionHistoryPane.setPage(tempHtml.toURI().toURL());
         } catch (MalformedURLException e) {

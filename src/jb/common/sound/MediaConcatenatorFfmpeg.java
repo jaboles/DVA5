@@ -22,7 +22,7 @@ public class MediaConcatenatorFfmpeg
 {
     private final static Logger logger = LogManager.getLogger(MediaConcatenatorFfmpeg.class);
 
-    public static void concat(List<URL> urlList, String outputFile, ProgressAdapter pa) {
+    public static void concat(List<URL> urlList, String outputFile, ProgressAdapter pa, File tempDir) {
         if (pa != null) {
             pa.show();
             pa.updateProgress(0, 0, "Processing...", null);
@@ -32,9 +32,9 @@ public class MediaConcatenatorFfmpeg
 
         try
         {
-            File tempDir = getTemp();
-            if (!tempDir.exists()) {
-                tempDir.mkdir();
+            File concatTemp = new File(tempDir, "mc");
+            if (!concatTemp.exists()) {
+                concatTemp.mkdirs();
             }
 
             File ffmpeg = new File(FileUtilities.getJarFolder(MediaConcatenatorFfmpeg.class),
@@ -50,7 +50,7 @@ public class MediaConcatenatorFfmpeg
                 logger.debug("Concatenating: {}", u);
                 if (pa != null) pa.updateProgress(0, 0, "Processing...", u.toString());
 
-                File tempFile = new File(tempDir, Integer.toString(i));
+                File tempFile = new File(concatTemp, Integer.toString(i));
                 Files.copy(u.openStream(), Paths.get(tempFile.toURI()), StandardCopyOption.REPLACE_EXISTING);
                 ffmpegCmd.add("-i");
                 ffmpegCmd.add(Integer.toString(i));
@@ -68,7 +68,7 @@ public class MediaConcatenatorFfmpeg
 
             logger.info("Running ffmpeg: {}", String.join(" ", ffmpegCmd));
             Process p = new ProcessBuilder(ffmpegCmd)
-                    .directory(tempDir)
+                    .directory(concatTemp)
                     .start();
             p.waitFor();
 
@@ -81,10 +81,5 @@ public class MediaConcatenatorFfmpeg
             ExceptionReporter.reportException(e);
         }
         if (pa != null) pa.dispose();
-    }
-
-    private static File getTemp()
-    {
-        return new File(System.getProperty("java.io.tmpdir") + File.separator + "dvatmp" + File.separator + "c");
     }
 }

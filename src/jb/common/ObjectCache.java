@@ -11,12 +11,13 @@ import java.util.concurrent.Callable;
 
 public class ObjectCache<T>
 {
-    private final String cacheRootName;
+    private final File cacheDir;
     private final String cacheUniverse;
     
-    public ObjectCache(String cacheRootName, String cacheUniverse)
+    public ObjectCache(File tempDir, String cacheUniverse)
     {
-        this.cacheRootName = cacheRootName;
+        cacheDir = new File(tempDir, "ObjectCache");
+        cacheDir.mkdirs();
         this.cacheUniverse = cacheUniverse;
     }
     
@@ -28,8 +29,6 @@ public class ObjectCache<T>
     @SuppressWarnings("unchecked")
     public T load(String cacheId, Callable<T> generator) throws Exception
     {
-        File cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + cacheRootName);
-        cacheDir.mkdirs();
         File cached = new File(cacheDir, cacheUniverse + "_" + cacheId);
         T retval;
 
@@ -67,7 +66,6 @@ public class ObjectCache<T>
     
     public void emptyCache()
     {
-        File cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + cacheRootName);
         if (cacheDir.exists()) {
             File[] files = cacheDir.listFiles();
             if (files != null) {

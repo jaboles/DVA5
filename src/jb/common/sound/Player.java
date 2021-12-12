@@ -36,13 +36,14 @@ public class Player extends Thread {
     Runnable longConcatCallback;
     Runnable afterConcatCallback;
     Timer timer;
+    final File tempDir;
     public static final int LongConcatThreshold = 700;
 
-    public Player(List<URL> urlList, LevelMeterPanel levelMeterPanel) {
-        this(urlList, null, null, levelMeterPanel);
+    public Player(List<URL> urlList, LevelMeterPanel levelMeterPanel, File tempDir) {
+        this(urlList, null, null, levelMeterPanel, tempDir);
     }
 
-    public Player(List<URL> urlList, Runnable longConcatCallback, Runnable afterConcatCallback, LevelMeterPanel levelMeterPanel) {
+    public Player(List<URL> urlList, Runnable longConcatCallback, Runnable afterConcatCallback, LevelMeterPanel levelMeterPanel, File tempDir) {
         for (URL u : urlList)
         {
             logger.info(u.toString());
@@ -51,6 +52,7 @@ public class Player extends Thread {
         this.longConcatCallback = longConcatCallback;
         this.afterConcatCallback = afterConcatCallback;
         this.timer = new Timer();
+        this.tempDir = tempDir;
         if (levelMeterPanel != null)
         {
             this.levelMeterThread = new LevelMeterThread(levelMeterPanel);
@@ -58,14 +60,14 @@ public class Player extends Thread {
         }
     }
 
-    public static File getCacheDir()
+    private static File getCacheDir(File tempDir)
     {
-        return new File(System.getProperty("java.io.tmpdir") + File.separator + "dvatmp");
+        return new File(tempDir, "PlayerCache");
     }
 
-    public static void emptyCache()
+    public static void emptyCache(File tempDir)
     {
-        File cacheDir = getCacheDir();
+        File cacheDir = getCacheDir(tempDir);
         if (cacheDir.exists()) {
             File[] cacheFiles = cacheDir.listFiles();
             if (cacheFiles != null) {
@@ -87,14 +89,14 @@ public class Player extends Thread {
         {
             if (audioClipList.size() > 1)
             {
-                File cacheDir = getCacheDir();
+                File cacheDir = getCacheDir(tempDir);
                 long combinedHash = 17;
                 for (Object o : audioClipList)
                 {
                     combinedHash = 23 * combinedHash + o.hashCode();
                 }
                 if (!cacheDir.exists()) {
-                    cacheDir.mkdir();
+                    cacheDir.mkdirs();
                 }
                 File[] cacheFiles = cacheDir.listFiles();
                 if (cacheFiles != null) {
@@ -121,7 +123,7 @@ public class Player extends Thread {
                     if (longConcatCallback != null) {
                         timer.schedule(longConcatTimerTask, LongConcatThreshold);
                     }
-                    MediaConcatenatorFfmpeg.concat(audioClipList, tempCacheFile.getPath(), null);
+                    MediaConcatenatorFfmpeg.concat(audioClipList, tempCacheFile.getPath(), null, tempDir);
                     
                     try {
                         if (tempCacheFile.exists())

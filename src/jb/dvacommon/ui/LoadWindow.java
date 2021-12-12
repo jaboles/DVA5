@@ -95,7 +95,7 @@ public class LoadWindow {
                 startSoundList.add(LoadWindow.class.getResource("/start4-V.f.mp3"));
                 startSoundList.add(LoadWindow.class.getResource("/start4-A.f.mp3"));
                 startSoundList.add(LoadWindow.class.getResource("/start4-5.f.mp3"));
-                p = new Player(startSoundList, null);
+                p = new Player(startSoundList, null, DVA.getTemp());
                 p.start();
             } catch (Exception e) {
                 ExceptionReporter.reportException(e);
