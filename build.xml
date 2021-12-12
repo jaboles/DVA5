@@ -35,8 +35,7 @@
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-    <property name="DmgSizeMb" value="175"/>
-	
+
 	<!-- Windows setup -->
     <property name="Wine"            value="wine"/>
     <property name="WinePrefix"      value="${user.home}/.wine"/>
@@ -350,8 +349,12 @@ Log=    console
     <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="BuildMacApp">
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
+        <exec executable="sh" outputproperty="dmgSizeMb">
+            <arg line="-c &quot;echo $((`du -d 0 -m build/Output/DVA.app | cut -f 1` + 5))&quot;"/>
+        </exec>
+        <echo>Creating .DMG with ${dmgSizeMb} mb</echo>
         <exec executable="hdiutil" failonerror="true">
-            <arg line="create -megabytes ${DmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${OutDir}/${DmgName}.dmg"/>
+            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${OutDir}/${DmgName}.dmg"/>
         </exec>
         <exec executable="hdiutil" failonerror="true">
             <arg line="attach ${OutDir}/${DmgName}.dmg"/>
