@@ -12,4 +12,5 @@ exec ./jre/Contents/Home/bin/java \
     -Xdock:name=DVA \
     -Xdock:icon=$DOCKICON \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
+    -Xmx1G \
     -jar DVA.jar "$@"

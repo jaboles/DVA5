@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.file.Files;
@@ -68,15 +69,25 @@ public class MediaConcatenatorFfmpeg
 
             logger.info("Running ffmpeg: {}", String.join(" ", ffmpegCmd));
             Process p = new ProcessBuilder(ffmpegCmd)
+                    .redirectErrorStream(true)
                     .directory(concatTemp)
                     .start();
-            p.waitFor();
 
-            BufferedReader processReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            String line;
-            while ((line = processReader.readLine()) != null)
-                logger.debug(line);
-            processReader.close();
+            Thread readerThread = new Thread(() -> {
+                try {
+                    BufferedReader processReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    String line;
+                    while ((line = processReader.readLine()) != null)
+                        logger.debug(line);
+                    processReader.close();
+                } catch (IOException e) {
+                    ExceptionReporter.reportException(e);
+                }
+            });
+
+            readerThread.start();
+            p.waitFor();
+            readerThread.join();
         } catch (Exception e) {
             ExceptionReporter.reportException(e);
         }
