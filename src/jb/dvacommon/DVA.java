@@ -47,7 +47,7 @@ public class DVA {
     ArrayList<URL> verifiedUrlList;
     final static Logger logger = LogManager.getLogger(DVA.class);
 
-    public static final String VersionString = "5.4.5";
+    public static final String VersionString = "5.5.0";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
 
     // 'Special' sounds which are only shown after enabling the option

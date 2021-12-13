@@ -79,6 +79,7 @@ public class LoadWindow {
             aboutText = aboutText.replace("$COPYRIGHT$",  DVA.CopyrightMessage);
             aboutText = aboutText.replace("$JAVAVERSION$", System.getProperty("java.version"));
             aboutText = aboutText.replace("$JAVAARCH$", System.getProperty("os.arch"));
+            aboutText = aboutText.replace("$GITHUB$", "https://github.com/jaboles/DVA5");
             aboutTextPane.setText(aboutText);
 
             aboutTextPane.addHyperlinkListener(event -> {
