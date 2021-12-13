@@ -1,5 +1,6 @@
 package jb.plasma.gtfs;
 
+import jb.common.ExceptionReporter;
 import jb.dvacommon.DVA;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +14,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class GtfsGenerator {
     private final static Logger logger = LogManager.getLogger(GtfsGenerator.class);
@@ -80,9 +82,16 @@ public class GtfsGenerator {
         HashMap<String, Route> routes = GtfsCsvReader.readRoutes(wd.resolve("routes.txt"));
         HashMap<String, ServicePeriod> servicePeriods = GtfsCsvReader.readServicePeriods(wd.resolve("calendar.txt"));
         HashMap<String, Trip> trips = GtfsCsvReader.readTrips(wd.resolve("trips.txt"), routes, servicePeriods);
-        List<StopTime> stopTimes = GtfsCsvReader.readStopTimes(wd.resolve("stop_times.txt"), trips, stops);
+        Supplier<Stream<StopTime>> stopTimesReader = () -> {
+            try {
+                return GtfsCsvReader.readStopTimes(wd.resolve("stop_times.txt"), trips, stops);
+            } catch (IOException e) {
+                ExceptionReporter.reportException(e);
+                return Stream.empty();
+            }
+        };
 
-        return new GtfsTimetable(routes, servicePeriods, stops, stopTimes, trips, downloadTimestamp(), expiryTime());
+        return new GtfsTimetable(routes, servicePeriods, stops, stopTimesReader, trips, downloadTimestamp(), expiryTime());
     }
 
     public void delete() throws IOException

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class GtfsCsvReader
 {
@@ -113,11 +114,9 @@ public class GtfsCsvReader
         return map;
     }
 
-    public static List<StopTime> readStopTimes(Path stoptimesTxt, Map<String, Trip> trips, Map<String, Stop> stops) throws IOException
+    public static Stream<StopTime> readStopTimes(Path stoptimesTxt, Map<String, Trip> trips, Map<String, Stop> stops) throws IOException
     {
-        List<StopTime> list = new ArrayList<>();
-
-        Files.lines(stoptimesTxt).skip(1).forEach(line ->
+        return Files.lines(stoptimesTxt).skip(1).map(line ->
         {
             String[] parts = line.split(",");
             for (int i = 0; i < parts.length; i++)
@@ -129,17 +128,14 @@ public class GtfsCsvReader
             boolean dropoff = parts[7].trim().charAt(0) == '0'; // e.g. "0" or "1". 0 actually means "yes"
             if (pickup || dropoff)
             {
-                StopTime data = new StopTime(
+                return new StopTime(
                         trips.get(parts[0]), // e.g. "108B.959.129.12.T.8.68357311"
                         parts[2], // e.g. "04:46:06"
                         stops.get(parts[3]), // e.g. "2135234"
                         pickup,
                         dropoff
                 );
-                list.add(data);
-            }
-        });
-
-        return list;
+            } else return null;
+        }).filter(Objects::nonNull);
     }
 }

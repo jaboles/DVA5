@@ -125,7 +125,7 @@ public class DVA {
             GtfsTimetable tt = GtfsGenerator.getInstance().read();
 
             int steps = GtfsTimetable.getAnalysisStepCount();
-            if (showLoadingProgress) lw.setText("Analysing timetable... indexing locations");
+            if (showLoadingProgress) lw.setText("Reading timetable data... indexing stops");
             for (int i = 0; i < steps; i++)  {
                 if (showLoadingProgress) lw.setText("Analysing timetable... " + tt.analyse(i));
             }

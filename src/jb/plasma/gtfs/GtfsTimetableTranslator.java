@@ -1,6 +1,7 @@
 package jb.plasma.gtfs;
 
 import com.google.transit.realtime.GtfsRealtime1007Extension;
+import jb.common.ui.ProgressWindow;
 import jb.dvacommon.DVA;
 import jb.plasma.DepartureData;
 import jb.plasma.GtfsDepartureData;
@@ -76,15 +77,16 @@ public class GtfsTimetableTranslator
             String routeName,
             int limit)
     {
-        Stream<Stop> platforms;
+        Set<Stop> platforms;
         if (platform != null)
         {
-            platforms = Arrays.stream(new Stop[] {platform});
+            platforms = Arrays.stream(new Stop[] {platform}).collect(Collectors.toSet());
         }
         else
         {
             platforms = tt.Stops.values().stream()
-                    .filter(s -> s.Parent == station);
+                    .filter(s -> s.Parent == station)
+                    .collect(Collectors.toSet());
         }
 
         final Set<Route> routes = routeName != null
@@ -92,18 +94,44 @@ public class GtfsTimetableTranslator
                     .collect(Collectors.toSet())
                 : null;
 
+        ProgressWindow pw = new ProgressWindow("Progress", "Scanning timetable data...");
+        pw.show();
+        pw.repaint();
+        pw.setProgressBarMaximum(100);
+        Set<StopTime> stopsAtSelectedLocation = tt.StopTimesReader.get()
+                .filter(st -> platforms.contains(st.Stop))
+                .collect(Collectors.toSet());
+        pw.setValue(25);
+        pw.repaint();
+        Set<Trip> tripsStoppingAtSelectedLocation = stopsAtSelectedLocation.stream()
+                .map(st -> st.Trip)
+                .collect(Collectors.toSet());
+        pw.setValue(50);
+        pw.repaint();
+        Set<Trip> blockTripsStoppingAtSelectedLocation = tripsStoppingAtSelectedLocation.stream()
+                .flatMap(t -> getLaterTripsInSameBlock(t).stream())
+                .collect(Collectors.toSet());
+        pw.setValue(75);
+        pw.repaint();
+        Map<Trip, List<StopTime>> stopTimesByTrip = tt.StopTimesReader.get()
+                .filter(st -> tripsStoppingAtSelectedLocation.contains(st.Trip) || blockTripsStoppingAtSelectedLocation.contains(st.Trip))
+                .collect(Collectors.groupingBy(st -> st.Trip));
+        pw.setValue(100);
+        pw.repaint();
+        System.gc();
+        pw.dispose();
+
         LocalDate today = LocalDate.now();
-        return platforms
-            .flatMap(p -> applyRealtimeInfo(tt.StopTimesByStop.get(p).stream(), today))
+        return applyRealtimeInfo(stopsAtSelectedLocation.stream(), today)
             .filter(st -> st.Pickup)
             .filter(st -> routes == null || routes.contains(st.Trip.Route))
-            .flatMap(st -> expandTrips(st, tt))
+            .flatMap(st -> expandTrips(st, stopTimesByTrip))
             .sorted(Comparator.comparing(t -> t.At))
             .limit(limit > 0 ? limit : Integer.MAX_VALUE)
             .map(GtfsDepartureData::new);
     }
 
-    private Stream<TripInstance> expandTrips(StopTime tripTimeAndPlace, GtfsTimetable tt)
+    private Stream<TripInstance> expandTrips(StopTime tripTimeAndPlace, Map<Trip, List<StopTime>> stopTimesByTrip)
     {
         LinkedList<TripInstance> list = new LinkedList<>();
         LocalDateTime now = LocalDateTime.now();
@@ -130,7 +158,7 @@ public class GtfsTimetableTranslator
                     (date.getDayOfWeek() == DayOfWeek.SUNDAY && tripTimeAndPlace.Trip.ServicePeriod.Sunday))
             {
                 final LocalDate dateCopy = date;
-                List<NormalizedStopTime> tripStopTimes = applyRealtimeInfo(tt.StopTimesByTrip.get(tripTimeAndPlace.Trip).stream(), dateCopy)
+                List<NormalizedStopTime> tripStopTimes = applyRealtimeInfo(stopTimesByTrip.get(tripTimeAndPlace.Trip).stream(), dateCopy)
                         .map(tst -> new NormalizedStopTime(tst, dateCopy))
                         .collect(Collectors.toList());
 
@@ -145,15 +173,9 @@ public class GtfsTimetableTranslator
                     tripStopTimes = new LinkedList<>(tripStopTimes);
                     NormalizedStopTime tripLastStopTime = tripStopTimes.get(tripStopTimes.size() - 1);
 
-                    for (Trip blockTrip : tt.TripsByBlockId.get(tripTimeAndPlace.Trip.BlockId).stream()
-                            // Only look at up to 2 following trips later in the same block
-                            .filter(bt -> bt != tripTimeAndPlace.Trip)
-                            .filter(bt -> bt.Name.compareTo(tripTimeAndPlace.Trip.Name) > 0)
-                            .sorted(Comparator.comparing(bt -> bt.Name))
-                            .limit(2)
-                            .collect(Collectors.toList()))
+                    for (Trip blockTrip : getLaterTripsInSameBlock(tripTimeAndPlace.Trip))
                     {
-                        List<NormalizedStopTime> blockStopTimes = applyRealtimeInfo(tt.StopTimesByTrip.get(blockTrip).stream(), dateCopy)
+                        List<NormalizedStopTime> blockStopTimes = applyRealtimeInfo(stopTimesByTrip.get(blockTrip).stream(), dateCopy)
                                 .map(bst -> new NormalizedStopTime(bst, dateCopy))
                                 .collect(Collectors.toList());
 
@@ -186,6 +208,19 @@ public class GtfsTimetableTranslator
             }
         }
         return list.stream();
+    }
+
+    public Set<Trip> getLaterTripsInSameBlock(Trip trip)
+    {
+        if (trip.BlockId == null || trip.BlockId.length() == 0) return Collections.emptySet();
+
+        return tt.TripsByBlockId.get(trip.BlockId).stream()
+            // Only look at up to 2 following trips later in the same block
+            .filter(bt -> bt != trip)
+            .filter(bt -> bt.Name.compareTo(trip.Name) > 0)
+            .sorted(Comparator.comparing(bt -> bt.Name))
+            .limit(2)
+            .collect(Collectors.toSet());
     }
 
     public void refreshRealtimeInfo()
@@ -228,13 +263,12 @@ public class GtfsTimetableTranslator
                 {
                     GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate stopTimeUpdate = tripUpdate.get(st.Stop);
 
-                    logger.info("RT update {} at {} ({}):", st.Trip.Name, st.Stop.Id, st.Stop.Name);
-                    String newArrival = null;
+                    logger.debug("RT update {} at {} ({}):", st.Trip.Name, st.Stop.Id, st.Stop.Name);
                     String newDeparture = null;
                     if (stopTimeUpdate.hasDeparture()) {
                         newDeparture = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getDeparture(), date);
                         if (newDeparture != null) {
-                            logger.info("  dep. time was {}, now {}", st.Departure, newDeparture);
+                            logger.debug("  dep. time was {}, now {}", st.Departure, newDeparture);
                         }
                     }
 
@@ -251,7 +285,7 @@ public class GtfsTimetableTranslator
                     // Not stopping at the location anymore
                     if (st.Dropoff || st.Pickup)
                     {
-                        logger.info("RT update {}: no longer stops at {} ({})",
+                        logger.debug("RT update {}: no longer stops at {} ({})",
                                 st.Trip.Name,
                                 st.Stop.Id,
                                 st.Stop.Name);

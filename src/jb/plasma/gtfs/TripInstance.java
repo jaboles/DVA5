@@ -15,29 +15,24 @@ public class TripInstance
     {
         Trip = tripTimeAndPlace.Trip;
         Platform = tripTimeAndPlace.Stop;
-        NormalizedStopTimes = stopTimes;
         BlockContinuingTrip = blockContinuingTrip;
         At = new NormalizedStopTime(tripTimeAndPlace, date).NormalizedDeparture;
-    }
 
-    public Trip Trip;
-    public Stop Platform;
-    public List<NormalizedStopTime> NormalizedStopTimes;
-    public Trip BlockContinuingTrip;
-    public LocalDateTime At;
-
-    public String[] getRemainingStopList()
-    {
         List<String> stops = new LinkedList<>();
         boolean found = false;
-        for (NormalizedStopTime nst : NormalizedStopTimes)
+        for (NormalizedStopTime nst : stopTimes)
         {
             if (nst.StopTime.Stop == Platform) found = true;
             else if (found && nst.StopTime.Dropoff) stops.add(nst.StopTime.Stop.Name);
         }
-
-        return stops.stream()
+        RemainingStopList = stops.stream()
                 .map(s -> s.split(" Station Platform ")[0])
                 .toArray(String[]::new);
     }
+
+    public Trip Trip;
+    public Stop Platform;
+    public String[] RemainingStopList;
+    public Trip BlockContinuingTrip;
+    public LocalDateTime At;
 }

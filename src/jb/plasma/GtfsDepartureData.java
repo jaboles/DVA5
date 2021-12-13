@@ -18,7 +18,7 @@ public class GtfsDepartureData extends DepartureData
         this.Type = null; // TODO
         this.Cars = ti.Trip.Cars;
         this.Platform = Integer.parseInt(ti.Platform.Name.split(" Station Platform ")[1]);
-        this.Stops = ti.getRemainingStopList();
+        this.Stops = ti.RemainingStopList;
         this.DueOut = ti.At;
 
         this.tripInstance = ti;

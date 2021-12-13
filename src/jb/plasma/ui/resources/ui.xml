@@ -51,7 +51,7 @@
                     <label id="gtfsInfo"/>
                     <hbox>
                         <label id="gtfsDownloadTimestamp"/>
-                        <button text="Clear" action="clearDownloadedGtfsAction"/>
+                        <button text="Clear" action="clearDownloadedGtfsAction" border="EmptyBorder(0,10,0,0)"/>
                     </hbox>
                     <label id="gtfsExpiryTime"/>
                 </panel>
