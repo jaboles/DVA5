@@ -15,7 +15,6 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import com.formdev.flatlaf.FlatLightLaf;
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.*;
 import jb.common.*;

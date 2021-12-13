@@ -19,12 +19,12 @@ public class GtfsCsvReader
             {
                 parts[i] = parts[i].substring(1, parts[i].length() - 1);
             }
-            Stop data = new Stop(
-                    parts[0], // e.g. "26401"
-                    parts[2], // e.g. "Albury Station Platform 1"
-                    map.getOrDefault(parts[9], null) // e.g. "26401"
-            );
-            map.put(parts[0], data);
+
+            String id = parts[0].intern(); // e.g. "26401"
+            String name = parts[2].intern(); // e.g. "Albury Station Platform 1"
+            String parent = parts[9].intern(); // e.g. "26401"
+            Stop data = new Stop(id, name,map.getOrDefault(parent, null));
+            map.put(id, data);
         });
 
         return map;
@@ -40,12 +40,14 @@ public class GtfsCsvReader
             {
                 parts[i] = parts[i].substring(1, parts[i].length() - 1);
             }
+
+            String id = parts[0].intern();
             Route data = new Route(
-                    parts[0], // e.g. "APS_1a"
-                    parts[3], // e.g. "City Circle to Macarthur via Airport"
-                    parts[4]  // e.g. "T8 Airport & South Line"
+                    id, // e.g. "APS_1a"
+                    parts[3].intern(), // e.g. "City Circle to Macarthur via Airport"
+                    parts[4].intern()  // e.g. "T8 Airport & South Line"
             );
-            map.put(parts[0], data);
+            map.put(id, data);
         });
 
         return map;
@@ -63,19 +65,21 @@ public class GtfsCsvReader
             {
                 parts[i] = parts[i].substring(1, parts[i].length() - 1);
             }
+
+            String id = parts[0].intern();
             ServicePeriod data = new ServicePeriod(
-                    parts[0], // e.g. "955.134.128"
-                    Integer.parseInt(parts[1]) > 0, // e.g. "0" or "1"
-                    Integer.parseInt(parts[2]) > 0,
-                    Integer.parseInt(parts[3]) > 0,
-                    Integer.parseInt(parts[4]) > 0,
-                    Integer.parseInt(parts[5]) > 0,
-                    Integer.parseInt(parts[6]) > 0,
-                    Integer.parseInt(parts[7]) > 0,
+                    id, // e.g. "955.134.128"
+                    parts[1].charAt(0) == '1', // e.g. "0" or "1"
+                    parts[2].charAt(0) == '1',
+                    parts[3].charAt(0) == '1',
+                    parts[4].charAt(0) == '1',
+                    parts[5].charAt(0) == '1',
+                    parts[6].charAt(0) == '1',
+                    parts[7].charAt(0) == '1',
                     LocalDate.parse(parts[8], formatter), // e.g. "20211129"
                     LocalDate.parse(parts[9], formatter)
             );
-            map.put(parts[0], data);
+            map.put(id, data);
         });
 
         return map;
@@ -93,17 +97,17 @@ public class GtfsCsvReader
                 parts[i] = parts[i].substring(1, parts[i].length() - 1);
             }
 
-            String tripId = parts[2];
-            String routeId = parts[0];
+            String tripId = parts[2].intern();
+            String routeId = parts[0].intern();
+            String calendarId = parts[1].intern();
             Trip data = new Trip(
                     tripId, // e.g. "108B.959.129.12.T.8.68357311"
                     routes.get(routeId), // e.g. "WST_2c"
-                    calendars.get(parts[1]), // e.g. "959.129.12"
-                    parts[3], // e.g. "Gordon via Lindfield"
-                    Integer.parseInt(parts[5].trim()), // e.g. "0" or "1"
-                    parts[6]
+                    calendars.get(calendarId), // e.g. "959.129.12"
+                    parts[3].intern(), // e.g. "Gordon via Lindfield"
+                    parts[6].intern()
             );
-            map.put(parts[2], data);
+            map.put(tripId, data);
         });
 
         return map;
@@ -111,7 +115,7 @@ public class GtfsCsvReader
 
     public static List<StopTime> readStopTimes(Path stoptimesTxt, Map<String, Trip> trips, Map<String, Stop> stops) throws IOException
     {
-        List<StopTime> list = new LinkedList<>();
+        List<StopTime> list = new ArrayList<>();
 
         Files.lines(stoptimesTxt).skip(1).forEach(line ->
         {
@@ -121,15 +125,19 @@ public class GtfsCsvReader
                 parts[i] = parts[i].substring(1, parts[i].length() - 1);
             }
 
-            StopTime data = new StopTime(
-                    trips.get(parts[0]), // e.g. "108B.959.129.12.T.8.68357311"
-                    parts[1], // e.g. "04:46:06"
-                    parts[2], // e.g. "04:46:06"
-                    stops.get(parts[3]), // e.g. "2135234"
-                    Integer.parseInt(parts[6].trim()) == 0, // e.g. "0" or "1". 0 actually means "yes"
-                    Integer.parseInt(parts[7].trim()) == 0 // e.g. "0" or "1". 0 actually means "yes"
-            );
-            list.add(data);
+            boolean pickup = parts[6].trim().charAt(0) == '0'; // e.g. "0" or "1". 0 actually means "yes"
+            boolean dropoff = parts[7].trim().charAt(0) == '0'; // e.g. "0" or "1". 0 actually means "yes"
+            if (pickup || dropoff)
+            {
+                StopTime data = new StopTime(
+                        trips.get(parts[0]), // e.g. "108B.959.129.12.T.8.68357311"
+                        parts[2], // e.g. "04:46:06"
+                        stops.get(parts[3]), // e.g. "2135234"
+                        pickup,
+                        dropoff
+                );
+                list.add(data);
+            }
         });
 
         return list;

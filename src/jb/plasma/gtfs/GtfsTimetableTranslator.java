@@ -231,12 +231,6 @@ public class GtfsTimetableTranslator
                     logger.info("RT update {} at {} ({}):", st.Trip.Name, st.Stop.Id, st.Stop.Name);
                     String newArrival = null;
                     String newDeparture = null;
-                    if (stopTimeUpdate.hasArrival()) {
-                        newArrival = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getArrival(), date);
-                        if (newArrival != null) {
-                            logger.info("  arr. time was {}, now {}", st.Arrival, newArrival);
-                        }
-                    }
                     if (stopTimeUpdate.hasDeparture()) {
                         newDeparture = timestampToTimeString(new NormalizedStopTime(st, date).NormalizedDeparture, stopTimeUpdate.getDeparture(), date);
                         if (newDeparture != null) {
@@ -246,7 +240,6 @@ public class GtfsTimetableTranslator
 
                     return new StopTime(
                             st.Trip,
-                            newArrival != null ? newArrival : st.Arrival,
                             newDeparture != null ? newDeparture : st.Departure,
                             st.Stop,
                             st.Pickup,
