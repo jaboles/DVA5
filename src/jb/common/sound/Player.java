@@ -109,7 +109,7 @@ public class Player extends Thread {
                 File cacheFile = new File(cacheDir, combinedHash + ".mp3");
                 File tempCacheFile = new File(cacheDir, combinedHash + ".temp.mp3");
                 logger.debug("Using cache file: {}", cacheFile.getPath());
-                
+
                 final TimerTask longConcatTimerTask = new TimerTask() {
                     public void run() {
                         if (longConcatCallback != null) {
@@ -117,14 +117,14 @@ public class Player extends Thread {
                         }
                     }
                 };
-                
+
                 if (!cacheFile.exists()) {
                     logger.debug("Cache file does not exist, creating");
                     if (longConcatCallback != null) {
                         timer.schedule(longConcatTimerTask, LongConcatThreshold);
                     }
                     MediaConcatenatorFfmpeg.concat(audioClipList, tempCacheFile.getPath(), null, tempDir);
-                    
+
                     try {
                         if (tempCacheFile.exists())
                             FileUtilities.copyFile(tempCacheFile, cacheFile);

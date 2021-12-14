@@ -55,7 +55,7 @@ public class DVA {
         "AnnouncementRail",
     };
     public static final Set<String> SPECIAL_SOUNDS = new HashSet<>(Arrays.asList(SPECIAL_SOUNDS_Array));
-    
+
     // Set fallback libraries for incomplete sound libraries
     public static final String[][] FALLBACK_LIBRARIES_Array = new String[][] {
         { "dTrog remix", "Sydney-Male" },
@@ -64,7 +64,7 @@ public class DVA {
         { "Sydney-Female (replaced low-quality sounds)", "Sydney-Female" },
     };
     public static final Map<String, String> FALLBACK_LIBRARIES = new HashMap<>();
-    
+
     static {
         for (String[] arr : FALLBACK_LIBRARIES_Array) {
             FALLBACK_LIBRARIES.put(arr[0], arr[1]);
@@ -78,7 +78,7 @@ public class DVA {
         logger.info("FFmpeg.log: {}ffmpeg.log", System.getProperty("java.io.tmpdir"));
         Player.emptyCache(getTemp());
     }
-    
+
     public DVA(boolean showMainWindow, boolean showLoadingProgress) {
         this();
         LoadWindow lw = null;
@@ -91,13 +91,13 @@ public class DVA {
             final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(getTemp(), "soundlibrarymap" + VersionString);
             final ObjectCache<SoundLibrary> c = new ObjectCache<>(getTemp(), "soundlibrary" + VersionString);
             populateSoundLibraries();
-            
+
             // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
             soundLibraryMap = mc.load(DVA.class, Integer.toString(soundLibraryMap.size()), () -> {
                 c.emptyCache();
                 return soundLibraryMap;
             });
-            
+
             for (final Map.Entry<String, SoundLibrary> entry : soundLibraryMap.entrySet()) {
                 if (showLoadingProgress) lw.setText("Loading sound libraries... " + entry.getValue().getName());
                 SoundLibrary library = c.load(DVA.class, entry.getKey(), () -> {
@@ -299,7 +299,6 @@ public class DVA {
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "DVA");
         System.setProperty("com.apple.mrj.application.growbox.intrudes", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("apple.awt.brushMetalLook", "true");
 
         // Set AUMI on Windows 7, to fix two separate DVA taskbar icons appearing during
         // launch (DVA.exe and java.exe)
@@ -398,7 +397,7 @@ public class DVA {
                 int rv;
                 boolean rvb;
 
-                // HWnd of the screensaver preview mini-window rooted in the screensaver settings dialog box 
+                // HWnd of the screensaver preview mini-window rooted in the screensaver settings dialog box
                 WinDef.HWND phwnd = new WinDef.HWND(Pointer.createConstant(Long.parseLong(args[1])));
                 logger.info("Preview parent window handle: {}", phwnd);
 
@@ -416,7 +415,7 @@ public class DVA {
                 User32.INSTANCE.ReleaseDC(new WinDef.HWND(Pointer.NULL), dc);
                 double scaleFactor = (double)physicalWidth / (double)virtualWidth;
                 parentRect.setSize((int)(parentRect.getWidth() * scaleFactor), (int)(parentRect.getHeight() * scaleFactor));
-                
+
                 // Create the plasma window
                 JFrame w = jb.plasma.ui.PlasmaUI.screenSaver(true, parentRect.getSize()).get(0);
                 WinDef.HWND hwnd = new WinDef.HWND(Native.getWindowPointer(w));
@@ -431,12 +430,12 @@ public class DVA {
                 logger.info("SetWindowPos returned {}", rvb);
             } else {
                 showLicenceIfNotRead();
-                
+
                 if (Settings.soundJarsNotDownloaded())
                 {
                     fetchSoundJars();
                 }
-                
+
                 // Regular application
                 new DVA(true, true);
             }
@@ -467,7 +466,7 @@ public class DVA {
             }
         }
     }
-    
+
     private static void showLicenceIfNotRead()
     {
         // Show the licence if it hasn't been displayed for this version.
@@ -483,7 +482,7 @@ public class DVA {
             Settings.setLicenceRead();
         }
     }
-    
+
     private static void fetchSoundJars()
     {
         ProgressWindow pw = new ProgressWindow("Download Progress", "Updating sound libraries...");

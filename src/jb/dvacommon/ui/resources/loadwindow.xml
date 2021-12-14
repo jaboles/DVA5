@@ -6,12 +6,13 @@
 		</panel>
 		<panel id="buttonPanel" constraints="BorderLayout.CENTER" layout="BorderLayout" border="EmptyBorder(0,0,0,0)" background="35,30,125">
 			<textpane editable="false" contenttype="text/html" id="aboutTextPane" constraints="BorderLayout.CENTER" text="
-&lt;html&gt;&lt;b&gt;DVA Version $VERSION$ Build $BUILDNUMBER$&lt;/b&gt; &lt;font size=&quot;3&quot;&gt;(Java $JAVAVERSION$ $JAVAARCH$)
+&lt;html&gt;&lt;font family=&quot;sans-serif&quot;&gt;&lt;b&gt;DVA Version $VERSION$ Build $BUILDNUMBER$&lt;/b&gt; &lt;font size=&quot;3&quot;&gt;(Java $JAVAVERSION$ $JAVAARCH$)
 &lt;br&gt;$COPYRIGHT$.
 &lt;br&gt;Contact: &lt;a href=&quot;mailto:$EMAIL$?subject=DVA&quot;&gt;$EMAIL$&lt;/a&gt;. GitHub: &lt;a href=&quot;$GITHUB$&quot;&gt;$GITHUB$&lt;/a&gt;
 &lt;br&gt;Sounds copyright &#169;: Glenn Jackson-Bethell, Paul McCabe, Winston Yang, Ben Cousins, PKBeam, Charlie Munns.
 &lt;br&gt;Used with permission. Original site: &lt;a href=&quot;$RAILWAVSURL$&quot;&gt;$RAILWAVSURL$&lt;/a&gt;
-&lt;br&gt;Original splash screen design: Winston Yang&lt;/font&gt;&lt;/html&gt;
+&lt;br&gt;Original splash screen design: Winston Yang
+&lt;/font&gt;&lt;/font&gt;&lt;/html&gt;
 				" border="EmptyBorder(10,10,10,10)" />
 			<!--<label foreground="255,255,255" font="dialog-PLAIN-12" id="loadLabel" constraints="BorderLayout.SOUTH" text="Loading" border="EmptyBorder(5,10,10,10)"/>-->
 			<panel constraints="BorderLayout.SOUTH" layout="FlowLayout(FlowLayout.TRAILING)">

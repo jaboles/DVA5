@@ -65,6 +65,14 @@ public class MediaConcatenatorFfmpeg
             ffmpegCmd.add(ffmpegCmdFilterComplex.toString());
             ffmpegCmd.add("-map");
             ffmpegCmd.add("[out]");
+            ffmpegCmd.add("-codec:a");
+            if (outputFile.toLowerCase().endsWith(".wav")) {
+                ffmpegCmd.add("pcm_s16le");
+            } else if (outputFile.toLowerCase().endsWith(".mp3")) {
+                ffmpegCmd.add("libmp3lame");
+                ffmpegCmd.add("-q:a");
+                ffmpegCmd.add("2");
+            }
             ffmpegCmd.add(outputFile);
 
             logger.info("Running ffmpeg: {}", String.join(" ", ffmpegCmd));
