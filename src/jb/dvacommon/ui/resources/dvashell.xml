@@ -59,8 +59,5 @@
             <menuitem action="aboutAction" macos_about="true" icon="null" mnemonic="VK_A" />
         </menu>
     </menubar>
-    <tabbedpane titles="Announcements,Indicators" id="tabbedPane">
-        <panel id="dvaPanel" layout="BorderLayout" constraints="BorderLayout.CENTER"/>
-        <panel id="indicatorsPanel" layout="BorderLayout" constraints="BorderLayout.CENTER"/>
-    </tabbedpane>
+    <tabbedpane id="tabbedPane" />
 </frame>

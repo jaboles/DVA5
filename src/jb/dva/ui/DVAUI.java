@@ -6,6 +6,7 @@
 //  Copyright 2006 __MyCompanyName__. All rights reserved.
 //
 package jb.dva.ui;
+import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -75,7 +76,7 @@ import org.jdesktop.swingx.JXBusyLabel;
 import org.swixml.SwingEngine;
 
 public class DVAUI {
-    private JPanel panel;
+    private Container panel;
     private final DVA controller;
     private boolean documentModified = false;
 
@@ -112,7 +113,7 @@ public class DVAUI {
     public SoundListModel suggestedSoundListModel;
     public DefaultListModel<Script> announcementListModel;
     public DefaultListModel<String> inflectionListModel;
-    
+
     public Script currentScript;
 
     final static Logger logger = LogManager.getLogger(DVAUI.class);
@@ -127,12 +128,12 @@ public class DVAUI {
         renderer.getTaglib().registerTag("dvatextarea", DVATextArea.class);
 
         try {
-            panel = (JPanel) renderer.render(DVAUI.class.getResource("/jb/dva/ui/resources/ui.xml"));
+            panel = renderer.render(DVAUI.class.getResource("/jb/dva/ui/resources/ui.xml"));
             currentScript = new Script("", "");
-            
+
             DVATextVerifyListener verifyHandler = new DVATextVerifyListener() {
                 public void OnFailed() {
-                    
+
                 }
                 public void OnVerified() {
                     updateAnnouncementStats(controller.getVerifiedUrlList());
@@ -144,7 +145,7 @@ public class DVAUI {
             voiceComboBox.setListData(soundLibraryList.toArray(new SoundLibrary[0]));
             voiceComboBox.setSelectedIndex(0);
             voiceComboBox.setCellRenderer(new SoundLibraryListCellRenderer());
-            
+
             suggestedSoundList.setCellRenderer(new SoundListCellRenderer());
 
             SoundLibrary selectedLibrary = voiceComboBox.getSelectedValue();
@@ -322,12 +323,15 @@ public class DVAUI {
             flattenJSplitPane(splitpane);
             flattenJSplitPane(splitpaneLeft);
             flattenJSplitPane(splitpaneRight);
+            splitpane.setOpaque(false);
+            splitpaneLeft.setOpaque(false);
+            splitpaneRight.setOpaque(false);
         } catch (Exception e) {
             ExceptionReporter.reportException(e);
         }
     }
-    
-    public JPanel getPanel() {
+
+    public Container getPanel() {
         return this.panel;
     }
 
@@ -670,7 +674,7 @@ public class DVAUI {
     }
 
     public static void flattenJSplitPane(JSplitPane splitPane) {
-        splitPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        //splitPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         BasicSplitPaneUI flatDividerSplitPaneUI = new BasicSplitPaneUI() {
             public BasicSplitPaneDivider createDefaultDivider() {
                 return new BasicSplitPaneDivider(this) {
@@ -680,7 +684,7 @@ public class DVAUI {
             }
         };
         splitPane.setUI(flatDividerSplitPaneUI);
-        splitPane.setBorder(null);
+        //splitPane.setBorder(null);
     }
 
     private static float getDuration(URL u) {

@@ -60,7 +60,7 @@ public class PlasmaUI
     private PlasmaSession session;
     private GtfsTimetableTranslator timetableTranslator;
 
-    private JPanel panel;
+    private Container panel;
     public JTabbedPane tabbedPane;
 
     public JButton promoteDeparturesButton;
@@ -98,7 +98,7 @@ public class PlasmaUI
         renderer.getTaglib().registerTag("colorcombobox", ColorComboBox.class);
         renderer.getTaglib().registerTag("jbcombobox", JBComboBox.class);
         try {
-            panel = (JPanel) renderer.render(PlasmaUI.class.getResource("/jb/plasma/ui/resources/ui.xml"));
+            panel = renderer.render(PlasmaUI.class.getResource("/jb/plasma/ui/resources/ui.xml"));
             TextIcon ti = new TextIcon(promoteDeparturesButton, "     <<< Shift Departures Upwards <<<    ");
             ti.setFont(new JLabel().getFont());
             RotatedIcon ri = new RotatedIcon(ti, RotatedIcon.Rotate.DOWN);
@@ -160,7 +160,7 @@ public class PlasmaUI
                     separator.setBorder(new EmptyBorder(0, 0, 0, 0));
                     departuresList.add(separator);
                 }
-                departuresList.add(departurePanels[i]);
+                departuresList.add(departurePanels[i].getPanel());
             }
 
             timetableTranslator = GtfsTimetableTranslator.getInstance();
@@ -218,7 +218,7 @@ public class PlasmaUI
         }
     }
 
-    public JPanel getPanel()
+    public Container getPanel()
     {
         return panel;
     }

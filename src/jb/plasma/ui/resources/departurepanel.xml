@@ -1,75 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<panel layout="BorderLayout">
-    <hbox>
-        <panel layout="BorderLayout">
-            <label id="titleLabel" constraints="BorderLayout.NORTH" />
-            <panel id="gridPanel" layout="GridLayout(4,2,2,2)">
-                <hbox>
-                    <label text="Destination:" />
-                    <panel layout="BorderLayout">
-                        <label constraints="BorderLayout.EAST" id="destinationIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
-                    </panel>
-                </hbox>
-                <dvatextfield id="destinationValue" />
-                <hbox>
-                    <label text="Destination line 2:" />
-                    <panel layout="BorderLayout">
-                        <label constraints="BorderLayout.EAST" id="destination2IndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
-                    </panel>
-                </hbox>
-                <dvatextfield id="destination2Value" />
-                <label text="Departure time:"/>
-                <textfield id="departureTimeValue" />
-                <label text="Service type:" />
-                <combobox id="serviceTypeValue" editable="true"/>
-            </panel>
+<hbox>
+    <panel layout="BorderLayout" opaque="false">
+        <label id="titleLabel" constraints="BorderLayout.NORTH" />
+        <panel id="gridPanel" layout="GridLayout(4,2,2,2)" opaque="false">
+            <hbox>
+                <label text="Destination:" />
+                <panel layout="BorderLayout" opaque="false">
+                    <label constraints="BorderLayout.EAST" id="destinationIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
+                </panel>
+            </hbox>
+            <dvatextfield id="destinationValue" />
+            <hbox>
+                <label text="Destination line 2:" />
+                <panel layout="BorderLayout" opaque="false">
+                    <label constraints="BorderLayout.EAST" id="destination2IndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
+                </panel>
+            </hbox>
+            <dvatextfield id="destination2Value" />
+            <label text="Departure time:"/>
+            <textfield id="departureTimeValue" />
+            <label text="Service type:" />
+            <combobox id="serviceTypeValue" editable="true"/>
         </panel>
-        <label text=" "/>
-        <panel layout="BorderLayout">
-            <panel layout="GridLayout(1,2,5,0)">
-                <vbox>
+    </panel>
+    <label text=" "/>
+    <panel layout="BorderLayout" opaque="false">
+        <panel layout="GridLayout(1,2,5,0)" opaque="false">
+            <vbox>
+                <hbox>
                     <hbox>
-                        <hbox>
-                            <label text="Cars: " />
-                            <spinner id="carsValue"/>
-                        </hbox>
-                        <label text=" "/>
-                        <hbox>
-                            <label text="Platform No.: " />
-                            <spinner id="platformValue" />
-                        </hbox>
+                        <label text="Cars: " />
+                        <spinner id="carsValue"/>
                     </hbox>
-                    <panel layout="FlowLayout(FlowLayout.LEADING)">
-                        <label text="Line:"/>
-                        <combobox id="lineValue" editable="true"/>
-                    </panel>
-                    <panel layout="FlowLayout(FlowLayout.LEADING)">
-                        <label text="Colours:"/>
-                        <colorcombobox id="color1Value"/>
-                        <colorcombobox id="color2Value"/>
-                        <colorcombobox id="textColorValue"/>
-                    </panel>
-                </vbox>
-                <panel layout="BorderLayout">
-                    <panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEADING)">
-                        <hbox constraints="BorderLayout.WEST">
-                            <label text="Station List:"/>
-                            <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
-                        </hbox>
-                    </panel>
-                    <scrollpane verticalScrollBarPolicy="VERTICAL_SCROLLBAR_ALWAYS">
-                        <dvatextarea id="stationsValue" linewrap="true" wrapstyleword="true" rows="3" cols="20" border="EmptyBorder(1,1,1,1)"/>
-                    </scrollpane>
+                    <label text=" "/>
+                    <hbox>
+                        <label text="Platform No.: " />
+                        <spinner id="platformValue" />
+                    </hbox>
+                </hbox>
+                <panel layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+                    <label text="Line:"/>
+                    <combobox id="lineValue" editable="true"/>
                 </panel>
-            </panel>
-            <panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
-                <label text="Custom announcement override:" constraints="BorderLayout.WEST"/>
-                <panel constraints="BorderLayout.CENTER" layout="BorderLayout">
-                    <label constraints="BorderLayout.WEST" id="customAnnouncementIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
-                    <filetextfield id="customAnnouncementText"/>
+                <panel layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+                    <label text="Colours:"/>
+                    <colorcombobox id="color1Value"/>
+                    <colorcombobox id="color2Value"/>
+                    <colorcombobox id="textColorValue"/>
                 </panel>
-                <button id="customAnnouncementButton" text="..." action="customAnnouncementBrowseAction" constraints="BorderLayout.EAST"/>
+            </vbox>
+            <panel layout="BorderLayout" opaque="false">
+                <panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+                    <hbox constraints="BorderLayout.WEST">
+                        <label text="Station List:"/>
+                        <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
+                    </hbox>
+                </panel>
+                <scrollpane verticalScrollBarPolicy="VERTICAL_SCROLLBAR_ALWAYS">
+                    <dvatextarea id="stationsValue" linewrap="true" wrapstyleword="true" rows="3" cols="20" border="EmptyBorder(1,1,1,1)"/>
+                </scrollpane>
             </panel>
         </panel>
-    </hbox>
-</panel>
+        <panel constraints="BorderLayout.SOUTH" layout="BorderLayout" opaque="false">
+            <label text="Custom announcement override:" constraints="BorderLayout.WEST"/>
+            <panel constraints="BorderLayout.CENTER" layout="BorderLayout" opaque="false">
+                <label constraints="BorderLayout.WEST" id="customAnnouncementIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
+                <filetextfield id="customAnnouncementText"/>
+            </panel>
+            <button id="customAnnouncementButton" text="..." action="customAnnouncementBrowseAction" constraints="BorderLayout.EAST"/>
+        </panel>
+    </panel>
+</hbox>

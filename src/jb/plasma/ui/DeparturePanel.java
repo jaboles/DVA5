@@ -1,7 +1,6 @@
 package jb.plasma.ui;
 
-import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -27,7 +26,7 @@ import jb.plasma.ManualDepartureData;
 import org.swixml.SwingEngine;
 
 // Panel for editing a train departure.
-public class DeparturePanel extends JPanel
+public class DeparturePanel
 {
     private Script script;
     public JLabel titleLabel;
@@ -48,6 +47,7 @@ public class DeparturePanel extends JPanel
     public ColorComboBox textColorValue;
     public FileTextField customAnnouncementText;
     public JLabel customAnnouncementIndicatorIconLabel;
+    private Container panel;
 
     public DeparturePanel(String title, DVA dva, String soundLibraryName)
     {
@@ -56,7 +56,7 @@ public class DeparturePanel extends JPanel
         renderer.getTaglib().registerTag("dvatextfield", DVATextField.class);
         renderer.getTaglib().registerTag("filetextfield", FileTextField.class);
         try {
-            JPanel panel = (JPanel)renderer.render(DeparturePanel.class.getResource("/jb/plasma/ui/resources/departurepanel.xml"));
+            panel = renderer.render(DeparturePanel.class.getResource("/jb/plasma/ui/resources/departurepanel.xml"));
             if (dva != null && soundLibraryName != null)
             {
                 this.script = new Script(soundLibraryName, "");
@@ -65,8 +65,7 @@ public class DeparturePanel extends JPanel
                 destination2Value.initialize(dva, script, destination2IndicatorIconLabel);
             }
             customAnnouncementText.initialize(customAnnouncementIndicatorIconLabel);
-            add(panel);
-            
+
             SimpleEditorUndoRedoKit.enableUndo(destinationValue);
             SimpleEditorUndoRedoKit.enableUndo(destination2Value);
             SimpleEditorUndoRedoKit.enableUndo(departureTimeValue);
@@ -117,6 +116,8 @@ public class DeparturePanel extends JPanel
         }
     }
 
+    public Container getPanel() {return panel;}
+
     public void setData(DepartureData d)
     {
         destinationValue.setText(d.Destination);
@@ -127,22 +128,22 @@ public class DeparturePanel extends JPanel
         departureTimeValue.setText(d.DueOut != null ? d.dueOutAsString() : "");
         stationsValue.setText(d.stopsAsString());
         CityrailLine line = CityrailLine.get(d.Line);
-        
+
         if (d.Color1Override != null)
             color1Value.setSelectedItem(d.Color1Override);
         else if (line != null)
             color1Value.setSelectedItem(line.Color1);
-        
+
         if (d.Color2Override != null)
             color2Value.setSelectedItem(d.Color2Override);
         else if (line != null)
             color2Value.setSelectedItem(line.Color2);
-        
+
         if (d.TextColorOverride != null)
             textColorValue.setSelectedItem(d.TextColorOverride);
         else if (line != null)
             textColorValue.setSelectedItem(line.TextColor);
-        
+
         lineValue.setSelectedItem(d.Line);
         customAnnouncementText.setText(d.CustomAnnouncementPath != null ? d.CustomAnnouncementPath : "");
     }
@@ -164,7 +165,7 @@ public class DeparturePanel extends JPanel
             (customAnnouncementText.getText() != null && customAnnouncementText.getText().length() > 0) ? customAnnouncementText.getText() : null
         );
     }
-    
+
     public void setScriptVoice(String voiceName)
     {
         if (script != null)
@@ -181,7 +182,7 @@ public class DeparturePanel extends JPanel
             dlg.addChoosableFileFilter(mp3Filter);
             dlg.addChoosableFileFilter(wavFilter);
             dlg.setFileFilter(mp3Filter);
-            int retval = dlg.showOpenDialog(DeparturePanel.this);
+            int retval = dlg.showOpenDialog(DeparturePanel.this.panel);
             if (retval == JFileChooser.APPROVE_OPTION)
             {
                 customAnnouncementText.setText(dlg.getSelectedFile().getPath());

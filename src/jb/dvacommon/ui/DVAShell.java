@@ -36,8 +36,6 @@ public class DVAShell
     private final DVA controller;
     private final static Font DefaultFont = new Font("Dialog", Font.PLAIN, 13);
     public PlasmaUI plasmaUI;
-    public JPanel dvaPanel;
-    public JPanel indicatorsPanel;
     public JMenu themeMenu;
 
     public JTabbedPane tabbedPane;
@@ -105,8 +103,8 @@ public class DVAShell
                 window.getRootPane().putClientProperty("apple.awt.brushMetalLook", true);
             }
             tabbedPane.putClientProperty(TABBED_PANE_TAB_AREA_ALIGNMENT, TABBED_PANE_ALIGN_CENTER);
-            dvaPanel.add(dvaUI.getPanel(), BorderLayout.CENTER);
-            indicatorsPanel.add(plasmaUI.getPanel(), BorderLayout.CENTER);
+            tabbedPane.add("Announcements", dvaUI.getPanel());
+            tabbedPane.add("Indicators", plasmaUI.getPanel());
 
             for (int i = 0; i < themeMenu.getItemCount(); i++) {
                 JCheckBoxMenuItem themeMenuItem = (JCheckBoxMenuItem)themeMenu.getItem(i);
