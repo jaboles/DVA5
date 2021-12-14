@@ -197,6 +197,9 @@
       <module fileurl="file://$PROJECT_DIR$/DVA.iml" filepath="$PROJECT_DIR$/DVA.iml" />
     </modules>
   </component>
+  <component name="ProjectResources">
+    <resource url="http://swixml.org" location="$PROJECT_DIR$/swixml.xsd" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/output" />
   </component>

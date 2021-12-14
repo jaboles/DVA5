@@ -30,12 +30,12 @@
                 <vbox>
                     <hbox>
                         <hbox>
-                            <label text="Cars:" />
+                            <label text="Cars: " />
                             <spinner id="carsValue"/>
                         </hbox>
                         <label text=" "/>
                         <hbox>
-                            <label text="Platform No.:" />
+                            <label text="Platform No.: " />
                             <spinner id="platformValue" />
                         </hbox>
                     </hbox>

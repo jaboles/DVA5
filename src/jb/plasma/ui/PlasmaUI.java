@@ -1,9 +1,8 @@
 package jb.plasma.ui;
 
-import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -11,19 +10,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import jb.common.ExceptionReporter;
@@ -51,6 +40,8 @@ import org.swixml.SwingEngine;
 import org.swixml.XHBox;
 import org.swixml.XVBox;
 
+import static com.formdev.flatlaf.FlatClientProperties.*;
+
 // The main CityRail Indicators application. It is usually hosted inside the DVA application, but
 // can exist outside of it, which is used by the screen saver mode.
 public class PlasmaUI
@@ -61,7 +52,7 @@ public class PlasmaUI
         public static final int SCREENSAVER = 1;
         public static final int SCREENSAVER_PREVIEW = 2;
     }
-    
+
     private static final String[] departurePanelTitles = new String[] { "Next Train:", "2nd Train:", "3rd Train:" };
     final static Logger logger = LogManager.getLogger(PlasmaUI.class);
     private final DVA dva;
@@ -95,7 +86,7 @@ public class PlasmaUI
     public JPanel previewButtonPanel;
     public XVBox rendererComboboxesPanel;
     private List<JComboBox<Drawer>> rendererComboBoxes;
-    
+
     private Player player;
 
     public PlasmaUI(int mode, DVA dva) {
@@ -112,6 +103,7 @@ public class PlasmaUI
             ti.setFont(new JLabel().getFont());
             RotatedIcon ri = new RotatedIcon(ti, RotatedIcon.Rotate.DOWN);
             promoteDeparturesButton.setIcon(ri);
+            tabbedPane.putClientProperty(TABBED_PANE_TAB_AREA_ALIGNMENT, TABBED_PANE_ALIGN_CENTER);
 
             // Instantiate the available renderers and announcers
             Drawer[] renderers = new Drawer[] {
@@ -129,7 +121,7 @@ public class PlasmaUI
                     new CityrailStandard(dva.getSoundLibrary("Sydney-Female"), false),
                     new NswCountry(dva.getSoundLibrary("Sydney-Male"), true),
                     new NswCountry(dva.getSoundLibrary("Sydney-Female"), false) };
-            }            
+            }
 
             // Populate the comboboxes with them, the second combobox has the
             // additional option of 'None'.
@@ -147,6 +139,7 @@ public class PlasmaUI
                 XHBox hb = new XHBox();
                 hb.add(new JLabel("Monitor " + (i + 1) + " Renderer:"));
                 hb.add(cb);
+                if (i > 0) rendererComboboxesPanel.add(Box.createVerticalStrut(2));
                 rendererComboboxesPanel.add(hb);
             }
             if (announcers != null)
@@ -179,14 +172,16 @@ public class PlasmaUI
             gtfsStation.replaceItems(timetableTranslator.getStations());
 
             // When the station is changed, update the list of platforms and routes
-            gtfsStation.addActionListener(e -> {
+            ActionListener gtfsStationChanged = e -> {
                 Stop station = gtfsStation.getSelectedItemTyped();
 
                 if (station != null) {
                     gtfsPlatform.replaceItems(timetableTranslator.getPlatformsForStation(station));
                     gtfsRoute.replaceItems(timetableTranslator.getRoutesForStation(station));
                 }
-            });
+            };
+            gtfsStationChanged.actionPerformed(null);
+            gtfsStation.addActionListener(gtfsStationChanged);
 
             // Initially select the first line, and show/hide the
             // window/fullscreen/preview buttons depending
@@ -222,7 +217,7 @@ public class PlasmaUI
             return ui.showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER, null);
         }
     }
-    
+
     public JPanel getPanel()
     {
         return panel;
@@ -269,7 +264,7 @@ public class PlasmaUI
             return null;
         }
     }
-    
+
     // Show the indicator board, specifying whether to run in full screen,
     // whether to close the
     // indicator windows on an event (e.g. screen saver 'preview', and whether
@@ -356,7 +351,7 @@ public class PlasmaUI
             } catch (NumberFormatException e) {
                 announcementTimes = null;
             }
-            
+
             if (playAnnouncementCheckbox.isSelected())
             {
                 announce = this::announce;
@@ -373,7 +368,7 @@ public class PlasmaUI
             session = null;
         }
     }
-    
+
     public void announce()
     {
         if (departureData != null && departureData.size() > 0)
@@ -403,7 +398,7 @@ public class PlasmaUI
                 logger.debug("Generated script: {}", announcement.getScript());
                 player = dva.play(null, announcement);
             }
-                        
+
             if (player != null)
             {
                 final Player p = player;
@@ -412,7 +407,7 @@ public class PlasmaUI
                 stopAction.setEnabled(true);
                 playStopButton.setAction(stopAction);
                 announceAction.setEnabled(false);
-                
+
                 new Thread(() -> {
                     try {
                         p.join();
@@ -425,7 +420,7 @@ public class PlasmaUI
                 }).start();
                 player.start();
             }
-        }        
+        }
     }
 
     // Get the indicator settings entered into the panels as an
@@ -571,7 +566,7 @@ public class PlasmaUI
             announce();
         }
     };
-    
+
     public Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
@@ -618,7 +613,7 @@ public class PlasmaUI
             }
         }
     };
-    
+
     public Action editSubstitutionsAction = new AbstractAction("Edit Substitution List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("substitutions.txt");
@@ -646,10 +641,10 @@ public class PlasmaUI
             {
                 new ProcessBuilder("open", "-a", "TextEdit", f.getPath()).start();
             }
-            else                
+            else
             {
                 new ProcessBuilder("notepad", f.getPath()).start();
-                
+
             }
         }
         catch (IOException e) {

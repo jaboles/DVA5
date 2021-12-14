@@ -63,15 +63,15 @@ public class ProgressWindow {
     }
 
     public void repaint() {
-        frame.update(frame.getGraphics());
         progressLabel.update(progressLabel.getGraphics());
         progressBar.update(progressBar.getGraphics());
+        frame.update(frame.getGraphics());
     }
 
     public void setProgressBarMaximum(int value) {
         progressBar.setMaximum(value);
     }
-    
+
     public int getProgressBarMaximum() {
         return progressBar.getMaximum();
     }

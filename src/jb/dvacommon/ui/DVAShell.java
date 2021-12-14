@@ -27,6 +27,8 @@ import jb.plasma.ui.PlasmaUI;
 import org.swixml.ConverterLibrary;
 import org.swixml.SwingEngine;
 
+import static com.formdev.flatlaf.FlatClientProperties.*;
+
 public class DVAShell
 {
     private final SwingEngine renderer;
@@ -41,7 +43,7 @@ public class DVAShell
     public JTabbedPane tabbedPane;
     public JLabel updateInfoLabel;
     public JTextPane updateVersionHistoryPane;
-    
+
     public Action voiceLibraryToggleAction;
     public Action soundInfoAction;
     public Action playCurrentAction;
@@ -57,7 +59,7 @@ public class DVAShell
     public Action saveAction;
     public Action undoAction;
     public Action redoAction;
-    
+
     public Action indicatorWindowAction;
     public Action indicatorFullScreenAction;
     public Action indicatorPlayAnnouncementAction;
@@ -88,7 +90,7 @@ public class DVAShell
             saveAction = dvaUI.saveAction;
             undoAction = SimpleEditorUndoRedoKit.UndoAction;
             redoAction = SimpleEditorUndoRedoKit.RedoAction;
-            
+
             plasmaUI = new PlasmaUI(PlasmaUI.Mode.REGULAR, controller);
             indicatorWindowAction = plasmaUI.windowAction;
             indicatorFullScreenAction = plasmaUI.fullScreenAction;
@@ -100,10 +102,9 @@ public class DVAShell
             window = (JFrame)renderer.render(DVAShell.class.getResource("/jb/dvacommon/ui/resources/dvashell.xml"));
             if (SwingEngine.isMacOSX())
             {
-                Dimension size = window.getSize();
-                window.setSize((int)size.getWidth(), (int)size.getHeight() + 20);
                 window.getRootPane().putClientProperty("apple.awt.brushMetalLook", true);
             }
+            tabbedPane.putClientProperty(TABBED_PANE_TAB_AREA_ALIGNMENT, TABBED_PANE_ALIGN_CENTER);
             dvaPanel.add(dvaUI.getPanel(), BorderLayout.CENTER);
             indicatorsPanel.add(plasmaUI.getPanel(), BorderLayout.CENTER);
 
@@ -121,7 +122,7 @@ public class DVAShell
             ExceptionReporter.reportException(e);
         }
     }
-    
+
     public void setVisible(boolean visible)
     {
         if (visible)
@@ -136,7 +137,7 @@ public class DVAShell
 
         window.setVisible(visible);
     }
-    
+
     public void promptToUpdate(BaseUpdater updater, boolean allowSkip) {
         String skip = "Skip this version";
         String notnow = "Not now";
@@ -290,7 +291,7 @@ public class DVAShell
             }
         }
     };
-    
+
     @SuppressWarnings("unused")
     public Action quitAction = new AbstractAction("Quit", null) {
         public void actionPerformed(ActionEvent e) {

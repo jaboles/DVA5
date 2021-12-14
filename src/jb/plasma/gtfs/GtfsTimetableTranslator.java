@@ -94,24 +94,28 @@ public class GtfsTimetableTranslator
                     .collect(Collectors.toSet())
                 : null;
 
-        ProgressWindow pw = new ProgressWindow("Progress", "Scanning timetable data...");
+        ProgressWindow pw = new ProgressWindow("Progress", "Scanning timetable data");
+        pw.setProgressBarMaximum(100);
+        pw.setProgressText("Filtering timepoint data to location " + station.Name);
         pw.show();
         pw.repaint();
-        pw.setProgressBarMaximum(100);
         Set<StopTime> stopsAtSelectedLocation = tt.StopTimesReader.get()
                 .filter(st -> platforms.contains(st.Stop))
                 .collect(Collectors.toSet());
         pw.setValue(25);
+        pw.setProgressText("Collecting timepoint data into trips");
         pw.repaint();
         Set<Trip> tripsStoppingAtSelectedLocation = stopsAtSelectedLocation.stream()
                 .map(st -> st.Trip)
                 .collect(Collectors.toSet());
         pw.setValue(50);
+        pw.setProgressText("Calculating continuing trips");
         pw.repaint();
         Set<Trip> blockTripsStoppingAtSelectedLocation = tripsStoppingAtSelectedLocation.stream()
                 .flatMap(t -> getLaterTripsInSameBlock(t).stream())
                 .collect(Collectors.toSet());
         pw.setValue(75);
+        pw.setProgressText("Filtering timepoint data by trips");
         pw.repaint();
         Map<Trip, List<StopTime>> stopTimesByTrip = tt.StopTimesReader.get()
                 .filter(st -> tripsStoppingAtSelectedLocation.contains(st.Trip) || blockTripsStoppingAtSelectedLocation.contains(st.Trip))

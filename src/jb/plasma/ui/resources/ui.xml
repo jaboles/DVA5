@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<panel layout="BorderLayout">
+<panel layout="BorderLayout" border="EmptyBorder(5,8,8,8)">
     <hbox constraints="BorderLayout.NORTH">
         <panel border="TitledBorder(Indicator Style)">
             <vbox id="rendererComboboxesPanel"/>
@@ -21,8 +21,10 @@
         </vbox>
         <panel id="startButtonsPanel" border="TitledBorder(Show)" layout="FlowLayout(FlowLayout.TRAILING)">
             <vbox>
-                <button id="windowButton" action="windowAction" text="Window" />
-                <button id="fullScreenButton" action="fullScreenAction" text="Full Screen" />
+                <panel layout="GridLayout(2,1,0,5)">
+                    <button id="windowButton" action="windowAction" text="Window" />
+                    <button id="fullScreenButton" action="fullScreenAction" text="Full Screen" />
+                </panel>
             </vbox>
         </panel>
         <panel id="previewButtonPanel" border="TitledBorder(Preview)" layout="FlowLayout(FlowLayout.TRAILING)">
@@ -47,24 +49,26 @@
         </panel>
         <panel name="Timetable" layout="FlowLayout">
             <vbox>
-                <panel layout="GridLayout(3,1,0,0)">
+                <panel layout="GridLayout(3,1,0,3)">
                     <label id="gtfsInfo"/>
                     <hbox>
                         <label id="gtfsDownloadTimestamp"/>
-                        <button text="Clear" action="clearDownloadedGtfsAction" border="EmptyBorder(0,10,0,0)"/>
+                        <label text=" "/>
+                        <button text="Clear" action="clearDownloadedGtfsAction"/>
                     </hbox>
                     <label id="gtfsExpiryTime"/>
                 </panel>
                 <label text=" "/>
-                <panel constraints="BorderLayout.NORTH" layout="GridLayout(7,1,5,2)" border="EmptyBorder(0,0,0,2)">
+                <label text=" "/>
+                <panel constraints="BorderLayout.NORTH" layout="GridLayout(6,1,0,6)" border="EmptyBorder(0,0,0,2)">
                     <label text="Select station:"/>
                     <jbcombobox id="gtfsStation" size="400,10"/>
                     <checkbox id="filterPlatform" action="filterPlatformAction" text="Filter by platform:"/>
                     <jbcombobox id="gtfsPlatform" size="400,10" />
                     <checkbox id="filterRoute" action="filterRouteAction" text="Filter by route:"/>
                     <jbcombobox id="gtfsRoute" size="400,10" />
-                    <label text=" "/>
                 </panel>
+                <label text=" "/>
                 <label text=" "/>
                 <panel layout="FlowLayout(FlowLayout.CENTER)">
                     <label text="&lt;html&gt;Use Window/Full Screen buttons at top of window to start&lt;br&gt;indicator, or use button below to load the Manual page.&lt;/html&gt;"/>
