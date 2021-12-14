@@ -19,12 +19,12 @@ import org.swixml.SwingEngine;
 
 public class ProgressWindow {
     public JDialog frame;
-    public JLabel descriptionLabel;
-    public JLabel progressLabel;
-    public JProgressBar progressBar;
-    public JButton cancelButton;
-    public JPanel cancelButtonPanel;
-    public Runnable cancelAction;
+    @SuppressWarnings("UnusedDeclaration") private JLabel descriptionLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel progressLabel;
+    @SuppressWarnings("UnusedDeclaration") private JProgressBar progressBar;
+    @SuppressWarnings("UnusedDeclaration") private JButton cancelButton;
+    @SuppressWarnings("UnusedDeclaration") private JPanel cancelButtonPanel;
+    private Runnable cancelAction;
 
     public ProgressWindow(String title, String description) {
         SwingEngine renderer = new SwingEngine(this);

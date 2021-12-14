@@ -29,24 +29,24 @@ import org.swixml.SwingEngine;
 public class DeparturePanel
 {
     private Script script;
-    public JLabel titleLabel;
-    public JPanel gridPanel;
-    public DVATextField destinationValue;
-    public JLabel destinationIndicatorIconLabel;
-    public DVATextField destination2Value;
-    public JLabel destination2IndicatorIconLabel;
-    public JComboBox<String> serviceTypeValue;
-    public JTextField departureTimeValue;
-    public JSpinner carsValue;
-    public JSpinner platformValue;
-    public JLabel indicatorIconLabel;
-    public DVATextArea stationsValue;
-    public JComboBox<String> lineValue;
-    public ColorComboBox color1Value;
-    public ColorComboBox color2Value;
-    public ColorComboBox textColorValue;
-    public FileTextField customAnnouncementText;
-    public JLabel customAnnouncementIndicatorIconLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel titleLabel;
+    @SuppressWarnings("UnusedDeclaration") private JPanel gridPanel;
+    @SuppressWarnings("UnusedDeclaration") private DVATextField destinationValue;
+    @SuppressWarnings("UnusedDeclaration") private JLabel destinationIndicatorIconLabel;
+    @SuppressWarnings("UnusedDeclaration") private DVATextField destination2Value;
+    @SuppressWarnings("UnusedDeclaration") private JLabel destination2IndicatorIconLabel;
+    @SuppressWarnings("UnusedDeclaration") private JComboBox<String> serviceTypeValue;
+    @SuppressWarnings("UnusedDeclaration") private JTextField departureTimeValue;
+    @SuppressWarnings("UnusedDeclaration") private JSpinner carsValue;
+    @SuppressWarnings("UnusedDeclaration") private JSpinner platformValue;
+    @SuppressWarnings("UnusedDeclaration") private JLabel indicatorIconLabel;
+    @SuppressWarnings("UnusedDeclaration") private DVATextArea stationsValue;
+    @SuppressWarnings("UnusedDeclaration") private JComboBox<String> lineValue;
+    @SuppressWarnings("UnusedDeclaration") private ColorComboBox color1Value;
+    @SuppressWarnings("UnusedDeclaration") private ColorComboBox color2Value;
+    @SuppressWarnings("UnusedDeclaration") private ColorComboBox textColorValue;
+    @SuppressWarnings("UnusedDeclaration") private FileTextField customAnnouncementText;
+    @SuppressWarnings("UnusedDeclaration") private JLabel customAnnouncementIndicatorIconLabel;
     private Container panel;
 
     public DeparturePanel(String title, DVA dva, String soundLibraryName)

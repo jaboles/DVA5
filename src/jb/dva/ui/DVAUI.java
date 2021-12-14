@@ -31,9 +31,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -53,7 +51,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import jb.common.ExceptionReporter;
 import jb.common.sound.LevelMeterPanel;
 import jb.common.sound.Player;
@@ -76,47 +73,45 @@ import org.jdesktop.swingx.JXBusyLabel;
 import org.swixml.SwingEngine;
 
 public class DVAUI {
+    private final static Logger logger = LogManager.getLogger(DVAUI.class);
+
     private Container panel;
     private final DVA controller;
     private boolean documentModified = false;
+    private final SoundListModel suggestedSoundListModel;
+    private DefaultListModel<Script> announcementListModel;
+    private DefaultListModel<String> inflectionListModel;
+    private Script currentScript;
 
     // Outlets
-    public JScrollPane voicePane;
-    public JList<SoundLibrary> voiceComboBox;
-    public JList<Script> announcementComboBox;
-    public JButton playStopCurrentAnnouncementButton;
-    public JButton playStopSavedAnnouncementButton;
-    public JLabel dvaTextAreaLabel;
-    public DVATextArea dvaTextArea;
-    public JLabel indicatorIconLabel;
-    public JCheckBox previewSoundCheckbox;
-    public JList<SoundReference> suggestedSoundList;
-    public JPanel inflectionPanel;
-    public JList<String> inflectionList;
-    public JSplitPane splitpane;
-    public JSplitPane splitpaneLeft;
-    public JSplitPane splitpaneRight;
-    public LevelMeterPanel levelMeterPanelCurrentAnnouncement;
-    public LevelMeterPanel levelMeterPanelSavedAnnouncement;
-    public JPanel soundInfoPanel;
-    public JLabel soundInfoSizeLabel;
-    public JLabel soundInfoDurationLabel;
-    public JLabel soundInfoEncodingLabel;
-    public JLabel soundInfoSampleRateLabel;
-    public JLabel soundInfoBitsPerSampleLabel;
-    public JLabel soundInfoChannelsLabel;
-    public JLabel soundInfoBytesPerFrameLabel;
-    public JLabel announcementStatsLabel;
-    public JXBusyLabel playSavedAnnouncementBusyLabel;
-    public JXBusyLabel playCurrentAnnouncementBusyLabel;
-
-    public SoundListModel suggestedSoundListModel;
-    public DefaultListModel<Script> announcementListModel;
-    public DefaultListModel<String> inflectionListModel;
-
-    public Script currentScript;
-
-    final static Logger logger = LogManager.getLogger(DVAUI.class);
+    @SuppressWarnings("UnusedDeclaration") private JScrollPane voicePane;
+    @SuppressWarnings("UnusedDeclaration") private JList<SoundLibrary> voiceComboBox;
+    @SuppressWarnings("UnusedDeclaration") private JList<Script> announcementComboBox;
+    @SuppressWarnings("UnusedDeclaration") private JButton playStopCurrentAnnouncementButton;
+    @SuppressWarnings("UnusedDeclaration") private JButton playStopSavedAnnouncementButton;
+    @SuppressWarnings("UnusedDeclaration") private JLabel dvaTextAreaLabel;
+    @SuppressWarnings("UnusedDeclaration") private DVATextArea dvaTextArea;
+    @SuppressWarnings("UnusedDeclaration") private JLabel indicatorIconLabel;
+    @SuppressWarnings("UnusedDeclaration") private JCheckBox previewSoundCheckbox;
+    @SuppressWarnings("UnusedDeclaration") private JList<SoundReference> suggestedSoundList;
+    @SuppressWarnings("UnusedDeclaration") private JPanel inflectionPanel;
+    @SuppressWarnings("UnusedDeclaration") private JList<String> inflectionList;
+    @SuppressWarnings("UnusedDeclaration") private JSplitPane splitpane;
+    @SuppressWarnings("UnusedDeclaration") private JSplitPane splitpaneLeft;
+    @SuppressWarnings("UnusedDeclaration") private JSplitPane splitpaneRight;
+    @SuppressWarnings("UnusedDeclaration") private LevelMeterPanel levelMeterPanelCurrentAnnouncement;
+    @SuppressWarnings("UnusedDeclaration") private LevelMeterPanel levelMeterPanelSavedAnnouncement;
+    @SuppressWarnings("UnusedDeclaration") private JPanel soundInfoPanel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoSizeLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoDurationLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoEncodingLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoSampleRateLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoBitsPerSampleLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoChannelsLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoBytesPerFrameLabel;
+    @SuppressWarnings("UnusedDeclaration") private JLabel announcementStatsLabel;
+    @SuppressWarnings("UnusedDeclaration") private JXBusyLabel playSavedAnnouncementBusyLabel;
+    @SuppressWarnings("UnusedDeclaration") private JXBusyLabel playCurrentAnnouncementBusyLabel;
 
     public DVAUI(final DVA controller) {
         this.controller = controller;

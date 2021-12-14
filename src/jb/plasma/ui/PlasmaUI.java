@@ -55,39 +55,42 @@ public class PlasmaUI
 
     private static final String[] departurePanelTitles = new String[] { "Next Train:", "2nd Train:", "3rd Train:" };
     final static Logger logger = LogManager.getLogger(PlasmaUI.class);
+
     private final DVA dva;
     private final String settingsKey;
     private PlasmaSession session;
+    private Player player;
+    private List<DepartureData> departureData = new LinkedList<>();
     private GtfsTimetableTranslator timetableTranslator;
 
     private Container panel;
-    public JTabbedPane tabbedPane;
+    @SuppressWarnings("UnusedDeclaration") private JTabbedPane tabbedPane;
 
-    public JButton promoteDeparturesButton;
-    public XVBox departuresList;
+    // Settings section
+    @SuppressWarnings("UnusedDeclaration") private XVBox rendererComboboxesPanel;
+    @SuppressWarnings("UnusedDeclaration") private List<JComboBox<Drawer>> rendererComboBoxes;
+    @SuppressWarnings("UnusedDeclaration") private JCheckBox playAnnouncementCheckbox;
+    @SuppressWarnings("UnusedDeclaration") private JTextField playAnnouncementTimes;
+    @SuppressWarnings("UnusedDeclaration") private JBComboBox<Announcer> playAnnouncementVoiceCombobox;
+    @SuppressWarnings("UnusedDeclaration") private JCheckBox coalesceStationSequencesCheckbox;
+    @SuppressWarnings("UnusedDeclaration") private JPanel startButtonsPanel;
+    @SuppressWarnings("UnusedDeclaration") private JPanel previewButtonPanel;
+
+    // Manual section
     private final DeparturePanel[] departurePanels = new DeparturePanel[3];
-    public JButton playStopButton;
-    private List<DepartureData> departureData = new LinkedList<>();
+    @SuppressWarnings("UnusedDeclaration") private XVBox departuresList;
+    @SuppressWarnings("UnusedDeclaration") private JButton playStopButton;
+    @SuppressWarnings("UnusedDeclaration") private JButton promoteDeparturesButton;
 
-    public JLabel gtfsInfo;
-    public JLabel gtfsDownloadTimestamp;
-    public JLabel gtfsExpiryTime;
-    public JBComboBox<Stop> gtfsStation;
-    public JCheckBox filterPlatform;
-    public JBComboBox<Stop> gtfsPlatform;
-    public JCheckBox filterRoute;
-    public JBComboBox<String> gtfsRoute;
-
-    public JCheckBox playAnnouncementCheckbox;
-    public JTextField playAnnouncementTimes;
-    public JBComboBox<Announcer> playAnnouncementVoiceCombobox;
-    public JCheckBox coalesceStationSequencesCheckbox;
-    public JPanel startButtonsPanel;
-    public JPanel previewButtonPanel;
-    public XVBox rendererComboboxesPanel;
-    private List<JComboBox<Drawer>> rendererComboBoxes;
-
-    private Player player;
+    // Timetables section
+    @SuppressWarnings("UnusedDeclaration") private JLabel gtfsInfo;
+    @SuppressWarnings("UnusedDeclaration") private JLabel gtfsDownloadTimestamp;
+    @SuppressWarnings("UnusedDeclaration") private JLabel gtfsExpiryTime;
+    @SuppressWarnings("UnusedDeclaration") private JBComboBox<Stop> gtfsStation;
+    @SuppressWarnings("UnusedDeclaration") private JCheckBox filterPlatform;
+    @SuppressWarnings("UnusedDeclaration") private JBComboBox<Stop> gtfsPlatform;
+    @SuppressWarnings("UnusedDeclaration") private JCheckBox filterRoute;
+    @SuppressWarnings("UnusedDeclaration") private JBComboBox<String> gtfsRoute;
 
     public PlasmaUI(int mode, DVA dva) {
         this.dva = dva;

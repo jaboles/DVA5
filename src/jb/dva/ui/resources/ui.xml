@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<splitpane id="splitpane" constraints="BorderLayout.CENTER" orientation="VERTICAL" border="EmptyBorder(4,8,8,8)">
+<splitpane id="splitpane" name="Announcements" constraints="BorderLayout.CENTER" orientation="VERTICAL" border="EmptyBorder(4,8,8,8)">
     <splitpane id="splitpaneLeft" orientation="HORIZONTAL" border="EmptyBorder(0,0,0,0)" opaque="false">
         <panel layout="BorderLayout" opaque="false">
             <panel layout="BorderLayout" constraints="BorderLayout.NORTH" opaque="false">
