@@ -31,12 +31,12 @@
     <property name="SignKey" value="/Users/jb/Software/jb.pvk"/>
     <property name="SignCert" value="/Users/jb/Software/jb.spc"/>
 
-	<!-- Mac setup -->
+    <!-- Mac setup -->
     <property name="DmgName" value="DVA5"/>
     <property name="DmgVolumeName" value="DVA 5"/>
     <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
 
-	<!-- Windows setup -->
+    <!-- Windows setup -->
     <property name="Wine"            value="wine"/>
     <property name="WinePrefix"      value="${user.home}/.wine"/>
     <property name="ResHackerDir"    value="${ToolsDir}${file.separator}resource_hacker"/>
@@ -50,7 +50,7 @@
                                              else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
         <os family="mac"/>
     </condition>
-	<property name="WindowsSetupName" value="DVA5Setup"/>
+    <property name="WindowsSetupName" value="DVA5Setup"/>
 
     <!-- linux DEB -->
     <property name="DpkgRoot" value="${OutDir}${file.separator}debian"/>
@@ -141,18 +141,18 @@
     <target name="Clean" description="Clean output folder">
         <delete failonerror="false" dir="${OutDir}"/>
     </target>
-	
-	<target name="Compile" description="Compile java code">
+
+    <target name="Compile" description="Compile java code">
         <mkdir dir="${ClassesDir}"/>
         <exec executable="protoc" failonerror="true">
             <arg value="--java_out=src" />
             <arg value="src${file.separator}jb${file.separator}plasma${file.separator}gtfs${file.separator}gtfs-realtime_1007_extension.proto" />
         </exec>
-		<javac srcdir="src" destdir="${ClassesDir}" classpath="${BuildClasspath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
+        <javac srcdir="src" destdir="${ClassesDir}" classpath="${BuildClasspath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
             <compilerarg value="-Xlint:unchecked"/>
             <compilerarg value="-Xlint:deprecation"/>
         </javac>
-	</target>
+    </target>
 
     <!-- After Eclipse compile task, prepare JAR file -->
     <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
@@ -177,7 +177,7 @@
             <fileset dir="resources">
                 <include name="**"/>
             </fileset>
-    	</jar>
+        </jar>
         <copy todir="${OutDir}" preservelastmodified="true">
             <fileset dir="configs" includes="*" />
         </copy>
@@ -219,15 +219,15 @@
             <arg value="DVA.app/Contents/Info.plist"/>
         </exec>
         <copy todir="${AppBundleContents}" preservelastmodified="true">
-        	<fileset dir=".">
+            <fileset dir=".">
                 <include name="log4j2.xml"/>
             </fileset>
-        	<fileset dir="${OutDir}">
-        		<include name="*.txt"/>
-        		<include name="DVA.jar"/>
-        	</fileset>
+            <fileset dir="${OutDir}">
+                <include name="*.txt"/>
+                <include name="DVA.jar"/>
+            </fileset>
             <fileset dir="jars">
-            	<include name="*.jar"/>
+                <include name="*.jar"/>
             </fileset>
             <fileset dir="ffmpeg/mac">
                 <include name="*"/>
@@ -245,7 +245,7 @@
     </target>
 
     <target name="SignMacApp.Check">
-    	<echo level="info">Running on ${hostname}</echo>
+        <echo level="info">Running on ${hostname}</echo>
         <condition property="WillSignMacApp">
             <or>
                 <equals arg1="${hostname}" arg2="jb"/>
@@ -331,7 +331,7 @@ Log=    console
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
     </target>
-    
+
     <target name="SetupCommon" description="common setup crap">
         <copy file="resources/new.html" todir="${OutDir}"/>
         <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac" failonerror="true">
@@ -344,7 +344,7 @@ Log=    console
         </exec>
         <echo level="info">Read version string: ${DVAVersion}</echo>
     </target>
-    
+
     <!-- Build Mac setup -->
     <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="BuildMacApp">
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
@@ -380,7 +380,7 @@ Log=    console
             <arg line="--verbose --${bzip2compression} ${OutDir}/${DmgName}.dmg"/>
         </exec>
     </target>
-    
+
     <!-- Build windows setup -->
     <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes">
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
@@ -407,7 +407,7 @@ Log=    console
 
     <!-- Sign windows setup -->
     <target name="SignWinSetup.Check">
-    	<echo level="info">Checking for ${SignKey}</echo>
+        <echo level="info">Checking for ${SignKey}</echo>
         <available file="${SignKey}" property="SignKeyExists"/>
     </target>
     <target name="SignWinSetup" depends="SignWinSetup.Check" if="SignKeyExists">
@@ -474,7 +474,7 @@ Log=    console
             </fileset>
         </copy>
     </target>
-    
+
     <target name="Run" description="Fast dev build" depends="BuildMacApp">
         <exec executable="build/Output/DVA.app/Contents/MacOS/dva"/>
     </target>

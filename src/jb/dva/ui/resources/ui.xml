@@ -1,111 +1,111 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <panel constraints="BorderLayout.CENTER" layout="BorderLayout" Border="EmptyBorder(0,0,0,0)">
-	<splitpane id="splitpane" constraints="BorderLayout.CENTER" orientation="VERTICAL" border="EmptyBorder(0,0,0,0)">
-		<panel layout="BorderLayout" border="EmptyBorder(4,10,10,0)">
-	           <splitpane id="splitpaneLeft" orientation="HORIZONTAL" border="EmptyBorder(0,0,0,0)">
-	               <panel layout="BorderLayout" border="EmptyBorder(0,0,0,0)">
-	                   <panel layout="BorderLayout" constraints="BorderLayout.NORTH">
-	                       <label id="voiceLabel" constraints="BorderLayout.WEST" text="Voice Library: "/>
-	                       <button action="voiceLibraryToggleAction" tooltiptext="Show/Hide Voice Library" constraints="BorderLayout.EAST" text="" contentareafilled="false" focuspainted="false" Border="EmptyBorder(2,2,2,2)"/>
-	                   </panel>
-	                   <scrollpane id="voicePane" horizontalScrollBarPolicy="HORIZONTAL_SCROLLBAR_NEVER">
-	                       <tooltiplist id="voiceComboBox" dragenabled="true" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
-	                   </scrollpane>
-	               </panel>
-	               <panel layout="BorderLayout">
-	                   <scrollpane>
-	                       <tooltiplist id="suggestedSoundList" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
-	                   </scrollpane>
-					<panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
-	                       <panel constraints="BorderLayout.NORTH" layout="BorderLayout">
-	                           <panel id="inflectionPanel" constraints="BorderLayout.NORTH" layout="BorderLayout" border="EmptyBorder(5,0,5,0)" visible="false">
-	                               <label text="Inflection:" constraints="BorderLayout.WEST" />
-	                               <list id="inflectionList" constraints="BorderLayout.CENTER" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
-	                           </panel>
-	                           <panel id="soundInfoPanel" constraints="BorderLayout.SOUTH" layout="FlowLayout" visible="false">
-	                               <panel layout="GridLayout(7,2)">
-	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Size : "/>
-	                                   <label font="dialog-BOLD-11" id="soundInfoSizeLabel" />
-	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Duration : "/>
-	                                   <label font="dialog-BOLD-11" id="soundInfoDurationLabel" />
-	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Encoding : "/>
-	                                   <label font="dialog-BOLD-11" id="soundInfoEncodingLabel" />
-	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Sample rate : "/>
-	                                   <label font="dialog-BOLD-11" id="soundInfoSampleRateLabel" />
-	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Bits per sample : "/>
-	                                   <label font="dialog-BOLD-11" id="soundInfoBitsPerSampleLabel" />
-	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Channels : "/>
-	                                   <label font="dialog-BOLD-11" id="soundInfoChannelsLabel" />
-	                                   <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Bytes per frame : "/>
-	                                   <label font="dialog-BOLD-11" id="soundInfoBytesPerFrameLabel" />
-	                               </panel>
-	                           </panel>
-	                       </panel>
-						<panel layout="BorderLayout(15,0)" constraints="BorderLayout.SOUTH">
-							<checkbox id="previewSoundCheckbox" constraints="BorderLayout.WEST" text="Preview sound on mouse click" selected="true" />
-							<button action="soundInfoAction" id="soundInfoButton" tooltiptext="Show/Hide Sound Info" contentareafilled="false" focuspainted="false" constraints="BorderLayout.EAST" text="" Border="EmptyBorder(2,2,2,2)"/>
-						</panel>
-					</panel>
-	               </panel>
-	           </splitpane>
-		</panel>
-	       <panel layout="BorderLayout" border="EmptyBorder(4,0,10,10)">
-	           <splitpane id="splitpaneRight" orientation="HORIZONTAL" border="EmptyBorder(0,0,0,0)">
-	               <panel constraints="BorderLayout.NORTH" layout="BorderLayout">
-	                   <vbox constraints="BorderLayout.NORTH">
-	                       <panel layout="BorderLayout">
-	                           <label id="announcementLabel" constraints="BorderLayout.WEST" text="Saved Announcements: "/>
-	                       </panel>
-	                       <panel layout="BorderLayout">
-	                           <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
-	                               <button action="openAction" />
-	                               <button action="moveUpAction" />
-	                               <button action="moveDownAction" />
-	                               <button action="renameAction" />
-	                               <button action="deleteAction" />
-	                           </panel>
-	                           <hbox constraints="BorderLayout.EAST">
-	                               <panel layout="FlowLayout(FlowLayout.TRAILING)">
-                                       <xbusylabel id="playSavedAnnouncementBusyLabel" />
-	                                   <button id="playStopSavedAnnouncementButton" action="playSavedAction" />
-	                               </panel>
-	                               <levelmeterpanel id="levelMeterPanelSavedAnnouncement" border="EmptyBorder(4,10,4,10)"/>
-	                           </hbox>
-	                       </panel>
-	                   </vbox>
-	                   <scrollpane>
-	                       <tooltiplist id="announcementComboBox" constraints="BorderLayout.CENTER" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
-	                   </scrollpane>
-	               </panel>
-	               <panel constraints="BorderLayout.CENTER" layout="BorderLayout">
-	                   <vbox constraints="BorderLayout.NORTH">
-	                       <panel layout="BorderLayout">
-	                           <hbox constraints="BorderLayout.WEST">
-	                               <label id="dvaTextAreaLabel" text="Current Announcement:"/>
-	                               <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
-	                           </hbox>
-	                           <label id="announcementStatsLabel" constraints="BorderLayout.EAST" text="0 sounds (0 s)" />
-	                       </panel>
-	                       <panel layout="BorderLayout">
-	                           <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
-	                               <button action="newAction" />
-	                               <button action="saveAction" />
-	                               <button action="exportAction" />
-	                           </panel>
-	                           <hbox constraints="BorderLayout.EAST">
-	                               <panel layout="FlowLayout(FlowLayout.TRAILING)">
-	                                   <xbusylabel id="playCurrentAnnouncementBusyLabel" />
-	                                   <button id="playStopCurrentAnnouncementButton" action="playCurrentAction" />
-	                               </panel>
-	                               <levelmeterpanel id="levelMeterPanelCurrentAnnouncement" border="EmptyBorder(4,10,4,10)"/>
-	                           </hbox>
-	                       </panel>
-	                   </vbox>
-	                   <scrollpane constraints="BorderLayout.CENTER">
-	                       <dvatextarea id="dvaTextArea" linewrap="true" wrapstyleword="true" border="EmptyBorder(1,1,1,1)"/>
-	                   </scrollpane>
-	               </panel>
-	           </splitpane>
-	       </panel>
-	</splitpane>
+    <splitpane id="splitpane" constraints="BorderLayout.CENTER" orientation="VERTICAL" border="EmptyBorder(0,0,0,0)">
+        <panel layout="BorderLayout" border="EmptyBorder(4,10,10,0)">
+            <splitpane id="splitpaneLeft" orientation="HORIZONTAL" border="EmptyBorder(0,0,0,0)">
+                <panel layout="BorderLayout" border="EmptyBorder(0,0,0,0)">
+                    <panel layout="BorderLayout" constraints="BorderLayout.NORTH">
+                        <label id="voiceLabel" constraints="BorderLayout.WEST" text="Voice Library: "/>
+                        <button action="voiceLibraryToggleAction" tooltiptext="Show/Hide Voice Library" constraints="BorderLayout.EAST" text="" contentareafilled="false" focuspainted="false" Border="EmptyBorder(2,2,2,2)"/>
+                    </panel>
+                    <scrollpane id="voicePane" horizontalScrollBarPolicy="HORIZONTAL_SCROLLBAR_NEVER">
+                       <tooltiplist id="voiceComboBox" dragenabled="true" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
+                    </scrollpane>
+                </panel>
+                <panel layout="BorderLayout">
+                    <scrollpane>
+                        <tooltiplist id="suggestedSoundList" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
+                    </scrollpane>
+                    <panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
+                        <panel constraints="BorderLayout.NORTH" layout="BorderLayout">
+                            <panel id="inflectionPanel" constraints="BorderLayout.NORTH" layout="BorderLayout" border="EmptyBorder(5,0,5,0)" visible="false">
+                                <label text="Inflection:" constraints="BorderLayout.WEST" />
+                                <list id="inflectionList" constraints="BorderLayout.CENTER" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
+                            </panel>
+                            <panel id="soundInfoPanel" constraints="BorderLayout.SOUTH" layout="FlowLayout" visible="false">
+                                <panel layout="GridLayout(7,2)">
+                                    <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Size : "/>
+                                    <label font="dialog-BOLD-11" id="soundInfoSizeLabel" />
+                                    <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Duration : "/>
+                                    <label font="dialog-BOLD-11" id="soundInfoDurationLabel" />
+                                    <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Encoding : "/>
+                                    <label font="dialog-BOLD-11" id="soundInfoEncodingLabel" />
+                                    <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Sample rate : "/>
+                                    <label font="dialog-BOLD-11" id="soundInfoSampleRateLabel" />
+                                    <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Bits per sample : "/>
+                                    <label font="dialog-BOLD-11" id="soundInfoBitsPerSampleLabel" />
+                                    <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Channels : "/>
+                                    <label font="dialog-BOLD-11" id="soundInfoChannelsLabel" />
+                                    <label font="dialog-PLAIN-11" horizontalAlignment="RIGHT" text="Bytes per frame : "/>
+                                    <label font="dialog-BOLD-11" id="soundInfoBytesPerFrameLabel" />
+                                </panel>
+                            </panel>
+                        </panel>
+                    <panel layout="BorderLayout(15,0)" constraints="BorderLayout.SOUTH">
+                        <checkbox id="previewSoundCheckbox" constraints="BorderLayout.WEST" text="Preview sound on mouse click" selected="true" />
+                        <button action="soundInfoAction" id="soundInfoButton" tooltiptext="Show/Hide Sound Info" contentareafilled="false" focuspainted="false" constraints="BorderLayout.EAST" text="" Border="EmptyBorder(2,2,2,2)"/>
+                    </panel>
+                </panel>
+                </panel>
+            </splitpane>
+        </panel>
+        <panel layout="BorderLayout" border="EmptyBorder(4,0,10,10)">
+            <splitpane id="splitpaneRight" orientation="HORIZONTAL" border="EmptyBorder(0,0,0,0)">
+                <panel constraints="BorderLayout.NORTH" layout="BorderLayout">
+                    <vbox constraints="BorderLayout.NORTH">
+                        <panel layout="BorderLayout">
+                            <label id="announcementLabel" constraints="BorderLayout.WEST" text="Saved Announcements: "/>
+                        </panel>
+                        <panel layout="BorderLayout">
+                            <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
+                                <button action="openAction" />
+                                <button action="moveUpAction" />
+                                <button action="moveDownAction" />
+                                <button action="renameAction" />
+                                <button action="deleteAction" />
+                            </panel>
+                            <hbox constraints="BorderLayout.EAST">
+                                <panel layout="FlowLayout(FlowLayout.TRAILING)">
+                                    <xbusylabel id="playSavedAnnouncementBusyLabel" />
+                                    <button id="playStopSavedAnnouncementButton" action="playSavedAction" />
+                                </panel>
+                                <levelmeterpanel id="levelMeterPanelSavedAnnouncement" border="EmptyBorder(4,10,4,10)"/>
+                            </hbox>
+                        </panel>
+                    </vbox>
+                    <scrollpane>
+                        <tooltiplist id="announcementComboBox" constraints="BorderLayout.CENTER" selectionmode="ListSelectionModel.SINGLE_SELECTION" />
+                    </scrollpane>
+                </panel>
+                <panel constraints="BorderLayout.CENTER" layout="BorderLayout">
+                    <vbox constraints="BorderLayout.NORTH">
+                        <panel layout="BorderLayout">
+                            <hbox constraints="BorderLayout.WEST">
+                                <label id="dvaTextAreaLabel" text="Current Announcement:"/>
+                                <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
+                            </hbox>
+                            <label id="announcementStatsLabel" constraints="BorderLayout.EAST" text="0 sounds (0 s)" />
+                        </panel>
+                        <panel layout="BorderLayout">
+                            <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
+                                <button action="newAction" />
+                                <button action="saveAction" />
+                                <button action="exportAction" />
+                            </panel>
+                            <hbox constraints="BorderLayout.EAST">
+                                <panel layout="FlowLayout(FlowLayout.TRAILING)">
+                                    <xbusylabel id="playCurrentAnnouncementBusyLabel" />
+                                    <button id="playStopCurrentAnnouncementButton" action="playCurrentAction" />
+                                </panel>
+                                <levelmeterpanel id="levelMeterPanelCurrentAnnouncement" border="EmptyBorder(4,10,4,10)"/>
+                            </hbox>
+                        </panel>
+                    </vbox>
+                    <scrollpane constraints="BorderLayout.CENTER">
+                        <dvatextarea id="dvaTextArea" linewrap="true" wrapstyleword="true" border="EmptyBorder(1,1,1,1)"/>
+                    </scrollpane>
+                </panel>
+            </splitpane>
+        </panel>
+    </splitpane>
 </panel>

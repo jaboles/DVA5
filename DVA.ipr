@@ -138,6 +138,9 @@
       </item>
     </group>
   </component>
+  <component name="ProjectCodeStyleConfiguration">
+    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+  </component>
   <component name="ProjectDictionaryState">
     <dictionary name="jb">
       <words>
