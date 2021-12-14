@@ -18,11 +18,7 @@ import javax.swing.border.EmptyBorder;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.sound.Player;
-import jb.common.ui.ColorComboBox;
-import jb.common.ui.JBComboBox;
-import jb.common.ui.ProportionalPanel;
-import jb.common.ui.RotatedIcon;
-import jb.common.ui.TextIcon;
+import jb.common.ui.*;
 import jb.dva.Script;
 import jb.dvacommon.DVA;
 import jb.dvacommon.Settings;
@@ -100,6 +96,7 @@ public class PlasmaUI
         SwingEngine renderer = new SwingEngine(this);
         renderer.getTaglib().registerTag("colorcombobox", ColorComboBox.class);
         renderer.getTaglib().registerTag("jbcombobox", JBComboBox.class);
+        renderer.getTaglib().registerTag("filler", Filler.class);
         try {
             panel = renderer.render(PlasmaUI.class.getResource("/jb/plasma/ui/resources/ui.xml"));
             TextIcon ti = new TextIcon(promoteDeparturesButton, "     <<< Shift Departures Upwards <<<    ");

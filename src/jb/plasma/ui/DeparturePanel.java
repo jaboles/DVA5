@@ -14,6 +14,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
 import jb.common.ui.ColorComboBox;
+import jb.common.ui.Filler;
 import jb.common.ui.SimpleEditorUndoRedoKit;
 import jb.dva.Script;
 import jb.dvacommon.DVA;
@@ -55,6 +56,7 @@ public class DeparturePanel
         renderer.getTaglib().registerTag("dvatextarea", DVATextArea.class);
         renderer.getTaglib().registerTag("dvatextfield", DVATextField.class);
         renderer.getTaglib().registerTag("filetextfield", FileTextField.class);
+        renderer.getTaglib().registerTag("filler", Filler.class);
         try {
             panel = renderer.render(DeparturePanel.class.getResource("/jb/plasma/ui/resources/departurepanel.xml"));
             if (dva != null && soundLibraryName != null)

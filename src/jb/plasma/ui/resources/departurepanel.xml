@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<hbox>
+<hbox border="EmptyBorder(3,0,3,0)">
     <panel layout="BorderLayout">
-        <label id="titleLabel" constraints="BorderLayout.NORTH" />
+        <label id="titleLabel" constraints="BorderLayout.NORTH" border="EmptyBorder(0,0,3,0)" />
         <panel id="gridPanel" layout="GridLayout(4,2,2,2)">
             <hbox>
                 <label text="Destination:" />
@@ -23,7 +23,7 @@
             <combobox id="serviceTypeValue" editable="true"/>
         </panel>
     </panel>
-    <label text=" "/>
+    <filler width="10"/>
     <panel layout="BorderLayout">
         <panel layout="GridLayout(1,2,5,0)">
             <vbox>
@@ -32,16 +32,18 @@
                         <label text="Cars: " />
                         <spinner id="carsValue"/>
                     </hbox>
-                    <label text=" "/>
+                    <filler width="10"/>
                     <hbox>
                         <label text="Platform No.: " />
                         <spinner id="platformValue" />
                     </hbox>
                 </hbox>
+                <filler height="2"/>
                 <panel layout="FlowLayout(FlowLayout.LEADING)">
                     <label text="Line:"/>
                     <combobox id="lineValue" editable="true"/>
                 </panel>
+                <filler height="2"/>
                 <panel layout="FlowLayout(FlowLayout.LEADING)">
                     <label text="Colours:"/>
                     <colorcombobox id="color1Value"/>
@@ -61,7 +63,7 @@
                 </scrollpane>
             </panel>
         </panel>
-        <panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
+        <panel constraints="BorderLayout.SOUTH" layout="BorderLayout" border="EmptyBorder(2,0,0,0)">
             <label text="Custom announcement override:" constraints="BorderLayout.WEST"/>
             <panel constraints="BorderLayout.CENTER" layout="BorderLayout">
                 <label constraints="BorderLayout.WEST" id="customAnnouncementIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
