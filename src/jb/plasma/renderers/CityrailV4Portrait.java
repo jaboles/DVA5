@@ -15,18 +15,21 @@ public class CityrailV4Portrait extends CityrailV4
     private Font NextDestinationFont;
     private Font NextDestination2Font;
     private Font MiniTextBoxFont;
+    private Font LargeDepartureTimeFont;
     private final boolean isConcourse;
-    private double top = 0;
+    private boolean isNswTrainlink;
+    private final double nswTrainlinkTopOffset = 0.08;
+    private double initialTop = 0;
 
     public CityrailV4Portrait(boolean isConcourse) {
         this.isConcourse = isConcourse;
         if (!isConcourse) {
-            this.top = 0.06;
+            this.initialTop = 0.06;
         }
 
         stationListInc = 0.04 / PlasmaPanel.FPS;
         stationListSeparation = 0.056;
-        stationListPosInitial = top + 0.14 + (1 * stationListSeparation);
+        stationListPosInitial = initialTop + 0.14 + (1 * stationListSeparation);
         stationListPos = stationListPosInitial;
     }
 
@@ -46,6 +49,7 @@ public class CityrailV4Portrait extends CityrailV4
         HeaderTimeNowFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
         TimeFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.035));
         DestinationFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.074));
+        LargeDepartureTimeFont = RobotoMedium.deriveFont(Font.BOLD, (int)(height * 0.09));
         Destination2Font = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.03));
         PlatformDepartsLabelFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
         PlatformDepartsFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.065));
@@ -68,6 +72,11 @@ public class CityrailV4Portrait extends CityrailV4
             DepartureData d = data.get(0);
             CityrailLine line = CityrailLine.get(d.Line);
             LineLogo = TryLoadLineLogo(line);
+
+            isNswTrainlink = line.IsNswTrainlink;
+            if (isNswTrainlink) {
+                stationListPosInitial += nswTrainlinkTopOffset;
+            }
         }
         else { LineLogo = null; }
     }
@@ -75,10 +84,13 @@ public class CityrailV4Portrait extends CityrailV4
     public void paint(Graphics g)
     {
         super.paint(g);
+        double top = initialTop;
+
         if (!isConcourse) {
             fillRect(0, 0, 1, top, HeaderBackgroundColor);
             drawString("Service", LeftMargin, 0.045, HeaderTextColor, HeaderFont);
-            // TODO: time now
+            drawString("Time now:", 0.5, 0.045, HeaderTextColor, HeaderTimeNowFont);
+            drawStringR(TimeFormat.format(timeNow), 0.96, 0.045, HeaderTextColor, HeaderFont);
         }
 
         DepartureData d0 = null;
@@ -90,19 +102,26 @@ public class CityrailV4Portrait extends CityrailV4
             }
         }
 
-        drawStringR("Platform", RightMargin, top + 0.16, TextColor, PlatformDepartsLabelFont);
-        drawStringR("Departs", RightMargin,  0.77, TextColor, PlatformDepartsLabelFont);
-
         String dueOutString;
         if (d0 != null) {
-            double departureLeft = LeftMargin;
+            double logoOffset = LeftMargin;
+            double logoWidth = isNswTrainlink ? 0.08 : 0.11;
             if (LineLogo != null) {
-                drawImageSquare(LineLogo, LeftMargin, top + 0.01, 0.11);
-                departureLeft = 0.22;
+                drawImageSquare(LineLogo, LeftMargin, top + 0.01, logoWidth);
+                logoOffset = LeftMargin + logoWidth + 0.08;
             }
-            drawString(d0.Destination, departureLeft, top + 0.08, TextColor, DestinationFont);
-            if (d0.Destination2 != null) {
-                drawString(d0.Destination2, departureLeft + 0.006, top + 0.11, TextColor, Destination2Font);
+            if (isNswTrainlink) {
+                drawString(DueOutFormat.format(d0.DueOut), logoOffset, top + 0.085, TextColor, LargeDepartureTimeFont);
+                drawString(d0.Destination, LeftMargin, top + 0.16, TextColor, DestinationFont);
+                if (d0.Destination2 != null) {
+                    drawString(d0.Destination2, LeftMargin + 0.006, top + 0.19, TextColor, Destination2Font);
+                }
+                top += nswTrainlinkTopOffset;
+            } else {
+                drawString(d0.Destination, logoOffset, top + 0.08, TextColor, DestinationFont);
+                if (d0.Destination2 != null) {
+                    drawString(d0.Destination2, logoOffset + 0.006, top + 0.11, TextColor, Destination2Font);
+                }
             }
 
             drawStringR(d0.Platform, RightMargin, top + 0.22, OrangeTextColor, PlatformDepartsFont);
@@ -118,7 +137,7 @@ public class CityrailV4Portrait extends CityrailV4
                     drawStringR(dueOutString, RightMargin, 0.83, OrangeTextColor, PlatformDepartsFont);
                 }
             }
-            drawMiniTextBox(0.74, 0.32, d0.Cars + " carriages");
+            drawMiniTextBox(0.74, top + 0.24, d0.Cars + " carriages");
             if (d0.Type != null && !d0.Type.equals("")) {
                 drawMiniTextBox(LeftMargin, 0.8, d0.Type);
             }
@@ -147,6 +166,9 @@ public class CityrailV4Portrait extends CityrailV4
                 }
             }
         }
+
+        drawStringR("Platform", RightMargin, top + 0.16, TextColor, PlatformDepartsLabelFont);
+        drawStringR("Departs", RightMargin,  0.77, TextColor, PlatformDepartsLabelFont);
 
         drawLine(LeftMargin, top + 0.13, RightMargin, top + 0.13, TextColor);
         drawLine(LeftMargin, 0.85, RightMargin, 0.85, TextColor);
