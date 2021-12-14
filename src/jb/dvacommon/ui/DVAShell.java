@@ -238,7 +238,7 @@ public class DVAShell
     public Action aboutAction = new AbstractAction("About", null) {
         public void actionPerformed(ActionEvent e) {
             LoadWindow lw = new LoadWindow();
-            lw.show(true, true, true);
+            lw.show(true, true, false);
         }
     };
 

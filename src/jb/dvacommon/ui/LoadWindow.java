@@ -28,7 +28,7 @@ public class LoadWindow {
     private static Font ArialRegular;
     private static Font ArialBold;
 
-    public JFrame frame;
+    public JDialog frame;
     public JTextPane aboutTextPane;
     public JLabel loadLabel;
     public JButton closeButton;
@@ -41,7 +41,7 @@ public class LoadWindow {
     public LoadWindow() {
         SwingEngine renderer = new SwingEngine(this);
         try {
-            frame = (JFrame) renderer.render(LoadWindow.class.getResource("/jb/dvacommon/ui/resources/loadwindow.xml"));
+            frame = (JDialog) renderer.render(LoadWindow.class.getResource("/jb/dvacommon/ui/resources/loadwindow.xml"));
             imagePanel.setLayout(new AbsoluteOverlayLayout(imagePanel));
             Dimension imageDimensions = imagePanel.getPreferredSize();
 
@@ -128,6 +128,7 @@ public class LoadWindow {
 
         if (showCloseButton) {
             versionLabel.setText("");
+            frame.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         }
         buttonPanel.setVisible(showCloseButton);
         loadLabel.setText("");

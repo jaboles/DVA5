@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<panel name="Indicators" layout="BorderLayout" border="EmptyBorder(4,8,8,8)" opaque="false">
+<panel name="Indicators" layout="BorderLayout" border="EmptyBorder(4,8,8,8)">
     <hbox constraints="BorderLayout.NORTH">
-        <panel border="TitledBorder(Indicator Style)" opaque="false">
+        <panel border="TitledBorder(Indicator Style)">
             <vbox id="rendererComboboxesPanel"/>
         </panel>
         <vbox border="TitledBorder(Announcement Style)">
             <jbcombobox id="playAnnouncementVoiceCombobox" />
-            <panel layout="BorderLayout" opaque="false">
-                <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+            <panel layout="BorderLayout">
+                <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
                     <checkbox id="playAnnouncementCheckbox" text="Announce" />
                     <textfield id="playAnnouncementTimes" />
                     <label text="mins before departure:"/>
                 </panel>
             </panel>
-            <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+            <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
                 <checkbox id="coalesceStationSequencesCheckbox" text="Enable &quot;all stations to&quot; phrasing" selected="true"/>
             </panel>
         </vbox>
-        <panel id="startButtonsPanel" border="TitledBorder(Show)" opaque="false">
+        <panel id="startButtonsPanel" border="TitledBorder(Show)">
             <vbox>
-                <panel layout="GridLayout(2,1,0,5)" opaque="false">
+                <panel layout="GridLayout(2,1,0,5)">
                     <button id="windowButton" action="windowAction" text="Window" />
                     <button id="fullScreenButton" action="fullScreenAction" text="Full Screen" />
                 </panel>
             </vbox>
         </panel>
-        <panel id="previewButtonPanel" border="TitledBorder(Preview)" layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+        <panel id="previewButtonPanel" border="TitledBorder(Preview)" layout="FlowLayout(FlowLayout.LEADING)">
             <button id="previewButton" action="previewAction"/>
         </panel>
     </hbox>
     <tabbedpane id="tabbedPane" constraints="BorderLayout.CENTER" border="TitledBorder(Data Source)">
-        <panel name="Manual" layout="FlowLayout" opaque="false">
+        <panel name="Manual" layout="FlowLayout">
             <hbox>
                 <vbox id="departuresList" />
                 <label text=" "/>
                 <vbox>
-                    <panel layout="BorderLayout" opaque="false">
+                    <panel layout="BorderLayout">
                         <button constraints="BorderLayout.NORTH" id="playStopButton" action="announceAction"/>
                         <label constraints="BorderLayout.CENTER" text="                   "/>
                     </panel>
-                    <panel layout="BorderLayout" opaque="false">
+                    <panel layout="BorderLayout">
                         <button constraints="BorderLayout.WEST" text="" id="promoteDeparturesButton" action="promoteDepartures"/>
                     </panel>
                 </vbox>
             </hbox>
         </panel>
-        <panel name="Timetable" layout="FlowLayout" opaque="false">
+        <panel name="Timetable" layout="FlowLayout">
             <vbox>
-                <panel layout="GridLayout(3,1,0,3)" opaque="false">
+                <panel layout="GridLayout(3,1,0,3)">
                     <label id="gtfsInfo"/>
                     <hbox>
                         <label id="gtfsDownloadTimestamp"/>
@@ -58,7 +58,7 @@
                 </panel>
                 <label text=" "/>
                 <label text=" "/>
-                <panel constraints="BorderLayout.NORTH" layout="GridLayout(6,1,0,6)" border="EmptyBorder(0,0,0,2)" opaque="false">
+                <panel constraints="BorderLayout.NORTH" layout="GridLayout(6,1,0,6)" border="EmptyBorder(0,0,0,2)">
                     <label text="Select station:"/>
                     <jbcombobox id="gtfsStation" size="400,10"/>
                     <checkbox id="filterPlatform" action="filterPlatformAction" text="Filter by platform:"/>
@@ -68,10 +68,10 @@
                 </panel>
                 <label text=" "/>
                 <label text=" "/>
-                <panel layout="FlowLayout(FlowLayout.CENTER)" opaque="false">
+                <panel layout="FlowLayout(FlowLayout.CENTER)">
                     <label text="&lt;html&gt;Use Window/Full Screen buttons at top of window to start&lt;br&gt;indicator, or use button below to load the Manual page.&lt;/html&gt;"/>
                 </panel>
-                <panel layout="FlowLayout(FlowLayout.CENTER)" opaque="false">
+                <panel layout="FlowLayout(FlowLayout.CENTER)">
                     <button action="loadManualFromTimetable"/>
                 </panel>
             </vbox>

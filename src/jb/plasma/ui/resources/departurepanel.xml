@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <hbox>
-    <panel layout="BorderLayout" opaque="false">
+    <panel layout="BorderLayout">
         <label id="titleLabel" constraints="BorderLayout.NORTH" />
-        <panel id="gridPanel" layout="GridLayout(4,2,2,2)" opaque="false">
+        <panel id="gridPanel" layout="GridLayout(4,2,2,2)">
             <hbox>
                 <label text="Destination:" />
-                <panel layout="BorderLayout" opaque="false">
+                <panel layout="BorderLayout">
                     <label constraints="BorderLayout.EAST" id="destinationIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
                 </panel>
             </hbox>
             <dvatextfield id="destinationValue" />
             <hbox>
                 <label text="Destination line 2:" />
-                <panel layout="BorderLayout" opaque="false">
+                <panel layout="BorderLayout">
                     <label constraints="BorderLayout.EAST" id="destination2IndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
                 </panel>
             </hbox>
@@ -24,8 +24,8 @@
         </panel>
     </panel>
     <label text=" "/>
-    <panel layout="BorderLayout" opaque="false">
-        <panel layout="GridLayout(1,2,5,0)" opaque="false">
+    <panel layout="BorderLayout">
+        <panel layout="GridLayout(1,2,5,0)">
             <vbox>
                 <hbox>
                     <hbox>
@@ -38,19 +38,19 @@
                         <spinner id="platformValue" />
                     </hbox>
                 </hbox>
-                <panel layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+                <panel layout="FlowLayout(FlowLayout.LEADING)">
                     <label text="Line:"/>
                     <combobox id="lineValue" editable="true"/>
                 </panel>
-                <panel layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+                <panel layout="FlowLayout(FlowLayout.LEADING)">
                     <label text="Colours:"/>
                     <colorcombobox id="color1Value"/>
                     <colorcombobox id="color2Value"/>
                     <colorcombobox id="textColorValue"/>
                 </panel>
             </vbox>
-            <panel layout="BorderLayout" opaque="false">
-                <panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEADING)" opaque="false">
+            <panel layout="BorderLayout">
+                <panel constraints="BorderLayout.NORTH" layout="FlowLayout(FlowLayout.LEADING)">
                     <hbox constraints="BorderLayout.WEST">
                         <label text="Station List:"/>
                         <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
@@ -61,9 +61,9 @@
                 </scrollpane>
             </panel>
         </panel>
-        <panel constraints="BorderLayout.SOUTH" layout="BorderLayout" opaque="false">
+        <panel constraints="BorderLayout.SOUTH" layout="BorderLayout">
             <label text="Custom announcement override:" constraints="BorderLayout.WEST"/>
-            <panel constraints="BorderLayout.CENTER" layout="BorderLayout" opaque="false">
+            <panel constraints="BorderLayout.CENTER" layout="BorderLayout">
                 <label constraints="BorderLayout.WEST" id="customAnnouncementIndicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,5,0,5)"/>
                 <filetextfield id="customAnnouncementText"/>
             </panel>
