@@ -112,7 +112,7 @@ public class Generator
         this.pa = pa;
     }
 
-    public Timetable run() throws Exception
+    public void run() throws Exception
     {
         out.println("Retrieving timetable for date: " + CityRailDateFormat.format(date.getTime()));
 
@@ -159,7 +159,6 @@ public class Generator
         oos.writeObject(timetable);
         oos.close();
         fos.close();
-        return timetable;
     }
 
     // Gets the timetable data for a single line and direction.
@@ -224,7 +223,7 @@ public class Generator
         TimetableLineSchedule schedule = new TimetableLineSchedule();
         if (allStops.length > 0)
         {
-            out.println(Integer.toString(stations.length) + " stations, " + Integer.toString(allStops[0].length) + " trains");
+            out.println(stations.length + " stations, " + allStops[0].length + " trains");
             for (int i = 0; i < stations.length; i++)
             {
                 schedule.addStationRow(stations[i], allStops[i]);
@@ -237,7 +236,7 @@ public class Generator
     static int contentCounter = 0;
     public void saveToFile(String content) {
         try {
-            PrintWriter fout = new PrintWriter("output." + Integer.toString(contentCounter) + ".txt");
+            PrintWriter fout = new PrintWriter("output." + contentCounter + ".txt");
             fout.println(content);
             fout.close();
             contentCounter++;

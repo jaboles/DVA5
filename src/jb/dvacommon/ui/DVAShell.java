@@ -24,7 +24,6 @@ import jb.dvacommon.ProgressAdapter;
 import jb.dvacommon.Settings;
 import jb.dvacommon.Updater;
 import jb.plasma.ui.PlasmaUI;
-import org.swixml.ConverterLibrary;
 import org.swixml.SwingEngine;
 
 import static com.formdev.flatlaf.FlatClientProperties.*;

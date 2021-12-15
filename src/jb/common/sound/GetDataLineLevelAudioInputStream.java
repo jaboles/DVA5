@@ -17,7 +17,7 @@ public class GetDataLineLevelAudioInputStream extends AudioInputStream {
     public static final int REFRESHES_PER_SEC = 35;
     private final int BYTES_PER_SAMPLE;
     private double[] levels;
-    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream bos = new ByteArrayOutputStream();
     private final int frameSize;
     private final boolean isBigEndian;
 

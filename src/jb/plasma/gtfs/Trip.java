@@ -17,11 +17,11 @@ public class Trip implements Serializable
         Name = Id.split("\\.")[0];
     }
 
-    public String Id;
-    public Route Route;
-    public ServicePeriod ServicePeriod;
-    public String Headsign;
-    public String BlockId;
-    public int Cars;
-    public String Name;
+    public final String Id;
+    public final Route Route;
+    public final ServicePeriod ServicePeriod;
+    public final String Headsign;
+    public final String BlockId;
+    public final int Cars;
+    public final String Name;
 }

@@ -29,13 +29,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Player extends Thread {
-    List<URL> audioClipList;
-    LevelMeterThread levelMeterThread = null;
-    BigClip clip;
+    private final List<URL> audioClipList;
+    private LevelMeterThread levelMeterThread = null;
+    private BigClip clip;
     final static Logger logger = LogManager.getLogger(Player.class);
-    Runnable longConcatCallback;
-    Runnable afterConcatCallback;
-    Timer timer;
+    private final Runnable longConcatCallback;
+    private final Runnable afterConcatCallback;
+    private final Timer timer;
     final File tempDir;
     public static final int LongConcatThreshold = 700;
 
@@ -163,7 +163,7 @@ public class Player extends Thread {
     private void run1(URL u) {
         try {
             GetDataLineLevelAudioInputStream ais;
-            double[] levels = null;
+            double[] levels;
 
             //System.out.println("Processing url: " + u.toString());
             InputStream istream = new BufferedInputStream(u.openStream(), 102400);

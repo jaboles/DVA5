@@ -22,6 +22,6 @@ public class NormalizedStopTime
         NormalizedDeparture = LocalDateTime.of(date, LocalTime.of(h, m, s));
     }
 
-    public StopTime StopTime;
-    public LocalDateTime NormalizedDeparture;
+    public final StopTime StopTime;
+    public final LocalDateTime NormalizedDeparture;
 }

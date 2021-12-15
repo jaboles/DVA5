@@ -18,9 +18,9 @@ public abstract class Drawer implements Cloneable
     protected List<DepartureData> DepartureData;
 
     // Aspect ratios
-    protected static Dimension LANDSCAPE_43 = new Dimension(4, 3);
-    protected static Dimension LANDSCAPE_1610 = new Dimension(16, 10);
-    protected static Dimension PORTRAIT_1610 = new Dimension(10, 16);
+    protected static final Dimension LANDSCAPE_43 = new Dimension(4, 3);
+    protected static final Dimension LANDSCAPE_1610 = new Dimension(16, 10);
+    protected static final Dimension PORTRAIT_1610 = new Dimension(10, 16);
 
     // Fonts
     protected static Font ArialRegular;

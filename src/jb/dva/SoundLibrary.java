@@ -24,23 +24,21 @@ import javax.swing.ImageIcon;
 
 public class SoundLibrary implements Serializable {
     private static final long serialVersionUID = 1L;
-    String name;
-    List<File> files;
-    Map<String, SoundReference> soundMap;
-    Map<String, String> canonicalNameMap;
-    Map<String, Integer> formatCounter;
-    List<String> sortedKeys;
-    HashSet<String> keys;
-    Icon icon = null;
-    int longestSoundName = 0;
-    Properties properties;
-    final static Logger logger = LogManager.getLogger(SoundLibrary.class);
+    private final String name;
+    private final List<File> files;
+    private Map<String, SoundReference> soundMap;
+    private Map<String, String> canonicalNameMap;
+    private List<String> sortedKeys;
+    private HashSet<String> keys;
+    private Icon icon = null;
+    private int longestSoundName = 0;
+    private final Properties properties;
+    private final static Logger logger = LogManager.getLogger(SoundLibrary.class);
 
     public SoundLibrary(String name) {
         this.soundMap = new LinkedHashMap<>();
         this.canonicalNameMap = new LinkedHashMap<>();
         this.name = name;
-        this.formatCounter = new HashMap<>();
         this.files = new LinkedList<>();
         this.properties = new Properties();
     }

@@ -43,13 +43,12 @@ public class ScreenSaverSettingsDialog
             ExceptionReporter.reportException(e);
         }
     }
-    
-    public JDialog setVisible(boolean b)
+
+    public void setVisible(boolean b)
     {
         dialog.setVisible(b);
-        return dialog;
     }
-    
+
     @SuppressWarnings("unused")
     public Action okAction = new AbstractAction("OK", null) {
         public void actionPerformed(ActionEvent e)
@@ -59,8 +58,8 @@ public class ScreenSaverSettingsDialog
             System.exit(0);
         }
     };
-    
-    public Action cancelAction = new AbstractAction("Cancel", null) {
+
+    public final Action cancelAction = new AbstractAction("Cancel", null) {
         public void actionPerformed(ActionEvent e)
         {
             dialog.setVisible(false);

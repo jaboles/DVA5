@@ -14,8 +14,8 @@ public class TimetableLineSchedule implements Serializable
     private static final long serialVersionUID = 7526471155622776148L;
     private static final Pattern TimePattern = Pattern.compile("(\\d+:\\d+)");
 
-    public List<String> stations;
-    public List<String[]> times;
+    public final List<String> stations;
+    public final List<String[]> times;
     public List<IntPair[]> convertedTimes;
 
     public TimetableLineSchedule()

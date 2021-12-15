@@ -11,8 +11,8 @@ public class URLStat
         LastModified = lastModified;
         Headers = headers;
     }
-    
-    public long Size;
-    public Date LastModified;
-    public Map<String,List<String>> Headers;
+
+    public final long Size;
+    public final Date LastModified;
+    public final Map<String,List<String>> Headers;
 }

@@ -178,7 +178,7 @@ public class RotatedIcon implements Icon
             AffineTransform original = g2.getTransform();
             AffineTransform at = new AffineTransform();
             at.concatenate(original);
-            at.translate((getIconWidth() - icon.getIconWidth()) / 2, (getIconHeight() - icon.getIconHeight()) / 2);
+            at.translate(((float)getIconWidth() - icon.getIconWidth()) / 2, ((float)getIconHeight() - icon.getIconHeight()) / 2);
             at.rotate(Math.toRadians(angle), x + cWidth, y + cHeight);
             g2.setTransform(at);
             icon.paintIcon(c, g2, x, y);

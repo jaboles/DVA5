@@ -8,7 +8,7 @@ import org.javatuples.Pair;
 
 public class CityrailStandard extends Announcer
 {
-    protected boolean isMale;
+    protected final boolean isMale;
     protected boolean coalesceStationSequences;
 
     public CityrailStandard(SoundLibrary soundLibrary, boolean isMale)
@@ -21,7 +21,7 @@ public class CityrailStandard extends Announcer
         super(name, soundLibrary);
         this.isMale = isMale;
     }
-    
+
     public void setCoalesceStationSequences(boolean b)
     {
         this.coalesceStationSequences = b;
@@ -34,13 +34,13 @@ public class CityrailStandard extends Announcer
         phraser.doSubstitutions(stops, this.getSoundLibrary().getName());
         String via = phraser.getVia(d);
         Pair<String,Integer> ast = null;
-        
+
         StringBuilder s = new StringBuilder(getSoundLibrary().initialSoundName());
         if (minutesToDeparture > 0)
             s.append(" The next train to arrive on platform");
         else
             s.append(" The train on platform");
-        
+
         if (isMale)
             s.append(" number");
 
@@ -60,7 +60,7 @@ public class CityrailStandard extends Announcer
         // "... via Y. ..."
         if (via != null)
             s.append(" ").append(via);
-        
+
         s.append(".");
 
         // "First stop A"
@@ -72,7 +72,7 @@ public class CityrailStandard extends Announcer
             {
                 if (coalesceStationSequences)
                     ast = phraser.getAllStationsTo(stops, i);
-                
+
                 if (i == 1 || addedAllStationsTo || ast != null || (i > 1 && i == stops.length - 1))
                 {
                     if (ast != null)
@@ -88,7 +88,7 @@ public class CityrailStandard extends Announcer
                         // If last "all stations to" add "and" before "then".
                         // "all stations to B) and (then all stations to C)."
                         s.append(" and");
-                    
+
                     if (addedThen && !addedAllStationsTo && (i + 1) == stops.length)
                         s.append(" and");
                     else
@@ -99,7 +99,7 @@ public class CityrailStandard extends Announcer
                 {
                     addedThen = false;
                 }
-                
+
                 // If there was a matching sequence of all stations
                 if (ast != null)
                 {

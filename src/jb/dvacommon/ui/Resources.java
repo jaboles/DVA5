@@ -10,13 +10,13 @@ import jb.dva.ui.DVAUI;
 public class Resources
 {
     private Resources() { }
-    
-    public static Icon greenIcon = new ImageIcon(DVAUI.class.getResource("/indicatorIconGreen4.png"));
-    public static Icon redIcon = new ImageIcon(DVAUI.class.getResource("/indicatorIconRed4.png"));
+
+    public static final Icon greenIcon = new ImageIcon(DVAUI.class.getResource("/indicatorIconGreen4.png"));
+    public static final Icon redIcon = new ImageIcon(DVAUI.class.getResource("/indicatorIconRed4.png"));
 
     // An instance of the private subclass of the default highlight painter
-    public static Highlighter.HighlightPainter errorHighlightPainter = new ErrorHighlightPainter();
-    
+    public static final Highlighter.HighlightPainter errorHighlightPainter = new ErrorHighlightPainter();
+
     // A private subclass of the default highlight painter
     public static class ErrorHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
         public ErrorHighlightPainter() {

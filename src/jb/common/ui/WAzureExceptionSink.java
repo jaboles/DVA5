@@ -18,7 +18,7 @@ public class WAzureExceptionSink implements IExceptionSink
         this.containerSharedAccessString = containerSharedAccessString;
     }
 
-    public void store(String message) throws IOException, URISyntaxException, InvalidKeyException, StorageException {
+    public void store(String message) throws IOException, URISyntaxException, StorageException {
         CloudBlobContainer container = new CloudBlobContainer(new URI(containerSharedAccessString));
         CloudBlockBlob b = container.getBlockBlobReference(new Date() + ".txt");
         b.uploadText(message);

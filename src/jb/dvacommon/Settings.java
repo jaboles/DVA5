@@ -20,9 +20,9 @@ import jb.plasma.IndicatorSettings;
 import jb.plasma.ManualDepartureData;
 
 public class Settings {
-    static Preferences prefs = Preferences.userNodeForPackage(Settings.class);
-    static Script[] DVA_DEMOS;
-    static DepartureData[] PLASMA_DEMOS;
+    private static final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
+    private static final Script[] DVA_DEMOS;
+    private static final DepartureData[] PLASMA_DEMOS;
     static {
         DVA_DEMOS = new Script[] {
             new Script("Demo 1", "Sydney-Male", "3 ascending chimes; Attention, defective announcements and young children are causing delays to the CityRail system. We are unable to continue this defective announcement. Please move towards the centre of the tulip festival as we rectify the problem. the CityRail system thanks you for your co-operation. "),

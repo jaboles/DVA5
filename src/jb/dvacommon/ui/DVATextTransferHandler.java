@@ -23,12 +23,12 @@ public class DVATextTransferHandler extends TransferHandler
     private static final long serialVersionUID = 1L;
 
     private final Script currentScript;
-    
+
     public DVATextTransferHandler(Script currentScript)
     {
         this.currentScript = currentScript;
     }
-    
+
     int importPos = 0;
 
     public boolean canImport(TransferSupport supp) {
@@ -36,7 +36,7 @@ public class DVATextTransferHandler extends TransferHandler
         if (!supp.isDataFlavorSupported(DataFlavor.stringFlavor)) {
             return false;
         }
-        
+
         if (!supp.isDrop()) {
             return true;
         }
@@ -108,7 +108,7 @@ public class DVATextTransferHandler extends TransferHandler
         }
         return super.importData(supp);
     }
-    
+
     protected Transferable createTransferable(JComponent c) {
         JTextComponent source = (JTextComponent) c;
         int start = source.getSelectionStart();
@@ -153,10 +153,10 @@ public class DVATextTransferHandler extends TransferHandler
         }
       }
     }
-    
+
     private Position p0, p1;
-    
-    Highlighter.HighlightPainter insertHighlightPainter = new InsertHighlightPainter();
+
+    private final Highlighter.HighlightPainter insertHighlightPainter = new InsertHighlightPainter();
 
     private static class InsertHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
         public InsertHighlightPainter() {

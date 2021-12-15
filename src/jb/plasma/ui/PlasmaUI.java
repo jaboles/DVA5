@@ -429,7 +429,8 @@ public class PlasmaUI
     {
         List<String> renderers = new LinkedList<>();
         for (JComboBox<Drawer> r : rendererComboBoxes) {
-            renderers.add(r.getSelectedItem().toString());
+            if (r.getSelectedItem() != null)
+                renderers.add(r.getSelectedItem().toString());
         }
         List<DepartureData> data = new LinkedList<>();
         for (DeparturePanel dp : departurePanels) {
@@ -501,7 +502,7 @@ public class PlasmaUI
     }
 
     // Show the indicator in windowed mode
-    public Action windowAction = new AbstractAction("Open in Window", new ThemedFlatSVGIcon("showwindow")) {
+    public final Action windowAction = new AbstractAction("Open in Window", new ThemedFlatSVGIcon("showwindow")) {
         public void actionPerformed(ActionEvent e)
         {
             showIndicatorBoard(PlasmaWindow.Mode.WINDOWED, null);
@@ -509,7 +510,7 @@ public class PlasmaUI
     };
 
     // Show the indicator in fullscreen mode
-    public Action fullScreenAction = new AbstractAction("Open in Full Screen", new ThemedFlatSVGIcon("show")) {
+    public final Action fullScreenAction = new AbstractAction("Open in Full Screen", new ThemedFlatSVGIcon("show")) {
         public void actionPerformed(ActionEvent e)
         {
             showIndicatorBoard(PlasmaWindow.Mode.FULLSCREEN, null);
@@ -567,7 +568,7 @@ public class PlasmaUI
         }
     };
 
-    public Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
+    public final Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
             announceAction.setEnabled(true);
@@ -577,7 +578,7 @@ public class PlasmaUI
     };
 
     @SuppressWarnings("unused")
-    public Action promoteDepartures = new AbstractAction("Shift Departures Upwards") {
+    public final Action promoteDepartures = new AbstractAction("Shift Departures Upwards") {
         public void actionPerformed(ActionEvent e)
         {
             if (session != null) {
@@ -597,13 +598,13 @@ public class PlasmaUI
     };
 
     @SuppressWarnings("unused")
-    public Action loadManualFromTimetable = new AbstractAction("<< Transfer to Manual Page") {
+    public final Action loadManualFromTimetable = new AbstractAction("<< Transfer to Manual Page") {
         public void actionPerformed(ActionEvent e)
         {
             try {
                 departureData = getTimetableDepartureData();
                 for (int i = 0; i < departurePanels.length; i++) {
-                    if (departureData.size() > i) {
+                    if (departureData != null && departureData.size() > i) {
                         departurePanels[i].setData(departureData.get(i));
                     }
                 }
@@ -614,19 +615,19 @@ public class PlasmaUI
         }
     };
 
-    public Action editSubstitutionsAction = new AbstractAction("Edit Substitution List") {
+    public final Action editSubstitutionsAction = new AbstractAction("Edit Substitution List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("substitutions.txt");
         }
     };
 
-    public Action editViasAction = new AbstractAction("Edit \"Via\" List") {
+    public final Action editViasAction = new AbstractAction("Edit \"Via\" List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("vias.txt");
         }
     };
 
-    public Action editAllStationsTosAction = new AbstractAction("Edit \"All Stations To\" List") {
+    public final Action editAllStationsTosAction = new AbstractAction("Edit \"All Stations To\" List") {
         public void actionPerformed(ActionEvent e) {
             launchTextEditor("allStationsTos.txt");
         }

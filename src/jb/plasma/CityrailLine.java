@@ -8,8 +8,8 @@ import java.util.Map;
 // Info about CityRail lines
 public class CityrailLine
 {
-    public static Map<String,CityrailLine> allLines = new HashMap<>();
-    public static List<String> allLineNames = new LinkedList<>();
+    public static final Map<String,CityrailLine> allLines = new HashMap<>();
+    public static final List<String> allLineNames = new LinkedList<>();
 
     public String Name;
     public Color Color1;
@@ -18,40 +18,40 @@ public class CityrailLine
     public boolean IsNswTrainlink;
     public String LogoImageFilename;
 
-    public static CityrailLine T1_NORTH_SHORE;
-    public static CityrailLine T1_WESTERN;
-    public static CityrailLine T2;
-    public static CityrailLine T3;
-    public static CityrailLine T4;
-    public static CityrailLine T5;
-    public static CityrailLine T7;
-    public static CityrailLine T8;
-    public static CityrailLine T9;
+    public static final CityrailLine T1_NORTH_SHORE;
+    public static final CityrailLine T1_WESTERN;
+    public static final CityrailLine T2;
+    public static final CityrailLine T3;
+    public static final CityrailLine T4;
+    public static final CityrailLine T5;
+    public static final CityrailLine T7;
+    public static final CityrailLine T8;
+    public static final CityrailLine T9;
 
-    public static CityrailLine BMT;
-    public static CityrailLine CCN;
-    public static CityrailLine SCO;
-    public static CityrailLine SHL;
-    public static CityrailLine HUN;
+    public static final CityrailLine BMT;
+    public static final CityrailLine CCN;
+    public static final CityrailLine SCO;
+    public static final CityrailLine SHL;
+    public static final CityrailLine HUN;
 
-    public static CityrailLine NRC;
-    public static CityrailLine NRW;
-    public static CityrailLine STH;
-    public static CityrailLine WST;
+    public static final CityrailLine NRC;
+    public static final CityrailLine NRW;
+    public static final CityrailLine STH;
+    public static final CityrailLine WST;
 
     // 'Official' Cityrail colours
-    public static Color grey = new Color(154, 164, 168);
-    public static Color red = new Color(207, 17, 43);
-    public static Color yellow = new Color(246, 193, 72);
-    public static Color green = new Color(75, 159, 71);
-    public static Color brown = new Color(242, 103, 38);
-    public static Color blue = new Color(27, 130, 197);
-    public static Color pink = new Color(204, 0, 160);
-    public static Color darkBlue = new Color(0, 43, 127);
-    public static Color darkRed = new Color(129, 47, 51);
-    //public static Color lightBlue = new Color(121, 213, 242);
-    //public static Color lightPurple = new Color(140, 127, 179);
-    public static Color orange = new Color(229, 109, 44);
+    public static final Color grey = new Color(154, 164, 168);
+    public static final Color red = new Color(207, 17, 43);
+    public static final Color yellow = new Color(246, 193, 72);
+    public static final Color green = new Color(75, 159, 71);
+    public static final Color brown = new Color(242, 103, 38);
+    public static final Color blue = new Color(27, 130, 197);
+    public static final Color pink = new Color(204, 0, 160);
+    public static final Color darkBlue = new Color(0, 43, 127);
+    public static final Color darkRed = new Color(129, 47, 51);
+    //public static final Color lightBlue = new Color(121, 213, 242);
+    //public static final Color lightPurple = new Color(140, 127, 179);
+    public static final Color orange = new Color(229, 109, 44);
 
     static
     {

@@ -1,13 +1,10 @@
 package jb.plasma.renderers;
 import java.awt.*;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import javax.imageio.ImageIO;
 import org.javatuples.Pair;
-import jb.common.ExceptionReporter;
 import jb.plasma.DepartureData;
 import jb.plasma.Drawer;
 import jb.plasma.ui.PlasmaPanel;
@@ -25,7 +22,7 @@ public abstract class Cityrail extends Drawer
     protected Font SmallFont = null;
     protected Font TypeSmallFont = null;
 
-    protected static DateTimeFormatter TimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+    protected static final DateTimeFormatter TimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     protected double stationListInc = -0.1 / PlasmaPanel.FPS;
     protected double stationListPosInitial;

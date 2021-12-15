@@ -28,17 +28,17 @@ import org.swixml.SwingEngine;
 
 public abstract class BaseUpdater
 {
-    final static Logger logger = LogManager.getLogger(BaseUpdater.class);
-    protected URL baseUrl;
+    private final static Logger logger = LogManager.getLogger(BaseUpdater.class);
+    protected final URL baseUrl;
 
     public BaseUpdater(URL baseUrl)
     {
         this.baseUrl = baseUrl;
     }
-    
+
     public abstract String getLatestVersion();
     public abstract URL getBaseUrl(String version) throws MalformedURLException;
-    
+
     // Run the update
     public void downloadAndInstall(final String version, final ProgressAdapter pw)
     {
@@ -81,7 +81,7 @@ public abstract class BaseUpdater
         pw.enableCancel(t);
         t.start();
     }
-    
+
     private static boolean downloadTo(URL url, File destination, ProgressAdapter pw, Integer startingProgressPosition, Integer totalProgress, String currentFile) throws IOException
     {
         destination.getParentFile().mkdirs();
@@ -89,7 +89,7 @@ public abstract class BaseUpdater
         {
             destination.delete();
         }
-        
+
         if (startingProgressPosition == null) startingProgressPosition = 0;
 
         URLConnection uc = url.openConnection();
@@ -114,13 +114,13 @@ public abstract class BaseUpdater
 
         return totalRead == contentLength;
     }
-    
+
     private static File downloadToTemp(URL url, ProgressAdapter pw) throws IOException
     {
         final File downloaded = new File(System.getProperty("java.io.tmpdir"), url.getFile());
         return downloadTo(url, downloaded, pw, null, null, null) ? downloaded : null;
     }
-    
+
     public URL getDownloadUrl(String version) throws MalformedURLException
     {
         String filename;
@@ -137,7 +137,7 @@ public abstract class BaseUpdater
     {
         return new URL(getBaseUrl(version), "new.html");
     }
-    
+
     public static int downloadIncrementalJarUpdates(URL baseUrl, URL artifactList, File localArtifactRoot, ProgressAdapter pw)
     {
         List<Triplet<URL,URLStat,File>> rv = new LinkedList<>();
@@ -157,14 +157,14 @@ public abstract class BaseUpdater
                 String artifactName = urlPath.substring(urlPath.lastIndexOf('/') + 1).replaceAll("%20", " ");
                 if (artifactName.toLowerCase().endsWith(".gz")) artifactName = artifactName.substring(0, artifactName.length() - 3);
                 dest = new File(localArtifactRoot, artifactName);
-                
+
                 boolean willUpdate = dest.lastModified() != getRealLastModified(stat) || dest.length() != stat.Size;
                 logger.info("Artifact {} local stats ({}, {}), remote ({}, {}), will update: {}", artifactName, dest.length(), new Date(dest.lastModified()), stat.Size, new Date(getRealLastModified(stat)), willUpdate);
                 if (willUpdate) {
                     rv.add(new Triplet<>(url, stat, dest));
                 }
             }
-            
+
             int total = rv.size() > 0 ? rv.stream().map(u -> u.getValue1().Size)
                     .reduce(0L, Long::sum).intValue() : 0;
             int starting = 0;
@@ -189,7 +189,7 @@ public abstract class BaseUpdater
         }
         return -1;
     }
-    
+
     private void launchInstaller(File downloadedInstaller) throws IOException, InterruptedException
     {
         String installerPath = downloadedInstaller.getPath();
@@ -256,9 +256,9 @@ public abstract class BaseUpdater
             Process p = new ProcessBuilder("xdg-open", installerPath, "&>/dev/null").start();
             p.waitFor();
         }
-        System.exit(0);        
+        System.exit(0);
     }
-    
+
     protected void restart() throws IOException
     {
         if (SwingEngine.isMacOSX()) // Mac OSX
@@ -280,7 +280,7 @@ public abstract class BaseUpdater
         }
         System.exit(0);
     }
-    
+
     private String getMacAppPath() {
         String appName = "DVA.app";
         String jarPath = FileUtilities.getJarFolder(this).getPath();

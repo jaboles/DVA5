@@ -6,10 +6,10 @@ import java.awt.Polygon;
 
 public abstract class CityrailV3 extends Cityrail
 {
-    protected static Color MiddleColor = Color.white;
-    protected static Color BackgroundColor = new Color(0, 20, 90);
-    protected static Color TextBlue = new Color(0, 40, 160);
-    protected static Color TextWhite = Color.white;
+    protected static final Color MiddleColor = Color.white;
+    protected static final Color BackgroundColor = new Color(0, 20, 90);
+    protected static final Color TextBlue = new Color(0, 40, 160);
+    protected static final Color TextWhite = Color.white;
 
     protected Font DestinationFont;
     protected Font MainFont;

@@ -38,8 +38,8 @@ public class CityrailV4Primary extends CityrailV4Landscape
         {
             DepartureData d = data.get(0);
             Line = CityrailLine.get(d.Line);
-            int logoWidth = round(height * 0.2);
-            LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
+            int logoSize = round(height * 0.2);
+            LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
         }
         else {
             LineLogo = null;

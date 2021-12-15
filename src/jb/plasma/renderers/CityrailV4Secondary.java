@@ -31,13 +31,13 @@ public class CityrailV4Secondary extends CityrailV4Landscape
         {
             DepartureData d1 = data.get(1);
             Line1 = CityrailLine.get(d1.Line);
-            int logoWidth = round(height * 0.2);
-            Line1Logo = TryReloadLineLogo(Line1, new Dimension(logoWidth, logoWidth));
+            int logoSize = round(height * 0.2);
+            Line1Logo = TryReloadLineLogo(Line1, new Dimension(logoSize, logoSize));
             if (data.size() > 2)
             {
                 DepartureData d2 = data.get(2);
                 Line2 = CityrailLine.get(d2.Line);
-                Line2Logo = TryReloadLineLogo(Line2, new Dimension(logoWidth, logoWidth));
+                Line2Logo = TryReloadLineLogo(Line2, new Dimension(logoSize, logoSize));
             }
             else {
                 Line2Logo = null;

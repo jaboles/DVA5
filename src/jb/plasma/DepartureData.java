@@ -8,7 +8,7 @@ import jb.common.StringUtilities;
 public abstract class DepartureData
 {
     // Default list of service types shown in the combo box
-    public static String[] DefaultServiceTypes = new String[] { "All Stops", "Limited Stops", "Express" };
+    public static final String[] DefaultServiceTypes = new String[] { "All Stops", "Limited Stops", "Express" };
     // Format string for editing departure time
     private static final DateTimeFormatter DateEditFormat = DateTimeFormatter.ofPattern("HH:mm");
 

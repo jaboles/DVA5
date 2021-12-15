@@ -18,7 +18,8 @@ public class AspectRatioLayout implements LayoutManager {
     }
 
     public void addLayoutComponent(String name, Component comp) {
-        assert(compCount++ == 0) : "AspectRatioLayout can only contain one component";
+        compCount++;
+        assert(compCount == 1) : "AspectRatioLayout can only contain one component";
     }
 
     public void removeLayoutComponent(Component comp) {

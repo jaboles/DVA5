@@ -15,7 +15,7 @@ public class Stop implements Serializable
 
     public String toString() {return Name;}
 
-    public String Id;
-    public String Name;
-    public Stop Parent;
+    public final String Id;
+    public final String Name;
+    public final Stop Parent;
 }

@@ -53,15 +53,15 @@ public class GtfsTimetable implements Serializable
         return step.getValue0();
     }
 
-    public Map<String, Route> Routes;
-    public Map<String, ServicePeriod> Calendar;
-    public Map<String, Stop> Stops;
-    public Map<String, Trip> Trips;
-    public Supplier<Stream<StopTime>> StopTimesReader;
+    public final Map<String, Route> Routes;
+    public final Map<String, ServicePeriod> Calendar;
+    public final Map<String, Stop> Stops;
+    public final Map<String, Trip> Trips;
+    public final Supplier<Stream<StopTime>> StopTimesReader;
     public Map<String, Stop> StopsByName;
     public Map<String, List<Trip>> TripsByBlockId;
     public Map<Stop, Set<Route>> RoutesByStation;
 
-    public LocalDateTime DownloadTimestamp;
-    public LocalDateTime ExpiryTime;
+    public final LocalDateTime DownloadTimestamp;
+    public final LocalDateTime ExpiryTime;
 }

@@ -29,23 +29,32 @@ public class PlasmaWindow extends JFrame
 {
     public static class Mode
     {
-        public static final Mode WINDOWED =                        new Mode() {{ IsFullScreen = false; IsUndecorated = false; CloseOnEvent = false; TerminateOnClose = false; LimitToOneScreen = false; }};
-        public static final Mode FULLSCREEN =                      new Mode() {{ IsFullScreen = true;  IsUndecorated = true;  CloseOnEvent = false; TerminateOnClose = false; LimitToOneScreen = false; }};
-        public static final Mode SCREENSAVER =                     new Mode() {{ IsFullScreen = true;  IsUndecorated = true;  CloseOnEvent = true;  TerminateOnClose = true;  LimitToOneScreen = false; }};
-        public static final Mode SCREENSAVER_PREVIEW =             new Mode() {{ IsFullScreen = true;  IsUndecorated = true;  CloseOnEvent = true;  TerminateOnClose = false; LimitToOneScreen = false; }};
-        public static final Mode SCREENSAVER_PREVIEW_MINI_WINDOW = new Mode() {{ IsFullScreen = false; IsUndecorated = true;  CloseOnEvent = false; TerminateOnClose = true;  LimitToOneScreen = true; }};
-        
-        public boolean IsFullScreen;
-        public boolean IsUndecorated;
-        public boolean CloseOnEvent;
-        public boolean TerminateOnClose;
-        public boolean LimitToOneScreen;
+        public static final Mode WINDOWED =                        new Mode(false, false, false, false, false);
+        public static final Mode FULLSCREEN =                      new Mode(true, true, false, false, false);
+        public static final Mode SCREENSAVER =                     new Mode(true, true, true, true, true);
+        public static final Mode SCREENSAVER_PREVIEW =             new Mode(true, true, true, false, false);
+        public static final Mode SCREENSAVER_PREVIEW_MINI_WINDOW = new Mode(false, true, false, true, true);
+
+        private Mode(boolean isFullScreen, boolean isUndecorated, boolean closeOnEvent, boolean terminateOnClose, boolean limitToOneScreen) {
+            IsFullScreen = isFullScreen;
+            IsUndecorated = isUndecorated;
+            CloseOnEvent = closeOnEvent;
+            TerminateOnClose = terminateOnClose;
+            LimitToOneScreen = limitToOneScreen;
+        }
+
+        public final boolean IsFullScreen;
+        public final boolean IsUndecorated;
+        public final boolean CloseOnEvent;
+        public final boolean TerminateOnClose;
+        public final boolean LimitToOneScreen;
     }
-    
+
     private static final long serialVersionUID = 1L;
-    
-    public Action announceAction;
-    
+
+    @SuppressWarnings("unused")
+    private final Action announceAction;
+
     public PlasmaWindow(final PlasmaUI controller, final Mode mode, int index, String title, Dimension size, Dimension aspectRatio, JPanel plasmaPanel) {
         super(mode.IsFullScreen ? (GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[index]).getDefaultConfiguration() : null);
 
@@ -61,7 +70,7 @@ public class PlasmaWindow extends JFrame
                 jb.common.ExceptionReporter.reportException(e);
             }
         }
-        
+
         // Set some window properties (icon, title, background)
         setDefaultCloseOperation(mode.TerminateOnClose ? WindowConstants.EXIT_ON_CLOSE : WindowConstants.DISPOSE_ON_CLOSE);
         setIconImage(getToolkit().getImage(PlasmaWindow.class.getResource("/pse16.png")));
@@ -82,8 +91,7 @@ public class PlasmaWindow extends JFrame
             getRootPane().getActionMap().put("Cancel", new AbstractAction(){ //$NON-NLS-1$
                 public void actionPerformed(ActionEvent e)
                 {
-                    if (controller != null)
-                        controller.stopSession();
+                    controller.stopSession();
                 }
             });
         }
@@ -98,8 +106,7 @@ public class PlasmaWindow extends JFrame
                     Point newPosition = e.getLocationOnScreen();
                     if (lastPosition != null && !lastPosition.equals(newPosition))
                     {
-                        if (controller != null)
-                            controller.stopSession();
+                        controller.stopSession();
                         if (mode.TerminateOnClose)
                             System.exit(0);
                     }
@@ -115,8 +122,7 @@ public class PlasmaWindow extends JFrame
         {
             KeyListener kl = new KeyAdapter() {
                 public void keyTyped(KeyEvent e) {
-                    if (controller != null)
-                        controller.stopSession();
+                    controller.stopSession();
                     if (mode.TerminateOnClose)
                         System.exit(0);
                 }
@@ -130,8 +136,7 @@ public class PlasmaWindow extends JFrame
         {
             MouseListener ml = new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
-                    if (controller != null)
-                        controller.stopSession();
+                    controller.stopSession();
                     if (mode.TerminateOnClose)
                         System.exit(0);
                 }
@@ -142,8 +147,7 @@ public class PlasmaWindow extends JFrame
 
         addWindowListener(new WindowAdapter() {
             public void windowClosed(WindowEvent e) {
-                if (controller != null)
-                    controller.stopSession();
+                controller.stopSession();
                 if (mode.TerminateOnClose)
                     System.exit(0);
             }
@@ -176,16 +180,15 @@ public class PlasmaWindow extends JFrame
             {
                 plasmaPanel.setPreferredSize(size);
             }
-            
+
             super.setVisible(true);
         }
     }
 
     // Dispose on close
-    public boolean close()
+    public void close()
     {
         dispose();
-        return true;
     }
 
 }

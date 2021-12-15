@@ -15,9 +15,9 @@ public class StopTime implements Serializable
         Dropoff = dropoff;
     }
 
-    public Trip Trip;
-    public String Departure;
-    public Stop Stop;
-    public boolean Pickup;
-    public boolean Dropoff;
+    public final Trip Trip;
+    public final String Departure;
+    public final Stop Stop;
+    public final boolean Pickup;
+    public final boolean Dropoff;
 }

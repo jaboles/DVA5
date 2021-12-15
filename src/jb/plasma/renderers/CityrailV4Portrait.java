@@ -62,8 +62,8 @@ public class CityrailV4Portrait extends CityrailV4
         NextDestination2Font = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.019));
         MiniTextBoxFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
 
-        int logoWidth = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
-        LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
+        int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
+        LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
     }
 
     public void dataChanged(java.util.List<DepartureData> data)

@@ -10,16 +10,15 @@ import jb.plasma.ui.PlasmaPanel;
 
 public class CityrailV2 extends Cityrail
 {
-    protected static Color MiddleColor = new Color(0, 30, 120);
-    protected static Color BackgroundColor = new Color(0, 0, 0);
-    protected static Color TextYellow = Color.yellow;
-    protected static Color TextWhite = Color.white;
+    protected static final Color MiddleColor = new Color(0, 30, 120);
+    protected static final Color BackgroundColor = new Color(0, 0, 0);
+    protected static final Color TextYellow = Color.yellow;
+    protected static final Color TextWhite = Color.white;
 
     protected Font DueOutFont;
     protected Font NextTrainFont;
-    protected double stationListSeparation;
-
-    protected boolean isConcourse;
+    protected final double stationListSeparation;
+    protected final boolean isConcourse;
 
     public CityrailV2(boolean isConcourse) {
         this.isConcourse = isConcourse;

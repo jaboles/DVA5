@@ -278,7 +278,7 @@ public class DVAUI {
                     save();
                 }
                 public void save() {
-                    Settings.saveAnnouncements(new AbstractList<Script>() {
+                    Settings.saveAnnouncements(new AbstractList<>() {
                         public Script get(int index) {
                             return announcementListModel.elementAt(index);
                         }
@@ -367,7 +367,7 @@ public class DVAUI {
         }
     }
 
-    public Action voiceLibraryToggleAction = new AbstractAction("Show/Hide Voice Library List", new ThemedFlatSVGIcon("togglelibraries")) {
+    public final Action voiceLibraryToggleAction = new AbstractAction("Show/Hide Voice Library List", new ThemedFlatSVGIcon("togglelibraries")) {
         public void actionPerformed(ActionEvent e) {
             boolean visible = voicePane.isVisible();
             voicePane.setVisible(!visible);
@@ -375,19 +375,19 @@ public class DVAUI {
         }
     };
 
-    public Action soundInfoAction = new AbstractAction("Show/Hide Sound Info", new ThemedFlatSVGIcon("info")) {
+    public final Action soundInfoAction = new AbstractAction("Show/Hide Sound Info", new ThemedFlatSVGIcon("info")) {
         public void actionPerformed(ActionEvent e) {
             soundInfoPanel.setVisible(!soundInfoPanel.isVisible());
         }
     };
 
-    public Action playSavedAction = new AbstractAction("Play", new ThemedFlatSVGIcon("play")) {
+    public final Action playSavedAction = new AbstractAction("Play", new ThemedFlatSVGIcon("play")) {
         public void actionPerformed(ActionEvent e) {
             play(this, true);
         }
     };
 
-    public Action playCurrentAction = new AbstractAction("Play", new ThemedFlatSVGIcon("play")) {
+    public final Action playCurrentAction = new AbstractAction("Play", new ThemedFlatSVGIcon("play")) {
         public void actionPerformed(ActionEvent e) {
             play(this, false);
         }
@@ -454,7 +454,7 @@ public class DVAUI {
         }
     }
 
-    public Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
+    public final Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
             playCurrentAction.setEnabled(true);
@@ -465,7 +465,7 @@ public class DVAUI {
         }
     };
 
-    public Action newAction = new AbstractAction("New", new ThemedFlatSVGIcon("new")) {
+    public final Action newAction = new AbstractAction("New", new ThemedFlatSVGIcon("new")) {
         public void actionPerformed(ActionEvent e) {
             if (documentModified && abortDestructiveAction(e)) return;
 
@@ -476,7 +476,7 @@ public class DVAUI {
         }
     };
 
-    public Action openAction = new AbstractAction("Edit", new ThemedFlatSVGIcon("edit")) {
+    public final Action openAction = new AbstractAction("Edit", new ThemedFlatSVGIcon("edit")) {
         public void actionPerformed(ActionEvent e) {
             if (documentModified && abortDestructiveAction(e)) return;
 
@@ -489,7 +489,7 @@ public class DVAUI {
         }
     };
 
-    public Action moveUpAction = new AbstractAction("Up", new ThemedFlatSVGIcon("up")) {
+    public final Action moveUpAction = new AbstractAction("Up", new ThemedFlatSVGIcon("up")) {
         public void actionPerformed(ActionEvent e) {
             int index = announcementComboBox.getSelectedIndex();
             if (index > 0)
@@ -501,7 +501,7 @@ public class DVAUI {
         }
     };
 
-    public Action moveDownAction = new AbstractAction("Down", new ThemedFlatSVGIcon("down")) {
+    public final Action moveDownAction = new AbstractAction("Down", new ThemedFlatSVGIcon("down")) {
         public void actionPerformed(ActionEvent e) {
             int index = announcementComboBox.getSelectedIndex();
             if (index < announcementListModel.size() - 1)
@@ -513,7 +513,7 @@ public class DVAUI {
         }
     };
 
-    public Action renameAction = new AbstractAction("Rename", new ThemedFlatSVGIcon("rename")) {
+    public final Action renameAction = new AbstractAction("Rename", new ThemedFlatSVGIcon("rename")) {
         public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog("Choose a name for this announcement");
             if (name == null || name.trim().isEmpty()) return;
@@ -540,7 +540,7 @@ public class DVAUI {
         }
     };
 
-    public Action deleteAction = new AbstractAction("Delete", new ThemedFlatSVGIcon("delete")) {
+    public final Action deleteAction = new AbstractAction("Delete", new ThemedFlatSVGIcon("delete")) {
         public void actionPerformed(ActionEvent e) {
             Object ann = announcementComboBox.getSelectedValue();
             if (announcementComboBox.getSelectedValue() != null)
@@ -551,7 +551,7 @@ public class DVAUI {
         }
     };
 
-    public Action exportAction = new AbstractAction("Export", new ThemedFlatSVGIcon("saveas")) {
+    public final Action exportAction = new AbstractAction("Export", new ThemedFlatSVGIcon("saveas")) {
         public void actionPerformed(ActionEvent e) {
             int errorPos = controller.verify(currentScript);
             if (errorPos >= 0) {
@@ -591,7 +591,7 @@ public class DVAUI {
         }
     };
 
-    public Action saveAction = new AbstractAction("Save", new ThemedFlatSVGIcon("save")) {
+    public final Action saveAction = new AbstractAction("Save", new ThemedFlatSVGIcon("save")) {
         public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog("Choose a name for this announcement");
             if (name == null || name.trim().isEmpty()) return;

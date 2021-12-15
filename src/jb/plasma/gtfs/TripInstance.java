@@ -30,9 +30,9 @@ public class TripInstance
                 .toArray(String[]::new);
     }
 
-    public Trip Trip;
-    public Stop Platform;
-    public String[] RemainingStopList;
-    public Trip BlockContinuingTrip;
-    public LocalDateTime At;
+    public final Trip Trip;
+    public final Stop Platform;
+    public final String[] RemainingStopList;
+    public final Trip BlockContinuingTrip;
+    public final LocalDateTime At;
 }

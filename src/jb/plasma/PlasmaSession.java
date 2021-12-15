@@ -25,7 +25,7 @@ public class PlasmaSession
     private final int[] announcementTimes;
     // Functor to play the announcement
     private final Runnable announce;
-    
+
     public PlasmaSession(List<PlasmaWindow> windows, final Runnable announce, List<DepartureData> data, List<Drawer> drawers, int[] announcementTimes)
     {
         this.announce = announce;
@@ -68,8 +68,8 @@ public class PlasmaSession
             d.dataChanged(data);
         }
     }
-    
-    ActionListener timerAction = new ActionListener() {
+
+    private final ActionListener timerAction = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             // Only need to do something if there's at least one departure in the list
             if (data.size() > 0)

@@ -37,7 +37,7 @@ public class WindowFader
         t.start();
     }
 
-    public ActionListener fadeInEvent = new ActionListener() {
+    private final ActionListener fadeInEvent = new ActionListener() {
         public void actionPerformed(ActionEvent e)
         {
             opacity += fadeDelta;
@@ -52,7 +52,7 @@ public class WindowFader
         }
     };
 
-    public ActionListener fadeOutEvent = new ActionListener() {
+    private final ActionListener fadeOutEvent = new ActionListener() {
         public void actionPerformed(ActionEvent e)
         {
             opacity -= fadeDelta;

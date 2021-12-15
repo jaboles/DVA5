@@ -22,14 +22,14 @@ public class ServicePeriod implements Serializable
         EndDate = endDate;
     }
 
-    public String Id;
-    public boolean Monday;
-    public boolean Tuesday;
-    public boolean Wednesday;
-    public boolean Thursday;
-    public boolean Friday;
-    public boolean Saturday;
-    public boolean Sunday;
-    public LocalDate StartDate;
-    public LocalDate EndDate;
+    public final String Id;
+    public final boolean Monday;
+    public final boolean Tuesday;
+    public final boolean Wednesday;
+    public final boolean Thursday;
+    public final boolean Friday;
+    public final boolean Saturday;
+    public final boolean Sunday;
+    public final LocalDate StartDate;
+    public final LocalDate EndDate;
 }

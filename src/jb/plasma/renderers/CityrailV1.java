@@ -5,12 +5,12 @@ import java.time.format.DateTimeFormatter;
 // The Cityrail V1 indicator (black/blue/turquoise plasma screens)
 public abstract class CityrailV1 extends Cityrail
 {
-    protected static Color SideColor = new Color(0, 75, 150);
-    protected static Color MiddleColor = new Color(0, 30, 62);
-    protected static Color BackgroundColor = new Color(0, 0, 0);
-    protected static Color TextYellow = Color.yellow;
-    protected static Color TextWhite = Color.white;
-    protected static DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("HH:mm");
+    protected static final Color SideColor = new Color(0, 75, 150);
+    protected static final Color MiddleColor = new Color(0, 30, 62);
+    protected static final Color BackgroundColor = new Color(0, 0, 0);
+    protected static final Color TextYellow = Color.yellow;
+    protected static final Color TextWhite = Color.white;
+    protected static final DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("HH:mm");
 
     protected double TopOffset;
     protected double BottomOffset;
@@ -19,8 +19,8 @@ public abstract class CityrailV1 extends Cityrail
 
     protected double stationListSeparation;
 
-    protected boolean isv11;
-    protected boolean isConcourse;
+    protected final boolean isv11;
+    protected final boolean isConcourse;
 
     public CityrailV1(boolean isv11, boolean isConcourse) {
         this.isv11 = isv11;

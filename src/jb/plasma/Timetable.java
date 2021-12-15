@@ -14,9 +14,9 @@ public class Timetable implements Serializable
     public static final int TIMETABLE_WEEKDAY = 1;
     public static final int TIMETABLE_WEEKEND = 2;
 
-    public Map<String, TimetableLine> lines;
-    public List<String> lineNames;
-    public int type;
+    public final Map<String, TimetableLine> lines;
+    public final List<String> lineNames;
+    public final int type;
     private final String name;
 
     public Timetable(String name, int type)

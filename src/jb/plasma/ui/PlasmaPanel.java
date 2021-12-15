@@ -25,6 +25,7 @@ public class PlasmaPanel extends JPanel
     public PlasmaPanel(Drawer drawer) {
         this.drawer = drawer;
         setDoubleBuffered(true);
+        ActionListener repaintAction = evt -> PlasmaPanel.this.repaint();
         new Timer(1000 / FPS, repaintAction).start();
         /*
         if (mouseDebug)
@@ -42,8 +43,6 @@ public class PlasmaPanel extends JPanel
         renderingHints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         renderingHints.put(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }
-
-    ActionListener repaintAction = evt -> PlasmaPanel.this.repaint();
 
     // Main paint routine. Notifies the active renderer of the panel dimensions, then calls the renderer's
     // paint routine. Also draws the FPS if set to do so.

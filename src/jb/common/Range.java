@@ -12,7 +12,7 @@ public class Range implements Iterable<Integer> {
     }
 
     public Iterator<Integer> iterator() {
-        return new Iterator<Integer>() {
+        return new Iterator<>() {
             private int cur = min;
             private int count = Range.this.count;
             public boolean hasNext() {
@@ -30,4 +30,3 @@ public class Range implements Iterable<Integer> {
         };
     }
 }
-

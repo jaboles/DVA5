@@ -215,7 +215,7 @@ class BigClip implements Clip, LineListener {
             try (ProgressMonitorInputStream pmis = new ProgressMonitorInputStream(
                             parent,
                             "Loading track..",
-                            is1);
+                            is1)
             ) {
                 pmis.getProgressMonitor().setMillisToPopup(0);
                 is2 = pmis;
@@ -225,7 +225,7 @@ class BigClip implements Clip, LineListener {
         }
 
         byte[] buf = new byte[ 2^16 ];
-        int numRead = 0;
+        int numRead;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         numRead = is2.read( buf );
         while (numRead>-1) {
@@ -261,18 +261,14 @@ class BigClip implements Clip, LineListener {
             int bufferSize)
                     throws LineUnavailableException {
         byte[] input = new byte[bufferSize];
-        for (int ii=0; ii<input.length; ii++) {
-            input[ii] = data[offset+ii];
-        }
+        System.arraycopy(data, offset, input, 0, input.length);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(input);
         try {
             AudioInputStream ais1 = AudioSystem.getAudioInputStream(inputStream);
             AudioInputStream ais2 = AudioSystem.getAudioInputStream(format, ais1);
             open(ais2);
-        } catch( UnsupportedAudioFileException uafe ) {
-            throw new IllegalArgumentException(uafe);
-        } catch( IOException ioe ) {
-            throw new IllegalArgumentException(ioe);
+        } catch(UnsupportedAudioFileException | IOException ex) {
+            throw new IllegalArgumentException(ex);
         }
         // TODO    -    throw IAE for invalid frame size, format.
     }
@@ -372,116 +368,114 @@ class BigClip implements Clip, LineListener {
 
     /** TODO - fix bug in LOOP_CONTINUOUSLY */
     public void start() {
-        Runnable r = new Runnable() {
-            public void run() {
-                try {
-                    /* Should these open()/close() calls be here, or explicitly
-                     called by user program?    The JavaDocs for line suggest that
-                     Clip should throw an IllegalArgumentException, so we'll
-                     stick with that and call it explicitly. */
-                    dataLine.open();
+        Runnable r = () -> {
+            try {
+                /* Should these open()/close() calls be here, or explicitly
+                 called by user program?    The JavaDocs for line suggest that
+                 Clip should throw an IllegalArgumentException, so we'll
+                 stick with that and call it explicitly. */
+                dataLine.open();
 
-                    dataLine.start();
+                dataLine.start();
 
-                    active = true;
+                active = true;
 
-                    int bytesRead = 0;
-                    int frameSize = dataLine.getFormat().getFrameSize();
-                    int bufSize = dataLine.getBufferSize();
-                    boolean startOrMove = true;
-                    byte[] data = new byte[bufSize];
-                    int offset = framePosition*frameSize;
-                    int totalBytes = offset;
-                    bytesRead = inputStream.read(new byte[offset], 0, offset);
-                    logger.log(Level.FINE, "bytesRead " + bytesRead );
-                    bytesRead = inputStream.read(data,0,data.length);
+                int bytesRead;
+                int frameSize = dataLine.getFormat().getFrameSize();
+                int bufSize = dataLine.getBufferSize();
+                boolean startOrMove = true;
+                byte[] data = new byte[bufSize];
+                int offset = framePosition*frameSize;
+                int totalBytes = offset;
+                bytesRead = inputStream.read(new byte[offset], 0, offset);
+                logger.log(Level.FINE, "bytesRead " + bytesRead );
+                bytesRead = inputStream.read(data,0,data.length);
 
-                    logger.log(Level.FINE, "loopCount " + loopCount );
-                    logger.log(Level.FINE, "countDown " + countDown );
-                    logger.log(Level.FINE, "bytesRead " + bytesRead );
+                logger.log(Level.FINE, "loopCount " + loopCount );
+                logger.log(Level.FINE, "countDown " + countDown );
+                logger.log(Level.FINE, "bytesRead " + bytesRead );
 
-                    while (bytesRead != -1 &&
-                            (loopCount==Clip.LOOP_CONTINUOUSLY ||
-                            countDown>0) &&
-                            active ) {
-                        logger.log(Level.FINEST,
-                                "BigClip.start() loop " + framePosition );
-                        totalBytes += bytesRead;
-                        int framesRead;
-                        byte[] tempData;
-                        if (format.getChannels()<2) {
-                            tempData = convertMonoToStereo(data, bytesRead);
-                            framesRead = bytesRead/
-                                    format.getFrameSize();
-                            bytesRead*=2;
-                        } else {
-                            framesRead = bytesRead/
-                                    dataLine.getFormat().getFrameSize();
-                            tempData = Arrays.copyOfRange(data, 0, bytesRead);
-                        }
-                        framePosition += framesRead;
-                        if (framePosition>=loopPointEnd) {
-                            framePosition = loopPointStart;
-                            inputStream.reset();
-                            countDown--;
-                            logger.log(Level.FINEST,
-                                    "Loop Count: " + countDown );
-                        }
-                        timelastPositionSet = System.currentTimeMillis();
-                        byte[] newData;
-                        if (fastForward) {
-                            newData = getEveryNthFrame(tempData, 2);
-                        } else if (fastRewind) {
-                            byte[] temp = getEveryNthFrame(tempData, 2);
-                            newData = reverseFrames(temp);
-                            inputStream.reset();
-                            totalBytes -= 2*bytesRead;
-                            framePosition -= 2*framesRead;
-                            if (totalBytes<0) {
-                                setFastRewind(false);
-                                totalBytes = 0;
-                            }
-                            inputStream.skip(totalBytes);
-                            logger.log(Level.FINE, "totalBytes " + totalBytes);
-                        } else {
-                            newData = tempData;
-                        }
-                        dataLine.write(newData, 0, newData.length);
-                        if (startOrMove) {
-                            data = new byte[bufSize/
-                                            bufferUpdateFactor];
-                            startOrMove = false;
-                        }
-                        bytesRead = inputStream.read(data,0,data.length);
-                        if (bytesRead<0 && countDown-->1) {
-                            inputStream.read(new byte[offset], 0, offset);
-                            logger.log(Level.FINE, "loopCount " + loopCount );
-                            logger.log(Level.FINE, "countDown " + countDown );
-                            inputStream.reset();
-                            bytesRead = inputStream.read(data,0,data.length);
-                        }
-                    }
+                while (bytesRead != -1 &&
+                        (loopCount==Clip.LOOP_CONTINUOUSLY ||
+                        countDown>0) &&
+                        active ) {
                     logger.log(Level.FINEST,
-                            "BigClip.start() loop ENDED" + framePosition );
-                    active = false;
-                    countDown = 1;
-                    framePosition = 0;
-                    inputStream.reset();
-                    dataLine.drain();
-                    dataLine.stop();
-                    /* should these open()/close() be here, or explicitly
-                     called by user program? */
-                    dataLine.close();
-                } catch (LineUnavailableException lue) {
-                    logger.log( Level.SEVERE,
-                            "No sound line available!", lue );
-                    if (parent!=null) {
-                        JOptionPane.showMessageDialog(
-                                parent,
-                                "Clear the sound lines to proceed",
-                                "No audio lines available!",
-                                JOptionPane.ERROR_MESSAGE);
+                            "BigClip.start() loop " + framePosition );
+                    totalBytes += bytesRead;
+                    int framesRead;
+                    byte[] tempData;
+                    if (format.getChannels()<2) {
+                        tempData = convertMonoToStereo(data, bytesRead);
+                        framesRead = bytesRead/
+                                format.getFrameSize();
+                        bytesRead*=2;
+                    } else {
+                        framesRead = bytesRead/
+                                dataLine.getFormat().getFrameSize();
+                        tempData = Arrays.copyOfRange(data, 0, bytesRead);
                     }
+                    framePosition += framesRead;
+                    if (framePosition>=loopPointEnd) {
+                        framePosition = loopPointStart;
+                        inputStream.reset();
+                        countDown--;
+                        logger.log(Level.FINEST,
+                                "Loop Count: " + countDown );
+                    }
+                    timelastPositionSet = System.currentTimeMillis();
+                    byte[] newData;
+                    if (fastForward) {
+                        newData = getEveryNthFrame(tempData, 2);
+                    } else if (fastRewind) {
+                        byte[] temp = getEveryNthFrame(tempData, 2);
+                        newData = reverseFrames(temp);
+                        inputStream.reset();
+                        totalBytes -= 2*bytesRead;
+                        framePosition -= 2*framesRead;
+                        if (totalBytes<0) {
+                            setFastRewind(false);
+                            totalBytes = 0;
+                        }
+                        inputStream.skip(totalBytes);
+                        logger.log(Level.FINE, "totalBytes " + totalBytes);
+                    } else {
+                        newData = tempData;
+                    }
+                    dataLine.write(newData, 0, newData.length);
+                    if (startOrMove) {
+                        data = new byte[bufSize/
+                                        bufferUpdateFactor];
+                        startOrMove = false;
+                    }
+                    bytesRead = inputStream.read(data,0,data.length);
+                    if (bytesRead<0 && countDown-->1) {
+                        inputStream.read(new byte[offset], 0, offset);
+                        logger.log(Level.FINE, "loopCount " + loopCount );
+                        logger.log(Level.FINE, "countDown " + countDown );
+                        inputStream.reset();
+                        bytesRead = inputStream.read(data,0,data.length);
+                    }
+                }
+                logger.log(Level.FINEST,
+                        "BigClip.start() loop ENDED" + framePosition );
+                active = false;
+                countDown = 1;
+                framePosition = 0;
+                inputStream.reset();
+                dataLine.drain();
+                dataLine.stop();
+                /* should these open()/close() be here, or explicitly
+                 called by user program? */
+                dataLine.close();
+            } catch (LineUnavailableException lue) {
+                logger.log( Level.SEVERE,
+                        "No sound line available!", lue );
+                if (parent!=null) {
+                    JOptionPane.showMessageDialog(
+                            parent,
+                            "Clear the sound lines to proceed",
+                            "No audio lines available!",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         };
@@ -497,20 +491,20 @@ class BigClip implements Clip, LineListener {
         byte[] frame = new byte[4];
 
         for (int ii=0; ii<data.length/4; ii++) {
-            int first = (data.length)-((ii+1)*4)+0;
+            int first = (data.length)-((ii+1)*4);
             int last = (data.length)-((ii+1)*4)+3;
             frame[0] = data[first];
             frame[1] = data[(data.length)-((ii+1)*4)+1];
             frame[2] = data[(data.length)-((ii+1)*4)+2];
             frame[3] = data[last];
 
-            reversed[ii*4+0] = frame[0];
+            reversed[ii*4] = frame[0];
             reversed[ii*4+1] = frame[1];
             reversed[ii*4+2] = frame[2];
             reversed[ii*4+3] = frame[3];
             if (ii<5 || ii>(data.length/4)-5) {
                 logger.log(Level.FINER, "From \t" + first + " \tlast " + last );
-                logger.log(Level.FINER, "To \t" + ((ii*4)+0) + " \tlast " + ((ii*4)+3) );
+                logger.log(Level.FINER, "To \t" + (ii*4) + " \tlast " + ((ii*4)+3) );
             }
         }
 
@@ -575,7 +569,7 @@ class BigClip implements Clip, LineListener {
         dataLine.close();
     }
 
-    public void open() throws LineUnavailableException {
+    public void open() {
         throw new IllegalArgumentException("illegal call to open() in interface Clip");
     }
 

@@ -19,15 +19,15 @@ import static java.awt.RenderingHints.*;
 
 public abstract class CityrailV4 extends Cityrail
 {
-    protected static Color BackgroundColor = Color.white;
-    protected static Color HeaderBackgroundColor = new Color(255, 128, 0);
-    protected static Color TextColor = new Color(0, 0, 50);
-    protected static Color HeaderTextColor = Color.white;
-    protected static Color OrangeTextColor = new Color(255, 128, 0);
-    protected static SVGUniverse SvgUniverse = new SVGUniverse();
+    protected static final Color BackgroundColor = Color.white;
+    protected static final Color HeaderBackgroundColor = new Color(255, 128, 0);
+    protected static final Color TextColor = new Color(0, 0, 50);
+    protected static final Color HeaderTextColor = Color.white;
+    protected static final Color OrangeTextColor = new Color(255, 128, 0);
+    protected static final SVGUniverse SvgUniverse = new SVGUniverse();
     protected static final double LeftMargin = 0.03;
     protected static final double RightMargin = 0.97;
-    protected static DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("H:mm");
+    protected static final DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("H:mm");
     public final static Map<Object, Object> RENDERING_HINTS = Map.of(
             KEY_ANTIALIASING,
             VALUE_ANTIALIAS_ON,

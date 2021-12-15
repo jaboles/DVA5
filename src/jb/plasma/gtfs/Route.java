@@ -15,7 +15,7 @@ public class Route implements Serializable
 
     public String toString() {return Description;}
 
-    public String Id;
-    public String Name;
-    public String Description;
+    public final String Id;
+    public final String Name;
+    public final String Description;
 }

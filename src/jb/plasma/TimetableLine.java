@@ -9,8 +9,8 @@ public class TimetableLine implements Serializable
 {
     private static final long serialVersionUID = 7526471155622776148L;
 
-    public Map<String, TimetableLineSchedule> directions;
-    public List<String> directionNames;
+    public final Map<String, TimetableLineSchedule> directions;
+    public final List<String> directionNames;
 
     public TimetableLine()
     {
