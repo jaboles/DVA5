@@ -58,7 +58,7 @@ public abstract class Drawer implements Cloneable
     {
         this.g = g;
 
-        realFPSAdjustment = getRealFPSAdjustment(PlasmaPanel.FPS);
+        realFPSAdjustment = getRealFPSAdjustment();
         lastFrame = System.currentTimeMillis();
 
         //paintInfrequent = paintInfrequent();

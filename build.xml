@@ -3,7 +3,7 @@
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname" failonerror="true"/>
-    <property name="ClassesDir" value="build${file.separator}classes"/>
+    <property name="ClassesDir" value="build/classes"/>
     <property name="OutDir" value="build${file.separator}Output"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="AppBundleContents" value="${OutDir}/DVA.app/Contents/MacOS"/>
@@ -53,7 +53,7 @@
     <property name="WindowsSetupName" value="DVA5Setup"/>
 
     <!-- linux DEB -->
-    <property name="DpkgRoot" value="${OutDir}${file.separator}debian"/>
+    <property name="DpkgRoot" value="${OutDir}/debian"/>
 
     <condition property="isMac">
         <os family="mac" />
@@ -70,10 +70,10 @@
         <mkdir dir="${ToolsDir}"/>
         <!-- Resource Hacker -->
         <get src="http://www.angusj.com/resourcehacker/resource_hacker.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
-        <unzip src="${ToolsDir}${file.separator}resource_hacker.zip" dest="${ResHackerDir}" overwrite="false"/>
+        <unzip src="${ToolsDir}/resource_hacker.zip" dest="${ResHackerDir}" overwrite="false"/>
         <!-- WinRun4J -->
-        <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}${file.separator}winrun4j.zip" verbose="true" skipexisting="true"/>
-        <unzip src="${ToolsDir}${file.separator}winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
+        <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}/winrun4j.zip" verbose="true" skipexisting="true"/>
+        <unzip src="${ToolsDir}/winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
         <!-- JRE: Win x64 -->
         <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
         <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
@@ -103,10 +103,10 @@
             <arg line="install --cask --no-quarantine wine-stable"/>
         </exec>
         <!-- Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}${file.separator}is.exe" verbose="true" skipexisting="true"/>
+        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" verbose="true" skipexisting="true"/>
         <exec executable="${Wine}" failonerror="true">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg line="${ToolsDir}${file.separator}is.exe /silent"/>
+            <arg line="${ToolsDir}/is.exe /silent"/>
         </exec>
         <!-- Dpkg -->
         <exec executable="brew" failonerror="true">
@@ -124,18 +124,26 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <!-- JRE: Linux x64 -->
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <untar dest="${ToolsDir}\jre\linux" compression="gzip" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="OpenJDK*-jre_x64_linux_*.tar.gz"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </untar>
     </target>
     <target name="FetchDeps.Windows" if="isWindows">
         <!-- Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}${file.separator}is.exe" verbose="true" skipexisting="true"/>
-        <exec executable="${ToolsDir}${file.separator}is.exe" failonerror="true">
+        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" verbose="true" skipexisting="true"/>
+        <exec executable="${ToolsDir}/is.exe" failonerror="true">
             <arg line="/silent"/>
         </exec>
     </target>
 
     <!-- Increments the build number -->
     <target name="IncrementBuildNumber" description="Increment build number">
-        <buildnumber file="resources${file.separator}buildnumber.txt"/>
+        <buildnumber file="resources/buildnumber.txt"/>
     </target>
 
     <target name="Clean" description="Clean output folder">
@@ -294,9 +302,9 @@ Log=    console
 </echo>
         <exec executable="${Wine}" osfamily="mac" failonerror="true">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg line="${ResHackerDir}${file.separator}ResourceHacker.exe -script temp.rh -log console"/>
+            <arg line="${ResHackerDir}/ResourceHacker.exe -script temp.rh -log console"/>
         </exec>
-        <exec executable="${ResHackerDir}${file.separator}ResourceHacker.exe" osfamily="windows" failonerror="true">
+        <exec executable="${ResHackerDir}\ResourceHacker.exe" osfamily="windows" failonerror="true">
             <arg line="-script temp.rh -log console"/>
         </exec>
         <delete file="temp.rh"/>
@@ -388,11 +396,11 @@ Log=    console
             <arg value="-i"/>
             <arg value=".bak"/>
             <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
-            <arg value="win${file.separator}setup.iss"/>
+            <arg value="win/setup.iss"/>
         </exec>
         <exec executable="powershell.exe" dir="${basedir}" osfamily="windows" failonerror="true">
             <arg value="-command"/>
-            <arg value="(gc 'win${file.separator}setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file 'win${file.separator}setup.iss'"/>
+            <arg value="(gc 'win\setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file 'win\setup.iss'"/>
         </exec>
         <echo level="info">Inno Setup compression: ${innosetupcompression}</echo>
         <property name="innosetupargs" value="/Qp /Dinnosetupcompression=${innosetupcompression} /Dversion=${DVAVersion} win\setup.iss"/>
@@ -420,15 +428,16 @@ Log=    console
     <!-- Linux Debian Setup -->
     <target name="BuildLinuxDeb" if="isMac" depends="CreateJar,SetupCommon">
         <delete failonerror="false" dir="${DpkgRoot}"/>
-        <mkdir dir="${DpkgRoot}"/>
+        <!--<mkdir dir="${DpkgRoot}"/>
         <mkdir dir="${DpkgRoot}${file.separator}DEBIAN"/>
         <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}bin"/>
         <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva"/>
-        <copy todir="${DpkgRoot}${file.separator}DEBIAN" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}debian${file.separator}control"/>
-        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}applications" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}debian${file.separator}dva.desktop"/>
-        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}bin" preservelastmodified="true" file="${basedir}${file.separator}linux${file.separator}dva"/>
-        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true" file="${basedir}${file.separator}resources${file.separator}dva_icon.png"/>
-        <copy todir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva" preservelastmodified="true">
+        <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva${file.separator}jre"/>-->
+        <copy todir="${DpkgRoot}/DEBIAN" preservelastmodified="true" file="linux/debian/control"/>
+        <copy todir="${DpkgRoot}/usr/share/applications" preservelastmodified="true" file="linux/debian/dva.desktop"/>
+        <copy todir="${DpkgRoot}/usr/bin" preservelastmodified="true" file="linux/dva"/>
+        <copy todir="${DpkgRoot}/usr/share/dva" preservelastmodified="true" file="resources/dva_icon.png"/>
+        <copy todir="${DpkgRoot}/usr/share/dva" preservelastmodified="true">
             <fileset dir="${OutDir}">
                 <include name="*.txt"/>
                 <include name="DVA.jar"/>
@@ -440,17 +449,24 @@ Log=    console
                 <include name="*"/>
             </fileset>
         </copy>
-        <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}bin${file.separator}dva"/>
-        <chmod perm="+x" file="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}ffmpeg"/>
+        <copy todir="${DpkgRoot}/usr/share/dva/jre" preservelastmodified="true">
+            <fileset dir="${ToolsDir}/jre/linux">
+                <include name="**"/>
+            </fileset>
+        </copy>
+        <chmod perm="+x" file="${DpkgRoot}/usr/bin/dva"/>
+        <chmod perm="+x" file="${DpkgRoot}/usr/share/dva/ffmpeg"/>
+        <chmod perm="+x" file="${DpkgRoot}/usr/share/dva/jre/bin/java"/>
+        <chmod perm="+x" file="${DpkgRoot}/usr/share/dva/jre/lib/jspawnhelper"/>
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
             <arg value=".bak"/>
             <arg value="s/[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/${DVAVersion}/"/>
-            <arg value="linux${file.separator}debian${file.separator}control"/>
+            <arg value="linux/debian/control"/>
         </exec>
         <exec executable="powershell.exe" dir="${basedir}" osfamily="windows" failonerror="true">
             <arg value="-command"/>
-            <arg value="(gc 'linux${file.separator}debian${file.separator}control' -raw) -replace '\d*\.\d*\.\d*', '${DVAVersion}' | out-file 'linux${file.separator}debian${file.separator}control'"/>
+            <arg value="(gc 'linux\debian\control' -raw) -replace '\d*\.\d*\.\d*', '${DVAVersion}' | out-file 'linux\debian\control'"/>
         </exec>
         <exec executable="fakeroot" dir="${OutDir}" failonerror="true">
             <arg value="dpkg-deb"/>
@@ -458,7 +474,7 @@ Log=    console
             <arg value="--build"/>
             <arg value="debian"/>
         </exec>
-        <move file="${OutDir}${file.separator}debian.deb" tofile="${OutDir}${file.separator}DVA5.deb"/>
+        <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5.deb"/>
     </target>
 
     <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacDmg,BuildWinSetup,SignWinSetup,BuildLinuxDeb">
@@ -490,7 +506,7 @@ Log=    console
     <target name="SoundJar">
         <basename property="name" file="${dir}"/>
         <zip basedir="${dir}"
-             destfile="build${file.separator}soundjars${file.separator}${name}.jar"
+             destfile="build/soundjars/${name}.jar"
              compress="false">
         </zip>
     </target>
