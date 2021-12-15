@@ -14,7 +14,7 @@ public abstract class Drawer implements Cloneable
     private Graphics g;
     protected double realFPSAdjustment;
     private long lastFrame = 0;
-    
+
     protected List<DepartureData> DepartureData;
 
     // Aspect ratios
@@ -76,7 +76,7 @@ public abstract class Drawer implements Cloneable
     public void paint(Graphics g)
     {
         this.g = g;
-        
+
         realFPSAdjustment = getRealFPSAdjustment(PlasmaPanel.FPS);
         lastFrame = System.currentTimeMillis();
 
@@ -172,10 +172,9 @@ public abstract class Drawer implements Cloneable
         }
     }
 
-    public void drawImageSquare(Image image, double x, double y, double w)
+    public void drawImage(Image image, double x, double y)
     {
-        int dimension = round(w * height);
-        g.drawImage(image, round(x * width), round(y * height), dimension, dimension, null);
+        g.drawImage(image, round(x * width), round(y * height), null);
     }
 
     protected int round(double d)

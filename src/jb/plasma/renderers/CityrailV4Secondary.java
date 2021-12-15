@@ -9,8 +9,10 @@ import java.awt.image.BufferedImage;
 
 public class CityrailV4Secondary extends CityrailV4Landscape
 {
-    public BufferedImage Line1Logo;
-    public BufferedImage Line2Logo;
+    private BufferedImage Line1Logo;
+    private BufferedImage Line2Logo;
+    private CityrailLine Line1;
+    private CityrailLine Line2;
 
     public Dimension getAspectRatio()
     {
@@ -28,17 +30,33 @@ public class CityrailV4Secondary extends CityrailV4Landscape
         if (data.size() > 1)
         {
             DepartureData d1 = data.get(1);
-            CityrailLine line = CityrailLine.get(d1.Line);
-            Line1Logo = TryLoadLineLogo(line);
+            Line1 = CityrailLine.get(d1.Line);
+            int logoWidth = round(height * 0.2);
+            Line1Logo = TryReloadLineLogo(Line1, new Dimension(logoWidth, logoWidth));
             if (data.size() > 2)
             {
                 DepartureData d2 = data.get(2);
-                line = CityrailLine.get(d2.Line);
-                Line2Logo = TryLoadLineLogo(line);
+                Line2 = CityrailLine.get(d2.Line);
+                Line2Logo = TryReloadLineLogo(Line2, new Dimension(logoWidth, logoWidth));
             }
-            else { Line2Logo = null; }
+            else {
+                Line2Logo = null;
+                Line2 = null;
+            }
         }
-        else { Line1Logo = null; Line2Logo = null; }
+        else {
+            Line1Logo = null;
+            Line2Logo = null;
+            Line1 = null;
+            Line2 = null;
+        }
+    }
+
+    public void dimensionsChanged() {
+        super.dimensionsChanged();
+        int logoWidth = round(height * 0.2);
+        if (Line1 != null) Line1Logo = TryReloadLineLogo(Line1, new Dimension(logoWidth, logoWidth));
+        if (Line2 != null) Line2Logo = TryReloadLineLogo(Line2, new Dimension(logoWidth, logoWidth));
     }
 
     public void paint(Graphics g)
@@ -74,7 +92,7 @@ public class CityrailV4Secondary extends CityrailV4Landscape
         if (d != null) {
             double destinationLeft = LeftMargin;
             if (lineLogo != null) {
-                drawImageSquare(lineLogo, LeftMargin, y, 0.2);
+                drawImage(lineLogo, LeftMargin, y);
                 destinationLeft = 0.16;
             }
             drawString(d.Destination, destinationLeft, y + 0.13, TextColor, DestinationFont);

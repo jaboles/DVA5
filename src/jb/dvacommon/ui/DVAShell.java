@@ -67,7 +67,6 @@ public class DVAShell
 
     public DVAShell(final DVA controller) {
         this.controller = controller;
-        ConverterLibrary.getInstance().register(ImageIcon.class, new SvgIconConverter());
         UIManager.getLookAndFeelDefaults().put("defaultFont", DefaultFont);
         renderer = new SwingEngine(this);
 

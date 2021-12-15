@@ -60,7 +60,7 @@ public class CityrailLine
         T9 = new CityrailLine("T9 Northern Line", red, Color.white, false, "T1.png");
 
         BMT = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, true, "T.png");
-        CCN = new CityrailLine("Central Coast & Newcastle Line", grey, red, Color.white, true, "T.png");
+        CCN = new CityrailLine("Central Coast & Newcastle Line", grey, red, Color.white, true, "T.svg");
         SCO = new CityrailLine("South Coast Line", grey, blue, Color.white, true, "T.png");
         SHL = new CityrailLine("Southern Highlands Line", grey, green, Color.white, true, "T.png");
         HUN = new CityrailLine("Hunter Line", grey, darkRed, Color.white, true, "T.png");

@@ -10,7 +10,8 @@ import java.awt.image.BufferedImage;
 
 public class CityrailV4Primary extends CityrailV4Landscape
 {
-    public BufferedImage LineLogo;
+    private BufferedImage LineLogo;
+    private CityrailLine Line;
 
     public CityrailV4Primary() {
         stationListInc = 0.0528 / PlasmaPanel.FPS;
@@ -36,10 +37,20 @@ public class CityrailV4Primary extends CityrailV4Landscape
         if (data.size() > 0)
         {
             DepartureData d = data.get(0);
-            CityrailLine line = CityrailLine.get(d.Line);
-            LineLogo = TryLoadLineLogo(line);
+            Line = CityrailLine.get(d.Line);
+            int logoWidth = round(height * 0.2);
+            LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
         }
-        else { LineLogo = null; }
+        else {
+            LineLogo = null;
+            Line = null;
+        }
+    }
+
+    public void dimensionsChanged() {
+        super.dimensionsChanged();
+        int logoWidth = round(height * 0.2);
+        if (Line != null) LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
     }
 
     public void paint(Graphics g)
@@ -57,7 +68,7 @@ public class CityrailV4Primary extends CityrailV4Landscape
         if (d0 != null) {
             double departureLeft = LeftMargin;
             if (LineLogo != null) {
-                drawImageSquare(LineLogo, LeftMargin, 0.12, 0.2);
+                drawImage(LineLogo, LeftMargin, 0.12);
                 departureLeft = 0.16;
             }
             drawString(d0.Destination, departureLeft, 0.25, TextColor, DestinationFont);

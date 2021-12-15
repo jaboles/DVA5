@@ -10,14 +10,14 @@ import java.awt.image.BufferedImage;
 
 public class CityrailV4Portrait extends CityrailV4
 {
-    public BufferedImage LineLogo;
+    private BufferedImage LineLogo;
+    private CityrailLine Line;
     private Font NextPlatformDepartsLabelFont;
     private Font NextDestinationFont;
     private Font NextDestination2Font;
     private Font MiniTextBoxFont;
     private Font LargeDepartureTimeFont;
     private final boolean isConcourse;
-    private boolean isNswTrainlink;
     private final double nswTrainlinkTopOffset = 0.08;
     private double initialTop = 0;
 
@@ -61,6 +61,9 @@ public class CityrailV4Portrait extends CityrailV4
         NextDestinationFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.026));
         NextDestination2Font = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.019));
         MiniTextBoxFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
+
+        int logoWidth = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
+        LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
     }
 
     public void dataChanged(java.util.List<DepartureData> data)
@@ -70,15 +73,17 @@ public class CityrailV4Portrait extends CityrailV4
         if (data.size() > 0)
         {
             DepartureData d = data.get(0);
-            CityrailLine line = CityrailLine.get(d.Line);
-            LineLogo = TryLoadLineLogo(line);
-
-            isNswTrainlink = line.IsNswTrainlink;
-            if (isNswTrainlink) {
+            Line = CityrailLine.get(d.Line);
+            int logoWidth = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
+            LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
+            if (Line.IsNswTrainlink) {
                 stationListPosInitial += nswTrainlinkTopOffset;
             }
         }
-        else { LineLogo = null; }
+        else {
+            Line = null;
+            LineLogo = null;
+        }
     }
 
     public void paint(Graphics g)
@@ -105,12 +110,12 @@ public class CityrailV4Portrait extends CityrailV4
         String dueOutString;
         if (d0 != null) {
             double logoOffset = LeftMargin;
-            double logoWidth = isNswTrainlink ? 0.08 : 0.11;
+            double logoWidth = Line != null && Line.IsNswTrainlink ? 0.08 : 0.11;
             if (LineLogo != null) {
-                drawImageSquare(LineLogo, LeftMargin, top + 0.01, logoWidth);
+                drawImage(LineLogo, LeftMargin, top + 0.01);
                 logoOffset = LeftMargin + logoWidth + 0.08;
             }
-            if (isNswTrainlink) {
+            if (Line != null && Line.IsNswTrainlink) {
                 drawString(DueOutFormat.format(d0.DueOut), logoOffset, top + 0.085, TextColor, LargeDepartureTimeFont);
                 drawString(d0.Destination, LeftMargin, top + 0.16, TextColor, DestinationFont);
                 if (d0.Destination2 != null) {
