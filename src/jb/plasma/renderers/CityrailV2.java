@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Polygon;
 import java.util.List;
+
+import jb.dvacommon.ui.Resources;
 import jb.plasma.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 
@@ -34,14 +36,14 @@ public class CityrailV2 extends Cityrail
 
     public void dimensionsChanged()
     {
-        TimeNowFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.024));
-        TimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.036));
-        DepartureTimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.04));
-        DestinationFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.10));
+        TimeNowFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.024));
+        TimeFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.036));
+        DepartureTimeFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.04));
+        DestinationFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.10));
         Destination2Font = DepartureTimeFont;
-        MainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.044));
-        DueOutFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        SmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.0238));
+        MainFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.044));
+        DueOutFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        SmallFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.0238));
         NextTrainFont = Destination2Font;
     }
 

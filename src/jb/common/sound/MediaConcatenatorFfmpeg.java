@@ -34,9 +34,7 @@ public class MediaConcatenatorFfmpeg
         try
         {
             File concatTemp = new File(tempDir, "mc");
-            if (!concatTemp.exists()) {
-                concatTemp.mkdirs();
-            }
+            if (!concatTemp.exists() && !concatTemp.mkdirs()) {logger.warn("Failed to mkdir {}", concatTemp);}
 
             File ffmpeg = new File(FileUtilities.getJarFolder(MediaConcatenatorFfmpeg.class),
                     OSDetection.isWindows() ? "ffmpeg.exe" : "ffmpeg");

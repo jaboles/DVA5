@@ -6,7 +6,6 @@ import com.microsoft.azure.storage.blob.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.InvalidKeyException;
 import java.util.Date;
 
 public class WAzureExceptionSink implements IExceptionSink

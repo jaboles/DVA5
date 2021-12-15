@@ -1,4 +1,6 @@
 package jb.plasma.renderers;
+import jb.dvacommon.ui.Resources;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -26,16 +28,16 @@ public abstract class CityrailV3 extends Cityrail
 
     public void dimensionsChanged()
     {
-        MainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.12));
+        MainFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.12));
         DestinationFont = MainFont;
-        NextTrainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.065));
-        MicroFont = ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.04));
-        MicroFontBold = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.04));
-        CarsFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.1));
-        Cars2Font = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.049));
-        HeaderFont = ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        TypeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.056));
-        TypeNextFont = ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.078));
+        NextTrainFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.065));
+        MicroFont = Resources.ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.04));
+        MicroFontBold = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.04));
+        CarsFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.1));
+        Cars2Font = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.049));
+        HeaderFont = Resources.ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        TypeFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.056));
+        TypeNextFont = Resources.ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.078));
     }
 
     public void paint(Graphics g)

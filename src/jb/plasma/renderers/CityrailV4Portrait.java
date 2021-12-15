@@ -1,5 +1,6 @@
 package jb.plasma.renderers;
 
+import jb.dvacommon.ui.Resources;
 import jb.plasma.CityrailLine;
 import jb.plasma.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
@@ -45,22 +46,22 @@ public class CityrailV4Portrait extends CityrailV4
 
     public void dimensionsChanged()
     {
-        HeaderFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.042));
-        HeaderTimeNowFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
-        TimeFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.035));
-        DestinationFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.074));
-        LargeDepartureTimeFont = RobotoMedium.deriveFont(Font.BOLD, (int)(height * 0.09));
-        Destination2Font = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.03));
-        PlatformDepartsLabelFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
-        PlatformDepartsFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.065));
-        PlatformDepartsFontSmall = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        MainFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.043));
-        TextBoxFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.021));
+        HeaderFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.042));
+        HeaderTimeNowFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
+        TimeFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.035));
+        DestinationFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.074));
+        LargeDepartureTimeFont = Resources.RobotoMedium.deriveFont(Font.BOLD, (int)(height * 0.09));
+        Destination2Font = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.03));
+        PlatformDepartsLabelFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.025));
+        PlatformDepartsFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.065));
+        PlatformDepartsFontSmall = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        MainFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.043));
+        TextBoxFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.021));
 
-        NextPlatformDepartsLabelFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.022));
-        NextDestinationFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.026));
-        NextDestination2Font = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.019));
-        MiniTextBoxFont = RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
+        NextPlatformDepartsLabelFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.022));
+        NextDestinationFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.026));
+        NextDestination2Font = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.019));
+        MiniTextBoxFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
 
         int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
         LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));

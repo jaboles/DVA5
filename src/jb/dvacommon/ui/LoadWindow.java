@@ -21,7 +21,6 @@ import jb.common.ui.AbsoluteOverlayLayout;
 import jb.common.ui.WindowFader;
 import jb.common.ui.WindowUtils;
 import jb.dvacommon.DVA;
-import jb.plasma.Drawer;
 import org.swixml.SwingEngine;
 
 public class LoadWindow {
@@ -42,20 +41,17 @@ public class LoadWindow {
             imagePanel.setLayout(new AbsoluteOverlayLayout(imagePanel));
             Dimension imageDimensions = imagePanel.getPreferredSize();
 
-            Font arialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arial.ttf"));
-            Font arialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arialbd.ttf"));
-
             // Read build number
             Properties props = new Properties();
             props.load(LoadWindow.class.getResourceAsStream("/buildnumber.txt"));
 
             JLabel dvaLabel = new JLabel("DVA");
-            dvaLabel.setFont(arialBold.deriveFont(Font.PLAIN, 86));
+            dvaLabel.setFont(Resources.ArialBold.deriveFont(Font.PLAIN, 86));
             dvaLabel.setForeground(Color.white);
             dvaLabel.setLocation((imageDimensions.width - dvaLabel.getPreferredSize().width) / 2, (imageDimensions.height - dvaLabel.getPreferredSize().height) / 2);
             imagePanel.add(dvaLabel, 0);
 
-            Font imageFont = arialRegular.deriveFont(Font.PLAIN, 14);
+            Font imageFont = Resources.ArialRegular.deriveFont(Font.PLAIN, 14);
             loadLabel = new JLabel("Loading");
             loadLabel.setFont(imageFont);
             loadLabel.setForeground(Color.white);

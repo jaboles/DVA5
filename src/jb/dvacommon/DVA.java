@@ -291,9 +291,7 @@ public class DVA {
             System.exit(0);
         }
 
-        if (!getTemp().exists()) {
-            getTemp().mkdirs();
-        }
+        if (!getTemp().exists() && !getTemp().mkdirs()) {logger.warn("Failed to mkdir {}", getTemp());}
 
         // Apple UI stuff
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "DVA");

@@ -155,7 +155,7 @@ public class DeparturePanel
         return new ManualDepartureData(
             destinationValue.getText(),
             destination2Value.getText(),
-            lineValue.getSelectedItem().toString(),
+            lineValue.getSelectedItem() != null ? lineValue.getSelectedItem().toString() : "",
             serviceTypeValue.getSelectedItem() != null ? serviceTypeValue.getSelectedItem().toString() : "",
             (Integer)carsValue.getValue(),
             (Integer)platformValue.getValue(),

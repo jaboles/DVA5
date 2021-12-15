@@ -91,7 +91,6 @@ public class PlasmaUI
     public PlasmaUI(int mode, DVA dva) {
         this.dva = dva;
         this.settingsKey = (mode == Mode.SCREENSAVER || mode == Mode.SCREENSAVER_PREVIEW) ? "screenSaver" : "remembered";
-        Drawer.initializeFonts();
 
         SwingEngine renderer = new SwingEngine(this);
         renderer.getTaglib().registerTag("colorcombobox", ColorComboBox.class);

@@ -70,6 +70,8 @@ public abstract class CityrailV4 extends Cityrail
         {
             String filename = line.LogoImageFilename;
             URL url = CityrailV4Primary.class.getResource("/jb/plasma/renderers/resources/" + line.LogoImageFilename);
+            if (url == null) return null;
+
             BufferedImage bi = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = bi.createGraphics();
             g.setRenderingHints(RENDERING_HINTS);

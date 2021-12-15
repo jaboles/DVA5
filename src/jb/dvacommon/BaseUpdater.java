@@ -84,11 +84,8 @@ public abstract class BaseUpdater
 
     private static boolean downloadTo(URL url, File destination, ProgressAdapter pw, Integer startingProgressPosition, Integer totalProgress, String currentFile) throws IOException
     {
-        destination.getParentFile().mkdirs();
-        if (destination.exists())
-        {
-            destination.delete();
-        }
+        if (!destination.getParentFile().exists() && !destination.getParentFile().mkdirs()) {logger.warn("Failed to mkdir {}", destination.getParentFile());}
+        if (destination.exists() && !destination.delete()) {logger.warn("Failed to delete {}", destination);}
 
         if (startingProgressPosition == null) startingProgressPosition = 0;
 
@@ -181,9 +178,7 @@ public abstract class BaseUpdater
             }
             return rv.size();
         } catch (Exception e) {
-            if (dest != null && dest.exists()) {
-                dest.delete();
-            }
+            if (dest != null && dest.exists() && !dest.delete()) {logger.warn("Failed to delete {}", dest);}
             logger.info("Caught exception doing incremental update:", e);
             e.printStackTrace(System.err);
         }

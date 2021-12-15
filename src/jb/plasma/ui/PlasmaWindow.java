@@ -81,20 +81,16 @@ public class PlasmaWindow extends JFrame
         boolean closeOnMouseClick = mode.CloseOnEvent;
         boolean closeonMouseMove = mode.CloseOnEvent;
         boolean closeOnKey = mode.IsFullScreen;
-        boolean closeOnEsc = true;
 
-        // If set to close on Esc key
-        if (closeOnEsc)
-        {
-            getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                    KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel"); //$NON-NLS-1$
-            getRootPane().getActionMap().put("Cancel", new AbstractAction(){ //$NON-NLS-1$
-                public void actionPerformed(ActionEvent e)
-                {
-                    controller.stopSession();
-                }
-            });
-        }
+        // Close on Esc key
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel"); //$NON-NLS-1$
+        getRootPane().getActionMap().put("Cancel", new AbstractAction(){ //$NON-NLS-1$
+            public void actionPerformed(ActionEvent e)
+            {
+                controller.stopSession();
+            }
+        });
 
         // If set to close on mouse movement (used for screen saver mode)
         if (closeonMouseMove)

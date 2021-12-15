@@ -3,6 +3,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.time.LocalDateTime;
+
+import jb.dvacommon.ui.Resources;
 import jb.plasma.DepartureData;
 import jb.plasma.ui.PlasmaPanel;
 
@@ -29,14 +31,14 @@ public class CityrailV1Landscape extends CityrailV1
     public void dimensionsChanged()
     {
         // Update the fonts if the dimensions changed.
-        TimeNowFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        TimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.07));
-        DepartureTimeFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.098));
-        DestinationFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.12));
-        Destination2Font = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        MainFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.066));
-        SmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
-        TypeSmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.035));
+        TimeNowFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        TimeFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.07));
+        DepartureTimeFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.098));
+        DestinationFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.12));
+        Destination2Font = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        MainFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.066));
+        SmallFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
+        TypeSmallFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.035));
     }
 
     public void paint(Graphics g)

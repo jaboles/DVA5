@@ -22,27 +22,8 @@ public abstract class Drawer implements Cloneable
     protected static final Dimension LANDSCAPE_1610 = new Dimension(16, 10);
     protected static final Dimension PORTRAIT_1610 = new Dimension(10, 16);
 
-    // Fonts
-    protected static Font ArialRegular;
-    protected static Font ArialBold;
-    protected static Font RobotoMedium;
-
     protected Drawer()
     {
-    }
-
-    public static void initializeFonts()
-    {
-        try
-        {
-            ArialRegular = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arial.ttf"));
-            ArialBold = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/arialbd.ttf"));
-            RobotoMedium = Font.createFont(Font.TRUETYPE_FONT, Drawer.class.getResourceAsStream("/Roboto-Medium.ttf"));
-        }
-        catch (Exception ex)
-        {
-            ExceptionReporter.reportException(ex);
-        }
     }
 
     // Called before each render cycle to notify the renderer of the dimensions it is drawing in
@@ -186,7 +167,7 @@ public abstract class Drawer implements Cloneable
         return super.clone();
     }
 
-    private double getRealFPSAdjustment(int nominalFPS)
+    private double getRealFPSAdjustment()
     {
         double adj;
         if (lastFrame == 0)
@@ -196,7 +177,7 @@ public abstract class Drawer implements Cloneable
         else
         {
             double realFPS = 1000.0 / (System.currentTimeMillis() - lastFrame);
-            adj = nominalFPS / realFPS;
+            adj = PlasmaPanel.FPS / realFPS;
         }
         return adj;
     }

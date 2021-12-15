@@ -1,5 +1,8 @@
 package jb.common;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,21 +14,22 @@ import java.util.concurrent.Callable;
 
 public class ObjectCache<T>
 {
+    private static final Logger logger = LogManager.getLogger(ObjectCache.class);
     private final File cacheDir;
     private final String cacheUniverse;
-    
+
     public ObjectCache(File tempDir, String cacheUniverse)
     {
         cacheDir = new File(tempDir, "ObjectCache");
-        cacheDir.mkdirs();
+        if (!cacheDir.exists() && !cacheDir.mkdirs()) {logger.warn("Failed to mkdir {}", cacheDir);}
         this.cacheUniverse = cacheUniverse;
     }
-    
+
     public T load(Class<?> cls, String cacheId, Callable<T> generator) throws Exception
     {
         return load(new File(cls.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).lastModified() + "_" + cacheId, generator);
     }
-    
+
     @SuppressWarnings("unchecked")
     public T load(String cacheId, Callable<T> generator) throws Exception
     {
@@ -50,20 +54,20 @@ public class ObjectCache<T>
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(cached));
         oos.writeObject(retval);
         oos.close();
-        
+
         return retval;
     }
-    
+
     public T load(Class<?> cls, String cacheId, final T obj) throws Exception
     {
-        return load(cls, cacheId, () -> obj);        
+        return load(cls, cacheId, () -> obj);
     }
 
     public T load(String cacheId, final T obj) throws Exception
     {
         return load(cacheId, () -> obj);
     }
-    
+
     public void emptyCache()
     {
         if (cacheDir.exists()) {
