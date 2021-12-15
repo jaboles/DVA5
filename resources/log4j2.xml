@@ -4,10 +4,10 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{1.} - %msg%n"/>
         </Console>
-        <File name="DvaLog" fileName="${sys:java.io.tmpdir}DVA/dva.log">
+        <File name="DvaLog" fileName="${sys:java.io.tmpdir}/DVA/dva.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger - %msg%n"/>
         </File>
-        <File name="FfmpegLog" fileName="${sys:java.io.tmpdir}DVA/ffmpeg.log">
+        <File name="FfmpegLog" fileName="${sys:java.io.tmpdir}/DVA/ffmpeg.log">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger - %msg%n"/>
         </File>
     </Appenders>

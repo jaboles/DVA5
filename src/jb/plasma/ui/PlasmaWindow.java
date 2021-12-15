@@ -53,7 +53,7 @@ public class PlasmaWindow extends JFrame
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
-    private final Action announceAction;
+    public Action announceAction;
 
     public PlasmaWindow(final PlasmaUI controller, final Mode mode, int index, String title, Dimension size, Dimension aspectRatio, JPanel plasmaPanel) {
         super(mode.IsFullScreen ? (GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[index]).getDefaultConfiguration() : null);
