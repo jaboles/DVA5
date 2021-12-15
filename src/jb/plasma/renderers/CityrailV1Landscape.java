@@ -38,7 +38,7 @@ public class CityrailV1Landscape extends CityrailV1
         SmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.05));
         TypeSmallFont = ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.035));
     }
-    
+
     public void paint(Graphics g)
     {
         super.paint(g);
@@ -56,7 +56,7 @@ public class CityrailV1Landscape extends CityrailV1
                 }
             }
         }
-        
+
         // Background and colour blocks
         fillRect(0, 0, 1, 1, BackgroundColor);
         fillRect(0, TopOffset, LeftOffset, BottomOffset, SideColor);
@@ -102,9 +102,11 @@ public class CityrailV1Landscape extends CityrailV1
                 if (d0.Destination2 != null) {
                     drawString(d0.Destination2, 0.21, 0.265, TextYellow, Destination2Font);
                 }
-                drawString(d0.Type, 0.02, 0.265, TextWhite, TypeSmallFont);
+                if (d0.Type != null && d0.Type.length() > 0)
+                    drawString(d0.Type, 0.02, 0.265, TextWhite, TypeSmallFont);
             } else {
-                drawString(d0.Type, 0.21, 0.265, TextWhite, MainFont);
+                if (d0.Type != null && d0.Type.length() > 0)
+                    drawString(d0.Type, 0.21, 0.265, TextWhite, MainFont);
             }
             LocalDateTime dueOut = d0.DueOut;
             if (dueOut != null) {
@@ -126,7 +128,8 @@ public class CityrailV1Landscape extends CityrailV1
                 }
             }
             drawString(d1.Destination, 0.21, 0.91, TextYellow, MainFont);
-            drawString(d1.Type, 0.6, 0.91, TextWhite, SmallFont);
+            if (d1.Type != null && d1.Type.length() > 0)
+                drawString(d1.Type, 0.6, 0.91, TextWhite, SmallFont);
             if (isConcourse)
                 drawString(d1.Platform, 0.9, 0.91, TextYellow, MainFont);
         }
@@ -142,7 +145,8 @@ public class CityrailV1Landscape extends CityrailV1
                 }
             }
             drawString(d2.Destination, 0.21, 0.98, TextYellow, MainFont);
-            drawString(d2.Type, 0.6, 0.98, TextWhite, SmallFont);
+            if (d2.Type != null && d2.Type.length() > 0)
+                drawString(d2.Type, 0.6, 0.98, TextWhite, SmallFont);
             if (isConcourse)
                 drawString(d2.Platform, 0.9, 0.98, TextYellow, MainFont);
         }

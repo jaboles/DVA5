@@ -26,7 +26,6 @@ public abstract class Cityrail extends Drawer
     protected Font TypeSmallFont = null;
 
     protected static DateTimeFormatter TimeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
-    protected static DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("HH:mm");
 
     protected double stationListInc = -0.1 / PlasmaPanel.FPS;
     protected double stationListPosInitial;
@@ -46,7 +45,7 @@ public abstract class Cityrail extends Drawer
         int mins = (int)ChronoUnit.MINUTES.between(timeNow, dueOut);
         return new Pair<>((mins / 60), mins % 60);
     }
-    
+
     public void dataChanged(List<DepartureData> newData)
     {
         super.dataChanged(newData);

@@ -1,5 +1,6 @@
 package jb.plasma.renderers;
 import java.awt.Color;
+import java.time.format.DateTimeFormatter;
 
 // The Cityrail V1 indicator (black/blue/turquoise plasma screens)
 public abstract class CityrailV1 extends Cityrail
@@ -9,6 +10,7 @@ public abstract class CityrailV1 extends Cityrail
     protected static Color BackgroundColor = new Color(0, 0, 0);
     protected static Color TextYellow = Color.yellow;
     protected static Color TextWhite = Color.white;
+    protected static DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("HH:mm");
 
     protected double TopOffset;
     protected double BottomOffset;

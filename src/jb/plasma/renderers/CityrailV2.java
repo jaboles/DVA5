@@ -50,7 +50,7 @@ public class CityrailV2 extends Cityrail
     {
         super.paint(g);
         List<DepartureData> data = DepartureData;
-        
+
         // Backgrounds
         fillRect(0, 0, 1, 1, BackgroundColor);
         fillRect(0, 0, 1, 0.8, MiddleColor);
@@ -78,7 +78,8 @@ public class CityrailV2 extends Cityrail
             if (d0.Destination2 != null) {
                 drawString(d0.Destination2, 0.02, 0.18, TextYellow, Destination2Font);
             }
-            drawString(d0.Type, 0.02, 0.24, TextWhite, SmallFont);
+            if (d0.Type != null && d0.Type.length() > 0)
+                drawString(d0.Type, 0.02, 0.24, TextWhite, SmallFont);
             drawStringC("Departs", 0.125, 0.34, TextWhite, SmallFont);
             if (d0.DueOut != null) {
                 int m = getDueOut(d0.DueOut).getValue1();
@@ -104,7 +105,8 @@ public class CityrailV2 extends Cityrail
                 }
             }
             drawString(d1.Destination, 0.21, 0.88, TextYellow, MainFont);
-            drawString(d1.Type, 0.21, 0.91, TextWhite, SmallFont);
+            if (d1.Type != null && d1.Type.length() > 0)
+                drawString(d1.Type, 0.21, 0.91, TextWhite, SmallFont);
         }
         if (data.size() >= 3)
         {
@@ -117,7 +119,8 @@ public class CityrailV2 extends Cityrail
                 }
             }
             drawString(d2.Destination, 0.21, 0.95, TextYellow, NextTrainFont);
-            drawString(d2.Type, 0.21, 0.98, TextWhite, SmallFont);
+            if (d2.Type != null && d2.Type.length() > 0)
+                drawString(d2.Type, 0.21, 0.98, TextWhite, SmallFont);
         }
 
         if (d0 != null)

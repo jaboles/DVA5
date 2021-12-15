@@ -38,9 +38,9 @@ public class CityrailV3Primary extends CityrailV3
         nextTrainBackground.addPoint(round(0.15 * width), 0);
         nextTrainBackground.addPoint(round(0.11 * width), round(0.1 * width));
         nextTrainBackground.addPoint(0, round(0.1 * width));
-        stroke = new BasicStroke(round(0.02 * height));        
+        stroke = new BasicStroke(round(0.02 * height));
     }
-    
+
     public void dataChanged(List<DepartureData> data)
     {
         super.dataChanged(data);
@@ -81,7 +81,7 @@ public class CityrailV3Primary extends CityrailV3
             drawString("This", 0.01, 0.06, TextWhite, NextTrainFont);
             drawString("Train", 0.01, 0.13, TextWhite, NextTrainFont);
         }
-        
+
         if (d0 != null) {
             //if (paintInfrequent)
             {
@@ -110,14 +110,15 @@ public class CityrailV3Primary extends CityrailV3
                     drawString(d0.Destination, 0.41 + hoursWidth, 0.105, TextBlue, MainFont);
                 }
 
-                drawStringC(d0.Type.split(" "), 0.125, 0.4, 0.08, TextBlue, TypeFont);
+                if (d0.Type != null && d0.Type.length() > 0)
+                    drawStringC(d0.Type.split(" "), 0.125, 0.4, 0.08, TextBlue, TypeFont);
 
                 // Cars count
                 fillRect(0.06, 0.8, 0.17, 0.9, TextBlue);
                 drawString(Integer.toString(d0.Cars), 0.065, 0.888, TextWhite, CarsFont);
                 drawString("cars", 0.106, 0.888, TextWhite, Cars2Font);
             }
-            
+
             // Scrolling list
             boolean shouldScroll = d0.Stops.length > 6;
             g.setClip(round(0.05 * width), round(0.225 * height), round((1 - 0.05) * width), height - round(0.225 * height));

@@ -114,7 +114,7 @@ public class CityrailV4Secondary extends CityrailV4Landscape
                 }
             }
             drawMiniTextBox(LeftMargin, y + 0.24, d.Cars + " carriages");
-            if (d.Type != null && !d.Type.equals("")) {
+            if (d.Type != null && d.Type.length() > 0) {
                 drawMiniTextBox(0.25, y + 0.24, d.Type);
             }
         }

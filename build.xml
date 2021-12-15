@@ -172,6 +172,7 @@
                     <include name="**/*.xml"/>
                     <include name="**/*.properties"/>
                     <include name="**/*.png"/>
+                    <include name="**/*.svg"/>
                 </patternset>
             </fileset>
             <fileset dir="resources">

@@ -34,6 +34,11 @@ public class CityrailLine
     public static CityrailLine SHL;
     public static CityrailLine HUN;
 
+    public static CityrailLine NRC;
+    public static CityrailLine NRW;
+    public static CityrailLine STH;
+    public static CityrailLine WST;
+
     // 'Official' Cityrail colours
     public static Color grey = new Color(154, 164, 168);
     public static Color red = new Color(207, 17, 43);
@@ -46,6 +51,7 @@ public class CityrailLine
     public static Color darkRed = new Color(129, 47, 51);
     //public static Color lightBlue = new Color(121, 213, 242);
     //public static Color lightPurple = new Color(140, 127, 179);
+    public static Color orange = new Color(229, 109, 44);
 
     static
     {
@@ -65,9 +71,14 @@ public class CityrailLine
         SHL = new CityrailLine("Southern Highlands Line", grey, green, Color.white, true, "T.svg");
         HUN = new CityrailLine("Hunter Line", grey, darkRed, Color.white, true, "T.svg");
 
+        NRC = new CityrailLine("NSW TrainLink North Coast", grey, orange, Color.white, true, "T.svg");
+        NRW = new CityrailLine("NSW TrainLink North Western", grey, orange, Color.white, true, "T.svg");
+        STH = new CityrailLine("NSW TrainLink Southern", grey, orange, Color.white, true, "T.svg");
+        WST = new CityrailLine("NSW TrainLink Western", grey, orange, Color.white, true, "T.svg");
+
         CityrailLine[] lines = new CityrailLine[] {
                 T1_NORTH_SHORE, T1_WESTERN, T2, T3, T4, T5, T7, T8, T9,
-                BMT, CCN, SCO, SHL, HUN
+                BMT, CCN, SCO, SHL, HUN, NRC, NRW, STH, WST
         };
         for (CityrailLine line : lines) {
             allLines.put(line.Name, line);
@@ -97,7 +108,12 @@ public class CityrailLine
 
     public static CityrailLine get(String name)
     {
-        return allLines.get(name);
+        CityrailLine line = allLines.get(name);
+
+        if (line == null)
+            line = allLines.get(name.replace(" Train Services", ""));
+
+        return line;
     }
 
     // Given a line name (from the Cityrail timetable) and stop list try and guess the real line name

@@ -74,7 +74,7 @@ public class CityrailV3Secondary extends CityrailV3
                 d2 = DepartureData.get(2);
             }
         }
-        
+
         g.setColor(Color.black);
         g.fillPolygon(nextTrainBackground);
         drawString("Following", 0.01, 0.06, TextWhite, NextTrainFont);
@@ -117,6 +117,7 @@ public class CityrailV3Secondary extends CityrailV3
             fillRect(0.05, y + 0.21, 1, y + 0.29, Line2Color1);
             drawString(d.Line, 0.25, y + 0.272, Line2TextColor, NextTrainFont);
         }
-        drawString(d.Type.split(" "), 0.8, y + 0.08, 0.067, Color.gray, TypeNextFont);
+        if (d.Type != null && d.Type.length() > 0)
+            drawString(d.Type.split(" "), 0.8, y + 0.08, 0.067, Color.gray, TypeNextFont);
     }
 }

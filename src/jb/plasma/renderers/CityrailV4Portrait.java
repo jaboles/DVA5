@@ -76,6 +76,7 @@ public class CityrailV4Portrait extends CityrailV4
             Line = CityrailLine.get(d.Line);
             int logoWidth = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
             LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
+            System.out.println(d.Line);
             if (Line.IsNswTrainlink) {
                 stationListPosInitial += nswTrainlinkTopOffset;
             }
@@ -143,7 +144,7 @@ public class CityrailV4Portrait extends CityrailV4
                 }
             }
             drawMiniTextBox(0.74, top + 0.24, d0.Cars + " carriages");
-            if (d0.Type != null && !d0.Type.equals("")) {
+            if (d0.Type != null && d0.Type.length() > 0) {
                 drawMiniTextBox(LeftMargin, 0.8, d0.Type);
             }
 
@@ -197,7 +198,7 @@ public class CityrailV4Portrait extends CityrailV4
             if (d1.Destination2 != null) {
                 drawString(d1.Destination2, LeftMargin, 0.97, TextColor, NextDestination2Font);
             }
-            if (d1.Type != null && !d1.Type.equals("")) {
+            if (d1.Type != null && d1.Type.length() > 0) {
                 drawMiniMiniTextBox(0.3, 0.947, d1.Type);
             }
         }
