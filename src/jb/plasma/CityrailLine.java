@@ -49,21 +49,21 @@ public class CityrailLine
 
     static
     {
-        T1_NORTH_SHORE = new CityrailLine("T1 North Shore Line", yellow, Color.black, false, "T1.png");
-        T1_WESTERN = new CityrailLine("T1 Western Line", yellow, Color.black, false, "T1.png");
-        T2 = new CityrailLine("T2 Inner West & Leppington Line", blue, Color.white, false, "T2.png");
-        T3 = new CityrailLine("T3 Bankstown Line", brown, Color.black, false, "T3.png");
-        T4 = new CityrailLine("T4 Eastern Suburbs & Illawarra Line", darkBlue, Color.white, false, "T4.png");
-        T5 = new CityrailLine("T5 Cumberland Line", pink, Color.white, false, "T5.png");
-        T7 = new CityrailLine("T7 Olympic Park Line", grey, Color.white, false, "T7.png");
-        T8 = new CityrailLine("T8 Airport & South Line", green, Color.white, false, "T2.png");
-        T9 = new CityrailLine("T9 Northern Line", red, Color.white, false, "T1.png");
+        T1_NORTH_SHORE = new CityrailLine("T1 North Shore Line", yellow, Color.black, false, "T1.svg");
+        T1_WESTERN = new CityrailLine("T1 Western Line", yellow, Color.black, false, "T1.svg");
+        T2 = new CityrailLine("T2 Inner West & Leppington Line", blue, Color.white, false, "T2.svg");
+        T3 = new CityrailLine("T3 Bankstown Line", brown, Color.black, false, "T3.svg");
+        T4 = new CityrailLine("T4 Eastern Suburbs & Illawarra Line", darkBlue, Color.white, false, "T4.svg");
+        T5 = new CityrailLine("T5 Cumberland Line", pink, Color.white, false, "T5.svg");
+        T7 = new CityrailLine("T7 Olympic Park Line", grey, Color.white, false, "T7.svg");
+        T8 = new CityrailLine("T8 Airport & South Line", green, Color.white, false, "T8.svg");
+        T9 = new CityrailLine("T9 Northern Line", red, Color.white, false, "T9.svg");
 
-        BMT = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, true, "T.png");
+        BMT = new CityrailLine("Blue Mountains Line", grey, yellow, Color.white, true, "T.svg");
         CCN = new CityrailLine("Central Coast & Newcastle Line", grey, red, Color.white, true, "T.svg");
-        SCO = new CityrailLine("South Coast Line", grey, blue, Color.white, true, "T.png");
-        SHL = new CityrailLine("Southern Highlands Line", grey, green, Color.white, true, "T.png");
-        HUN = new CityrailLine("Hunter Line", grey, darkRed, Color.white, true, "T.png");
+        SCO = new CityrailLine("South Coast Line", grey, blue, Color.white, true, "T.svg");
+        SHL = new CityrailLine("Southern Highlands Line", grey, green, Color.white, true, "T.svg");
+        HUN = new CityrailLine("Hunter Line", grey, darkRed, Color.white, true, "T.svg");
 
         CityrailLine[] lines = new CityrailLine[] {
                 T1_NORTH_SHORE, T1_WESTERN, T2, T3, T4, T5, T7, T8, T9,
