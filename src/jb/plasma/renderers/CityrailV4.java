@@ -12,6 +12,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
+
+import static java.awt.RenderingHints.*;
 
 public abstract class CityrailV4 extends Cityrail
 {
@@ -23,6 +26,26 @@ public abstract class CityrailV4 extends Cityrail
     protected static SVGUniverse SvgUniverse = new SVGUniverse();
     protected static final double LeftMargin = 0.03;
     protected static final double RightMargin = 0.97;
+    public final static Map<Object, Object> RENDERING_HINTS = Map.of(
+            KEY_ANTIALIASING,
+            VALUE_ANTIALIAS_ON,
+            KEY_ALPHA_INTERPOLATION,
+            VALUE_ALPHA_INTERPOLATION_QUALITY,
+            KEY_COLOR_RENDERING,
+            VALUE_COLOR_RENDER_QUALITY,
+            KEY_DITHERING,
+            VALUE_DITHER_DISABLE,
+            KEY_FRACTIONALMETRICS,
+            VALUE_FRACTIONALMETRICS_ON,
+            KEY_INTERPOLATION,
+            VALUE_INTERPOLATION_BICUBIC,
+            KEY_RENDERING,
+            VALUE_RENDER_QUALITY,
+            KEY_STROKE_CONTROL,
+            VALUE_STROKE_PURE,
+            KEY_TEXT_ANTIALIASING,
+            VALUE_TEXT_ANTIALIAS_ON
+    );
 
     protected Font HeaderFont;
     protected Font HeaderTimeNowFont;
@@ -47,6 +70,7 @@ public abstract class CityrailV4 extends Cityrail
             URL url = CityrailV4Primary.class.getResource("/jb/plasma/renderers/resources/" + line.LogoImageFilename);
             BufferedImage bi = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = bi.createGraphics();
+            g.setRenderingHints(RENDERING_HINTS);
             try {
                 if (filename.toLowerCase().endsWith(".svg")) {
                     SVGDiagram svg = SvgUniverse.getDiagram(SvgUniverse.loadSVG(url));
