@@ -68,7 +68,7 @@
 <ol>
     <li>
         Download source archive:
-        <pre>curl -OL https://github.com/jaboles/DVA5/archive/master.zip && unzip master.zip
+        <pre>curl -OL https://github.com/jaboles/DVA5/archive/refs/heads/master.zip && unzip master.zip
 cd DVA5-master</pre>
     </li>
     <li>
@@ -80,13 +80,16 @@ cd DVA5-master</pre>
         <pre>brew install --cask temurin11</pre>
     </li>
     <li>
-        <a href="http://ant.apache.org">Apache Ant</a> and <a href="http://ant-contrib.sourceforge.net">Ant-Contrib</a>:
-        <pre>brew install --ignore-dependencies ant ant-contrib</pre>
+        <a href="http://ant.apache.org">Apache Ant</a>:
+        <pre>brew install --ignore-dependencies ant</pre>
     </li>
     <li>
         Building a Windows app or setup, or Linux .DEB package requires additional tools which you can install using:
         <pre>ant FetchDeps</pre>
         <ul>
+            <li>
+                <a href="http://ant-contrib.sourceforge.net">Ant-Contrib</a>
+            </li>
             <li>
                 <a href="https://www.winehq.org" target="_blank">Wine</a>, required for running Inno Setup. Wine requires <a href="https://www.xquartz.org" target="_blank">XQuartz</a>.
             </li>
@@ -151,17 +154,20 @@ cd DVA5-master</pre>
     </li>
     <li>
         Download source archive:
-        <pre>(new-object net.webclient).downloadfile("https://github.com/jaboles/DVA5/archive/master.zip", "$env:userprofile\master.zip");
-[System.IO.Compression.ZipFile]::ExtractToDirectory("$env:userprofile\master.zip", "$env:userprofile")
-cd "$env:userprofile\DVA5-master"</pre>
+        <pre>(new-object net.webclient).downloadfile("https://github.com/jaboles/DVA5/archive/refs/heads/master.zip", "$env:USERPROFILE\DVAmaster.zip");
+Add-Type -as System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::ExtractToDirectory("$env:USERPROFILE\DVAmaster.zip", "$env:USERPROFILE")
+cd "$env:USERPROFILE\DVA5-master"</pre>
     </li>
     <li>
         <a href="http://scoop.sh" target="_blank">Scoop</a>, a command-line installer for Windows:
         <pre>iex (new-object net.webclient).downloadstring('https://get.scoop.sh')</pre>
     </li>
     <li>
-        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a> version 1.6 or higher:
-        <pre>scoop install openjdk</pre>
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">Java Development Kit</a>:
+        <pre>scoop install git
+scoop bucket add java
+scoop install temurin11-jdk</pre>
     </li>
     <li>
         <a href="http://ant.apache.org">Apache Ant</a>:
@@ -171,6 +177,9 @@ cd "$env:userprofile\DVA5-master"</pre>
         The following additional tools which you can install using:
         <pre>ant FetchDeps</pre>
         <ul>
+            <li>
+                <a href="http://ant-contrib.sourceforge.net">Ant-Contrib</a>
+            </li>
             <li>
                 <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>
             </li>
