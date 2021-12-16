@@ -1,10 +1,10 @@
 Package: dva
 Name: DVA
-Version: 5.5.0
+Version: 5.5.1
 Section: utilities
 Priority: optional
 Architecture: amd64
-Installed-Size: 174248
+Installed-Size: 174572
 Maintainer: Jonathan Boles <jaboles@fastmail.fm>
 Description: Sydney Trains DVA and Plasma Screen Emulator
 Homepage: https://github.com/jaboles/DVA5

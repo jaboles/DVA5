@@ -165,6 +165,7 @@
 
     <target name="Clean" description="Clean output folder">
         <delete failonerror="false" dir="${OutDir}"/>
+        <delete failonerror="false" dir="${ClassesDir}"/>
     </target>
 
     <target name="Compile" description="Compile java code">
