@@ -9,10 +9,14 @@ public class ProportionalPanel extends JPanel
 {
     private static final long serialVersionUID = 1L;
 
-    public ProportionalPanel(Dimension aspectRatio, JPanel panel) {
+    public ProportionalPanel(Dimension aspectRatio, JPanel panel, Color background) {
         float proportion = (float)aspectRatio.getWidth() / (float)aspectRatio.getHeight();
         setLayout(new AspectRatioLayout(proportion));
-        setBackground(Color.black);
+        if (background != null) {
+            setBackground(background);
+        } else {
+            setOpaque(false);
+        }
 
         this.add(panel);
     }

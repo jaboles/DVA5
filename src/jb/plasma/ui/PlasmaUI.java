@@ -134,6 +134,7 @@ public class PlasmaUI
                 for (Drawer d : renderers) {
                     cb.addItem(d);
                 }
+                cb.setRenderer(new PlasmaRendererListCellRenderer());
                 rendererComboBoxes.add(cb);
                 XHBox hb = new XHBox();
                 hb.add(new JLabel("Monitor " + (i + 1) + " Renderer:"));
@@ -325,7 +326,7 @@ public class PlasmaUI
                 d.dataChanged(departureData);
                 PlasmaPanel p = new PlasmaPanel(d);
                 PlasmaWindow w = new PlasmaWindow(this, mode, i, d.toString(), size, d.getAspectRatio(), new ProportionalPanel(d
-                        .getAspectRatio(), p));
+                        .getAspectRatio(), p, Color.black));
                 w.paint(w.getGraphics());
                 w.setVisible(true);
                 windows.add(w);
