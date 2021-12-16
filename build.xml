@@ -1,12 +1,11 @@
 <?xml version="1.0" ?>
 <!-- Configuration of the Ant build system to generate a Jar file -->
-<project name="DVA" default="CreateJar">
+<project name="DVA" default="CreateJar" xmlns:if="ant:if" xmlns:unless="ant:unless">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname" failonerror="true"/>
     <property name="ClassesDir" value="build/classes"/>
     <property name="OutDir" value="build${file.separator}Output"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
-    <property name="AppBundleContents" value="${OutDir}/DVA.app/Contents/MacOS"/>
     <path id="jars">
         <fileset dir="jars">
             <include name="*" />
@@ -38,11 +37,6 @@
     <property name="SignKey" value="/Users/jb/Software/jb.pvk"/>
     <property name="SignCert" value="/Users/jb/Software/jb.spc"/>
 
-    <!-- Mac setup -->
-    <property name="DmgName" value="DVA5"/>
-    <property name="DmgVolumeName" value="DVA 5"/>
-    <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-
     <!-- Windows setup -->
     <property name="Wine"            value="wine"/>
     <property name="WinePrefix"      value="${user.home}/.wine"/>
@@ -50,42 +44,71 @@
     <property name="OutDirWine"      value="build\Output"/>
     <property name="WinRun4JDir"     value="${ToolsDir}${file.separator}winrun4j${file.separator}bin${file.separator}"/>
     <property name="WinOutDir32"     value="${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
-    <property name="WinOutDir32Wine" value="${OutDirWine}\win\i386\"/>
     <property name="WinOutDir64"     value="${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
-    <property name="WinOutDir64Wine" value="${OutDirWine}\win\amd64\"/>
     <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files (x86)/Inno Setup 5/ISCC.exe"
-                                             else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
+               else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
         <os family="mac"/>
     </condition>
+    <property name="DmgName" value="DVA5"/>
     <property name="WindowsSetupName" value="DVA5Setup"/>
 
-    <!-- linux DEB -->
-    <property name="DpkgRoot" value="${OutDir}/debian"/>
-
+    <!-- OS/arch conditions -->
     <condition property="isMac">
         <os family="mac" />
     </condition>
     <condition property="isWindows">
         <os family="windows" />
     </condition>
+    <exec if:set="isMac" executable="uname" outputproperty="machineArch">
+        <arg value="-m"/>
+    </exec>
+    <condition property="isIntelMac">
+        <and>
+            <isset property="isMac"/>
+            <equals arg1="${machineArch}" arg2="x86_64" />
+        </and>
+    </condition>
+
+    <!-- Whether to build certain outputs based on OS/arch conditions -->
+    <condition property="buildWindows">
+        <or>
+            <isset property="isWindows"/>
+            <isset property="isIntelMac"/>
+        </or>
+    </condition>
+    <property name="buildLinux" value="${isIntelMac}"/>
 
     <!-- Fetch build dependencies -->
-    <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Windows">
-
-    </target>
+    <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Mac.Intel,FetchDeps.Windows"/>
     <target name="FetchDeps.Common">
         <mkdir dir="${ToolsDir}"/>
         <!-- Ant-Contrib -->
-        <get src="https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.tar.gz/download" dest="${ToolsDir}/ant-contrib.tar.gz" verbose="true" skipexisting="true"/>
+        <get src="https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.tar.gz/download" dest="${ToolsDir}/ant-contrib.tar.gz" usetimestamp="true"/>
         <untar src="${ToolsDir}/ant-contrib.tar.gz" dest="${ToolsDir}" compression="gzip" overwrite="false" />
+    </target>
+    <target name="FetchDeps.Mac" if="isMac">
+        <!-- JRE: Mac x64 -->
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jre\mac" compression="gzip" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </untar>
+        <!-- Protocol Buffers compiler -->
+        <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-osx-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
+        <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
+        <chmod perm="u+x" file="${ToolsDir}/protoc/bin/protoc"/>
+    </target>
+    <target name="FetchDeps.BuildForWindows">
         <!-- Resource Hacker -->
-        <get src="http://www.angusj.com/resourcehacker/resource_hacker.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <get src="http://www.angusj.com/resourcehacker/resource_hacker.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip src="${ToolsDir}/resource_hacker.zip" dest="${ResHackerDir}" overwrite="false"/>
         <!-- WinRun4J -->
-        <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}/winrun4j.zip" verbose="true" skipexisting="true"/>
+        <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}/winrun4j.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
         <!-- JRE: Win x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jre_x64_windows_*.zip"/>
@@ -93,68 +116,74 @@
             <cutdirsmapper dirs="1"/>
         </unzip>
         <!-- JRE: Win x86 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x86-32_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x86-32_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jre\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
+        <!-- download Inno Setup -->
+        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
     </target>
-    <target name="FetchDeps.Mac" if="isMac">
+    <target name="FetchDeps.Mac.Intel" if="isIntelMac" depends="FetchDeps.BuildForWindows">
         <!-- Wine -->
-        <exec executable="brew" failonerror="true">
+        <exec executable="which" outputproperty="testXquartz">
+            <arg value="xquartz"/>
+        </exec>
+        <exec executable="brew" if:blank="testXquartz" failonerror="true">
             <arg line="install xquartz"/>
         </exec>
-        <exec executable="brew" failonerror="true">
+        <exec executable="which" outputproperty="testWine">
+            <arg value="wine"/>
+        </exec>
+        <exec executable="brew" if:blank="testWine" failonerror="true">
             <arg line="tap homebrew/cask-versions"/>
         </exec>
-        <exec executable="brew" failonerror="true">
+        <exec executable="brew" if:blank="testWine" failonerror="true">
             <arg line="install --cask --no-quarantine wine-stable"/>
         </exec>
-        <!-- Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" verbose="true" skipexisting="true"/>
-        <exec executable="${Wine}" failonerror="true">
+        <!-- install Inno Setup -->
+        <condition property="innoSetupCompilerAvailable" value="1">
+            <available file="${InnoSetupCompiler}"/>
+        </condition>
+        <exec executable="${Wine}" unless:set="innoSetupCompilerAvailable" failonerror="true">
             <env key="WINEPREFIX" value="${WinePrefix}"/>
             <arg line="${ToolsDir}/is.exe /silent"/>
         </exec>
-        <!-- Dpkg -->
-        <exec executable="brew" failonerror="true">
-            <arg line="install dpkg"/>
-        </exec>
-        <!-- Fakeroot -->
-        <exec executable="brew" failonerror="true">
-            <arg line="install fakeroot"/>
-        </exec>
-        <!-- JRE: Mac x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
-        <untar dest="${ToolsDir}\jre\mac" compression="gzip" overwrite="false">
-            <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
-            </fileset>
-            <cutdirsmapper dirs="1"/>
-        </untar>
         <!-- JRE: Linux x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" verbose="true" skipexisting="true"/>
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jre\linux" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jre_x64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <!-- Protocol Buffers compiler -->
-        <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-osx-x86_64.zip" dest="${ToolsDir}/protoc.zip" verbose="true" skipexisting="true"/>
-        <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
-        <chmod perm="u+x" file="${ToolsDir}/protoc/bin/protoc"/>
+        <!-- Dpkg -->
+        <exec executable="which" outputproperty="testDpkg">
+            <arg value="dpkg"/>
+        </exec>
+        <exec executable="brew" if:blank="testDpkg" failonerror="true">
+            <arg line="install dpkg"/>
+        </exec>
+        <!-- Fakeroot -->
+        <exec executable="which" outputproperty="testFakeroot">
+            <arg value="fakeroot"/>
+        </exec>
+        <exec executable="brew" if:blank="testFakeroot" failonerror="true">
+            <arg line="install fakeroot"/>
+        </exec>
     </target>
-    <target name="FetchDeps.Windows" if="isWindows">
-        <!-- Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" verbose="true" skipexisting="true"/>
-        <exec executable="${ToolsDir}/is.exe" failonerror="true">
+    <target name="FetchDeps.Windows" if="isWindows" depends="FetchDeps.BuildForWindows">
+        <!-- install Inno Setup -->
+        <condition property="innoSetupCompilerAvailable" value="1">
+            <available file="${InnoSetupCompiler}"/>
+        </condition>
+        <exec executable="${ToolsDir}/is.exe" unless:set="innoSetupCompilerAvailable" failonerror="true">
             <arg line="/silent"/>
         </exec>
         <!-- Protocol Buffers compiler -->
-        <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-win64.zip" dest="${ToolsDir}/protoc.zip" verbose="true" skipexisting="true"/>
+        <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-win64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
     </target>
 
@@ -212,38 +241,23 @@
 
     <!-- Builds the Mac app bundle. Windows uses a stub .exe launcher so no need to update it. -->
     <target name="BuildMacApp" description="Update contents of the mac app" if="isMac" depends="CreateJar,SetupCommon">
+        <property name="AppBundleContents" value="${OutDir}/DVA.app/Contents/MacOS"/>
         <copy todir="${OutDir}">
             <fileset dir="mac">
                 <include name="DVA.app/**"/>
             </fileset>
         </copy>
         <exec executable="plutil" dir="${OutDir}" failonerror="true">
-            <arg value="-replace"/>
-            <arg value="CFBundleGetInfoString"/>
-            <arg value="-string"/>
-            <arg value="${DVAVersion}"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
+            <arg line="-replace CFBundleGetInfoString -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
         <exec executable="plutil" dir="${OutDir}" failonerror="true">
-            <arg value="-replace"/>
-            <arg value="CFBundleShortVersionString"/>
-            <arg value="-string"/>
-            <arg value="${DVAVersion}"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
+            <arg line="-replace CFBundleShortVersionString -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
         <exec executable="plutil" dir="${OutDir}" failonerror="true">
-            <arg value="-replace"/>
-            <arg value="CFBundleVersion"/>
-            <arg value="-string"/>
-            <arg value="${DVAVersion}"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
+            <arg line="-replace CFBundleVersion -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
         <exec executable="plutil" dir="${OutDir}" failonerror="true">
-            <arg value="-replace"/>
-            <arg value="NSHumanReadableCopyright"/>
-            <arg value="-string"/>
-            <arg value="Copyright © Jonathan Boles 1999-2021"/>
-            <arg value="DVA.app/Contents/Info.plist"/>
+            <arg line="-replace NSHumanReadableCopyright -string &quot;Copyright © Jonathan Boles 1999-2021&quot; DVA.app/Contents/Info.plist"/>
         </exec>
         <copy todir="${AppBundleContents}" preservelastmodified="true">
             <fileset dir=".">
@@ -328,6 +342,8 @@ Log=    console
         <delete file="temp.rh"/>
     </target>
     <target name="BuildWinExes">
+        <property name="WinOutDir32Wine" value="${OutDirWine}\win\i386\"/>
+        <property name="WinOutDir64Wine" value="${OutDirWine}\win\amd64\"/>
         <copy tofile="${WinOutDir32}DVA.exe" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
         <copy tofile="${WinOutDir64}DVA.exe" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
         <copy tofile="${WinOutDir32}DVA.scr" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
@@ -374,6 +390,8 @@ Log=    console
 
     <!-- Build Mac setup -->
     <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="BuildMacApp">
+        <property name="DmgVolumeName" value="DVA 5"/>
+        <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
         <exec executable="sh" outputproperty="dmgSizeMb">
@@ -409,7 +427,7 @@ Log=    console
     </target>
 
     <!-- Build windows setup -->
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes" if="buildWindows">
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
             <arg value=".bak"/>
@@ -444,13 +462,9 @@ Log=    console
     </target>
 
     <!-- Linux Debian Setup -->
-    <target name="BuildLinuxDeb" if="isMac" depends="CreateJar,SetupCommon">
+    <target name="BuildLinuxDeb" if="buildLinux" depends="CreateJar,SetupCommon">
+        <property name="DpkgRoot" value="${OutDir}/debian"/>
         <delete failonerror="false" dir="${DpkgRoot}"/>
-        <!--<mkdir dir="${DpkgRoot}"/>
-        <mkdir dir="${DpkgRoot}${file.separator}DEBIAN"/>
-        <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}bin"/>
-        <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva"/>
-        <mkdir dir="${DpkgRoot}${file.separator}usr${file.separator}share${file.separator}dva${file.separator}jre"/>-->
         <copy todir="${DpkgRoot}/DEBIAN" preservelastmodified="true" file="linux/debian/control"/>
         <copy todir="${DpkgRoot}/usr/share/applications" preservelastmodified="true" file="linux/debian/dva.desktop"/>
         <copy todir="${DpkgRoot}/usr/bin" preservelastmodified="true" file="linux/dva"/>
