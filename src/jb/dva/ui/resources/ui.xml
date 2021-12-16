@@ -49,7 +49,7 @@
             <panel constraints="BorderLayout.NORTH" layout="BorderLayout">
                 <vbox constraints="BorderLayout.NORTH">
                     <panel layout="BorderLayout">
-                        <label id="announcementLabel" constraints="BorderLayout.WEST" text="Saved Announcements: "/>
+                        <label id="announcementLabel" constraints="BorderLayout.WEST" text="Saved Announcements: " border="EmptyBorder(0,2,0,0)"/>
                     </panel>
                     <panel layout="BorderLayout">
                         <panel constraints="BorderLayout.WEST" layout="FlowLayout(FlowLayout.LEADING)">
@@ -76,7 +76,7 @@
                 <vbox constraints="BorderLayout.NORTH">
                     <panel layout="BorderLayout">
                         <hbox constraints="BorderLayout.WEST">
-                            <label id="dvaTextAreaLabel" text="Current Announcement:"/>
+                            <label id="dvaTextAreaLabel" text="Current Announcement:" border="EmptyBorder(0,2,0,0)"/>
                             <label id="indicatorIconLabel" icon="indicatorIconGreen4.png" Border="EmptyBorder(0,10,0,0)"/>
                         </hbox>
                         <label id="announcementStatsLabel" constraints="BorderLayout.EAST" text="0 sounds (0 s)" />
