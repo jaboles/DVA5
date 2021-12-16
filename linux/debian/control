@@ -4,7 +4,7 @@ Version: 5.5.0
 Section: utilities
 Priority: optional
 Architecture: amd64
-Installed-Size: 166056
+Installed-Size: 174248
 Maintainer: Jonathan Boles <jaboles@fastmail.fm>
 Description: Sydney Trains DVA and Plasma Screen Emulator
 Homepage: https://github.com/jaboles/DVA5
