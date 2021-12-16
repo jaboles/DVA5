@@ -458,15 +458,18 @@ Log=    console
         <chmod perm="+x" file="${DpkgRoot}/usr/share/dva/ffmpeg"/>
         <chmod perm="+x" file="${DpkgRoot}/usr/share/dva/jre/bin/java"/>
         <chmod perm="+x" file="${DpkgRoot}/usr/share/dva/jre/lib/jspawnhelper"/>
+        <exec executable="sh" outputproperty="debInstalledSize">
+            <arg line="-c &quot;echo `du -d 0 -k build/Output/debian | cut -f 1`&quot;"/>
+        </exec>
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
             <arg value=".bak"/>
-            <arg value="s/[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/${DVAVersion}/"/>
+            <arg value="s/Version: [[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/Version: ${DVAVersion}/;s/Installed\-Size: [[:digit:]]*/Installed\-Size: ${debInstalledSize}/"/>
             <arg value="linux/debian/control"/>
         </exec>
         <exec executable="powershell.exe" dir="${basedir}" osfamily="windows" failonerror="true">
             <arg value="-command"/>
-            <arg value="(gc 'linux\debian\control' -raw) -replace '\d*\.\d*\.\d*', '${DVAVersion}' | out-file 'linux\debian\control'"/>
+            <arg value="((gc 'linux\debian\control' -raw) -replace 'Version: \d*\.\d*\.\d*', 'Version: ${DVAVersion}') -replace 'Installed-Size: \d*', 'Installed-Size: ${debInstalledSize}' | out-file 'linux\debian\control'"/>
         </exec>
         <exec executable="fakeroot" dir="${OutDir}" failonerror="true">
             <arg value="dpkg-deb"/>

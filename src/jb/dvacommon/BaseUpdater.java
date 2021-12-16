@@ -192,14 +192,8 @@ public abstract class BaseUpdater
         {
             Process p;
             // Unzip
-            int extensionLength;
-            if (downloadedInstaller.getName().toLowerCase().endsWith(".bz2")) {
-                p = new ProcessBuilder("bunzip2", "-f", installerPath).start();
-                extensionLength = 3;
-            } else {
-                p = new ProcessBuilder("gunzip", "-f", installerPath).start();
-                extensionLength = 2;
-            }
+            int extensionLength = 3;
+            p = new ProcessBuilder("bunzip2", "-f", installerPath).start();
             p.waitFor();
 
             // Mount
