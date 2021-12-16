@@ -13,6 +13,9 @@
         </fileset>
     </path>
     <property name="BuildClasspath" value="${toString:jars}" />
+    <condition property="ExecutableExtension" value=".exe" else="">
+        <os family="windows"/>
+    </condition>
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
     </condition>
@@ -132,6 +135,10 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <!-- Protocol Buffers compiler -->
+        <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-osx-x86_64.zip" dest="${ToolsDir}/protoc.zip" verbose="true" skipexisting="true"/>
+        <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
+        <chmod perm="u+x" file="${ToolsDir}/protoc/bin/protoc"/>
     </target>
     <target name="FetchDeps.Windows" if="isWindows">
         <!-- Inno Setup -->
@@ -139,6 +146,9 @@
         <exec executable="${ToolsDir}/is.exe" failonerror="true">
             <arg line="/silent"/>
         </exec>
+        <!-- Protocol Buffers compiler -->
+        <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-win64.zip" dest="${ToolsDir}/protoc.zip" verbose="true" skipexisting="true"/>
+        <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
     </target>
 
     <!-- Increments the build number -->
@@ -152,7 +162,7 @@
 
     <target name="Compile" description="Compile java code">
         <mkdir dir="${ClassesDir}"/>
-        <exec executable="protoc" failonerror="true">
+        <exec executable="${ToolsDir}/protoc/bin/protoc${ExecutableExtension}" failonerror="true">
             <arg value="--java_out=src" />
             <arg value="src${file.separator}jb${file.separator}plasma${file.separator}gtfs${file.separator}gtfs-realtime_1007_extension.proto" />
         </exec>
