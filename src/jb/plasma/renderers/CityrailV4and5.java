@@ -2,7 +2,6 @@ package jb.plasma.renderers;
 
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGException;
-import com.kitfox.svg.SVGUniverse;
 import jb.common.ExceptionReporter;
 import jb.plasma.CityrailLine;
 
@@ -13,9 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-
-import static java.awt.RenderingHints.*;
 
 public abstract class CityrailV4and5 extends Cityrail
 {
@@ -23,30 +19,9 @@ public abstract class CityrailV4and5 extends Cityrail
     protected static final Color HeaderBackgroundColor = new Color(255, 128, 0);
     protected static final Color HeaderTextColor = Color.white;
     protected static final Color OrangeTextColor = new Color(255, 128, 0);
-    protected static final SVGUniverse SvgUniverse = new SVGUniverse();
     protected static final double LeftMargin = 0.03;
     protected static final double RightMargin = 0.97;
     protected static final DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("H:mm");
-    public final static Map<Object, Object> RENDERING_HINTS = Map.of(
-            KEY_ANTIALIASING,
-            VALUE_ANTIALIAS_ON,
-            KEY_ALPHA_INTERPOLATION,
-            VALUE_ALPHA_INTERPOLATION_QUALITY,
-            KEY_COLOR_RENDERING,
-            VALUE_COLOR_RENDER_QUALITY,
-            KEY_DITHERING,
-            VALUE_DITHER_DISABLE,
-            KEY_FRACTIONALMETRICS,
-            VALUE_FRACTIONALMETRICS_ON,
-            KEY_INTERPOLATION,
-            VALUE_INTERPOLATION_BICUBIC,
-            KEY_RENDERING,
-            VALUE_RENDER_QUALITY,
-            KEY_STROKE_CONTROL,
-            VALUE_STROKE_PURE,
-            KEY_TEXT_ANTIALIASING,
-            VALUE_TEXT_ANTIALIAS_ON
-    );
 
     protected Font HeaderFont;
     protected Font HeaderTimeNowFont;

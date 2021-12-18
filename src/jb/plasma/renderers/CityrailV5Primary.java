@@ -49,8 +49,8 @@ public class CityrailV5Primary extends CityrailV5Landscape
 
     public void dimensionsChanged() {
         super.dimensionsChanged();
-        int logoWidth = round(height * 0.2);
-        if (Line != null) LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
+        int logoSize = round(height * 0.2);
+        if (Line != null) LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
     }
 
     public void paint(Graphics g)
@@ -103,40 +103,48 @@ public class CityrailV5Primary extends CityrailV5Landscape
             boolean shouldScroll = d0.Stops.length > 6;
             g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.55 * width), height - round(0.35 * height));
             fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
-            String[] stationList = d0.Stops;
-            for (int i = 0; i < stationList.length; i++) {
+            for (int i = 0; i < d0.Stops.length; i++) {
                 int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
-                drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
-
-                if (d0.StopCarRanges != null && i < d0.StopCarRanges.length && d0.StopCarRanges[i] != null)  {
-                    int carRangeYAbs = yAbs - round(stationListSeparation * 0.6 * height);
-                    double carRangeOffset = (double)g.getFontMetrics(MainFont).stringWidth(stationList[i]) / width;
-                    drawCarRangeTextBox(g, LeftMargin + carRangeOffset + 0.02, carRangeYAbs, d0.StopCarRanges[i]);
-                }
+                int yCutoff = round((1.05 + stationListSeparation) * height);
+                if (yAbs > yCutoff)
+                    continue;
+                drawScrollingStation(g, yAbs, d0.Stops[i]);
 
                 // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
                 if (shouldScroll) {
-                    yAbs = round(stationListPos * height) + round((i + stationList.length + 5) * stationListSeparation * height);
-                    drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
-
-                    if (d0.StopCarRanges != null && i < d0.StopCarRanges.length && d0.StopCarRanges[i] != null)  {
-                        int carRangeYAbs = yAbs - round(stationListSeparation * 0.6 * height);
-                        double carRangeOffset = (double)g.getFontMetrics(MainFont).stringWidth(stationList[i]) / width;
-                        drawCarRangeTextBox(g, LeftMargin + carRangeOffset + 0.02, carRangeYAbs, d0.StopCarRanges[i]);
-                    }
+                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
+                    if (yAbs <= yCutoff)
+                        drawScrollingStation(g, yAbs, d0.Stops[i]);
                 }
             }
             g.setClip(0, 0, width, height);
 
             if (shouldScroll) {
                 stationListPos -= (stationListInc * realFPSAdjustment);
-                if (stationListPos < (-1 * (stationList.length + 5) * stationListSeparation)) {
-                    stationListPos += (stationList.length + 5) * stationListSeparation;
+                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
                 }
             }
         }
 
         drawLine(LeftMargin, 0.35, RightMargin, 0.35, TextColor);
+    }
 
+    private void drawScrollingStation(Graphics g, int yAbs, DepartureData.Stop stop) {
+        drawString(stop.Name, LeftMargin, yAbs, TextColor, MainFont);
+
+        if (stop.Airport || stop.CarRange != null) {
+            double xOffset = (double)g.getFontMetrics(MainFont).stringWidth(stop.Name) / width + 0.02;
+            yAbs = yAbs - round(stationListSeparation * 0.6 * height);
+            // Airport icon
+            if (stop.Airport) {
+                drawImage(airportIcon, LeftMargin + xOffset, yAbs);
+                xOffset += AirportIconWidth + 0.02;
+            }
+            // Car range
+            if (stop.CarRange != null)  {
+                drawCarRangeTextBox(g, LeftMargin + xOffset, yAbs, stop.CarRange);
+            }
+        }
     }
 }

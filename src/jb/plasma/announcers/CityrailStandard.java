@@ -6,6 +6,8 @@ import jb.plasma.DepartureData;
 import jb.plasma.Phraser;
 import org.javatuples.Pair;
 
+import java.util.Arrays;
+
 public class CityrailStandard extends Announcer
 {
     protected final boolean isMale;
@@ -30,7 +32,7 @@ public class CityrailStandard extends Announcer
     public String createAnnouncementText(DepartureData d, int minutesToDeparture)
     {
         Phraser phraser = new Phraser();
-        String[] stops = d.Stops.clone();
+        String[] stops = Arrays.stream(d.Stops).map(st -> st.Name).toArray(String[]::new);
         phraser.doSubstitutions(stops, this.getSoundLibrary().getName());
         String via = phraser.getVia(d);
         Pair<String,Integer> ast = null;

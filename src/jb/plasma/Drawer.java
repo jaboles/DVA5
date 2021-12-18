@@ -1,14 +1,26 @@
 package jb.plasma;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.kitfox.svg.SVGDiagram;
+import com.kitfox.svg.SVGException;
+import com.kitfox.svg.SVGUniverse;
 import jb.common.ExceptionReporter;
+import jb.plasma.renderers.CityrailV4Primary;
 import jb.plasma.ui.PlasmaPanel;
+
+import static java.awt.RenderingHints.*;
+import static java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
 
 // Abstract renderer class
 public abstract class Drawer implements Cloneable
 {
+    protected static final SVGUniverse SvgUniverse = new SVGUniverse();
     protected int width = 0;
     protected int height = 0;
     private Graphics g;
@@ -21,6 +33,27 @@ public abstract class Drawer implements Cloneable
     protected static final Dimension LANDSCAPE_43 = new Dimension(4, 3);
     protected static final Dimension LANDSCAPE_1610 = new Dimension(16, 10);
     protected static final Dimension PORTRAIT_1610 = new Dimension(10, 16);
+
+    public final static Map<Object, Object> RENDERING_HINTS = Map.of(
+            KEY_ANTIALIASING,
+            VALUE_ANTIALIAS_ON,
+            KEY_ALPHA_INTERPOLATION,
+            VALUE_ALPHA_INTERPOLATION_QUALITY,
+            KEY_COLOR_RENDERING,
+            VALUE_COLOR_RENDER_QUALITY,
+            KEY_DITHERING,
+            VALUE_DITHER_DISABLE,
+            KEY_FRACTIONALMETRICS,
+            VALUE_FRACTIONALMETRICS_ON,
+            KEY_INTERPOLATION,
+            VALUE_INTERPOLATION_BICUBIC,
+            KEY_RENDERING,
+            VALUE_RENDER_QUALITY,
+            KEY_STROKE_CONTROL,
+            VALUE_STROKE_PURE,
+            KEY_TEXT_ANTIALIASING,
+            VALUE_TEXT_ANTIALIAS_ON
+    );
 
     protected Drawer()
     {
@@ -167,6 +200,11 @@ public abstract class Drawer implements Cloneable
         g.drawImage(image, round(x * width), round(y * height), null);
     }
 
+    public void drawImage(Image image, double x, int y)
+    {
+        g.drawImage(image, round(x * width), y, null);
+    }
+
     protected int round(double d)
     {
         return (int)Math.round(d);
@@ -189,5 +227,27 @@ public abstract class Drawer implements Cloneable
             adj = PlasmaPanel.FPS / realFPS;
         }
         return adj;
+    }
+
+    protected BufferedImage loadSvg(String resourcePath, Dimension d)
+    {
+        URL url = CityrailV4Primary.class.getResource(resourcePath);
+        if (url == null) return null;
+
+        BufferedImage bi = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = bi.createGraphics();
+        g.setRenderingHints(RENDERING_HINTS);
+        SVGDiagram svg = SvgUniverse.getDiagram(SvgUniverse.loadSVG(url));
+        svg.setIgnoringClipHeuristic(true);
+        final AffineTransform transform = g.getTransform();
+        transform.setToScale(d.width / svg.getWidth(), d.height / svg.getHeight());
+        g.setTransform( transform );
+        try {
+            svg.render(g);
+            return bi;
+        } catch (SVGException e) {
+            ExceptionReporter.reportException(e);
+            return null;
+        }
     }
 }

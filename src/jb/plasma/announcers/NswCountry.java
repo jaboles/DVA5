@@ -4,6 +4,8 @@ import jb.dva.SoundLibrary;
 import jb.plasma.DepartureData;
 import jb.plasma.Phraser;
 
+import java.util.Arrays;
+
 public class NswCountry extends CityrailStandard
 {
     public NswCountry(SoundLibrary soundLibrary, boolean isMale)
@@ -14,7 +16,7 @@ public class NswCountry extends CityrailStandard
     public String createAnnouncementText(DepartureData d, int minutesToDeparture)
     {
         Phraser phraser = new Phraser();
-        String[] stops = d.Stops.clone();
+        String[] stops = Arrays.stream(d.Stops).map(st -> st.Name).toArray(String[]::new);
         phraser.doSubstitutions(stops, getSoundLibrary().getName());
 
         StringBuilder s = new StringBuilder(getSoundLibrary().initialSoundName());

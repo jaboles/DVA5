@@ -34,9 +34,9 @@ public class ManualDepartureData extends DepartureData
 
         // Parses the list of stops from a comma-separated string
         this.Stops = Arrays.stream(stopsString.split(","))
-                .map(String::trim)
-                .filter(s -> s.length() > 0)
-                .toArray(String[]::new);
+                .map(s -> new DepartureData.Stop(s.trim(), null, false))
+                .filter(s -> s.Name.length() > 0)
+                .toArray(DepartureData.Stop[]::new);
 
         // Parses due out from hh:mm
         try {
@@ -82,7 +82,9 @@ public class ManualDepartureData extends DepartureData
                 textColorOverride,
                 customAnnouncementPath);
 
-        this.Stops = stops;
+        this.Stops = Arrays.stream(stops).map(s -> new DepartureData.Stop(s.trim(), null, false))
+            .filter(s -> s.Name.length() > 0)
+            .toArray(DepartureData.Stop[]::new);;
         this.DueOut = dueOut;
     }
 

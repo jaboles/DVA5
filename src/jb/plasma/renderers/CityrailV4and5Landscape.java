@@ -3,6 +3,7 @@ package jb.plasma.renderers;
 import jb.dvacommon.ui.Resources;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public abstract class CityrailV4and5Landscape extends CityrailV4and5
 {

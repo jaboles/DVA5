@@ -52,7 +52,7 @@ public class Phraser
         {
             for (Quartet<String,String,String,String> via : vias)
             {
-                List<String> stops = Arrays.stream(d.Stops).map(String::toLowerCase).collect(Collectors.toList());
+                List<String> stops = Arrays.stream(d.Stops).map(st -> st.Name.toLowerCase()).collect(Collectors.toList());
                 int fromIndex = via.getValue0() != null && via.getValue0().length() > 0 ? stops.indexOf(via.getValue0().toLowerCase()) : 0;
                 int viaIndex =  stops.indexOf(via.getValue1().toLowerCase());
                 int destIndex = stops.indexOf(via.getValue2().toLowerCase());

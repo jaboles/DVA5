@@ -3,6 +3,10 @@ package jb.plasma;
 import jb.plasma.gtfs.TripInstance;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.javatuples.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GtfsDepartureData extends DepartureData
 {
@@ -18,19 +22,23 @@ public class GtfsDepartureData extends DepartureData
         this.Type = ti.LimitedStops ? "Limited Stops" : "All Stops";
         this.Cars = ti.Trip.Cars;
         this.Platform = Integer.parseInt(ti.Platform.Name.split(" Station Platform ")[1]);
-        this.Stops = ti.RemainingStopList;
-        this.StopCarRanges = ti.RemainingStopsCarRanges.stream()
-                .map(carRange ->  {
-                    if (carRange == null) {
-                        return null;
-                    } else if (carRange.getValue0() == carRange.getValue1()) {
-                        return "Car " + carRange.getValue0();
-                    } else if (carRange.getValue1() - carRange.getValue0() + 1 < Cars) {
-                        return "Car " + carRange.getValue0() + "-" + carRange.getValue1();
-                    } else {
-                        return null;
-                    }
-                }).toArray(String[]::new);
+
+        List<Stop> stops = new ArrayList<>();
+        for (int i = 0; i < ti.RemainingStopList.length; i++)
+        {
+            String stopName = ti.RemainingStopList[i];
+            String carRangeString = null;
+            Pair<Integer, Integer> carRange = ti.RemainingStopsCarRanges.get(i);
+            if (carRange != null && carRange.getValue0().equals(carRange.getValue1())) {
+                carRangeString = "Car " + carRange.getValue0();
+            } else if (carRange != null && carRange.getValue1() - carRange.getValue0() + 1 < Cars) {
+                carRangeString = "Car " + carRange.getValue0() + "-" + carRange.getValue1();
+            }
+            boolean airport = stopName.equals("International") || stopName.equals("Domestic");
+
+            stops.add(new Stop(stopName, carRangeString, airport));
+        }
+        this.Stops = stops.toArray(new Stop[0]);
         this.DueOut = ti.At;
 
         this.tripInstance = ti;

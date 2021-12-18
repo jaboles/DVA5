@@ -123,12 +123,11 @@ public class CityrailV3Primary extends CityrailV3
             boolean shouldScroll = d0.Stops.length > 6;
             g.setClip(round(0.05 * width), round(0.225 * height), round((1 - 0.05) * width), height - round(0.225 * height));
             fillRect(0.22, 0.225, 0.95, 1, Color.white);
-            String[] stationList = d0.Stops;
             double stopGraphicOffset = 0.35;
-            for (int i = 0; i < stationList.length; i++) {
+            for (int i = 0; i < d0.Stops.length; i++) {
                 double y = stationListPos + (i * stationListSeparation);
                 int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
-                drawString(stationList[i], 0.25, yAbs, TextBlue, MainFont);
+                drawString(d0.Stops[i].Name, 0.25, yAbs, TextBlue, MainFont);
 
                 // Draw the coloured line graphic to the left of the station name
                 ((Graphics2D)g).setStroke(stroke);
@@ -140,9 +139,9 @@ public class CityrailV3Primary extends CityrailV3
 
                 // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
                 if (shouldScroll) {
-                    y = stationListPos + ((i + stationList.length + 5) * stationListSeparation);
-                    yAbs = round(stationListPos * height) + round((i + stationList.length + 5) * stationListSeparation * height);
-                    drawString(stationList[i], 0.25, yAbs, TextBlue, MainFont);
+                    y = stationListPos + ((i + d0.Stops.length + 5) * stationListSeparation);
+                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
+                    drawString(d0.Stops[i], 0.25, yAbs, TextBlue, MainFont);
 
                     ((Graphics2D)g).setStroke(stroke);
                     g.setColor(LineColor2);
@@ -156,8 +155,8 @@ public class CityrailV3Primary extends CityrailV3
 
             if (shouldScroll) {
                 stationListPos -= (stationListInc * realFPSAdjustment);
-                if (stationListPos < (-1 * (stationList.length + 5) * stationListSeparation)) {
-                    stationListPos += (stationList.length + 5) * stationListSeparation;
+                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
                 }
             }
         }

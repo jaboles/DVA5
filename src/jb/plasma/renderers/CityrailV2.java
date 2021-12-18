@@ -128,21 +128,20 @@ public class CityrailV2 extends Cityrail
         {
             boolean shouldScroll = d0.Stops.length > 11;
             g.setClip(round(0.25 * width), round(0.21 * height), round((1 - 0.25) * width), round((0.8 - 0.21) * height));
-            String[] stationList = d0.Stops;
-            for (int i = 0; i < stationList.length; i++) {
+            for (int i = 0; i < d0.Stops.length; i++) {
                 int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
-                drawString(stationList[i], 0.27, yAbs, TextWhite, MainFont);
+                drawString(d0.Stops[i].Name, 0.27, yAbs, TextWhite, MainFont);
                 if (shouldScroll) {
-                    yAbs = round(stationListPos * height) + round((i + stationList.length + 5) * stationListSeparation * height);
-                    drawString(stationList[i], 0.27, yAbs, TextWhite, MainFont);
+                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
+                    drawString(d0.Stops[i].Name, 0.27, yAbs, TextWhite, MainFont);
                 }
             }
             g.setClip(0, 0, width, height);
 
             if (shouldScroll) {
                 stationListPos -= stationListInc;
-                if (stationListPos < (-1 * (stationList.length + 5) * stationListSeparation)) {
-                    stationListPos += (stationList.length + 5) * stationListSeparation;
+                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
                 }
             }
         }

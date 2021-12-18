@@ -49,8 +49,8 @@ public class CityrailV4Primary extends CityrailV4Landscape
 
     public void dimensionsChanged() {
         super.dimensionsChanged();
-        int logoWidth = round(height * 0.2);
-        if (Line != null) LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
+        int logoSize = round(height * 0.2);
+        if (Line != null) LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
     }
 
     public void paint(Graphics g)
@@ -98,23 +98,26 @@ public class CityrailV4Primary extends CityrailV4Landscape
             boolean shouldScroll = d0.Stops.length > 6;
             g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.55 * width), height - round(0.35 * height));
             fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
-            String[] stationList = d0.Stops;
-            for (int i = 0; i < stationList.length; i++) {
+            for (int i = 0; i < d0.Stops.length; i++) {
                 int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
-                drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
+                int yCutoff = round((1.05 + stationListSeparation) * height);
+                if (yAbs > yCutoff)
+                    continue;
+                drawString(d0.Stops[i].Name, LeftMargin, yAbs, TextColor, MainFont);
 
                 // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
                 if (shouldScroll) {
-                    yAbs = round(stationListPos * height) + round((i + stationList.length + 5) * stationListSeparation * height);
-                    drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
+                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
+                    if (yAbs <= yCutoff)
+                        drawString(d0.Stops[i].Name, LeftMargin, yAbs, TextColor, MainFont);
                 }
             }
             g.setClip(0, 0, width, height);
 
             if (shouldScroll) {
                 stationListPos -= (stationListInc * realFPSAdjustment);
-                if (stationListPos < (-1 * (stationList.length + 5) * stationListSeparation)) {
-                    stationListPos += (stationList.length + 5) * stationListSeparation;
+                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
                 }
             }
         }

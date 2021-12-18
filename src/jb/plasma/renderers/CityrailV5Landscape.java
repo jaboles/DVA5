@@ -1,11 +1,21 @@
 package jb.plasma.renderers;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public abstract class CityrailV5Landscape extends CityrailV4and5Landscape
 {
     protected static final Color TextColor = new Color(0, 0, 0);
     protected static final Color TextBoxColor = new Color(54, 57, 56);
+    protected static final double AirportIconWidth = 0.035;
+    protected BufferedImage airportIcon;
+
+    public void dimensionsChanged()
+    {
+        super.dimensionsChanged();
+
+        airportIcon = loadSvg("/jb/plasma/renderers/resources/airport.svg", new Dimension(round(AirportIconWidth * width), round(AirportIconWidth * width)));
+    }
 
     protected double drawMiniTextBox(Graphics g, double x, double y, String s)
     {

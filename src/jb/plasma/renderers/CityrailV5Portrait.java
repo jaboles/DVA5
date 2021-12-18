@@ -22,6 +22,8 @@ public class CityrailV5Portrait extends CityrailV4and5
     private Font MiniTextBoxFont;
     private Font LargeDepartureTimeFont;
     private final double nswTrainlinkTopOffset = 0.08;
+    private BufferedImage airportIcon;
+    protected static final double AirportIconWidth = 0.05;
 
     public CityrailV5Portrait() {
         stationListInc = 0.04 / PlasmaPanel.FPS;
@@ -61,6 +63,8 @@ public class CityrailV5Portrait extends CityrailV4and5
 
         int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
         LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+
+        airportIcon = loadSvg("/jb/plasma/renderers/resources/airport.svg", new Dimension(round(AirportIconWidth * width), round(AirportIconWidth * width)));
     }
 
     public void dataChanged(java.util.List<DepartureData> data)
@@ -71,8 +75,8 @@ public class CityrailV5Portrait extends CityrailV4and5
         {
             DepartureData d = data.get(0);
             Line = CityrailLine.get(d.Line);
-            int logoWidth = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
-            LineLogo = TryReloadLineLogo(Line, new Dimension(logoWidth, logoWidth));
+            int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
+            LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
             System.out.println(d.Line);
             if (Line.IsNswTrainlink) {
                 stationListPosInitial += nswTrainlinkTopOffset;
@@ -151,35 +155,26 @@ public class CityrailV5Portrait extends CityrailV4and5
             boolean shouldScroll = d0.Stops.length > 6;
             g.setClip(round(LeftMargin * width), round((top + 0.2) * height), round(0.7 * width), round((0.53 - top) * height));
             fillRect(LeftMargin, top + 0.2, 0.7, top + 0.75, Color.white);
-            String[] stationList = d0.Stops;
-            for (int i = 0; i < stationList.length; i++) {
+            for (int i = 0; i < d0.Stops.length; i++) {
                 int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
-                drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
-
-                if (d0.StopCarRanges != null && i < d0.StopCarRanges.length && d0.StopCarRanges[i] != null)  {
-                    int carRangeYAbs = yAbs - round(stationListSeparation * 0.6 * height);
-                    double carRangeOffset = (double)g.getFontMetrics(MainFont).stringWidth(stationList[i]) / width;
-                    drawCarRangeTextBox(g, LeftMargin + carRangeOffset + 0.02, carRangeYAbs, d0.StopCarRanges[i]);
-                }
+                int yCutoff = round((1.05 + stationListSeparation) * height);
+                drawScrollingStation(g, yAbs, d0.Stops[i]);
+                if (yAbs > yCutoff)
+                    continue;
 
                 // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
                 if (shouldScroll) {
-                    yAbs = round(stationListPos * height) + round((i + stationList.length + 5) * stationListSeparation * height);
-                    drawString(stationList[i], LeftMargin, yAbs, TextColor, MainFont);
-
-                    if (d0.StopCarRanges != null && i < d0.StopCarRanges.length && d0.StopCarRanges[i] != null)  {
-                        int carRangeYAbs = yAbs - round(stationListSeparation * 0.6 * height);
-                        double carRangeOffset = (double)g.getFontMetrics(MainFont).stringWidth(stationList[i]) / width;
-                        drawCarRangeTextBox(g, LeftMargin + carRangeOffset + 0.02, carRangeYAbs, d0.StopCarRanges[i]);
-                    }
+                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
+                    if (yAbs <= yCutoff)
+                        drawScrollingStation(g, yAbs, d0.Stops[i]);
                 }
             }
             g.setClip(0, 0, width, height);
 
             if (shouldScroll) {
                 stationListPos -= (stationListInc * realFPSAdjustment);
-                if (stationListPos < (-1 * (stationList.length + 5) * stationListSeparation)) {
-                    stationListPos += (stationList.length + 5) * stationListSeparation;
+                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
                 }
             }
         }
@@ -199,6 +194,25 @@ public class CityrailV5Portrait extends CityrailV4and5
         if (d2 != null) {
             drawNextDeparture(g, d2, 0.952);
         }
+    }
+
+    private void drawScrollingStation(Graphics g, int yAbs, DepartureData.Stop stop) {
+        drawString(stop.Name, LeftMargin, yAbs, TextColor, MainFont);
+
+        if (stop.Airport || stop.CarRange != null) {
+            double xOffset = (double)g.getFontMetrics(MainFont).stringWidth(stop.Name) / width + 0.02;
+            yAbs = yAbs - round(stationListSeparation * 0.6 * height);
+            // Airport icon
+            if (stop.Airport) {
+                drawImage(airportIcon, LeftMargin + xOffset, yAbs);
+                xOffset += AirportIconWidth + 0.02;
+            }
+            // Car range
+            if (stop.CarRange != null)  {
+                drawCarRangeTextBox(g, LeftMargin + xOffset, yAbs, stop.CarRange);
+            }
+        }
+
     }
 
     private void drawNextDeparture(Graphics g, DepartureData d, double y)
