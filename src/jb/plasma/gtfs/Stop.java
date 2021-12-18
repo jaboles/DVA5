@@ -1,6 +1,9 @@
 package jb.plasma.gtfs;
 
+import org.javatuples.Pair;
+
 import java.io.Serializable;
+import java.util.Map;
 
 public class Stop implements Serializable
 {
@@ -18,4 +21,5 @@ public class Stop implements Serializable
     public final String Id;
     public final String Name;
     public final Stop Parent;
+    public Map<VehicleCategory, Pair<Integer, Integer>> VehicleBoardings;
 }

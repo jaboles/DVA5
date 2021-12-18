@@ -2,7 +2,10 @@ package jb.plasma;
 import java.awt.Color;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import jb.common.StringUtilities;
+import org.javatuples.Pair;
 
 // Represents info about a single departure being displayed on the indicator board
 public abstract class DepartureData
@@ -20,6 +23,7 @@ public abstract class DepartureData
     public int Platform = 0; // Platform no. (shown on concourse indicators)
     public LocalDateTime DueOut = null;  // Departure time
     public String[] Stops = new String[] { }; // List of stops
+    public String[] StopCarRanges = new String[] {}; // List of SP car ranges for stops, or null if not a short platform.
     public Color Color1Override = null;
     public Color Color2Override = null;
     public Color TextColorOverride = null;

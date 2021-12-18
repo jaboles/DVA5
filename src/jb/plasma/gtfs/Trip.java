@@ -6,11 +6,12 @@ public class Trip implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    public Trip(String id, Route route, ServicePeriod servicePeriod, String headsign, String blockId)
+    public Trip(String id, Route route, ServicePeriod servicePeriod, VehicleCategory vehicleCategory, String headsign, String blockId)
     {
         Id = id;
         Route = route;
         ServicePeriod = servicePeriod;
+        VehicleCategory = vehicleCategory;
         Headsign = headsign;
         BlockId = blockId;
         Cars = Integer.parseInt(Id.split("\\.")[5]);
@@ -24,4 +25,5 @@ public class Trip implements Serializable
     public final String BlockId;
     public final int Cars;
     public final String Name;
+    public final VehicleCategory VehicleCategory;
 }

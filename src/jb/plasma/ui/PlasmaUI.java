@@ -106,8 +106,10 @@ public class PlasmaUI
 
             // Instantiate the available renderers and announcers
             Drawer[] renderers = new Drawer[] {
-                    new CityrailV4Portrait(false),
-                    new CityrailV4Portrait(true),
+                new CityrailV5Portrait(),
+                new CityrailV5Primary(), new CityrailV5Secondary(),
+                new CityrailV4Portrait(false),
+                new CityrailV4Portrait(true),
                 new CityrailV4Primary(), new CityrailV4Secondary(),
                 new CityrailV3Primary(), new CityrailV3Secondary(),
                 new CityrailV2(false), new CityrailV1Portrait(true, true), new CityrailV1Landscape(true, false),

@@ -131,6 +131,15 @@ public abstract class Drawer implements Cloneable
         g.drawString(s, round(x * width) - (g.getFontMetrics(f).stringWidth(s) / 2), round(y * height));
     }
 
+    // Draw a string using X coordinate between (0,1) and absolute Y coordinate.
+    public void drawStringC(Object obj, double x, int y, Color c, Font f)
+    {
+        g.setFont(f);
+        g.setColor(c);
+        String s = obj.toString();
+        g.drawString(s, round(x * width) - (g.getFontMetrics(f).stringWidth(s) / 2), y);
+    }
+
     // Draw a list of strings using coordinates between (0,0) and (1,1)
     public void drawString(String[] str, double x, double y, double sep, Color c, Font f)
     {

@@ -29,6 +29,7 @@ public class GtfsTimetable implements Serializable
                          Map<String, Stop> stops,
                          Supplier<Stream<StopTime>> stopTimesReader,
                          Map<String, Trip> trips,
+                         HashMap<String, VehicleCategory> vehicleCategories,
                          LocalDateTime downloadTimestamp,
                          LocalDateTime expiryTime)
     {
@@ -37,6 +38,7 @@ public class GtfsTimetable implements Serializable
         Stops = stops;
         Trips = trips;
         StopTimesReader = stopTimesReader;
+        VehicleCategories = vehicleCategories;
         DownloadTimestamp = downloadTimestamp;
         ExpiryTime = expiryTime;
     }
@@ -58,6 +60,7 @@ public class GtfsTimetable implements Serializable
     public final Map<String, Stop> Stops;
     public final Map<String, Trip> Trips;
     public final Supplier<Stream<StopTime>> StopTimesReader;
+    public final HashMap<String, VehicleCategory> VehicleCategories;
     public Map<String, Stop> StopsByName;
     public Map<String, List<Trip>> TripsByBlockId;
     public Map<Stop, Set<Route>> RoutesByStation;

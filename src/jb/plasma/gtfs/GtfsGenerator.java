@@ -78,10 +78,11 @@ public class GtfsGenerator {
 
     public GtfsTimetable read() throws Exception
     {
-        HashMap<String, Stop> stops = GtfsCsvReader.readStops(wd.resolve("stops.txt"));
+        HashMap<String, VehicleCategory> vehicleCategories = GtfsCsvReader.readVehicleCategories(wd.resolve("vehicle_categories.txt"));
+        HashMap<String, Stop> stops = GtfsCsvReader.readStops(wd.resolve("stops.txt"), wd.resolve("vehicle_boardings.txt"), vehicleCategories);
         HashMap<String, Route> routes = GtfsCsvReader.readRoutes(wd.resolve("routes.txt"));
         HashMap<String, ServicePeriod> servicePeriods = GtfsCsvReader.readServicePeriods(wd.resolve("calendar.txt"));
-        HashMap<String, Trip> trips = GtfsCsvReader.readTrips(wd.resolve("trips.txt"), routes, servicePeriods);
+        HashMap<String, Trip> trips = GtfsCsvReader.readTrips(wd.resolve("trips.txt"), routes, servicePeriods, vehicleCategories);
         Supplier<Stream<StopTime>> stopTimesReader = () -> {
             try {
                 return GtfsCsvReader.readStopTimes(wd.resolve("stop_times.txt"), trips, stops);
@@ -91,7 +92,8 @@ public class GtfsGenerator {
             }
         };
 
-        return new GtfsTimetable(routes, servicePeriods, stops, stopTimesReader, trips, downloadTimestamp(), expiryTime());
+        return new GtfsTimetable(routes, servicePeriods, stops, stopTimesReader, trips,
+                vehicleCategories, downloadTimestamp(), expiryTime());
     }
 
     public void delete() throws IOException

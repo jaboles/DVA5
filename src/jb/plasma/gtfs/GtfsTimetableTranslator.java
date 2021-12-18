@@ -23,7 +23,6 @@ public class GtfsTimetableTranslator
     private final static ZoneId SydneyTimeZone = TimeZone.getTimeZone("Australia/Sydney").toZoneId();
     private final static long RealtimeUpdateIntervalSec = 120;
     private static GtfsTimetableTranslator instance;
-
     private final GtfsTimetable tt;
     private Map<Trip, Map<Stop, GtfsRealtime1007Extension.TripUpdate.StopTimeUpdate>> realtimeTripUpdates;
 
