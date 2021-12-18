@@ -58,7 +58,11 @@ public class PlasmaWindow extends JFrame
     public PlasmaWindow(final PlasmaUI controller, final Mode mode, int index, String title, Dimension size, Dimension aspectRatio, JPanel plasmaPanel) {
         super(mode.IsFullScreen ? (GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[index]).getDefaultConfiguration() : null);
 
-        announceAction = controller.announceAction;
+        announceAction = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                controller.announce();
+            }
+        };
 
         SwingEngine renderer = new SwingEngine(this);
         if (!mode.IsFullScreen)
