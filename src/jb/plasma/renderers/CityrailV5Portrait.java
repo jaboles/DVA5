@@ -171,7 +171,7 @@ public class CityrailV5Portrait extends CityrailV4and5
     public void paint(Graphics g) {
         super.paint(g);
 
-        DepartureData d0 = null;
+        DepartureData d0;
         if (DepartureData.size() > 0) {
             d0 = DepartureData.get(0);
         } else return;

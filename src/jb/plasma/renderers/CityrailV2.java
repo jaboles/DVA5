@@ -71,7 +71,7 @@ public class CityrailV2 extends Cityrail
         drawString("Following Trains", 0.02, 0.83, TextWhite, SmallFont);
 
         // Next train
-        DepartureData d0 = null;
+        DepartureData d0;
         if (data.size() >= 1)
         {
             d0 = data.get(0);

@@ -101,6 +101,8 @@ public class GtfsGenerator {
         Files.walk(wd)
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
-                .forEach(File::delete);
+                .forEach(f -> {
+                    if (!f.delete()) logger.warn("Failed to delete {}", f);
+                });
     }
 }

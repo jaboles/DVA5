@@ -62,7 +62,6 @@ public class PlasmaPanel extends JPanel
         int width = getWidth();
         int height = getHeight();
         int second = LocalDateTime.now().getSecond();
-        boolean paintInfrequent = false;
 
         if (height != lastHeight || width != lastWidth) {
             lastHeight = height;

@@ -1,6 +1,4 @@
 package jb.plasma;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -34,7 +32,7 @@ public class PlasmaSession
         this.windows = windows;
         this.announcementTimes = announcementTimes;
 
-        timer = new javax.swing.Timer(1000, timerAction);
+        timer = new javax.swing.Timer(1000, evt -> timerEvent());
         timer.start();
     }
 
@@ -69,36 +67,35 @@ public class PlasmaSession
         }
     }
 
-    private final ActionListener timerAction = new ActionListener() {
-        public void actionPerformed(ActionEvent evt) {
-            // Only need to do something if there's at least one departure in the list
-            if (data.size() > 0)
+    private void timerEvent()
+    {
+        // Only need to do something if there's at least one departure in the list
+        if (data.size() > 0)
+        {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime dueOut = data.get(0).DueOut;
+            if (dueOut != null)
             {
-                LocalDateTime now = LocalDateTime.now();
-                LocalDateTime dueOut = data.get(0).DueOut;
-                if (dueOut != null)
+                // If due-out time has passed, pop off the first entry in the list and notify the renderers
+                if (now.isAfter(dueOut))
                 {
-                    // If due-out time has passed, pop off the first entry in the list and notify the renderers
-                    if (now.isAfter(dueOut))
-                    {
-                        trainDeparted();
-                    }
-                    // If a sound library has been specified, and it's time to play an announcement, play it
-                    // using the given sound library.
-                    else if (announcementTimes != null && announce != null) {
-                        for (int announcementTime : announcementTimes) {
-                            LocalDateTime announceAt = now
-                                    .plusMinutes(announcementTime)
-                                    .plusSeconds(30);
-                            if (withinOneSecondOf(announceAt, dueOut))
-                            {
-                                announce.run();
-                                break;
-                            }
+                    trainDeparted();
+                }
+                // If a sound library has been specified, and it's time to play an announcement, play it
+                // using the given sound library.
+                else if (announcementTimes != null && announce != null) {
+                    for (int announcementTime : announcementTimes) {
+                        LocalDateTime announceAt = now
+                                .plusMinutes(announcementTime)
+                                .plusSeconds(30);
+                        if (withinOneSecondOf(announceAt, dueOut))
+                        {
+                            announce.run();
+                            break;
                         }
                     }
                 }
             }
         }
-    };
+    }
 }

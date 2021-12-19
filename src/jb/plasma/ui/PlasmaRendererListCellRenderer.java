@@ -1,7 +1,6 @@
 package jb.plasma.ui;
 
 import jb.common.ExceptionReporter;
-import jb.common.ui.AspectRatioLayout;
 import jb.common.ui.ProportionalPanel;
 import jb.plasma.*;
 

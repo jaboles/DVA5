@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +28,6 @@ public abstract class Drawer implements Cloneable
     private long lastFrame = 0;
 
     protected List<DepartureData> DepartureData;
-    protected LocalDateTime timeNow;
 
     // Aspect ratios
     protected static final Dimension LANDSCAPE_43 = new Dimension(4, 3);
@@ -86,8 +84,6 @@ public abstract class Drawer implements Cloneable
 
         realFPSAdjustment = getRealFPSAdjustment();
         lastFrame = System.currentTimeMillis();
-
-        //paintInfrequent = paintInfrequent();
     }
 
     public void paintInfrequent(Graphics g)

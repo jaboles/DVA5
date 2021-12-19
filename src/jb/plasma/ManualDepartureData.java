@@ -84,7 +84,7 @@ public class ManualDepartureData extends DepartureData
 
         this.Stops = Arrays.stream(stops).map(s -> new DepartureData.Stop(s.trim(), null, false))
             .filter(s -> s.Name.length() > 0)
-            .toArray(DepartureData.Stop[]::new);;
+            .toArray(DepartureData.Stop[]::new);
         this.DueOut = dueOut;
     }
 
