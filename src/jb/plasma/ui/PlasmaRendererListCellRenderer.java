@@ -42,7 +42,7 @@ public class PlasmaRendererListCellRenderer implements ListCellRenderer<Drawer> 
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
             JPanel preview = new ProportionalPanel(d.getAspectRatio(), new PlasmaPanel(d), null);
-            preview.setPreferredSize(new Dimension(100, 75));
+            preview.setPreferredSize(new Dimension(120, 75));
             panel.setBackground(background);
             panel.add(preview, BorderLayout.WEST);
             JTextArea label = new JTextArea(d.toString());

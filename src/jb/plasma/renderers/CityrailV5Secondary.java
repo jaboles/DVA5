@@ -21,7 +21,7 @@ public class CityrailV5Secondary extends CityrailV5Landscape
 
     public String toString()
     {
-        return "CityRail V5 Dual-screen Platform Secondary (Landscape 16:10)";
+        return "CityRail V5 Dual-screen Secondary (Landscape 16:10)";
     }
 
     public void dataChanged(java.util.List<DepartureData> data)

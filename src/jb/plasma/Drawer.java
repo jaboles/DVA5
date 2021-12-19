@@ -37,24 +37,15 @@ public abstract class Drawer implements Cloneable
     protected static final Dimension PORTRAIT_1610 = new Dimension(10, 16);
 
     public final static Map<Object, Object> RENDERING_HINTS = Map.of(
-            KEY_ANTIALIASING,
-            VALUE_ANTIALIAS_ON,
-            KEY_ALPHA_INTERPOLATION,
-            VALUE_ALPHA_INTERPOLATION_QUALITY,
-            KEY_COLOR_RENDERING,
-            VALUE_COLOR_RENDER_QUALITY,
-            KEY_DITHERING,
-            VALUE_DITHER_DISABLE,
-            KEY_FRACTIONALMETRICS,
-            VALUE_FRACTIONALMETRICS_ON,
-            KEY_INTERPOLATION,
-            VALUE_INTERPOLATION_BICUBIC,
-            KEY_RENDERING,
-            VALUE_RENDER_QUALITY,
-            KEY_STROKE_CONTROL,
-            VALUE_STROKE_PURE,
-            KEY_TEXT_ANTIALIASING,
-            VALUE_TEXT_ANTIALIAS_ON
+            KEY_ANTIALIASING,        VALUE_ANTIALIAS_ON,
+            KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY,
+            KEY_COLOR_RENDERING,     VALUE_COLOR_RENDER_QUALITY,
+            KEY_DITHERING,           VALUE_DITHER_DISABLE,
+            KEY_FRACTIONALMETRICS,   VALUE_FRACTIONALMETRICS_ON,
+            KEY_INTERPOLATION,       VALUE_INTERPOLATION_BICUBIC,
+            KEY_RENDERING,           VALUE_RENDER_QUALITY,
+            KEY_STROKE_CONTROL,      VALUE_STROKE_PURE,
+            KEY_TEXT_ANTIALIASING,   VALUE_TEXT_ANTIALIAS_ON
     );
 
     protected Drawer()

@@ -2,11 +2,13 @@ package jb.plasma.ui;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.nio.Buffer;
 import java.time.LocalDateTime;
+import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import jb.plasma.Drawer;
+
+import static java.awt.RenderingHints.*;
 
 public class PlasmaPanel extends JPanel
 {
@@ -18,11 +20,21 @@ public class PlasmaPanel extends JPanel
     private final static boolean mouseDebug = false;
     private Point mousePosition = new Point(0, 0);
     */
-    private final static RenderingHints renderingHints = new RenderingHints(null, null);
+    public final static Map<Object, Object> RenderingHints = Map.of(
+            KEY_ANTIALIASING,        VALUE_ANTIALIAS_ON,
+            KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY,
+            KEY_COLOR_RENDERING,     VALUE_COLOR_RENDER_QUALITY,
+            KEY_DITHERING,           VALUE_DITHER_DISABLE,
+            KEY_FRACTIONALMETRICS,   VALUE_FRACTIONALMETRICS_ON,
+            KEY_INTERPOLATION,       VALUE_INTERPOLATION_BICUBIC,
+            KEY_RENDERING,           VALUE_RENDER_QUALITY,
+            KEY_STROKE_CONTROL,      VALUE_STROKE_PURE,
+            KEY_TEXT_ANTIALIASING,   VALUE_TEXT_ANTIALIAS_ON
+    );
     private int lastHeight = 0;
     private int lastWidth = 0;
     private int lastSecond = 0;
-    private static final boolean BufferInfrequentDraws = true;
+    private static final boolean BufferInfrequentDraws = false;
     private Image buf = null;
     private Graphics bg = null;
 
@@ -41,11 +53,6 @@ public class PlasmaPanel extends JPanel
             });
         }
         */
-
-        renderingHints.clear();
-        renderingHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        renderingHints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        renderingHints.put(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }
 
     // Main paint routine. Notifies the active renderer of the panel dimensions, then calls the renderer's
@@ -64,7 +71,7 @@ public class PlasmaPanel extends JPanel
             drawer.dimensionsChanged();
             buf = createImage(width, height);
             bg = buf.getGraphics();
-            ((Graphics2D)bg).setRenderingHints(renderingHints);
+            ((Graphics2D)bg).setRenderingHints(RenderingHints);
             if (BufferInfrequentDraws)
                 drawer.paintInfrequent(bg);
         } else if (second != lastSecond && BufferInfrequentDraws) {
@@ -72,7 +79,7 @@ public class PlasmaPanel extends JPanel
              drawer.paintInfrequent(bg);
         }
 
-        ((Graphics2D)g).setRenderingHints(renderingHints);
+        ((Graphics2D)g).setRenderingHints(RenderingHints);
         if (BufferInfrequentDraws)
             g.drawImage(buf, 0, 0, null);
         else

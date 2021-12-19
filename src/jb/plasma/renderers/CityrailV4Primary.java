@@ -108,8 +108,8 @@ public class CityrailV4Primary extends CityrailV4Landscape
 
         // Scrolling list
         boolean shouldScroll = d0.Stops.length > 6;
-        g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.55 * width), height - round(0.35 * height));
-        fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
+        g.setClip(round(LeftMargin * width), round(0.355 * height), round(0.55 * width), height - round(0.355 * height));
+        fillRect(LeftMargin, 0.355, 0.6, 1, Color.white);
         for (int i = 0; i < d0.Stops.length; i++) {
             int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
             int yCutoff = round((1.05 + stationListSeparation) * height);
