@@ -3,7 +3,6 @@ package jb.plasma.renderers;
 import jb.dvacommon.ui.Resources;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public abstract class CityrailV4and5Landscape extends CityrailV4and5
 {
@@ -21,9 +20,9 @@ public abstract class CityrailV4and5Landscape extends CityrailV4and5
         TextBoxFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.04));
     }
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
+        super.paintInfrequent(g);
         fillRect(0, 0, 1, 0.1, HeaderBackgroundColor);
     }
 }

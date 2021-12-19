@@ -55,109 +55,113 @@ public class CityrailV3Primary extends CityrailV3
         }
     }
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
+        super.paintInfrequent(g);
         DepartureData d0 = null;
         if (DepartureData.size() > 0)
         {
             d0 = DepartureData.get(0);
         }
 
-        //if (paintInfrequent)
-        {
-            // Background color blocks
-            fillRect(0, 0, 1, 0.22, MiddleColor);
-            fillRect(0.05, 0.225, 0.95, 1, MiddleColor);
+        // Background color blocks
+        fillRect(0, 0, 1, 0.22, MiddleColor);
+        fillRect(0.05, 0.225, 0.95, 1, MiddleColor);
 
-            if (d0 != null && d0.Line != null) {
-                fillRect(0, 0.12, 1, 0.2, LineColor1);
-                drawString(d0.Line, 0.15, 0.182, LineTextColor, NextTrainFont);
-            }
-
-            // 'This train'
-            g.setColor(Color.black);
-            g.fillPolygon(nextTrainBackground);
-            drawString("This", 0.01, 0.06, TextWhite, NextTrainFont);
-            drawString("Train", 0.01, 0.13, TextWhite, NextTrainFont);
+        if (d0 != null && d0.Line != null) {
+            fillRect(0, 0.12, 1, 0.2, LineColor1);
+            drawString(d0.Line, 0.15, 0.182, LineTextColor, NextTrainFont);
         }
 
+        // 'This train'
+        g.setColor(Color.black);
+        g.fillPolygon(nextTrainBackground);
+        drawString("This", 0.01, 0.06, TextWhite, NextTrainFont);
+        drawString("Train", 0.01, 0.13, TextWhite, NextTrainFont);
+
         if (d0 != null) {
-            //if (paintInfrequent)
-            {
-                // 'in X mins to Destination'
-                drawString("in", 0.15, 0.105, TextBlue, MicroFont);
-                double hoursWidth = 0;
-                if (d0.DueOut != null) {
-                    Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
-                    int dueOutHours = dueOut.getValue0();
-                    int dueOutMins = dueOut.getValue1();
-                    if (dueOutHours > 0 || dueOutMins > 0) {
-                        if (dueOutHours > 0) {
-                            hoursWidth = 0.07;
-                            if (dueOutHours >= 10) {
-                                hoursWidth += 0.03;
-                            }
-                            drawStringR(dueOutHours, 0.16 + hoursWidth, 0.105, TextBlue, MainFont);
-                            drawString("hr", 0.162 + hoursWidth, 0.105, TextBlue, MicroFontBold);
+            // 'in X mins to Destination'
+            drawString("in", 0.15, 0.105, TextBlue, MicroFont);
+            double hoursWidth = 0;
+            if (d0.DueOut != null) {
+                Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
+                int dueOutHours = dueOut.getValue0();
+                int dueOutMins = dueOut.getValue1();
+                if (dueOutHours > 0 || dueOutMins > 0) {
+                    if (dueOutHours > 0) {
+                        hoursWidth = 0.07;
+                        if (dueOutHours >= 10) {
+                            hoursWidth += 0.03;
                         }
-                        drawStringR(dueOutMins, 0.28 + hoursWidth, 0.105, TextBlue, MainFont);
-                        drawString("mins", 0.285 + hoursWidth, 0.105, TextBlue, MicroFontBold);
+                        drawStringR(dueOutHours, 0.16 + hoursWidth, 0.105, TextBlue, MainFont);
+                        drawString("hr", 0.162 + hoursWidth, 0.105, TextBlue, MicroFontBold);
                     }
+                    drawStringR(dueOutMins, 0.28 + hoursWidth, 0.105, TextBlue, MainFont);
+                    drawString("mins", 0.285 + hoursWidth, 0.105, TextBlue, MicroFontBold);
                 }
-                if (d0.Destination != null) {
-                    drawString("to", 0.36 + hoursWidth, 0.105, TextBlue, MicroFont);
-                    drawString(d0.Destination, 0.41 + hoursWidth, 0.105, TextBlue, MainFont);
-                }
-
-                if (d0.Type != null && d0.Type.length() > 0)
-                    drawStringC(d0.Type.split(" "), 0.125, 0.4, 0.08, TextBlue, TypeFont);
-
-                // Cars count
-                fillRect(0.06, 0.8, 0.17, 0.9, TextBlue);
-                drawString(Integer.toString(d0.Cars), 0.065, 0.888, TextWhite, CarsFont);
-                drawString("cars", 0.106, 0.888, TextWhite, Cars2Font);
+            }
+            if (d0.Destination != null) {
+                drawString("to", 0.36 + hoursWidth, 0.105, TextBlue, MicroFont);
+                drawString(d0.Destination, 0.41 + hoursWidth, 0.105, TextBlue, MainFont);
             }
 
-            // Scrolling list
-            boolean shouldScroll = d0.Stops.length > 6;
-            g.setClip(round(0.05 * width), round(0.225 * height), round((1 - 0.05) * width), height - round(0.225 * height));
-            fillRect(0.22, 0.225, 0.95, 1, Color.white);
-            double stopGraphicOffset = 0.35;
-            for (int i = 0; i < d0.Stops.length; i++) {
-                double y = stationListPos + (i * stationListSeparation);
-                int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
+            if (d0.Type != null && d0.Type.length() > 0)
+                drawStringC(d0.Type.split(" "), 0.125, 0.4, 0.08, TextBlue, TypeFont);
+
+            // Cars count
+            fillRect(0.06, 0.8, 0.17, 0.9, TextBlue);
+            drawString(Integer.toString(d0.Cars), 0.065, 0.888, TextWhite, CarsFont);
+            drawString("cars", 0.106, 0.888, TextWhite, Cars2Font);
+        }
+    }
+
+    public void paint(Graphics g)
+    {
+        super.paint(g);
+
+        DepartureData d0;
+        if (DepartureData.size() > 0)
+            d0 = DepartureData.get(0);
+        else return;
+
+        // Scrolling list
+        boolean shouldScroll = d0.Stops.length > 6;
+        g.setClip(round(0.05 * width), round(0.225 * height), round((1 - 0.05) * width), height - round(0.225 * height));
+        fillRect(0.22, 0.225, 0.95, 1, Color.white);
+        double stopGraphicOffset = 0.35;
+        for (int i = 0; i < d0.Stops.length; i++) {
+            double y = stationListPos + (i * stationListSeparation);
+            int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
+            drawString(d0.Stops[i].Name, 0.25, yAbs, TextBlue, MainFont);
+
+            // Draw the coloured line graphic to the left of the station name
+            ((Graphics2D)g).setStroke(stroke);
+            g.setColor(LineColor2);
+            yAbs -= round(height * stopGraphicOffset * stationListSeparation);
+            g.drawLine(round(width * 0.225), yAbs, round(width * 0.231), yAbs);
+            g.setColor(LineColor1);
+            g.drawLine(round(width * 0.22), round(height * (y - stopGraphicOffset * stationListSeparation - stationListSeparation)), round(width * 0.22), yAbs);
+
+            // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
+            if (shouldScroll) {
+                y = stationListPos + ((i + d0.Stops.length + 5) * stationListSeparation);
+                yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
                 drawString(d0.Stops[i].Name, 0.25, yAbs, TextBlue, MainFont);
 
-                // Draw the coloured line graphic to the left of the station name
                 ((Graphics2D)g).setStroke(stroke);
                 g.setColor(LineColor2);
                 yAbs -= round(height * stopGraphicOffset * stationListSeparation);
                 g.drawLine(round(width * 0.225), yAbs, round(width * 0.231), yAbs);
                 g.setColor(LineColor1);
                 g.drawLine(round(width * 0.22), round(height * (y - stopGraphicOffset * stationListSeparation - stationListSeparation)), round(width * 0.22), yAbs);
-
-                // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
-                if (shouldScroll) {
-                    y = stationListPos + ((i + d0.Stops.length + 5) * stationListSeparation);
-                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
-                    drawString(d0.Stops[i], 0.25, yAbs, TextBlue, MainFont);
-
-                    ((Graphics2D)g).setStroke(stroke);
-                    g.setColor(LineColor2);
-                    yAbs -= round(height * stopGraphicOffset * stationListSeparation);
-                    g.drawLine(round(width * 0.225), yAbs, round(width * 0.231), yAbs);
-                    g.setColor(LineColor1);
-                    g.drawLine(round(width * 0.22), round(height * (y - stopGraphicOffset * stationListSeparation - stationListSeparation)), round(width * 0.22), yAbs);
-                }
             }
-            g.setClip(0, 0, width, height);
+        }
+        g.setClip(0, 0, width, height);
 
-            if (shouldScroll) {
-                stationListPos -= (stationListInc * realFPSAdjustment);
-                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
-                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
-                }
+        if (shouldScroll) {
+            stationListPos -= (stationListInc * realFPSAdjustment);
+            if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                stationListPos += (d0.Stops.length + 5) * stationListSeparation;
             }
         }
     }

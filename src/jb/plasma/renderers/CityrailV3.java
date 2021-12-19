@@ -40,12 +40,9 @@ public abstract class CityrailV3 extends Cityrail
         TypeNextFont = Resources.ArialRegular.deriveFont(Font.PLAIN, (int)(height * 0.078));
     }
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
-        //if (paintInfrequent)
-        {
-            fillRect(0, 0, 1, 1, BackgroundColor);
-        }
+        super.paintInfrequent(g);
+        fillRect(0, 0, 1, 1, BackgroundColor);
     }
 }

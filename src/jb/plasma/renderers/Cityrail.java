@@ -31,10 +31,10 @@ public abstract class Cityrail extends Drawer
 
     protected LocalDateTime timeNow;
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
         timeNow = LocalDateTime.now();
+        super.paintInfrequent(g);
     }
 
     protected Pair<Integer,Integer> getDueOut(LocalDateTime dueOut)

@@ -62,9 +62,9 @@ public class CityrailV3Secondary extends CityrailV3
         }
     }
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
+        super.paintInfrequent(g);
         DepartureData d1 = null, d2 = null;
         if (DepartureData.size() > 1)
         {

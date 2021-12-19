@@ -2,6 +2,8 @@ package jb.plasma.ui;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.nio.Buffer;
+import java.time.LocalDateTime;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import jb.plasma.Drawer;
@@ -19,6 +21,8 @@ public class PlasmaPanel extends JPanel
     private final static RenderingHints renderingHints = new RenderingHints(null, null);
     private int lastHeight = 0;
     private int lastWidth = 0;
+    private int lastSecond = 0;
+    private static final boolean BufferInfrequentDraws = true;
     private Image buf = null;
     private Graphics bg = null;
 
@@ -50,19 +54,30 @@ public class PlasmaPanel extends JPanel
     {
         int width = getWidth();
         int height = getHeight();
+        int second = LocalDateTime.now().getSecond();
+        boolean paintInfrequent = false;
 
-        if (height != lastHeight || width != lastWidth || (buf == null)) {
+        if (height != lastHeight || width != lastWidth) {
             lastHeight = height;
             lastWidth = width;
             drawer.setDimensions(width, height);
             drawer.dimensionsChanged();
             buf = createImage(width, height);
             bg = buf.getGraphics();
+            ((Graphics2D)bg).setRenderingHints(renderingHints);
+            if (BufferInfrequentDraws)
+                drawer.paintInfrequent(bg);
+        } else if (second != lastSecond && BufferInfrequentDraws) {
+            lastSecond = second;
+             drawer.paintInfrequent(bg);
         }
 
-        ((Graphics2D)bg).setRenderingHints(renderingHints);
-        drawer.paint(bg);
-        g.drawImage(buf, 0, 0, null);
+        ((Graphics2D)g).setRenderingHints(renderingHints);
+        if (BufferInfrequentDraws)
+            g.drawImage(buf, 0, 0, null);
+        else
+            drawer.paintInfrequent(g);
+        drawer.paint(g);
 
         /*
         if (lastRenderTimeMillis != 0)

@@ -53,9 +53,9 @@ public class CityrailV5Primary extends CityrailV5Landscape
         if (Line != null) LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
     }
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
+        super.paintInfrequent(g);
         DepartureData d0 = null;
             if (DepartureData.size() > 0) {
             d0 = DepartureData.get(0);
@@ -98,36 +98,45 @@ public class CityrailV5Primary extends CityrailV5Landscape
             if (d0.Type != null && d0.Type.length() > 0) {
                 drawMiniTextBox(0.97 - textboxWidth, 0.46, textboxWidth, d0.Type);
             }
-
-            // Scrolling list
-            boolean shouldScroll = d0.Stops.length > 6;
-            g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.55 * width), height - round(0.35 * height));
-            fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
-            for (int i = 0; i < d0.Stops.length; i++) {
-                int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
-                int yCutoff = round((1.05 + stationListSeparation) * height);
-                if (yAbs > yCutoff)
-                    continue;
-                drawScrollingStation(g, yAbs, d0.Stops[i]);
-
-                // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
-                if (shouldScroll) {
-                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
-                    if (yAbs <= yCutoff)
-                        drawScrollingStation(g, yAbs, d0.Stops[i]);
-                }
-            }
-            g.setClip(0, 0, width, height);
-
-            if (shouldScroll) {
-                stationListPos -= (stationListInc * realFPSAdjustment);
-                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
-                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
-                }
-            }
         }
 
         drawLine(LeftMargin, 0.35, RightMargin, 0.35, TextColor);
+    }
+
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        DepartureData d0;
+        if (DepartureData.size() > 0) {
+            d0 = DepartureData.get(0);
+        } else return;
+
+        // Scrolling list
+        boolean shouldScroll = d0.Stops.length > 6;
+        g.setClip(round(LeftMargin * width), round(0.35 * height), round(0.55 * width), height - round(0.35 * height));
+        fillRect(LeftMargin, 0.35, 0.6, 1, Color.white);
+        for (int i = 0; i < d0.Stops.length; i++) {
+            int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
+            int yCutoff = round((1.05 + stationListSeparation) * height);
+            if (yAbs > yCutoff)
+                continue;
+            drawScrollingStation(g, yAbs, d0.Stops[i]);
+
+            // If scrolling, draw a second copy so that one list scrolls seamlessly into the next
+            if (shouldScroll) {
+                yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
+                if (yAbs <= yCutoff)
+                    drawScrollingStation(g, yAbs, d0.Stops[i]);
+            }
+        }
+        g.setClip(0, 0, width, height);
+
+        if (shouldScroll) {
+            stationListPos -= (stationListInc * realFPSAdjustment);
+            if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                stationListPos += (d0.Stops.length + 5) * stationListSeparation;
+            }
+        }
     }
 
     private void drawScrollingStation(Graphics g, int yAbs, DepartureData.Stop stop) {

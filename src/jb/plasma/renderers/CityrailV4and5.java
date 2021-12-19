@@ -31,9 +31,9 @@ public abstract class CityrailV4and5 extends Cityrail
     protected Font PlatformDepartsFontSmall;
     protected Font TextBoxFont;
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
+        super.paintInfrequent(g);
         fillRect(0, 0, 1, 1, BackgroundColor);
     }
 

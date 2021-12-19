@@ -54,14 +54,14 @@ public class CityrailV4Secondary extends CityrailV4Landscape
 
     public void dimensionsChanged() {
         super.dimensionsChanged();
-        int logoWidth = round(height * 0.2);
-        if (Line1 != null) Line1Logo = TryReloadLineLogo(Line1, new Dimension(logoWidth, logoWidth));
-        if (Line2 != null) Line2Logo = TryReloadLineLogo(Line2, new Dimension(logoWidth, logoWidth));
+        int logoSize = round(height * 0.2);
+        if (Line1 != null) Line1Logo = TryReloadLineLogo(Line1, new Dimension(logoSize, logoSize));
+        if (Line2 != null) Line2Logo = TryReloadLineLogo(Line2, new Dimension(logoSize, logoSize));
     }
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
+        super.paintInfrequent(g);
         DepartureData d1 = null, d2 = null;
         if (DepartureData.size() > 1) {
             d1 = DepartureData.get(1);

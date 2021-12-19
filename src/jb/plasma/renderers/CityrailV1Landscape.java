@@ -41,9 +41,9 @@ public class CityrailV1Landscape extends CityrailV1
         TypeSmallFont = Resources.ArialBold.deriveFont(Font.PLAIN, (int)(height * 0.035));
     }
 
-    public void paint(Graphics g)
+    public void paintInfrequent(Graphics g)
     {
-        super.paint(g);
+        super.paintInfrequent(g);
 
         DepartureData d0 = null, d1 = null, d2 = null;
         if (DepartureData.size() > 0)
@@ -152,27 +152,33 @@ public class CityrailV1Landscape extends CityrailV1
             if (isConcourse)
                 drawString(d2.Platform, 0.9, 0.98, TextYellow, MainFont);
         }
+    }
 
-        // Scrolling list
-        if (d0 != null)
-        {
-            boolean shouldScroll = d0.Stops.length > 7;
-            g.setClip(round(0.21 * width), round(0.29 * height), round((1 - 0.21 - 0.21) * width), round((BottomOffset - 0.29) * height));
-            for (int i = 0; i < d0.Stops.length; i++) {
-                int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
-                drawString(d0.Stops[i].Name, 0.25, yAbs, TextWhite, MainFont);
-                if (shouldScroll) {
-                    yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
-                    drawString(d0.Stops[i].Name, 0.25, yAbs, TextWhite, MainFont);
-                }
-            }
-            g.setClip(0, 0, width, height);
+    public void paint(Graphics g)
+    {
+        super.paint(g);
 
+        DepartureData d0;
+        if (DepartureData.size() > 0)
+            d0 = DepartureData.get(0);
+        else return;
+
+        boolean shouldScroll = d0.Stops.length > 7;
+        g.setClip(round(0.21 * width), round(0.29 * height), round((1 - 0.21 - 0.21) * width), round((BottomOffset - 0.29) * height));
+        for (int i = 0; i < d0.Stops.length; i++) {
+            int yAbs = round(stationListPos * height) + round(i * stationListSeparation * height);
+            drawString(d0.Stops[i].Name, 0.25, yAbs, TextWhite, MainFont);
             if (shouldScroll) {
-                stationListPos -= stationListInc;
-                if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
-                    stationListPos += (d0.Stops.length + 5) * stationListSeparation;
-                }
+                yAbs = round(stationListPos * height) + round((i + d0.Stops.length + 5) * stationListSeparation * height);
+                drawString(d0.Stops[i].Name, 0.25, yAbs, TextWhite, MainFont);
+            }
+        }
+        g.setClip(0, 0, width, height);
+
+        if (shouldScroll) {
+            stationListPos -= stationListInc;
+            if (stationListPos < (-1 * (d0.Stops.length + 5) * stationListSeparation)) {
+                stationListPos += (d0.Stops.length + 5) * stationListSeparation;
             }
         }
     }
