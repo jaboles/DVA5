@@ -12,10 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.ClosedByInterruptException;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -25,6 +22,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
+import jb.common.OSDetection;
+import jb.dvacommon.ui.LoadWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -123,17 +122,19 @@ public class Player extends Thread {
                     if (longConcatCallback != null) {
                         timer.schedule(longConcatTimerTask, LongConcatThreshold);
                     }
-                    MediaConcatenatorFfmpeg.concat(audioClipList, tempCacheFile.getPath(), null, tempDir);
 
-                    try {
-                        if (tempCacheFile.exists())
-                            FileUtilities.copyFile(tempCacheFile, cacheFile);
-                    } catch (ClosedByInterruptException ex) {
-                        if (tempCacheFile.exists())
-                            tempCacheFile.delete();
-                        if (cacheFile.exists())
-                            cacheFile.delete();
+                    // Handle RPi sound taking a short moment to play
+                    // https://forums.raspberrypi.com/viewtopic.php?t=292234
+                    List<URL> audioClipListCopy = audioClipList;
+                    if (OSDetection.isRaspberryPi()) {
+                        audioClipListCopy = new LinkedList<>(audioClipList);
+                        audioClipListCopy.add(0, Player.class.getResource("/silence500msec.wav"));
+                        audioClipListCopy.add(0, Player.class.getResource("/silence200msec.wav"));
                     }
+                    MediaConcatenatorFfmpeg.concat(audioClipListCopy, tempCacheFile.getPath(), null, tempDir);
+
+                    if (tempCacheFile.exists())
+                        tempCacheFile.renameTo(cacheFile);
                 }
 
                 if (longConcatCallback != null)

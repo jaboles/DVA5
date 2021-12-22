@@ -44,4 +44,7 @@ public class OSDetection {
         return OS.contains("sunos");
     }
 
+    public static boolean isRaspberryPi() {
+        return isUnix() && System.getProperty("os.arch").equals("aarch64");
+    }
 }

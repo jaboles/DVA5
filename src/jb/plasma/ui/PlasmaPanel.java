@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import jb.common.OSDetection;
 import jb.plasma.Drawer;
 
 import static java.awt.RenderingHints.*;
@@ -34,7 +36,7 @@ public class PlasmaPanel extends JPanel
     private int lastHeight = 0;
     private int lastWidth = 0;
     private int lastSecond = 0;
-    private static final boolean BufferInfrequentDraws = true;
+    private static final boolean BufferInfrequentDraws = OSDetection.isRaspberryPi();
     private Image buf = null;
     private Graphics bg = null;
 
