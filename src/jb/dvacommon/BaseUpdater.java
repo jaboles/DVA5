@@ -126,7 +126,7 @@ public abstract class BaseUpdater
         else if (OSDetection.isWindows())
             filename = "DVA5Setup.exe";
         else
-            filename = "DVA5.deb";
+            filename = "DVA5-" + System.getProperty("os.arch") + ".deb";
         return new URL(getBaseUrl(version), filename);
     }
 

@@ -26,7 +26,7 @@ import jb.common.VersionComparator;
 public class WAzureUpdater extends BaseUpdater
 {
     private String latestVersion = null;
-    
+
     public static final String VersionsListName = "versionslist";
     public static final String SoundJarsList = "soundjarslist";
     public static final String MetadataContainerName = "metadata";
@@ -34,12 +34,12 @@ public class WAzureUpdater extends BaseUpdater
     public static final String ExceptionsContainerName = "exceptions";
 
     public static final String PersistedLastModifiedTimestamp = "PersistedLastModifiedTimestamp";
-    
+
     public WAzureUpdater(URL baseUrl)
     {
         super(baseUrl);
     }
-    
+
     public String getLatestVersion()
     {
         if (latestVersion == null)
@@ -68,7 +68,7 @@ public class WAzureUpdater extends BaseUpdater
         CloudBlobClient serviceClient = account.createCloudBlobClient();
 
         String cmd = args[0];
-        
+
         CloudBlobContainer versionContainer = null;
         if (args.length > 1) {
             String version = args[1];
@@ -76,13 +76,13 @@ public class WAzureUpdater extends BaseUpdater
             String containerName = version.replace('.',  '-');
             versionContainer = serviceClient.getContainerReference(containerName);
         }
-        
+
         CloudBlobContainer metadataContainer = serviceClient.getContainerReference(MetadataContainerName);
         CloudBlobContainer soundjarsContainer = serviceClient.getContainerReference(SoundJarsContainerName);
 
         BlobContainerPermissions bcp = new BlobContainerPermissions();
         bcp.setPublicAccess(BlobContainerPublicAccessType.CONTAINER);
-        
+
         metadataContainer.createIfNotExists();
         metadataContainer.uploadPermissions(bcp);
 
@@ -90,13 +90,14 @@ public class WAzureUpdater extends BaseUpdater
         {
             versionContainer.createIfNotExists();
             versionContainer.uploadPermissions(bcp);
-            
+
             // Upload an image file.
             File[] artifacts = new File[] {
                     new File("/Users/jb/Software/DVA/build/Output/new.html"),
                     new File("/Users/jb/Software/DVA/build/Output/DVA5.dmg.bz2"),
                     new File("/Users/jb/Software/DVA/build/Output/DVA5Setup.exe"),
-                    new File("/Users/jb/Software/DVA/build/Output/DVA5.deb"),
+                    new File("/Users/jb/Software/DVA/build/Output/DVA5-x86_64.deb"),
+                    new File("/Users/jb/Software/DVA/build/Output/DVA5-aarch64.deb"),
                 };
             for (File f : artifacts)
             {
@@ -141,7 +142,7 @@ public class WAzureUpdater extends BaseUpdater
             metadataContainer.getBlockBlobReference(SoundJarsList).deleteIfExists();
         }
     }
-    
+
     private static void uploadArtifact(File f, CloudBlobContainer c) throws StorageException, IOException, URISyntaxException
     {
         CloudBlockBlob blob = c.getBlockBlobReference(f.getName());
@@ -153,7 +154,7 @@ public class WAzureUpdater extends BaseUpdater
         blob.uploadMetadata();
         System.out.println("done");
     }
-    
+
     private static void uploadArtifactList(File[] files, CloudBlobContainer metadataContainer, String listBlobName) throws StorageException, IOException, URISyntaxException
     {
         CloudBlockBlob listBlob = metadataContainer.getBlockBlobReference(listBlobName);
@@ -165,7 +166,7 @@ public class WAzureUpdater extends BaseUpdater
         listBlob.uploadText(StringUtilities.join("\n", artifactNames));
         System.out.println("done");
     }
-    
+
     private static void updateVersions(CloudBlobClient serviceClient, CloudBlobContainer metadataContainer) throws StorageException, URISyntaxException, IOException
     {
         CloudBlockBlob versionsList = metadataContainer.getBlockBlobReference(VersionsListName);
@@ -177,7 +178,7 @@ public class WAzureUpdater extends BaseUpdater
         versionsList.uploadText(StringUtilities.join("\n", versions));
         System.out.println("done");
     }
-    
+
     private static void deleteContainer(CloudBlobContainer versionContainer) throws StorageException
     {
         System.out.print("Deleting " + versionContainer.getName() + " ... ");

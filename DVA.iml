@@ -159,24 +159,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/jars/log4j-api-2.15.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/jars/log4j-core-2.15.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/jars/flatlaf-1.6.5.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -196,6 +178,24 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/jars/svg-salamander-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/log4j-api-2.17.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jars/log4j-core-2.17.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

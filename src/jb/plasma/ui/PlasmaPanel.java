@@ -34,7 +34,7 @@ public class PlasmaPanel extends JPanel
     private int lastHeight = 0;
     private int lastWidth = 0;
     private int lastSecond = 0;
-    private static final boolean BufferInfrequentDraws = false;
+    private static final boolean BufferInfrequentDraws = true;
     private Image buf = null;
     private Graphics bg = null;
 

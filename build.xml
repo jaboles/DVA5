@@ -153,9 +153,17 @@
         </exec>
         <!-- JRE: Linux x64 -->
         <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\linux" compression="gzip" overwrite="false">
+        <untar dest="${ToolsDir}\jre\linux-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jre_x64_linux_*.tar.gz"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </untar>
+        <!-- JRE: Linux aarch64 -->
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_aarch64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jre\linux-aarch64" compression="gzip" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="OpenJDK*-jre_aarch64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
@@ -461,8 +469,23 @@ Log=    console
         </exec>
     </target>
 
-    <!-- Linux Debian Setup -->
-    <target name="BuildLinuxDeb" if="buildLinux" depends="CreateJar,SetupCommon">
+    <!-- Linux Debian Setups -->
+    <target name="BuildLinuxDebs" if="buildLinux" depends="CreateJar,SetupCommon">
+        <antcall target="BuildLinuxDeb">
+            <param name="arch" value="x86_64"/>
+            <param name="arch.debian" value="amd64"/>
+        </antcall>
+        <antcall target="BuildLinuxDeb">
+            <param name="arch" value="aarch64"/>
+            <param name="arch.debian" value="arm64"/>
+        </antcall>
+    </target>
+    <target name="BuildLinuxDeb">
+        <!-- Params:
+             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+             ${arch.debian} - the corresponding Debian arch identifier (amd64, arm64)
+        -->
+        <echo>Building .DEB for arch: ${arch} (debian arch: ${arch.debian})</echo>
         <property name="DpkgRoot" value="${OutDir}/debian"/>
         <delete failonerror="false" dir="${DpkgRoot}"/>
         <copy todir="${DpkgRoot}/DEBIAN" preservelastmodified="true" file="linux/debian/control"/>
@@ -477,12 +500,12 @@ Log=    console
             <fileset dir="jars">
                 <include name="*.jar"/>
             </fileset>
-            <fileset dir="ffmpeg/linux">
-                <include name="*"/>
+            <fileset dir="ffmpeg/linux-${arch}">
+                <include name="**"/>
             </fileset>
         </copy>
         <copy todir="${DpkgRoot}/usr/share/dva/jre" preservelastmodified="true">
-            <fileset dir="${ToolsDir}/jre/linux">
+            <fileset dir="${ToolsDir}/jre/linux-${arch}">
                 <include name="**"/>
             </fileset>
         </copy>
@@ -496,23 +519,20 @@ Log=    console
         <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
             <arg value=".bak"/>
-            <arg value="s/Version: [[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*/Version: ${DVAVersion}/;s/Installed\-Size: [[:digit:]]*/Installed\-Size: ${debInstalledSize}/"/>
-            <arg value="linux/debian/control"/>
+            <arg value="s/^Version:.*/Version: ${DVAVersion}/;s/^Installed\-Size:.*/Installed\-Size: ${debInstalledSize}/;s/^Architecture:.*/Architecture: ${arch.debian}/"/>
+            <arg value="${DpkgRoot}/DEBIAN/control"/>
         </exec>
-        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows" failonerror="true">
-            <arg value="-command"/>
-            <arg value="((gc 'linux\debian\control' -raw) -replace 'Version: \d*\.\d*\.\d*', 'Version: ${DVAVersion}') -replace 'Installed-Size: \d*', 'Installed-Size: ${debInstalledSize}' | out-file 'linux\debian\control'"/>
-        </exec>
+        <delete file="${DpkgRoot}/DEBIAN/control.bak"/>
         <exec executable="fakeroot" dir="${OutDir}" failonerror="true">
             <arg value="dpkg-deb"/>
             <arg value="-Z${dpkgcompression}"/>
             <arg value="--build"/>
             <arg value="debian"/>
         </exec>
-        <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5.deb"/>
+        <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch}.deb"/>
     </target>
 
-    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacDmg,BuildWinSetup,SignWinSetup,BuildLinuxDeb">
+    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacDmg,BuildWinSetup,SignWinSetup,BuildLinuxDebs">
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>
