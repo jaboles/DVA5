@@ -9,8 +9,6 @@ package jb.dva;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,8 +17,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 public class SoundLibrary implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -30,7 +26,7 @@ public class SoundLibrary implements Serializable {
     private Map<String, String> canonicalNameMap;
     private List<String> sortedKeys;
     private HashSet<String> keys;
-    private Icon icon = null;
+    private URL icon = null;
     private int longestSoundName = 0;
     private final Properties properties;
     private final static Logger logger = LogManager.getLogger(SoundLibrary.class);
@@ -43,7 +39,7 @@ public class SoundLibrary implements Serializable {
         this.properties = new Properties();
     }
 
-    public SoundLibrary(String name, List<SoundLibrary> librariesToCombine, Icon icon)
+    public SoundLibrary(String name, List<SoundLibrary> librariesToCombine, URL icon)
     {
         this(name);
         this.icon = icon;
@@ -101,7 +97,7 @@ public class SoundLibrary implements Serializable {
         return getName();
     }
 
-    public Icon getIcon()
+    public URL getIcon()
     {
         return this.icon;
     }
@@ -198,7 +194,7 @@ public class SoundLibrary implements Serializable {
             {
                 // Found a graphics file, use it as the icon
                 logger.debug("icon found - {}", urlString);
-                this.icon = shrinkIcon(u);
+                this.icon = u;
             }
             else if (urlString.toLowerCase().endsWith("files.list"))
             {
@@ -246,18 +242,5 @@ public class SoundLibrary implements Serializable {
     public boolean supportsInflections()
     {
         return properties.getProperty("SupportsInflections", "").length() > 0;
-    }
-
-    // Shrink icon down to 32x32 size
-    public static Icon shrinkIcon(URL u)
-    {
-        int iconSize = 32;
-        ImageIcon resizedIcon = new ImageIcon((new ImageIcon(u).getImage()).getScaledInstance(32, -1, java.awt.Image.SCALE_SMOOTH));
-        BufferedImage bi = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
-        int xOffset = (iconSize - resizedIcon.getIconWidth()) / 2;
-        int yOffset = (iconSize - resizedIcon.getIconHeight()) / 2;
-        Graphics g = bi.createGraphics();
-        g.drawImage(resizedIcon.getImage(), xOffset, yOffset, resizedIcon.getIconWidth(), resizedIcon.getIconHeight(), null);
-        return new ImageIcon(bi);
     }
 }

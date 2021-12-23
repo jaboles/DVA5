@@ -6,12 +6,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.UIManager;
 
 import com.sun.jna.WString;
@@ -49,26 +48,18 @@ public class DVA {
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
 
     // 'Special' sounds which are only shown after enabling the option
-    public static final String[] SPECIAL_SOUNDS_Array = new String[] {
+    public static final Set<String> SPECIAL_SOUNDS = Arrays.stream(new String[] {
         "dTrog remix",
         "AnnouncementRail",
-    };
-    public static final Set<String> SPECIAL_SOUNDS = new HashSet<>(Arrays.asList(SPECIAL_SOUNDS_Array));
+    }).collect(Collectors.toSet());
 
     // Set fallback libraries for incomplete sound libraries
-    public static final String[][] FALLBACK_LIBRARIES_Array = new String[][] {
+    public static final Map<String, String> FALLBACK_LIBRARIES = Arrays.stream(new String[][] {
         { "dTrog remix", "Sydney-Male" },
         { "AnnouncementRail", "Sydney-Female" },
         { "Sydney-Male (replaced low-quality sounds)", "Sydney-Male" },
         { "Sydney-Female (replaced low-quality sounds)", "Sydney-Female" },
-    };
-    public static final Map<String, String> FALLBACK_LIBRARIES = new HashMap<>();
-
-    static {
-        for (String[] arr : FALLBACK_LIBRARIES_Array) {
-            FALLBACK_LIBRARIES.put(arr[0], arr[1]);
-        }
-    }
+    }).collect(Collectors.toMap(v -> v[0], v -> v[1]));
 
     public DVA() {
         logger.info("DVA: {}, Java: {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
@@ -113,7 +104,7 @@ public class DVA {
                     library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
                 }
             }
-            soundLibraryMap.put("All", new SoundLibrary("All", new LinkedList<>(soundLibraryMap.values()), SoundLibrary.shrinkIcon(DVA.class.getResource("/all.png"))));
+            soundLibraryMap.put("All", new SoundLibrary("All", new LinkedList<>(soundLibraryMap.values()), DVA.class.getResource("/all.png")));
             //if (p != null) p.join();
 
             if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");

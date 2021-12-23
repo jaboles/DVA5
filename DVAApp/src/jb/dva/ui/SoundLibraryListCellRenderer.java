@@ -2,9 +2,10 @@ package jb.dva.ui;
 import jb.dva.SoundLibrary;
 
 import java.awt.Component;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JLabel;
-import javax.swing.JList;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import javax.swing.*;
 
 // Custom renderer for the sound library list that adds an icon, and count of sounds in the library
 public class SoundLibraryListCellRenderer extends DefaultListCellRenderer {
@@ -25,7 +26,19 @@ public class SoundLibraryListCellRenderer extends DefaultListCellRenderer {
 
         JLabel label = (JLabel)super.getListCellRendererComponent(list, s, index, selected, expanded);
         SoundLibrary obj = (SoundLibrary)value;
-        label.setIcon(obj.getIcon());
+        label.setIcon(shrinkIcon(obj.getIcon()));
         return label;
     }
-}
+
+    // Shrink icon down to 32x32 size
+    private static Icon shrinkIcon(URL u)
+    {
+        int iconSize = 32;
+        ImageIcon resizedIcon = new ImageIcon((new ImageIcon(u).getImage()).getScaledInstance(32, -1, java.awt.Image.SCALE_SMOOTH));
+        BufferedImage bi = new BufferedImage(iconSize, iconSize, BufferedImage.TYPE_INT_ARGB);
+        int xOffset = (iconSize - resizedIcon.getIconWidth()) / 2;
+        int yOffset = (iconSize - resizedIcon.getIconHeight()) / 2;
+        Graphics g = bi.createGraphics();
+        g.drawImage(resizedIcon.getImage(), xOffset, yOffset, resizedIcon.getIconWidth(), resizedIcon.getIconHeight(), null);
+        return new ImageIcon(bi);
+    }}

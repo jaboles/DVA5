@@ -25,8 +25,8 @@ public class AnnouncementListCellRenderer extends DefaultListCellRenderer {
             boolean expanded) {
         JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, selected, expanded);
         Script obj = (Script)value;
-        Icon i = this.controller.getSoundLibrary(obj.getVoice()).getIcon();
-        label.setIcon(i);
+        //Icon i = this.controller.getSoundLibrary(obj.getVoice()).getIcon();
+        //label.setIcon(i);
         return label;
     }
 }

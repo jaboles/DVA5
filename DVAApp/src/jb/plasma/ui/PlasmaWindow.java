@@ -186,11 +186,4 @@ public class PlasmaWindow extends JFrame
             super.setVisible(true);
         }
     }
-
-    // Dispose on close
-    public void close()
-    {
-        dispose();
-    }
-
 }
