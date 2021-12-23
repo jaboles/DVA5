@@ -205,7 +205,10 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DVA.iml" filepath="$PROJECT_DIR$/DVA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Core/Core.iml" filepath="$PROJECT_DIR$/Core/Core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DVAApp/DVAApp.iml" filepath="$PROJECT_DIR$/DVAApp/DVAApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DVACommon/DVACommon.iml" filepath="$PROJECT_DIR$/DVACommon/DVACommon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PlasmaCommon/PlasmaCommon.iml" filepath="$PROJECT_DIR$/PlasmaCommon/PlasmaCommon.iml" />
     </modules>
   </component>
   <component name="ProjectResources">

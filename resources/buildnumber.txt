@@ -1,3 +1,0 @@
-#Build Number for ANT. Do not edit!
-#Wed Dec 22 11:53:30 PST 2021
-build.number=4993
