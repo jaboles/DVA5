@@ -2,7 +2,9 @@ package jb.dvacommon.ui;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.event.DocumentEvent;
@@ -11,15 +13,16 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import jb.common.ExceptionReporter;
 import jb.common.ui.TextComponentHighlighter;
-import jb.dvacommon.DVA;
+import jb.dva.DVAManager;
 import jb.dva.Script;
 import jb.dva.SoundReference;
 import jb.dva.ui.SoundListModel;
+import org.javatuples.Pair;
 
 public class DVATextManager
 {
     private static final int LOOKBACK_LIMIT = 6;
-    private DVA controller;
+    private DVAManager dvaManager;
     private Script currentScript;
     public JLabel indicatorIconLabel;
     private JList<SoundReference> suggestedSoundList;
@@ -27,39 +30,39 @@ public class DVATextManager
     public boolean documentModified = false;
     private DVATextVerifyListener listener;
     private JTextComponent component;
-    
+
     public DVATextManager()
     {
     }
 
-    public void initialize(JTextComponent component, final DVA controller, final Script currentScript)
+    public void initialize(JTextComponent component, final DVAManager dvaManager, final Script currentScript)
     {
         this.component = component;
-        this.controller = controller;
+        this.dvaManager = dvaManager;
         this.currentScript = currentScript;
-    
+
         component.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {textAreaChanged(e);}
             public void insertUpdate(DocumentEvent e) {textAreaChanged(e);}
             public void removeUpdate(DocumentEvent e) {textAreaChanged(e);}
         });
     }
-    
-    public void initialize(JTextComponent component, final DVA controller, final Script currentScript, JLabel indicatorIconLabel)
+
+    public void initialize(JTextComponent component, final DVAManager dvaManager, final Script currentScript, JLabel indicatorIconLabel)
     {
-        initialize(component, controller, currentScript);
+        initialize(component, dvaManager, currentScript);
         this.indicatorIconLabel = indicatorIconLabel;
     }
-    
-    public void initialize(JTextComponent component, final DVA controller, final Script currentScript, JLabel indicatorIconLabel, DVATextVerifyListener listener, final JList<SoundReference> suggestedSoundList, SoundListModel suggestedSoundListModel)
+
+    public void initialize(JTextComponent component, final DVAManager dvaManager, final Script currentScript, JLabel indicatorIconLabel, DVATextVerifyListener listener, final JList<SoundReference> suggestedSoundList, SoundListModel suggestedSoundListModel)
     {
-        initialize(component, controller, currentScript, indicatorIconLabel);
+        initialize(component, dvaManager, currentScript, indicatorIconLabel);
         this.listener = listener;
         this.suggestedSoundList = suggestedSoundList;
         this.suggestedSoundListModel = suggestedSoundListModel;
-        
+
         component.setTransferHandler(new DVATextTransferHandler(currentScript));
-        
+
         component.addKeyListener(new KeyAdapter()
         {
             public void keyPressed(KeyEvent e)
@@ -106,8 +109,9 @@ public class DVATextManager
     public void autoComplete()
     {
         if (suggestedSoundList == null || suggestedSoundListModel == null) return;
-        
-        int errorPos = controller.verify(currentScript);
+
+        Pair<Integer, List<URL>> verifyResult = dvaManager.verify(currentScript);
+        int errorPos = verifyResult.getValue0();
         int cursorPos = component.getCaretPosition();
         int startPos;
 
@@ -136,7 +140,7 @@ public class DVATextManager
             }
         }
     }
-    
+
     private int overlapLength(String s1, String s2)
     {
         int overlapLength = -1;
@@ -149,26 +153,26 @@ public class DVATextManager
 
         return overlapLength;
     }
-    
+
     public void textAreaChanged(DocumentEvent e)
     {
         currentScript.setScript(component.getText());
         int errorPos = verify();
-        
+
         if (suggestedSoundList != null && suggestedSoundListModel != null)
         {
             updateFilter(errorPos, e);
         }
     }
-    
+
     public int verify()
     {
-        int errorPos = controller.verify(currentScript);
-        if (errorPos >= 0)
+        Pair<Integer, List<URL>> verifyResult = dvaManager.verify(currentScript);
+        if (verifyResult.getValue0() >= 0)
         {
             if (indicatorIconLabel != null)
                 indicatorIconLabel.setIcon(Resources.redIcon);
-            TextComponentHighlighter.addHighlight(component, Resources.errorHighlightPainter, errorPos);
+            TextComponentHighlighter.addHighlight(component, Resources.errorHighlightPainter, verifyResult.getValue0());
             if (listener != null)
                 listener.OnFailed();
         }
@@ -178,14 +182,14 @@ public class DVATextManager
                 indicatorIconLabel.setIcon(Resources.greenIcon);
             TextComponentHighlighter.removeHighlight(component, Resources.errorHighlightPainter);
             if (listener != null)
-                listener.OnVerified();
+                listener.OnVerified(verifyResult.getValue1());
         }
-        return errorPos;
+        return verifyResult.getValue0();
     }
-    
+
     public void canonicalise()
     {
-        String cs = controller.getCanonicalScript(currentScript);
+        String cs = dvaManager.getCanonicalScript(currentScript);
         if (cs != null) {
             int caretPos = component.getCaretPosition();
             component.setText(cs);
@@ -198,7 +202,7 @@ public class DVATextManager
     {
         String text = component.getText();
         ArrayList<Integer> translatedDataOffsets = currentScript.getTranslatedDataOffsets();
-                
+
         int changePosition;
         if (e == null) {
             changePosition = component.getCaretPosition();
@@ -241,5 +245,5 @@ public class DVATextManager
         }
     }
 
-    
+
 }

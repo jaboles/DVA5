@@ -3,14 +3,6 @@ import java.awt.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.swing.UIManager;
 
 import com.sun.jna.WString;
@@ -19,18 +11,19 @@ import jb.common.*;
 import jb.common.jna.windows.GDI32Ex;
 import jb.common.jna.windows.Shell32Ex;
 import jb.common.jna.windows.User32Ex;
-import jb.common.sound.LevelMeterPanel;
 import jb.common.sound.Player;
-import jb.common.sound.MediaConcatenatorFfmpeg;
+import jb.dva.DVAManager;
+import jb.dva.SoundLibraryManager;
 import jb.dvacommon.ui.ProgressWindow;
 import jb.dva.Script;
-import jb.dva.SoundLibrary;
 import jb.dvacommon.ui.DVAShell;
 import jb.dvacommon.ui.LicenceWindow;
 import jb.dvacommon.ui.LoadWindow;
 import jb.plasma.gtfs.GtfsGenerator;
 import jb.plasma.gtfs.GtfsTimetable;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
+import jb.plasma.ui.PlasmaUI;
+import jb.plasma.ui.PlasmaWindow;
 import jb.plasma.ui.ScreenSaverSettingsDialog;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -38,235 +31,161 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class DVA {
-    DVAShell mainWindow;
-    Map<String, SoundLibrary> soundLibraryMap = new LinkedHashMap<>();
-    Player player;
-    ArrayList<URL> verifiedUrlList;
-    final static Logger logger = LogManager.getLogger(DVA.class);
-
+    private static final Logger logger = LogManager.getLogger(DVA.class);
     public static final String VersionString = "5.5.2";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
 
-    // 'Special' sounds which are only shown after enabling the option
-    public static final Set<String> SPECIAL_SOUNDS = Arrays.stream(new String[] {
-        "dTrog remix",
-        "AnnouncementRail",
-    }).collect(Collectors.toSet());
+    private DVAShell mainWindow;
+    private final SoundLibraryManager soundLibraryManager;
+    private final DVAManager dvaManager;
 
-    // Set fallback libraries for incomplete sound libraries
-    public static final Map<String, String> FALLBACK_LIBRARIES = Arrays.stream(new String[][] {
-        { "dTrog remix", "Sydney-Male" },
-        { "AnnouncementRail", "Sydney-Female" },
-        { "Sydney-Male (replaced low-quality sounds)", "Sydney-Male" },
-        { "Sydney-Female (replaced low-quality sounds)", "Sydney-Female" },
-    }).collect(Collectors.toMap(v -> v[0], v -> v[1]));
-
-    public DVA() {
+    public DVA() throws Exception {
         logger.info("DVA: {}, Java: {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
         logger.info("OS: {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
         logger.info("Temp is: {}", getTemp());
         logger.info("FFmpeg.log: {}ffmpeg.log", new File(getTemp(), "FFmpeg.log").getAbsolutePath());
         Player.emptyCache(getTemp());
+
+        soundLibraryManager = new SoundLibraryManager(getTemp(), VersionString, Settings.specialSoundsEnabled());
+        dvaManager = new DVAManager(getTemp(), soundLibraryManager);
     }
 
-    public DVA(boolean showMainWindow, boolean showLoadingProgress) {
-        this();
-        LoadWindow lw = null;
+    public void runApp(boolean showMainWindow, boolean showLoadingProgress) throws Exception {
+        if (Settings.soundJarsNotDownloaded())
+        {
+            fetchSoundJars();
+        }
+        showLicenceIfNotRead();
+
+        final LoadWindow lw = new LoadWindow();
         if (showLoadingProgress) {
-            lw = new LoadWindow();
             lw.show(false, showMainWindow, true);
         }
 
-        try {
-            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(getTemp(), "soundlibrarymap" + VersionString);
-            final ObjectCache<SoundLibrary> c = new ObjectCache<>(getTemp(), "soundlibrary" + VersionString);
-            populateSoundLibraries();
+        logger.info("Loading sound libraries");
+        soundLibraryManager.loadAllSoundLibraries(showLoadingProgress
+                ? name -> lw.setText("Loading sound libraries... " + name)
+                : null);
 
-            // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
-            soundLibraryMap = mc.load(DVA.class, Integer.toString(soundLibraryMap.size()), () -> {
-                c.emptyCache();
-                return soundLibraryMap;
-            });
+        logger.info("Fetching GTFS timetable");
+        if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
+        GtfsGenerator.initialize(new File(getTemp(), "GtfsTimetable").toPath());
+        GtfsGenerator.getInstance().download();
 
-            for (final Map.Entry<String, SoundLibrary> entry : soundLibraryMap.entrySet()) {
-                if (showLoadingProgress) lw.setText("Loading sound libraries... " + entry.getValue().getName());
-                SoundLibrary library = c.load(DVA.class, entry.getKey(), () -> {
-                    SoundLibrary l = entry.getValue();
-                    try {
-                        l.populate();
-                    } catch (Exception ignored) {}
-                    return l;
-                });
-                soundLibraryMap.put(entry.getKey(), library);
+        logger.info("Reading timetable data");
+        if (showLoadingProgress) lw.setText("Reading timetable data... ");
+        GtfsTimetable tt = GtfsGenerator.getInstance().read();
+
+        int steps = GtfsTimetable.getAnalysisStepCount();
+        if (showLoadingProgress) lw.setText("Reading timetable data... indexing stops");
+        for (int i = 0; i < steps; i++)  {
+            String stepDescription = tt.analyse(i);
+            if (showLoadingProgress) lw.setText("Analysing timetable... " + stepDescription);
+        }
+        GtfsTimetableTranslator.initialize(tt, getTemp());
+
+        if (showMainWindow) {
+            logger.info("Loading main window");
+            if (showLoadingProgress) {
+                lw.setText("Loading...");
             }
-            for (SoundLibrary library : soundLibraryMap.values()) {
-                if (FALLBACK_LIBRARIES.containsKey(library.getName())) {
-                    library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
-                }
-            }
-            soundLibraryMap.put("All", new SoundLibrary("All", new LinkedList<>(soundLibraryMap.values()), DVA.class.getResource("/all.png")));
-            //if (p != null) p.join();
-
-            if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
-            GtfsGenerator.initialize(new File(getTemp(), "GtfsTimetable").toPath());
-            GtfsGenerator.getInstance().download();
-
-            if (showLoadingProgress) lw.setText("Reading timetable data... ");
-            GtfsTimetable tt = GtfsGenerator.getInstance().read();
-
-            int steps = GtfsTimetable.getAnalysisStepCount();
-            if (showLoadingProgress) lw.setText("Reading timetable data... indexing stops");
-            for (int i = 0; i < steps; i++)  {
-                if (showLoadingProgress) lw.setText("Analysing timetable... " + tt.analyse(i));
-            }
-            GtfsTimetableTranslator.initialize(tt, getTemp());
-
-            if (showMainWindow) {
-                if (lw != null) {
-                    lw.setText("Loading...");
-                }
-                mainWindow = new DVAShell(DVA.this);
-            }
-
-            if (showLoadingProgress) lw.setText("");
-        } catch (Exception e) {
-            ExceptionReporter.reportException(e);
+            mainWindow = new DVAShell(dvaManager, soundLibraryManager.getSoundLibraries(), getTemp());
         }
 
-        if (showLoadingProgress) lw.dispose();
+        if (showLoadingProgress) {
+            lw.setText("");
+            lw.dispose();
+        }
 
         if (showMainWindow) {
             mainWindow.setVisible(true);
         }
     }
 
-    public DVA(String soundLibrary) {
-        this();
+    private void screensaver() throws Exception {
+        runApp(false, false);
+        new PlasmaUI(PlasmaUI.Mode.SCREENSAVER, dvaManager, soundLibraryManager.getSoundLibraries(), getTemp())
+                .showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER, null);
+    }
 
+    private void screensaverPreview(long windowHandle) {
+        WinDef.HWND rvhwnd;
+        int rv;
+        boolean rvb;
+
+        // HWnd of the screensaver preview mini-window rooted in the screensaver settings dialog box
+        WinDef.HWND phwnd = new WinDef.HWND(Pointer.createConstant(windowHandle));
+        logger.info("Preview parent window handle: {}", phwnd);
+
+        // Get dimensions of the Windows window to install the plasma window into
+        WinDef.RECT parentRectNative = new WinDef.RECT();
+        rvb = User32Ex.INSTANCE.GetClientRect(phwnd, parentRectNative);
+        logger.info("GetClientRect returned {}", rvb);
+        Rectangle parentRect = parentRectNative.toRectangle();
+
+        // Scale dimensions by the DPI setting
+        // HAX!!!1 http://stackoverflow.com/questions/7003316/windows-display-setting-at-150-still-shows-96-dpi
+        WinDef.HDC dc = User32.INSTANCE.GetDC(new WinDef.HWND(Pointer.NULL));
+        int virtualWidth = GDI32.INSTANCE.GetDeviceCaps(dc, GDI32Ex.HORZRES);
+        int physicalWidth = GDI32.INSTANCE.GetDeviceCaps(dc, GDI32Ex.DESKTOPHORZRES);
+        User32.INSTANCE.ReleaseDC(new WinDef.HWND(Pointer.NULL), dc);
+        double scaleFactor = (double)physicalWidth / (double)virtualWidth;
+        parentRect.setSize((int)(parentRect.getWidth() * scaleFactor), (int)(parentRect.getHeight() * scaleFactor));
+
+        // Create the plasma window
+        Window w = new PlasmaUI(PlasmaUI.Mode.SCREENSAVER_PREVIEW, null, null, getTemp())
+                .showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER_PREVIEW_MINI_WINDOW, parentRect.getSize()).get(0);
+        WinDef.HWND hwnd = new WinDef.HWND(Native.getWindowPointer(w));
+        logger.info("Window handle: {}", hwnd);
+
+        // Shove the plasma window into the screensaver settings dialog box
+        rvhwnd = User32.INSTANCE.SetParent(hwnd, phwnd);
+        logger.info("SetParent returned {}", rvhwnd);
+        rv = User32.INSTANCE.SetWindowLong(hwnd, User32.GWL_STYLE, User32.INSTANCE.GetWindowLong(hwnd, User32.GWL_STYLE) | User32.WS_CHILD);
+        logger.info("SetWindowLong returned {}", rv);
+        rvb = User32.INSTANCE.SetWindowPos(hwnd, phwnd, 0, 0, (int)parentRect.getWidth(), (int)parentRect.getHeight(), User32.SWP_NOZORDER | User32Ex.SWP_NOACTIVATE);
+        logger.info("SetWindowPos returned {}", rvb);
+    }
+
+    private void screensaverSettings() throws Exception {
+        runApp(false, true);
+        new ScreenSaverSettingsDialog(dvaManager, soundLibraryManager.getSoundLibraries(), getTemp()).setVisible(true);
+    }
+
+    private void play(Script announcement) {
         try {
-            final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(getTemp(), "soundlibrarymap" + VersionString);
-            final ObjectCache<SoundLibrary> c = new ObjectCache<>(getTemp(), "soundlibrary" + VersionString);
-            populateSoundLibraries();
-
-            // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
-            soundLibraryMap = mc.load(DVA.class, Integer.toString(soundLibraryMap.size()), () -> {
-                c.emptyCache();
-                return soundLibraryMap;
-            });
-
-            logger.info("Loading sound library '{}'", soundLibrary);
-            String fallbackLibraryName = FALLBACK_LIBRARIES.get(soundLibrary);
-
-            SoundLibrary singleLibrary = c.load(DVA.class, soundLibrary, () -> {
-                SoundLibrary l = soundLibraryMap.get(soundLibrary);
+            soundLibraryManager.loadSoundLibraryWithFallback(announcement.getVoice());
+            dvaManager.verify(announcement);
+            logger.info("Playing: '{}'", dvaManager.getCanonicalScript(announcement));
+            Player p = dvaManager.play(null, announcement, null, null);
+            p.start();
+            new Thread(() -> {
                 try {
-                    l.populate();
-                } catch (Exception ignored) {}
-                return l;
-            });
-            soundLibraryMap.put(soundLibrary, singleLibrary);
-            SoundLibrary fallbackLibrary = c.load(DVA.class, fallbackLibraryName, () -> {
-                SoundLibrary l = soundLibraryMap.get(fallbackLibraryName);
-                try {
-                    l.populate();
-                } catch (Exception ignored) {}
-                return l;
-            });
-            soundLibraryMap.put(fallbackLibraryName, fallbackLibrary);
-
-            for (SoundLibrary library : soundLibraryMap.values()) {
-                if (FALLBACK_LIBRARIES.containsKey(library.getName())) {
-                    library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
+                    p.join();
+                    logger.info("Success.");
+                    System.exit(0);
+                } catch (InterruptedException ignored) {
                 }
-            }
+            }).start();
         } catch (Exception e) {
             ExceptionReporter.reportException(e);
         }
     }
 
-    public Collection<SoundLibrary> getSoundLibraryList() {
-        return soundLibraryMap.values();
-    }
-
-    public Collection<String> getSoundLibraryNames() {
-        return soundLibraryMap.keySet();
-    }
-
-    public void quit() {
-        System.exit(0);
-    }
-
-    public Player play(LevelMeterPanel levelMeterPanel, Script s, Runnable longConcatCallback, Runnable afterConcatCallback) {
+    private void export(Script announcement, String filename) {
         try {
-            ArrayList<URL> al = s.getTranslatedUrlList(getSoundLibrary(s.getVoice()));
-            player = new Player(al, longConcatCallback, afterConcatCallback, levelMeterPanel, getTemp());
-
-            return player;
-        } catch (Exception e) {
-            ExceptionReporter.reportException(e);
-        }
-        return null;
-    }
-
-    public Player play(LevelMeterPanel levelMeterPanel, Script s) {
-        return play(levelMeterPanel, s, null, null);
-    }
-
-    // Check that the script correctly and fully translates into a playable announcement, given the available
-    // sound files.
-    public int verify(Script script) {
-        try {
-            verifiedUrlList = script.getTranslatedUrlList(getSoundLibrary(script.getVoice()));
-        } catch (Exception ex) {
+            logger.info("Loading sound library '{}'", announcement.getVoice());
+            soundLibraryManager.loadSoundLibraryWithFallback(announcement.getVoice());
+            dvaManager.verify(announcement);
+            logger.info("Exporting to '{}': '{}'", filename, dvaManager.getCanonicalScript(announcement));
             try {
-                return Integer.parseInt(ex.toString().substring(ex.toString().lastIndexOf(' ')+1));
-            } catch (Exception ex2) {
-                ExceptionReporter.reportException(ex);
-                ExceptionReporter.reportException(ex2);
+                dvaManager.export(announcement, filename);
+            } catch (Exception e) {
+                ExceptionReporter.reportException(e);
             }
-        }
-        return -1;
-    }
-
-    public ArrayList<URL> getVerifiedUrlList() {
-        return verifiedUrlList;
-    }
-
-    public void export(Script script, String targetFile) throws Exception
-    {
-        // Convert to list of URLs to the wads
-        ArrayList<URL> al = script.getTranslatedUrlList(getSoundLibrary(script.getVoice()));
-        File parent = (new File(targetFile)).getParentFile();
-        if (parent != null) {
-            parent.mkdirs();
-        }
-        MediaConcatenatorFfmpeg.concat(al, targetFile, getTemp());
-    }
-
-    public String getCanonicalScript(Script script) {
-        try {
-            return script.getCanonicalScript(getSoundLibrary(script.getVoice()));
-        } catch (Exception ex) {
-            ExceptionReporter.reportException(ex);
-        }
-        return null;
-    }
-
-    public void stop() {
-        player.stopPlaying();
-    }
-
-    public SoundLibrary getSoundLibrary(String key) {
-        return soundLibraryMap.get(key);
-    }
-
-    private SoundLibrary getOrCreateSoundLibrary(String name) {
-        if (soundLibraryMap.containsKey(name)) {
-            return soundLibraryMap.get(name);
-        } else {
-            SoundLibrary sl = new SoundLibrary(name);
-            soundLibraryMap.put(name, sl);
-            return sl;
+            logger.info("Success.");
+        } catch (Exception e) {
+            ExceptionReporter.reportException(e);
         }
     }
 
@@ -323,135 +242,48 @@ public class DVA {
 
         logger.info("argc: {}", args.length);
 
-        // Run the program in different ways depending on command line switches
-        if (args.length > 0 && args[0].equalsIgnoreCase("/x"))
-        {
-            // Sound download during Windows installer -- exit
-            fetchSoundJars();
-        }
-        else if (args.length >= 3 && args[0].equalsIgnoreCase("/play"))
-        {
-            String soundLibrary = args[1];
-            String announcementText = args[2];
-            Script announcement = new Script(soundLibrary, announcementText);
-            DVA dva = new DVA(soundLibrary);
-            dva.verify(announcement);
-            logger.info("Playing: '{}'", announcementText);
-            Player p = dva.play(null, announcement, null, null);
-            p.start();
-            new Thread(() -> {
-                try {
-                    p.join();
-                    logger.info("Success.");
-                    System.exit(0);
-                } catch (InterruptedException ignored) {
-                }
-            }).start();
-        }
-        else if (args.length >= 4 && args[0].equalsIgnoreCase("/export"))
-        {
-            String filename = args[1];
-            String soundLibrary = args[2];
-            String announcementText = args[3];
-            Script announcement = new Script(soundLibrary, announcementText);
-            DVA dva = new DVA(soundLibrary);
-            dva.verify(announcement);
-            logger.info("Exporting to '{}': '{}'", filename, announcementText);
-            try {
-                dva.export(announcement, filename);
-            } catch (Exception e) {
-                ExceptionReporter.reportException(e);
+        try {
+            // Run the program in different ways depending on command line switches
+            if (args.length > 0 && args[0].equalsIgnoreCase("/x"))
+            {
+                // Sound download during Windows installer -- exit
+                fetchSoundJars();
             }
-            logger.info("Success.");
-        }
-        else
-        {
-            if (args.length > 0 && args[0].equalsIgnoreCase("/s")) {
+            else if (args.length >= 3 && args[0].equalsIgnoreCase("/play"))
+            {
+                String soundLibrary = args[1];
+                String announcementText = args[2];
+                new DVA().play(new Script(soundLibrary, announcementText));
+            }
+            else if (args.length >= 4 && args[0].equalsIgnoreCase("/export"))
+            {
+                String filename = args[1];
+                String soundLibrary = args[2];
+                String announcementText = args[3];
+                new DVA().export(new Script(soundLibrary, announcementText), filename);
+            }
+            else if (args.length > 0 && args[0].equalsIgnoreCase("/s"))
+            {
                 // Windows screen saver mode
-                jb.plasma.ui.PlasmaUI.screenSaver(false, null);
-            } else if (args.length > 0 && (args[0].equalsIgnoreCase("/c") || args[0].startsWith("/c:") || args[0].startsWith("/C:"))) {
+                new DVA().screensaver();
+            }
+            else if (args.length > 0 && (args[0].equalsIgnoreCase("/c") || args[0].startsWith("/c:") || args[0].startsWith("/C:")))
+            {
                 // Run the plasma UI in screen saver setting mode, outside of the regular
                 // application.
-                if (Settings.soundJarsNotDownloaded())
-                {
-                    fetchSoundJars();
-                }
-                showLicenceIfNotRead();
-                new ScreenSaverSettingsDialog().setVisible(true);
-            } else if (OSDetection.isWindows() && args.length > 0 && args[0].toLowerCase().startsWith("/p") && args.length >= 2) {
-                //JOptionPane.showMessageDialog(null, args[1]);
+                new DVA().screensaverSettings();
+            }
+            else if (OSDetection.isWindows() && args.length > 0 && args[0].toLowerCase().startsWith("/p") && args.length >= 2)
+            {
                 // Windows screen saver preview mode
-                WinDef.HWND rvhwnd;
-                int rv;
-                boolean rvb;
-
-                // HWnd of the screensaver preview mini-window rooted in the screensaver settings dialog box
-                WinDef.HWND phwnd = new WinDef.HWND(Pointer.createConstant(Long.parseLong(args[1])));
-                logger.info("Preview parent window handle: {}", phwnd);
-
-                // Get dimensions of the Windows window to install the plasma window into
-                WinDef.RECT parentRectNative = new WinDef.RECT();
-                rvb = User32Ex.INSTANCE.GetClientRect(phwnd, parentRectNative);
-                logger.info("GetClientRect returned {}", rvb);
-                Rectangle parentRect = parentRectNative.toRectangle();
-
-                // Scale dimensions by the DPI setting
-                // HAX!!!1 http://stackoverflow.com/questions/7003316/windows-display-setting-at-150-still-shows-96-dpi
-                WinDef.HDC dc = User32.INSTANCE.GetDC(new WinDef.HWND(Pointer.NULL));
-                int virtualWidth = GDI32.INSTANCE.GetDeviceCaps(dc, GDI32Ex.HORZRES);
-                int physicalWidth = GDI32.INSTANCE.GetDeviceCaps(dc, GDI32Ex.DESKTOPHORZRES);
-                User32.INSTANCE.ReleaseDC(new WinDef.HWND(Pointer.NULL), dc);
-                double scaleFactor = (double)physicalWidth / (double)virtualWidth;
-                parentRect.setSize((int)(parentRect.getWidth() * scaleFactor), (int)(parentRect.getHeight() * scaleFactor));
-
-                // Create the plasma window
-                Window w = jb.plasma.ui.PlasmaUI.screenSaver(true, parentRect.getSize()).get(0);
-                WinDef.HWND hwnd = new WinDef.HWND(Native.getWindowPointer(w));
-                logger.info("Window handle: {}", hwnd);
-
-                // Shove the plasma window into the screensaver settings dialog box
-                rvhwnd = User32.INSTANCE.SetParent(hwnd, phwnd);
-                logger.info("SetParent returned {}", rvhwnd);
-                rv = User32.INSTANCE.SetWindowLong(hwnd, User32.GWL_STYLE, User32.INSTANCE.GetWindowLong(hwnd, User32.GWL_STYLE) | User32.WS_CHILD);
-                logger.info("SetWindowLong returned {}", rv);
-                rvb = User32.INSTANCE.SetWindowPos(hwnd, phwnd, 0, 0, (int)parentRect.getWidth(), (int)parentRect.getHeight(), User32.SWP_NOZORDER | User32Ex.SWP_NOACTIVATE);
-                logger.info("SetWindowPos returned {}", rvb);
+                long windowHandle = Long.parseLong(args[1]);
+                new DVA().screensaverPreview(windowHandle);
             } else {
-                showLicenceIfNotRead();
-
-                if (Settings.soundJarsNotDownloaded())
-                {
-                    fetchSoundJars();
-                }
-
                 // Regular application
-                new DVA(true, true);
+                new DVA().runApp(true, true);
             }
-        }
-    }
-
-    // Find folders and jars next to the application and load them as sound libraries.
-    public void populateSoundLibraries() {
-        File f = getSoundJarsFolder();
-        if (f.exists() && f.isDirectory()) {
-            File[] soundDirs = f.listFiles();
-            if (soundDirs != null) {
-                for (File soundDir : soundDirs) {
-                    String path = soundDir.getPath();
-                    String name;
-                    if (soundDir.isDirectory() && !path.toLowerCase().endsWith(".app")) {
-                        name = path.substring(path.lastIndexOf(File.separatorChar) + 1);
-                        if (!SPECIAL_SOUNDS.contains(name) || Settings.specialSoundsEnabled()) {
-                            getOrCreateSoundLibrary(name).addFile(soundDir);
-                        }
-                    } else if (path.toLowerCase().endsWith(".jar")) {
-                        name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.length() - 4);
-                        if (!SPECIAL_SOUNDS.contains(name) || Settings.specialSoundsEnabled()) {
-                            getOrCreateSoundLibrary(name).addFile(soundDir);
-                        }
-                    }
-                }
-            }
+        } catch (Exception e) {
+            ExceptionReporter.reportException(e);
         }
     }
 
@@ -490,21 +322,5 @@ public class DVA {
     public static File getTemp()
     {
         return new File(System.getProperty("java.io.tmpdir"), "DVA");
-    }
-
-    public static File getSoundJarsFolder()
-    {
-        if (OSDetection.isWindows())
-        {
-            return new File(FileUtilities.getUserApplicationDataFolder(), "DVA");
-        }
-        else if (OSDetection.isMac())
-        {
-            return new File("/Users/Shared/Library/Application Support/DVA");
-        }
-        else
-        {
-            return new File(FileUtilities.getUserApplicationDataFolder(), ".dva");
-        }
     }
 }

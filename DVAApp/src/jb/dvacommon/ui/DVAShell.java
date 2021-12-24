@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Map;
 import java.util.Optional;
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
@@ -16,6 +17,8 @@ import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.ui.SimpleEditorUndoRedoKit;
 import jb.common.ui.WindowUtils;
+import jb.dva.DVAManager;
+import jb.dva.SoundLibrary;
 import jb.dva.ui.DVAUI;
 import jb.dvacommon.BaseUpdater;
 import jb.dvacommon.DVA;
@@ -31,7 +34,6 @@ public class DVAShell
 {
     private final SwingEngine renderer;
     private JFrame window;
-    private final DVA controller;
     private final static Font DefaultFont = new Font("Dialog", Font.PLAIN, 13);
     private PlasmaUI plasmaUI;
     @SuppressWarnings("UnusedDeclaration") private JMenu themeMenu;
@@ -63,13 +65,12 @@ public class DVAShell
     public Action indicatorEditViasAction;
     public Action indicatorEditAllStationsTosAction;
 
-    public DVAShell(final DVA controller) {
-        this.controller = controller;
+    public DVAShell(final DVAManager dvaManager, Map<String, SoundLibrary> availableSoundLibraries, File temp) {
         UIManager.getLookAndFeelDefaults().put("defaultFont", DefaultFont);
         renderer = new SwingEngine(this);
 
         try {
-            DVAUI dvaUI = new DVAUI(controller);
+            DVAUI dvaUI = new DVAUI(dvaManager, availableSoundLibraries, temp);
             voiceLibraryToggleAction = dvaUI.voiceLibraryToggleAction;
             soundInfoAction = dvaUI.soundInfoAction;
             playCurrentAction = dvaUI.playCurrentAction;
@@ -86,7 +87,7 @@ public class DVAShell
             undoAction = SimpleEditorUndoRedoKit.UndoAction;
             redoAction = SimpleEditorUndoRedoKit.RedoAction;
 
-            plasmaUI = new PlasmaUI(PlasmaUI.Mode.REGULAR, controller);
+            plasmaUI = new PlasmaUI(PlasmaUI.Mode.REGULAR, dvaManager, availableSoundLibraries, temp);
             indicatorWindowAction = plasmaUI.windowAction;
             indicatorFullScreenAction = plasmaUI.fullScreenAction;
             indicatorPlayAnnouncementAction = plasmaUI.announceAction;
@@ -206,7 +207,7 @@ public class DVAShell
             boolean specialSoundsEnabled = Settings.specialSoundsEnabled();
             Settings.setSpecialSoundsEnabled(!specialSoundsEnabled);
             JOptionPane.showMessageDialog(window, "Changing this setting requires re-launching DVA. DVA will now close.", "Restart Required", JOptionPane.WARNING_MESSAGE);
-            controller.quit();
+            System.exit(0);
         }
     };
 
@@ -290,7 +291,7 @@ public class DVAShell
     @SuppressWarnings("unused")
     public Action quitAction = new AbstractAction("Quit", null) {
         public void actionPerformed(ActionEvent e) {
-            controller.quit();
+            System.exit(0);
         }
     };
 

@@ -18,8 +18,8 @@ import jb.common.ExceptionReporter;
 import jb.common.ui.ColorComboBox;
 import jb.common.ui.Filler;
 import jb.common.ui.SimpleEditorUndoRedoKit;
+import jb.dva.DVAManager;
 import jb.dva.Script;
-import jb.dvacommon.DVA;
 import jb.dvacommon.ui.DVATextArea;
 import jb.dvacommon.ui.DVATextField;
 import jb.dvacommon.ui.FileTextField;
@@ -52,7 +52,7 @@ public class DeparturePanel
     @SuppressWarnings("UnusedDeclaration") private JLabel customAnnouncementIndicatorIconLabel;
     private Container panel;
 
-    public DeparturePanel(String title, DVA dva, String soundLibraryName)
+    public DeparturePanel(String title, DVAManager dvaManager, String soundLibraryName)
     {
         SwingEngine renderer = new SwingEngine(this);
         renderer.getTaglib().registerTag("dvatextarea", DVATextArea.class);
@@ -61,12 +61,12 @@ public class DeparturePanel
         renderer.getTaglib().registerTag("filler", Filler.class);
         try {
             panel = renderer.render(DeparturePanel.class.getResource("/jb/plasma/ui/resources/departurepanel.xml"));
-            if (dva != null && soundLibraryName != null)
+            if (dvaManager != null && soundLibraryName != null)
             {
                 this.script = new Script(soundLibraryName, "");
-                stationsValue.initialize(dva, script, indicatorIconLabel);
-                destinationValue.initialize(dva, script, destinationIndicatorIconLabel);
-                destination2Value.initialize(dva, script, destination2IndicatorIconLabel);
+                stationsValue.initialize(dvaManager, script, indicatorIconLabel);
+                destinationValue.initialize(dvaManager, script, destinationIndicatorIconLabel);
+                destination2Value.initialize(dvaManager, script, destination2IndicatorIconLabel);
             }
             customAnnouncementText.initialize(customAnnouncementIndicatorIconLabel);
 

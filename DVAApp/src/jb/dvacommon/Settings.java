@@ -80,7 +80,7 @@ public class Settings {
                     null)
         };
     }
-    
+
     public static void deleteAll() {
         try {
             prefs.clear();
@@ -142,12 +142,12 @@ public class Settings {
 
         return savedAnnouncements;
     }
-    
+
     public static Script loadAnnouncement(String key) {
         String annName = prefs.get(key + "Name", "");
         String annVoice = prefs.get(key + "Voice", "");
         String annScript = prefs.get(key + "Script", "");
-        return new Script(annName, annVoice, annScript); 
+        return new Script(annName, annVoice, annScript);
     }
 
     public static void saveAnnouncements(List<Script> anns) {
@@ -161,7 +161,7 @@ public class Settings {
             prefs.flush();
         } catch (BackingStoreException e) { e.printStackTrace(System.err); }
     }
-    
+
     public static void saveAnnouncement(String key, Script s) {
         prefs.put(key + "Name", s.getName());
         prefs.put(key + "Voice", s.getVoice());
@@ -244,7 +244,7 @@ public class Settings {
                 prefs.getBoolean(key + "FilterRoute", false),
                 prefs.get(key + "GtfsRoute", ""));
     }
-    
+
     public static DepartureData getIndicatorDepartureData(String key) {
         return new ManualDepartureData(
                 prefs.get(key + "Destination", ""),
@@ -293,7 +293,7 @@ public class Settings {
             prefs.flush();
         } catch (BackingStoreException e) { e.printStackTrace(System.err); }
     }
-    
+
     public static void setIndicatorDepartureData(String k, DepartureData d) {
         prefs.put(k + "Destination", d.Destination);
         prefs.put(k + "Destination2", d.Destination2);

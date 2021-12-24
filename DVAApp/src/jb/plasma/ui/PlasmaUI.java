@@ -19,8 +19,9 @@ import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.sound.Player;
 import jb.common.ui.*;
+import jb.dva.DVAManager;
 import jb.dva.Script;
-import jb.dvacommon.DVA;
+import jb.dva.SoundLibrary;
 import jb.dvacommon.Settings;
 import jb.dvacommon.ui.ProgressWindow;
 import jb.dvacommon.ui.ThemedFlatSVGIcon;
@@ -53,12 +54,13 @@ public class PlasmaUI
     private static final String[] departurePanelTitles = new String[] { "Next Train:", "2nd Train:", "3rd Train:" };
     final static Logger logger = LogManager.getLogger(PlasmaUI.class);
 
-    private final DVA dva;
+    private final DVAManager dva;
     private final String settingsKey;
     private PlasmaSession session;
     private Player player;
     private List<DepartureData> departureData = new LinkedList<>();
     private GtfsTimetableTranslator timetableTranslator;
+    private final File temp;
 
     private Container panel;
     @SuppressWarnings("UnusedDeclaration") private JTabbedPane tabbedPane;
@@ -89,9 +91,10 @@ public class PlasmaUI
     @SuppressWarnings("UnusedDeclaration") private JCheckBox filterRoute;
     @SuppressWarnings("UnusedDeclaration") private JBComboBox<String> gtfsRoute;
 
-    public PlasmaUI(int mode, DVA dva) {
-        this.dva = dva;
+    public PlasmaUI(int mode, DVAManager dvaManager, Map<String, SoundLibrary> availableSoundLibraries, File temp) {
+        this.dva = dvaManager;
         this.settingsKey = (mode == Mode.SCREENSAVER || mode == Mode.SCREENSAVER_PREVIEW) ? "screenSaver" : "remembered";
+        this.temp = temp;
 
         SwingEngine renderer = new SwingEngine(this);
         renderer.getTaglib().registerTag("colorcombobox", ColorComboBox.class);
@@ -117,12 +120,12 @@ public class PlasmaUI
                 new CityrailV1Portrait(false, true), new CityrailV1Landscape(false, false) };
 
             Announcer[] announcers = null;
-            if (dva != null)
+            if (availableSoundLibraries != null)
             {
-                announcers = new Announcer[] { new CityrailStandard(dva.getSoundLibrary("Sydney-Male"), true),
-                    new CityrailStandard(dva.getSoundLibrary("Sydney-Female"), false),
-                    new NswCountry(dva.getSoundLibrary("Sydney-Male"), true),
-                    new NswCountry(dva.getSoundLibrary("Sydney-Female"), false) };
+                announcers = new Announcer[] { new CityrailStandard(availableSoundLibraries.get("Sydney-Male"), true),
+                    new CityrailStandard(availableSoundLibraries.get("Sydney-Female"), false),
+                    new NswCountry(availableSoundLibraries.get("Sydney-Male"), true),
+                    new NswCountry(availableSoundLibraries.get("Sydney-Female"), false) };
             }
 
             // Populate the comboboxes with them, the second combobox has the
@@ -203,21 +206,6 @@ public class PlasmaUI
             });
         } catch (Exception e) {
             ExceptionReporter.reportException(e);
-        }
-    }
-
-    // Run the indicator in screensaver mode
-    public static List<Window> screenSaver(boolean preview, Dimension previewSize)
-    {
-        if (preview)
-        {
-            final PlasmaUI ui = new PlasmaUI(PlasmaUI.Mode.SCREENSAVER_PREVIEW, null);
-            return ui.showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER_PREVIEW_MINI_WINDOW, previewSize);
-        }
-        else
-        {
-            final PlasmaUI ui = new PlasmaUI(PlasmaUI.Mode.SCREENSAVER, new DVA(false, false));
-            return ui.showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER, null);
         }
     }
 
@@ -398,7 +386,7 @@ public class PlasmaUI
                 try {
                     ArrayList<URL> al = new ArrayList<>();
                     al.add(new File(departureData.get(0).CustomAnnouncementPath).toURI().toURL());
-                    player = new Player(al, null, DVA.getTemp());
+                    player = new Player(al, null, temp);
                     player.start();
                 } catch (Exception e) {
                     ExceptionReporter.reportException(e);

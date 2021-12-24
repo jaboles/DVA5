@@ -13,14 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -56,17 +55,14 @@ import jb.common.sound.LevelMeterPanel;
 import jb.common.sound.Player;
 import jb.common.ui.SimpleEditorUndoRedoKit;
 import jb.common.ui.ToolTipList;
-import jb.dva.Script;
-import jb.dva.SoundInflection;
-import jb.dva.SoundLibrary;
-import jb.dva.SoundReference;
-import jb.dvacommon.DVA;
+import jb.dva.*;
 import jb.dvacommon.Settings;
 import jb.dvacommon.ui.DVATextArea;
 import jb.dvacommon.ui.DVATextVerifyListener;
 import jb.dvacommon.ui.ThemedFlatSVGIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 import org.jdesktop.swingx.JXBusyLabel;
 import org.swixml.SwingEngine;
 
@@ -74,12 +70,14 @@ public class DVAUI {
     private final static Logger logger = LogManager.getLogger(DVAUI.class);
 
     private Container panel;
-    private final DVA controller;
+    private final DVAManager dvaManager;
+    private final Map<String, SoundLibrary> availableSoundLibraries;
     private boolean documentModified = false;
     private final SoundListModel suggestedSoundListModel;
     private DefaultListModel<Script> announcementListModel;
     private DefaultListModel<String> inflectionListModel;
     private Script currentScript;
+    private final File temp;
 
     // Outlets
     @SuppressWarnings("UnusedDeclaration") private JScrollPane voicePane;
@@ -111,9 +109,11 @@ public class DVAUI {
     @SuppressWarnings("UnusedDeclaration") private JXBusyLabel playSavedAnnouncementBusyLabel;
     @SuppressWarnings("UnusedDeclaration") private JXBusyLabel playCurrentAnnouncementBusyLabel;
 
-    public DVAUI(final DVA controller) {
-        this.controller = controller;
+    public DVAUI(final DVAManager dvaManager, Map<String, SoundLibrary> availableSoundLibraries, File temp) {
+        this.dvaManager = dvaManager;
+        this.availableSoundLibraries = availableSoundLibraries;
         this.suggestedSoundListModel = new SoundListModel();
+        this.temp = temp;
         SwingEngine renderer = new SwingEngine(this);
         renderer.getTaglib().registerTag("tooltiplist", ToolTipList.class);
         renderer.getTaglib().registerTag("levelmeterpanel", LevelMeterPanel.class);
@@ -128,14 +128,13 @@ public class DVAUI {
                 public void OnFailed() {
 
                 }
-                public void OnVerified() {
-                    updateAnnouncementStats(controller.getVerifiedUrlList());
+                public void OnVerified(List<URL> verified) {
+                    updateAnnouncementStats(verified);
                 }
             };
-            dvaTextArea.initialize(controller, currentScript, indicatorIconLabel, verifyHandler, suggestedSoundList, suggestedSoundListModel);
+            dvaTextArea.initialize(dvaManager, currentScript, indicatorIconLabel, verifyHandler, suggestedSoundList, suggestedSoundListModel);
 
-            Collection<SoundLibrary> soundLibraryList = controller.getSoundLibraryList();
-            voiceComboBox.setListData(soundLibraryList.toArray(new SoundLibrary[0]));
+            voiceComboBox.setListData(availableSoundLibraries.values().toArray(SoundLibrary[]::new));
             voiceComboBox.setSelectedIndex(0);
             voiceComboBox.setCellRenderer(new SoundLibraryListCellRenderer());
 
@@ -261,7 +260,7 @@ public class DVAUI {
             });
 
             announcementListModel = new DefaultListModel<>();
-            for (Script s : Settings.loadAnnouncements(controller.getSoundLibraryNames()))
+            for (Script s : Settings.loadAnnouncements(availableSoundLibraries.keySet()))
             {
                 announcementListModel.addElement(s);
             }
@@ -330,7 +329,7 @@ public class DVAUI {
 
     public void previewSound(int index, int inflection)
     {
-        new Player(Collections.singletonList(suggestedSoundListModel.getURLAt(index, inflection)), levelMeterPanelCurrentAnnouncement, DVA.getTemp()).start();
+        new Player(Collections.singletonList(suggestedSoundListModel.getURLAt(index, inflection)), levelMeterPanelCurrentAnnouncement, temp).start();
     }
 
     public void showSoundInfo(int index, int inflection)
@@ -413,7 +412,7 @@ public class DVAUI {
             dvaTextArea.canonicalise();
         }
 
-        if (controller.getSoundLibrary(script.getVoice()) != null)
+        if (availableSoundLibraries.containsKey(script.getVoice()))
         {
             playSavedAction.setEnabled(false);
             playCurrentAction.setEnabled(false);
@@ -433,7 +432,7 @@ public class DVAUI {
                 playCurrentAnnouncementBusyLabel.setBusy(false);
             });
 
-            final Player p = controller.play(levelMeterPanel, script, longConcatCallback, afterConcatCallback);
+            final Player p = dvaManager.play(levelMeterPanel, script, longConcatCallback, afterConcatCallback);
             new Thread(() -> {
                 try {
                     p.join();
@@ -459,7 +458,7 @@ public class DVAUI {
             playSavedAction.setEnabled(true);
             playStopCurrentAnnouncementButton.setAction(playCurrentAction);
             playStopSavedAnnouncementButton.setAction(playSavedAction);
-            controller.stop();
+            dvaManager.stop();
         }
     };
 
@@ -481,7 +480,7 @@ public class DVAUI {
             Script loadScript = announcementComboBox.getSelectedValue();
             currentScript.setVoice(loadScript.getVoice());
             currentScript.setScript(loadScript.getScript());
-            voiceComboBox.setSelectedValue(controller.getSoundLibrary(loadScript.getVoice()), true);
+            voiceComboBox.setSelectedValue(availableSoundLibraries.get(loadScript.getVoice()), true);
             dvaTextArea.setText(loadScript.getScript());
             documentModified = false;
         }
@@ -551,7 +550,8 @@ public class DVAUI {
 
     public final Action exportAction = new AbstractAction("Export", new ThemedFlatSVGIcon("saveas")) {
         public void actionPerformed(ActionEvent e) {
-            int errorPos = controller.verify(currentScript);
+            Pair<Integer, List<URL>> verifyResult = dvaManager.verify(currentScript);
+            int errorPos = verifyResult.getValue0();
             if (errorPos >= 0) {
                 // there was a parse error
                 failSound();
@@ -575,7 +575,7 @@ public class DVAUI {
                     }
 
                     try {
-                        controller.export(currentScript, path);
+                        dvaManager.export(currentScript, path);
                         if (SwingEngine.isMacOSX()) {
                             new ProcessBuilder("open", "-R", path).start();
                         } else {
@@ -618,7 +618,7 @@ public class DVAUI {
 
     public void failSound()
     {
-        new Player(Collections.singletonList(DVAUI.class.getResource("/Basso.wav")), null, DVA.getTemp()).start();
+        new Player(Collections.singletonList(DVAUI.class.getResource("/Basso.wav")), null, temp).start();
     }
 
     private boolean abortDestructiveAction(ActionEvent e) {
@@ -641,7 +641,7 @@ public class DVAUI {
 
     private static final ScheduledExecutorService updateAnnouncementStatsWorker = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> updateAnnouncementStatsTask;
-    private void updateAnnouncementStats(final ArrayList<URL> al) {
+    private void updateAnnouncementStats(final List<URL> al) {
         if (updateAnnouncementStatsTask != null) {
             updateAnnouncementStatsTask.cancel(true);
         }

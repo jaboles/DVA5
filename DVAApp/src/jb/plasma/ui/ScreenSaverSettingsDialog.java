@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -12,7 +14,8 @@ import javax.swing.JDialog;
 import javax.swing.KeyStroke;
 import jb.common.ExceptionReporter;
 import jb.common.ui.WindowUtils;
-import jb.dvacommon.DVA;
+import jb.dva.DVAManager;
+import jb.dva.SoundLibrary;
 import jb.dvacommon.Settings;
 import org.swixml.SwingEngine;
 
@@ -21,9 +24,9 @@ public class ScreenSaverSettingsDialog
     private JDialog dialog;
     private final PlasmaUI ui;
 
-    public ScreenSaverSettingsDialog()
+    public ScreenSaverSettingsDialog(DVAManager dvaManager, Map<String, SoundLibrary> availableSoundLibraries, File temp)
     {
-        ui = new PlasmaUI(PlasmaUI.Mode.SCREENSAVER, new DVA(false, true));
+        ui = new PlasmaUI(PlasmaUI.Mode.SCREENSAVER, dvaManager, availableSoundLibraries, temp);
         try {
             SwingEngine renderer = new SwingEngine(this);
             dialog = (JDialog) renderer.render(ScreenSaverSettingsDialog.class.getResource("/jb/plasma/ui/resources/screensaversettingsdialog.xml"));

@@ -21,30 +21,24 @@ import java.util.jar.JarFile;
 public class SoundLibrary implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String name;
-    private final List<File> files;
-    private Map<String, SoundReference> soundMap;
-    private Map<String, String> canonicalNameMap;
-    private List<String> sortedKeys;
-    private HashSet<String> keys;
+    private final List<File> files = new LinkedList<>();
+    private Map<String, SoundReference> soundMap = new LinkedHashMap<>();
+    private Map<String, String> canonicalNameMap = new LinkedHashMap<>();
+    private List<String> sortedKeys = new LinkedList<>();
+    private HashSet<String> keys = new HashSet<>();
     private URL icon = null;
     private int longestSoundName = 0;
-    private final Properties properties;
+    private final Properties properties = new Properties();
     private final static Logger logger = LogManager.getLogger(SoundLibrary.class);
 
     public SoundLibrary(String name) {
-        this.soundMap = new LinkedHashMap<>();
-        this.canonicalNameMap = new LinkedHashMap<>();
         this.name = name;
-        this.files = new LinkedList<>();
-        this.properties = new Properties();
     }
 
     public SoundLibrary(String name, List<SoundLibrary> librariesToCombine, URL icon)
     {
         this(name);
         this.icon = icon;
-        keys = new HashSet<>();
-        sortedKeys = new LinkedList<>();
 
         librariesToCombine.sort(Comparator.comparingInt(SoundLibrary::size));
         for (SoundLibrary lib : librariesToCombine)
