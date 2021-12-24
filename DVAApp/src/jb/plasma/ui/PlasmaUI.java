@@ -91,7 +91,7 @@ public class PlasmaUI
     @SuppressWarnings("UnusedDeclaration") private JCheckBox filterRoute;
     @SuppressWarnings("UnusedDeclaration") private JBComboBox<String> gtfsRoute;
 
-    public PlasmaUI(int mode, DVAManager dvaManager, Map<String, SoundLibrary> availableSoundLibraries, File temp) {
+    public PlasmaUI(int mode, DVAManager dvaManager, File temp) {
         this.dva = dvaManager;
         this.settingsKey = (mode == Mode.SCREENSAVER || mode == Mode.SCREENSAVER_PREVIEW) ? "screenSaver" : "remembered";
         this.temp = temp;
@@ -119,14 +119,12 @@ public class PlasmaUI
                 new CityrailV2(false), new CityrailV1Portrait(true, true), new CityrailV1Landscape(true, false),
                 new CityrailV1Portrait(false, true), new CityrailV1Landscape(false, false) };
 
-            Announcer[] announcers = null;
-            if (availableSoundLibraries != null)
-            {
-                announcers = new Announcer[] { new CityrailStandard(availableSoundLibraries.get("Sydney-Male"), true),
-                    new CityrailStandard(availableSoundLibraries.get("Sydney-Female"), false),
-                    new NswCountry(availableSoundLibraries.get("Sydney-Male"), true),
-                    new NswCountry(availableSoundLibraries.get("Sydney-Female"), false) };
-            }
+            Announcer[] announcers = new Announcer[] {
+                new CityrailStandard("Sydney-Male", true),
+                new CityrailStandard("Sydney-Female", false),
+                new NswCountry("Sydney-Male", true),
+                new NswCountry("Sydney-Female", false)
+            };
 
             // Populate the comboboxes with them, the second combobox has the
             // additional option of 'None'.
@@ -159,7 +157,7 @@ public class PlasmaUI
             for (int i = 0; i < departurePanels.length; i++) {
                 departurePanels[i] = new DeparturePanel(departurePanelTitles[i],
                     dva,
-                    dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary().getName() : null);
+                    dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary() : null);
 
                 if (i >= 1) {
                     JSeparator separator = new JSeparator();
@@ -201,7 +199,7 @@ public class PlasmaUI
 
             playAnnouncementVoiceCombobox.addActionListener(e -> {
                 for (DeparturePanel departurePanel : departurePanels) {
-                    departurePanel.setScriptVoice((playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary().getName());
+                    departurePanel.setScriptVoice((playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary());
                 }
             });
         } catch (Exception e) {
@@ -401,7 +399,7 @@ public class PlasmaUI
                 {
                     ((CityrailStandard)announcer).setCoalesceStationSequences(coalesceStationSequencesCheckbox.isSelected());
                 }
-                Script announcement = announcer.createAnnouncement(departureData.get(0), (int)minsToDeparture);
+                Script announcement = new Script(announcer.getSoundLibrary(), announcer.createAnnouncementText(departureData.get(0), (int)minsToDeparture));
                 logger.debug("Generated script: {}", announcement.getScript());
                 player = dva.play(null, announcement);
             }

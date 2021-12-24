@@ -104,7 +104,7 @@ public class DVA {
 
     private void screensaver() throws Exception {
         runApp(false, false);
-        new PlasmaUI(PlasmaUI.Mode.SCREENSAVER, dvaManager, soundLibraryManager.getSoundLibraries(), getTemp())
+        new PlasmaUI(PlasmaUI.Mode.SCREENSAVER, dvaManager, getTemp())
                 .showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER, null);
     }
 
@@ -133,7 +133,7 @@ public class DVA {
         parentRect.setSize((int)(parentRect.getWidth() * scaleFactor), (int)(parentRect.getHeight() * scaleFactor));
 
         // Create the plasma window
-        Window w = new PlasmaUI(PlasmaUI.Mode.SCREENSAVER_PREVIEW, null, null, getTemp())
+        Window w = new PlasmaUI(PlasmaUI.Mode.SCREENSAVER_PREVIEW, null, getTemp())
                 .showIndicatorBoard(PlasmaWindow.Mode.SCREENSAVER_PREVIEW_MINI_WINDOW, parentRect.getSize()).get(0);
         WinDef.HWND hwnd = new WinDef.HWND(Native.getWindowPointer(w));
         logger.info("Window handle: {}", hwnd);
@@ -149,7 +149,7 @@ public class DVA {
 
     private void screensaverSettings() throws Exception {
         runApp(false, true);
-        new ScreenSaverSettingsDialog(dvaManager, soundLibraryManager.getSoundLibraries(), getTemp()).setVisible(true);
+        new ScreenSaverSettingsDialog(dvaManager, getTemp()).setVisible(true);
     }
 
     private void play(Script announcement) {

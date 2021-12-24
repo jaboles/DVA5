@@ -87,7 +87,7 @@ public class DVAShell
             undoAction = SimpleEditorUndoRedoKit.UndoAction;
             redoAction = SimpleEditorUndoRedoKit.RedoAction;
 
-            plasmaUI = new PlasmaUI(PlasmaUI.Mode.REGULAR, dvaManager, availableSoundLibraries, temp);
+            plasmaUI = new PlasmaUI(PlasmaUI.Mode.REGULAR, dvaManager, temp);
             indicatorWindowAction = plasmaUI.windowAction;
             indicatorFullScreenAction = plasmaUI.fullScreenAction;
             indicatorPlayAnnouncementAction = plasmaUI.announceAction;

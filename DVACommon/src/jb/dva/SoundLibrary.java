@@ -228,11 +228,6 @@ public class SoundLibrary implements Serializable {
         return longestSoundName;
     }
 
-    public String initialSoundName()
-    {
-        return properties.getProperty("InitialSoundName", "");
-    }
-
     public boolean supportsInflections()
     {
         return properties.getProperty("SupportsInflections", "").length() > 0;

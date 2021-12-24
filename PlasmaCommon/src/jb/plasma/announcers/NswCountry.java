@@ -1,6 +1,5 @@
 package jb.plasma.announcers;
 
-import jb.dva.SoundLibrary;
 import jb.plasma.DepartureData;
 import jb.plasma.Phraser;
 
@@ -8,7 +7,7 @@ import java.util.Arrays;
 
 public class NswCountry extends CityrailStandard
 {
-    public NswCountry(SoundLibrary soundLibrary, boolean isMale)
+    public NswCountry(String soundLibrary, boolean isMale)
     {
         super("Sydney Terminal country platforms " + (isMale ? "(Male)" : "(Female)"), soundLibrary, isMale);
     }
@@ -17,9 +16,9 @@ public class NswCountry extends CityrailStandard
     {
         Phraser phraser = new Phraser();
         String[] stops = Arrays.stream(d.Stops).map(st -> st.Name).toArray(String[]::new);
-        phraser.doSubstitutions(stops, getSoundLibrary().getName());
+        phraser.doSubstitutions(stops, getSoundLibrary());
 
-        StringBuilder s = new StringBuilder(getSoundLibrary().initialSoundName());
+        StringBuilder s = new StringBuilder(isMale ? "CHIME" : "CHIMES");
         s.append(" The train on platform");
         if (isMale) {
             s.append(" number");

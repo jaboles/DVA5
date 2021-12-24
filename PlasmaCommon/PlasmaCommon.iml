@@ -26,7 +26,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="Core" />
-    <orderEntry type="module" module-name="DVACommon" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>

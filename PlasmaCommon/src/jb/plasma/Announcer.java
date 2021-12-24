@@ -1,14 +1,11 @@
 package jb.plasma;
 
-import jb.dva.Script;
-import jb.dva.SoundLibrary;
-
 public abstract class Announcer
 {
     private final String name;
-    private final SoundLibrary soundLibrary;
+    private final String soundLibrary;
 
-    protected Announcer(String name, SoundLibrary soundLibrary)
+    protected Announcer(String name, String soundLibrary)
     {
         this.name = name;
         this.soundLibrary = soundLibrary;
@@ -24,15 +21,10 @@ public abstract class Announcer
         return getName();
     }
 
-    public SoundLibrary getSoundLibrary()
+    public String getSoundLibrary()
     {
         return this.soundLibrary;
     }
 
     public abstract String createAnnouncementText(DepartureData d, int minutesToDeparture);
-
-    public Script createAnnouncement(DepartureData d, int minutesToDeparture)
-    {
-        return new Script(soundLibrary.getName(), createAnnouncementText(d, minutesToDeparture));
-    }
 }

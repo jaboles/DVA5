@@ -1,6 +1,5 @@
 package jb.plasma.announcers;
 
-import jb.dva.SoundLibrary;
 import jb.plasma.Announcer;
 import jb.plasma.DepartureData;
 import jb.plasma.Phraser;
@@ -13,12 +12,12 @@ public class CityrailStandard extends Announcer
     protected final boolean isMale;
     protected boolean coalesceStationSequences;
 
-    public CityrailStandard(SoundLibrary soundLibrary, boolean isMale)
+    public CityrailStandard(String soundLibrary, boolean isMale)
     {
         this("CityRail " + (isMale ? "(Male)" : "(Female)"), soundLibrary, isMale);
     }
 
-    protected CityrailStandard(String name, SoundLibrary soundLibrary, boolean isMale)
+    protected CityrailStandard(String name, String soundLibrary, boolean isMale)
     {
         super(name, soundLibrary);
         this.isMale = isMale;
@@ -33,11 +32,11 @@ public class CityrailStandard extends Announcer
     {
         Phraser phraser = new Phraser();
         String[] stops = Arrays.stream(d.Stops).map(st -> st.Name).toArray(String[]::new);
-        phraser.doSubstitutions(stops, this.getSoundLibrary().getName());
+        phraser.doSubstitutions(stops, this.getSoundLibrary());
         String via = phraser.getVia(d);
         Pair<String,Integer> ast = null;
 
-        StringBuilder s = new StringBuilder(getSoundLibrary().initialSoundName());
+        StringBuilder s = new StringBuilder(isMale ? "CHIME" : "CHIMES");
         if (minutesToDeparture > 0)
             s.append(" The next train to arrive on platform");
         else
