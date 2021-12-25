@@ -12,6 +12,7 @@
         </fileset>
     </path>
     <property name="BuildClasspath" value="${toString:jars}" />
+    <property name="JlinkModules" value="java.desktop,java.naming,jdk.unsupported,java.management"/>
     <condition property="ExecutableExtension" value=".exe" else="">
         <os family="windows"/>
     </condition>
@@ -80,6 +81,20 @@
 
     <!-- Fetch build dependencies -->
     <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Mac.Intel,FetchDeps.Windows"/>
+    <target name="FetchDeps.JlinkOptimizeJre">
+        <echo>Calling jlink to optimize JRE into ${ToolsDir}/jre/${jrefolder}</echo>
+        <delete dir="${ToolsDir}/jre/${jrefolder}"/>
+        <exec executable="${env.JAVA_HOME}/bin/jlink">
+            <arg value="--module-path"/>
+            <arg value="${ToolsDir}/jdk/${jrefolder}/jmods"/>
+            <arg value="--add-modules"/>
+            <arg value="${JlinkModules}"/>
+            <arg value="--no-header-files"/>
+            <arg value="--no-man-pages"/>
+            <arg value="--output"/>
+            <arg value="${ToolsDir}/jre/${jrefolder}"/>
+        </exec>
+    </target>
     <target name="FetchDeps.Common">
         <mkdir dir="${ToolsDir}"/>
         <!-- Ant-Contrib -->
@@ -88,13 +103,16 @@
     </target>
     <target name="FetchDeps.Mac" if="isMac">
         <!-- JRE: Mac x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\mac" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\mac" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
+                <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <antcall target="FetchDeps.JlinkOptimizeJre">
+            <param name="jrefolder" value="mac"/>
+        </antcall>
         <!-- Protocol Buffers compiler -->
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-osx-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
@@ -108,21 +126,27 @@
         <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}/winrun4j.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
         <!-- JRE: Win x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
-        <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <unzip dest="${ToolsDir}\jdk\win64" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
+                <include name="OpenJDK*-jdk_x64_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
+        <antcall target="FetchDeps.JlinkOptimizeJre">
+            <param name="jrefolder" value="win64"/>
+        </antcall>
         <!-- JRE: Win x86 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x86-32_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
-        <unzip dest="${ToolsDir}\jre\win32" overwrite="false">
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x86-32_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <unzip dest="${ToolsDir}\jdk\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
+                <include name="OpenJDK*-jdk_x86-32_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
+        <antcall target="FetchDeps.JlinkOptimizeJre">
+            <param name="jrefolder" value="win32"/>
+        </antcall>
         <!-- download Inno Setup -->
         <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
     </target>
@@ -152,21 +176,27 @@
             <arg line="${ToolsDir}/is.exe /silent"/>
         </exec>
         <!-- JRE: Linux x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_x64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\linux-x86_64" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\linux-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_linux_*.tar.gz"/>
+                <include name="OpenJDK*-jdk_x64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <antcall target="FetchDeps.JlinkOptimizeJre">
+            <param name="jrefolder" value="linux-x86_64"/>
+        </antcall>
         <!-- JRE: Linux aarch64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jre_aarch64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\linux-aarch64" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\linux-aarch64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_aarch64_linux_*.tar.gz"/>
+                <include name="OpenJDK*-jdk_aarch64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <antcall target="FetchDeps.JlinkOptimizeJre">
+            <param name="jrefolder" value="linux-aarch64"/>
+        </antcall>
         <!-- Dpkg -->
         <exec executable="which" outputproperty="testDpkg">
             <arg value="dpkg"/>
@@ -292,15 +322,16 @@
                 <include name="*"/>
             </fileset>
         </copy>
-        <copy todir="${AppBundleContents}\jre" preservelastmodified="true">
-            <fileset dir="${ToolsDir}\jre\mac">
+        <delete failonerror="false" dir="${AppBundleContents}/jre"/>
+        <copy todir="${AppBundleContents}/jre" preservelastmodified="true">
+            <fileset dir="${ToolsDir}/jre/mac">
                 <include name="**"/>
             </fileset>
         </copy>
         <chmod perm="u+x" file="${AppBundleContents}/dva"/>
         <chmod perm="u+x" file="${AppBundleContents}/ffmpeg"/>
-        <chmod perm="u+x" file="${AppBundleContents}/jre/Contents/Home/bin/java"/>
-        <chmod perm="u+x" file="${AppBundleContents}/jre/Contents/Home/lib/jspawnhelper"/>
+        <chmod perm="u+x" file="${AppBundleContents}/jre/bin/java"/>
+        <chmod perm="u+x" file="${AppBundleContents}/jre/lib/jspawnhelper"/>
     </target>
 
     <target name="SignMacApp.Check">
@@ -429,8 +460,8 @@ Log=    console
         </copy>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
         <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/ffmpeg"/>
-        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/bin/java"/>
-        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/Contents/Home/lib/jspawnhelper"/>
+        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/bin/java"/>
+        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/lib/jspawnhelper"/>
         <exec executable="osascript" failonerror="true">
             <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
         </exec>
@@ -446,16 +477,6 @@ Log=    console
 
     <!-- Build windows setup -->
     <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes" if="buildWindows">
-        <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
-            <arg value="-i"/>
-            <arg value=".bak"/>
-            <arg value="s/5\.[[:digit:]]\.[[:digit:]]/${DVAVersion}/"/>
-            <arg value="win/setup.iss"/>
-        </exec>
-        <exec executable="powershell.exe" dir="${basedir}" osfamily="windows" failonerror="true">
-            <arg value="-command"/>
-            <arg value="(gc 'win\setup.iss' -raw) -replace '5\.\d\.\d', '${DVAVersion}' | out-file -Encoding ASCII 'win\setup.iss'"/>
-        </exec>
         <echo level="info">Inno Setup compression: ${innosetupcompression}</echo>
         <property name="innosetupargs" value="/Qp /Dinnosetupcompression=${innosetupcompression} /Dversion=${DVAVersion} win\setup.iss"/>
         <exec executable="${Wine}" osfamily="mac" failonerror="true">

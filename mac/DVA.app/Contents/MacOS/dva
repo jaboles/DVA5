@@ -8,7 +8,7 @@ BASEDIR=`dirname "$0"`
 DOCKICON=`realpath $BASEDIR/../Resources/dva.icns`
 cd $BASEDIR
 xattr -dr ./ffmpeg
-exec ./jre/Contents/Home/bin/java \
+exec ./jre/bin/java \
     -Xdock:name=DVA \
     -Xdock:icon=$DOCKICON \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
