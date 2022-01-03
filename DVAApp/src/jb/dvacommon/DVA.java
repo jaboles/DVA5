@@ -32,8 +32,8 @@ import org.apache.logging.log4j.Logger;
 
 public class DVA {
     private static final Logger logger = LogManager.getLogger(DVA.class);
-    public static final String VersionString = "5.5.2";
-    public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2021";
+    public static final String VersionString = "5.5.3";
+    public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2022";
 
     private DVAShell mainWindow;
     private final SoundLibraryManager soundLibraryManager;
