@@ -29,16 +29,23 @@ public class Phraser
     {
         for (int i = 0; i < stops.length; i++)
         {
-            for (String[] s : substitutions)
+            stops[i] = doSubstitution(stops[i], soundLibraryName);
+        }
+    }
+
+    public String doSubstitution(String stop, String soundLibraryName)
+    {
+        for (String[] s : substitutions)
+        {
+            if (s.length >= 2)
             {
-                if (s.length >= 2)
-                {
-                    boolean substitute = s.length == 2 || StringUtilities.containsIgnoreCase(soundLibraryName, s[2]);
-                    if (substitute && stops[i].equalsIgnoreCase(s[0]))
-                        stops[i] = s[1];
-                }
+                boolean substitute = s.length == 2 || StringUtilities.containsIgnoreCase(soundLibraryName, s[2]);
+                if (substitute && stop.equalsIgnoreCase(s[0]))
+                    return s[1];
             }
         }
+
+        return stop;
     }
 
     public String getVia(DepartureData d)

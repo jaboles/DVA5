@@ -28,3 +28,5 @@ Nth Strathfield,North Strathfield
 Mt Victoria,Mount Victoria
 Rosehill,Rosehill Racecourse
 Central (i),Central
+Newcastle Interchange,Newcastle,Sydney-Male
+

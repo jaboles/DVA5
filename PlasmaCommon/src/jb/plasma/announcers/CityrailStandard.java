@@ -32,6 +32,7 @@ public class CityrailStandard extends Announcer
     {
         Phraser phraser = new Phraser();
         String[] stops = Arrays.stream(d.Stops).map(st -> st.Name).toArray(String[]::new);
+        String destination = phraser.doSubstitution(d.Destination, this.getSoundLibrary());
         phraser.doSubstitutions(stops, this.getSoundLibrary());
         String via = phraser.getVia(d);
         Pair<String,Integer> ast = null;
@@ -56,7 +57,7 @@ public class CityrailStandard extends Announcer
         }
 
         // "... goes to X ..."
-        s.append(" goes to ").append(d.Destination);
+        s.append(" goes to ").append(destination);
 
         // "... via Y. ..."
         if (via != null)

@@ -16,6 +16,7 @@ public class NswCountry extends CityrailStandard
     {
         Phraser phraser = new Phraser();
         String[] stops = Arrays.stream(d.Stops).map(st -> st.Name).toArray(String[]::new);
+        String destination = phraser.doSubstitution(d.Destination, this.getSoundLibrary());
         phraser.doSubstitutions(stops, getSoundLibrary());
 
         StringBuilder s = new StringBuilder(isMale ? "CHIME" : "CHIMES");
@@ -35,7 +36,7 @@ public class NswCountry extends CityrailStandard
         s.append(" is the ");
         s.append(d.DueOut.getHour()).append(" ");
         s.append(d.DueOut.getMinute()).append(" ");
-        s.append(d.Destination).append(" stopping at ");
+        s.append(destination).append(" stopping at ");
 
         s.append(stops[0]);
         if (stops.length > 1) {
