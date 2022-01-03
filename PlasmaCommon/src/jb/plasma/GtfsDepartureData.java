@@ -16,8 +16,9 @@ public class GtfsDepartureData extends DepartureData
     public GtfsDepartureData(TripInstance ti)
     {
         String[] headsignParts = ti.Trip.Headsign.split(" via ");
-        this.Destination = headsignParts[0];
-        this.Destination2 = headsignParts.length >= 2 ? "via " + headsignParts[1] : "";
+        CityrailLine line = CityrailLine.get(ti.Trip.Route.Description);
+        this.Destination = substitute(headsignParts[0], true, line);
+        this.Destination2 = headsignParts.length >= 2 ? "via " + substitute(headsignParts[1], true, line) : "";
         this.Line = ti.Trip.Route.Description;
         this.Type = ti.LimitedStops ? "Limited Stops" : "All Stops";
         this.Cars = ti.Trip.Cars;
@@ -36,7 +37,7 @@ public class GtfsDepartureData extends DepartureData
             }
             boolean airport = stopName.equals("International") || stopName.equals("Domestic");
 
-            stops.add(new Stop(stopName, carRangeString, airport));
+            stops.add(new Stop(substitute(stopName, false, line), carRangeString, airport));
         }
         this.Stops = stops.toArray(new Stop[0]);
         this.DueOut = ti.At;
@@ -53,5 +54,18 @@ public class GtfsDepartureData extends DepartureData
                 tripInstance.Trip.Headsign,
                 tripInstance.Trip.Cars,
                 tripInstance.BlockContinuingTrip != null ? tripInstance.BlockContinuingTrip.Name : "<no continuation>");
+    }
+
+    private String substitute(String name, boolean destination, CityrailLine line) {
+        if (name.equals("Newcastle Interchange")) {
+            return "Newcastle Intg";
+        } else if (line != null && line.IsNswTrainlink && name.equals("Central")) {
+            if (destination)
+                return "Syd Central";
+            else
+                return "Central (i)";
+        } else {
+            return name;
+        }
     }
 }
