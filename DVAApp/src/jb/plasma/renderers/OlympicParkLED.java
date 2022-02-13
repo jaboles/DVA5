@@ -46,7 +46,7 @@ public class OlympicParkLED extends Drawer {
         }
         drawString("STOPPING AT", 0.01, 0.30, Color.orange, SmallFont);
         for (int i = 0; i < 2; i++) {
-            int stopIndex = (scrollCount + i) % (d0.Stops.length + 2);
+            int stopIndex = d0.Stops.length > 2 ? (scrollCount + i) % (d0.Stops.length + 2) : i;
             if (stopIndex < d0.Stops.length) {
                 drawString(d0.Stops[stopIndex].Name.toUpperCase(), 0.01, 0.39 + (i * 0.09), Color.orange, SmallFont);
             }
