@@ -117,7 +117,8 @@ public class PlasmaUI
                 new CityrailV4Primary(), new CityrailV4Secondary(),
                 new CityrailV3Primary(), new CityrailV3Secondary(),
                 new CityrailV2(false), new CityrailV1Portrait(true, true), new CityrailV1Landscape(true, false),
-                new CityrailV1Portrait(false, true), new CityrailV1Landscape(false, false) };
+                new CityrailV1Portrait(false, true), new CityrailV1Landscape(false, false),
+                new OlympicParkLED() };
 
             Announcer[] announcers = new Announcer[] {
                 new CityrailStandard("Sydney-Male", true),

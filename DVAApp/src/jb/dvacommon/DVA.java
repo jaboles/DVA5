@@ -3,6 +3,7 @@ import java.awt.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.NoSuchFileException;
 import javax.swing.UIManager;
 
 import com.sun.jna.WString;
@@ -32,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 public class DVA {
     private static final Logger logger = LogManager.getLogger(DVA.class);
-    public static final String VersionString = "5.5.3";
+    public static final String VersionString = "5.5.4";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2022";
 
     private DVAShell mainWindow;
@@ -70,11 +71,19 @@ public class DVA {
         logger.info("Fetching GTFS timetable");
         if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
         GtfsGenerator.initialize(new File(getTemp(), "GtfsTimetable").toPath());
-        GtfsGenerator.getInstance().download();
+        GtfsGenerator.getInstance().download(false);
 
         logger.info("Reading timetable data");
         if (showLoadingProgress) lw.setText("Reading timetable data... ");
-        GtfsTimetable tt = GtfsGenerator.getInstance().read();
+        GtfsTimetable tt;
+        try {
+            tt = GtfsGenerator.getInstance().read();
+        } catch (NoSuchFileException e) {
+            if (showLoadingProgress) lw.setText("Detected incomplete timetable data, re-downloading... ");
+            GtfsGenerator.getInstance().download(true);
+            if (showLoadingProgress) lw.setText("Reading timetable data... ");
+            tt = GtfsGenerator.getInstance().read();
+        }
 
         int steps = GtfsTimetable.getAnalysisStepCount();
         if (showLoadingProgress) lw.setText("Reading timetable data... indexing stops");

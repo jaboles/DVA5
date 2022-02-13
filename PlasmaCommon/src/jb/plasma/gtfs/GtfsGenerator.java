@@ -26,7 +26,7 @@ public class GtfsGenerator {
 
         GtfsGenerator.initialize(FileSystems.getDefault().getPath("./testing"));
         try {
-            GtfsGenerator.getInstance().download();
+            GtfsGenerator.getInstance().download(false);
             GtfsGenerator.getInstance().read().analyse();
         }
         catch (Exception e) {
@@ -43,12 +43,12 @@ public class GtfsGenerator {
 
     public static void initialize(Path wd) {instance = new GtfsGenerator(wd);}
 
-    public void download() throws IOException
+    public void download(boolean forceDelete) throws IOException
     {
         if (Files.exists(wd))
         {
             logger.info("GTFS data {} exists", wd);
-            if (LocalDateTime.now().isAfter(expiryTime()))
+            if (LocalDateTime.now().isAfter(expiryTime()) || forceDelete)
             {
                 logger.info("GTFS data expired, deleting.");
                 delete();

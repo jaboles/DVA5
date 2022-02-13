@@ -33,6 +33,12 @@ public class Resources
             try (InputStream is = Drawer.class.getResourceAsStream("/Roboto-Medium.ttf")) {
                 RobotoMedium = Font.createFont(Font.TRUETYPE_FONT, is);
             }
+            try (InputStream is = Drawer.class.getResourceAsStream("/led_board-7.ttf")) {
+                LedBoard7 = Font.createFont(Font.TRUETYPE_FONT, is);
+            }
+            try (InputStream is = Drawer.class.getResourceAsStream("/advanced-led-board-7.regular.ttf")) {
+                AdvancedLedBoard7 = Font.createFont(Font.TRUETYPE_FONT, is);
+            }
         } catch (IOException | FontFormatException ex) {
             ex.printStackTrace(System.err);
         }
@@ -45,6 +51,8 @@ public class Resources
     public static Font ArialRegular;
     public static Font ArialBold;
     public static Font RobotoMedium;
+    public static Font LedBoard7;
+    public static Font AdvancedLedBoard7;
 
     // An instance of the private subclass of the default highlight painter
     public static final Highlighter.HighlightPainter errorHighlightPainter = new ErrorHighlightPainter();
