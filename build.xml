@@ -33,7 +33,7 @@
     </taskdef>
 
     <!-- Mac signing identity in Keychain -->
-    <property name="SignIdentity" value="Jonathan Boles"/>
+    <property name="SignIdentity" value="Developer ID Application: Jonathan Boles (W2WXX3D2U6)"/>
     <!-- Windows signing cert paths. -->
     <property name="SignKey" value="/Users/jb/Software/jb.pvk"/>
     <property name="SignCert" value="/Users/jb/Software/jb.spc"/>
@@ -332,6 +332,7 @@
         <chmod perm="u+x" file="${AppBundleContents}/ffmpeg"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/bin/java"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/lib/jspawnhelper"/>
+        <move file="${OutDir}/DVA.app/Contents/MacOS/jre/legal" tofile="${OutDir}/DVA.app/Contents/Resources/legal"/>
     </target>
 
     <target name="SignMacApp.Check">
@@ -339,25 +340,18 @@
         <condition property="WillSignMacApp">
             <or>
                 <equals arg1="${hostname}" arg2="jb"/>
+                <equals arg1="${hostname}" arg2="jb.local"/>
                 <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
             </or>
         </condition>
     </target>
     <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,BuildMacApp" if="WillSignMacApp">
-        <apply executable="codesign">
-            <arg line="-v -f -s '${SignIdentity}'"/>
-            <fileset dir="${OutDir}/DVA.app/Contents/MacOS">
-                <include name="*.jar"/>
-                <include name="*.txt"/> <!-- TODO: user space -->
-                <include name="*.properties"/> <!-- TODO: user space -->
-            </fileset>
-        </apply>
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
-            <arg line="-v -f -s '${SignIdentity}' DVA.app"/>
+            <arg line="-v --force --deep --options runtime --timestamp --sign '${SignIdentity}' DVA.app"/>
         </exec>
         <!-- verify codesign -->
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
-            <arg line="-vv DVA.app"/>
+            <arg line="-v --deep --verify DVA.app"/>
         </exec>
         <!-- verify gatekeeper -->
         <exec executable="spctl" dir="${OutDir}" failonerror="true">
@@ -438,7 +432,7 @@ Log=    console
     </target>
 
     <!-- Build Mac setup -->
-    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="BuildMacApp">
+    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="SignMacApp">
         <property name="DmgVolumeName" value="DVA 5"/>
         <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
@@ -469,9 +463,35 @@ Log=    console
         <exec executable="umount" failonerror="true">
             <arg value="${DmgMountPoint}"/>
         </exec>
+    </target>
+    <target name="SignMacDmg" description="Mac DMG Signing" depends="SignMacApp.Check,BuildMacDmg" if="WillSignMacApp">
+        <exec executable="xattr" dir="${OutDir}" failonerror="true">
+            <arg line="-cr ${DmgName}.dmg"/>
+        </exec>
+        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+            <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}.dmg"/>
+        </exec>
+        <!-- verify codesign -->
+        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+            <arg line="-v --verify ${DmgName}.dmg"/>
+        </exec>
+        <!-- verify gatekeeper -->
+        <exec executable="spctl" dir="${OutDir}" failonerror="true">
+            <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}.dmg"/>
+        </exec>
+        <!-- Notarize -->
+        <exec executable="zip" dir="${OutDir}" failonerror="true">
+            <arg line="-r ${DmgName}.dmg.zip ${DmgName}.dmg"/>
+        </exec>
+        <!--
+        <exec executable="xcrun" dir="${OutDir}" failonerror="true">
+            <arg line="altool =notarize-app -f ${DmgName}.dmg.zip =primary-bundle-id jb.dva -t osx -u jonno@fastmail.fm -p @keychain:DVAnotarization"/>
+        </exec>-->
+    </target>
+    <target name="ZipMacDmg" depends="SignMacDmg">
         <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
-        <exec executable="bzip2" failonerror="true">
-            <arg line="--verbose --${bzip2compression} ${OutDir}/${DmgName}.dmg"/>
+        <exec executable="bzip2" dir="${OutDir}" failonerror="true">
+            <arg line="--verbose --${bzip2compression} ${DmgName}.dmg"/>
         </exec>
     </target>
 
@@ -494,7 +514,7 @@ Log=    console
         <echo level="info">Checking for ${SignKey}</echo>
         <available file="${SignKey}" property="SignKeyExists"/>
     </target>
-    <target name="SignWinSetup" depends="SignWinSetup.Check" if="SignKeyExists">
+    <target name="SignWinSetup" depends="SignWinSetup.Check,BuildWinSetup" if="SignKeyExists">
         <exec executable="signcode" dir="${OutDir}" failonerror="true">
             <arg line="signcode -a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; DVA5Setup.exe"/>
         </exec>
@@ -563,7 +583,7 @@ Log=    console
         <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch}.deb"/>
     </target>
 
-    <target name="AllSetups" description="Build all setups" depends="Clean,BuildMacDmg,BuildWinSetup,SignWinSetup,BuildLinuxDebs">
+    <target name="AllSetups" description="Build all setups" depends="Clean,ZipMacDmg,SignWinSetup,BuildLinuxDebs">
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>
