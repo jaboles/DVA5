@@ -473,7 +473,7 @@ Log=    console
             <arg line="--verbose --${bzip2compression} --keep ${DmgName}.dmg"/>
         </exec>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="convert ${DmgName}.dmg -format UDZO -o ${DmgName}.ro.dmg"/>
+            <arg line="convert ${DmgName}.dmg -format UDBZ -o ${DmgName}.ro.dmg"/>
         </exec>
         <move file="${OutDir}/${DmgName}.ro.dmg" tofile="${OutDir}/${DmgName}.dmg"/>
     </target>
