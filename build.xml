@@ -353,6 +353,10 @@
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --deep --verify DVA.app"/>
         </exec>
+        <!-- notarize -->
+        <exec executable="bash" dir="${OutDir}" failonerror="true">
+            <arg line="../../notarize.sh DVA.app"/>
+        </exec>
         <!-- verify gatekeeper -->
         <exec executable="spctl" dir="${OutDir}" failonerror="true">
             <arg line="-vv --assess --type execute DVA.app"/>
@@ -432,20 +436,21 @@ Log=    console
     </target>
 
     <!-- Build Mac setup -->
-    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac" depends="SignMacApp">
+    <target name="BuildMacDmg" description  ="Build Mac DMG" if="isMac" depends="SignMacApp">
         <property name="DmgVolumeName" value="DVA 5"/>
         <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
+        <delete file="${OutDir}/${DmgName}.rw.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
         <exec executable="sh" outputproperty="dmgSizeMb">
             <arg line="-c &quot;echo $((`du -d 0 -m build/Output/DVA.app | cut -f 1` + 5))&quot;"/>
         </exec>
         <echo>Creating .DMG with ${dmgSizeMb} mb</echo>
-        <exec executable="hdiutil" failonerror="true">
-            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${OutDir}/${DmgName}.dmg"/>
+        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
+            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}.rw.dmg"/>
         </exec>
-        <exec executable="hdiutil" failonerror="true">
-            <arg line="attach ${OutDir}/${DmgName}.dmg"/>
+        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
+            <arg line="attach ${DmgName}.rw.dmg"/>
         </exec>
         <copy todir="${DmgMountPoint}" preservelastmodified="true">
             <fileset dir="${OutDir}">
@@ -460,14 +465,15 @@ Log=    console
             <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
         </exec>
         <sleep seconds="1"/>
-        <exec executable="umount" failonerror="true">
-            <arg value="${DmgMountPoint}"/>
+        <exec executable="hdiutil" failonerror="true">
+            <arg line="detach '${DmgMountPoint}'"/>
         </exec>
+        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
+            <arg line="convert ${DmgName}.rw.dmg -format UDZO -o ${DmgName}.dmg"/>
+        </exec>
+        <delete file="${OutDir}/${DmgName}.rw.dmg" failonerror="false"/>
     </target>
     <target name="SignMacDmg" description="Mac DMG Signing" depends="SignMacApp.Check,BuildMacDmg" if="WillSignMacApp">
-        <exec executable="xattr" dir="${OutDir}" failonerror="true">
-            <arg line="-cr ${DmgName}.dmg"/>
-        </exec>
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}.dmg"/>
         </exec>
@@ -475,23 +481,19 @@ Log=    console
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --verify ${DmgName}.dmg"/>
         </exec>
+        <!-- Notarize -->
+        <exec executable="bash" dir="${OutDir}" failonerror="true">
+            <arg line="../../notarize.sh ${DmgName}.dmg"/>
+        </exec>
         <!-- verify gatekeeper -->
         <exec executable="spctl" dir="${OutDir}" failonerror="true">
             <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}.dmg"/>
         </exec>
-        <!-- Notarize -->
-        <exec executable="zip" dir="${OutDir}" failonerror="true">
-            <arg line="-r ${DmgName}.dmg.zip ${DmgName}.dmg"/>
-        </exec>
-        <!--
-        <exec executable="xcrun" dir="${OutDir}" failonerror="true">
-            <arg line="altool =notarize-app -f ${DmgName}.dmg.zip =primary-bundle-id jb.dva -t osx -u jonno@fastmail.fm -p @keychain:DVAnotarization"/>
-        </exec>-->
     </target>
     <target name="ZipMacDmg" depends="SignMacDmg">
         <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
         <exec executable="bzip2" dir="${OutDir}" failonerror="true">
-            <arg line="--verbose --${bzip2compression} ${DmgName}.dmg"/>
+            <arg line="--verbose --${bzip2compression} --keep ${DmgName}.dmg"/>
         </exec>
     </target>
 
