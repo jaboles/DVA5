@@ -592,9 +592,10 @@ Log=    console
         <echo level="info">Version ${DVAVersion}</echo>
         <copy todir="build/TestUpdateDrop/${DVAVersion}">
             <fileset dir="${OutDir}">
+                <include name="${DmgName}.dmg"/>
                 <include name="${DmgName}.dmg.bz2"/>
                 <include name="${WindowsSetupName}.exe"/>
-                <include name="DVA5.deb"/>
+                <include name="DVA5*.deb"/>
                 <include name="new.html"/>
             </fileset>
         </copy>

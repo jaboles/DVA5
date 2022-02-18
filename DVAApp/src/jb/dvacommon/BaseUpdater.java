@@ -125,7 +125,7 @@ public abstract class BaseUpdater
     {
         String filename;
         if (OSDetection.isMac())
-            filename = "DVA5.dmg.bz2";
+            filename = "DVA5.dmg";
         else if (OSDetection.isWindows())
             filename = "DVA5Setup.exe";
         else
@@ -193,14 +193,8 @@ public abstract class BaseUpdater
         String installerPath = downloadedInstaller.getPath();
         if (OSDetection.isMac()) // Mac OSX
         {
-            Process p;
-            // Unzip
-            int extensionLength = 3;
-            p = new ProcessBuilder("bunzip2", "-f", installerPath).start();
-            p.waitFor();
-
             // Mount
-            p = new ProcessBuilder("hdiutil", "attach", "-mount", "required", installerPath.substring(0, installerPath.length() - extensionLength - 1)).start();
+            Process p = new ProcessBuilder("hdiutil", "attach", "-mount", "required", installerPath).start();
             p.waitFor();
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             br.readLine();

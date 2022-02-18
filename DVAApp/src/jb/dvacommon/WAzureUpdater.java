@@ -94,6 +94,7 @@ public class WAzureUpdater extends BaseUpdater
             // Upload an image file.
             File[] artifacts = new File[] {
                     new File("/Users/jb/Software/DVA/build/Output/new.html"),
+                    new File("/Users/jb/Software/DVA/build/Output/DVA5.dmg"),
                     new File("/Users/jb/Software/DVA/build/Output/DVA5.dmg.bz2"),
                     new File("/Users/jb/Software/DVA/build/Output/DVA5Setup.exe"),
                     new File("/Users/jb/Software/DVA/build/Output/DVA5-x86_64.deb"),
