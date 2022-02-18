@@ -16,13 +16,13 @@ public class Updater
     public static ArrayList<BaseUpdater> AllUpdaters;
     final static Logger logger = LogManager.getLogger(Updater.class);
     private static final File jarFolder;
-    
+
     static
     {
         jarFolder = FileUtilities.getJarFolder(Updater.class);
         try {
             AllUpdaters = new ArrayList<>();
-            if (jarFolder != null && jarFolder.getPath().toLowerCase().startsWith("/Users/jb/Software/DVA/build".toLowerCase())) {
+            if (jarFolder != null && new File("/Users/jb/Software/DVA/build").exists()) {
                 logger.info("Using the local drop source");
                 AllUpdaters.add(new SimpleWebsiteUpdater(new URL("file:///Users/jb/Software/DVA/build/TestUpdateDrop/")));
             }
@@ -30,7 +30,7 @@ public class Updater
             //AllUpdaters.add(new SimpleWebsiteUpdater(new URL("http://jonathanboles.com/dva/")));
         } catch (MalformedURLException ignored) {}
     }
-    
+
     public static Optional<BaseUpdater> updateAvailable(String currentVersion, String suppressedVersion)
     {
         logger.info("Checking available updaters for a version newer than {}, suppressed version {}", currentVersion, suppressedVersion);
@@ -38,14 +38,14 @@ public class Updater
 
         Optional<BaseUpdater> latestUpdater = AllUpdaters.stream()
             .peek(u -> {
-                String uv = u.getLatestVersion(); 
+                String uv = u.getLatestVersion();
                 logger.debug("Checked {}: latest is {}", u.getClass().getName(), uv);
             })
             .filter(u -> u.getLatestVersion() != null)
             .filter(u -> suppressedVersion == null || VersionComparator.Instance.compare(u.getLatestVersion(), suppressedVersion) > 0)
             .filter(u -> VersionComparator.Instance.compare(u.getLatestVersion(), currentVersion) > 0)
             .max((u1, u2) -> VersionComparator.Instance.compare(u1.getLatestVersion(), u2.getLatestVersion()));
-         
+
         if (latestUpdater.isPresent())
             logger.info("Newer version found using updater {}", latestUpdater.getClass().getName());
         else
