@@ -439,7 +439,7 @@ Log=    console
     <target name="BuildMacDmg" description  ="Build Mac DMG" if="isMac" depends="SignMacApp">
         <property name="DmgVolumeName" value="DVA 5"/>
         <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-        <delete file="${OutDir}/${DmgName}.rw.dmg" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}.ro.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
         <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
         <exec executable="sh" outputproperty="dmgSizeMb">
@@ -447,10 +447,10 @@ Log=    console
         </exec>
         <echo>Creating .DMG with ${dmgSizeMb} mb</echo>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}.rw.dmg"/>
+            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}.dmg"/>
         </exec>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="attach ${DmgName}.rw.dmg"/>
+            <arg line="attach ${DmgName}.dmg"/>
         </exec>
         <copy todir="${DmgMountPoint}" preservelastmodified="true">
             <fileset dir="${OutDir}">
@@ -468,10 +468,14 @@ Log=    console
         <exec executable="hdiutil" failonerror="true">
             <arg line="detach '${DmgMountPoint}'"/>
         </exec>
-        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="convert ${DmgName}.rw.dmg -format UDZO -o ${DmgName}.dmg"/>
+        <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
+        <exec executable="bzip2" dir="${OutDir}" failonerror="true">
+            <arg line="--verbose --${bzip2compression} --keep ${DmgName}.dmg"/>
         </exec>
-        <delete file="${OutDir}/${DmgName}.rw.dmg" failonerror="false"/>
+        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
+            <arg line="convert ${DmgName}.dmg -format UDZO -o ${DmgName}.ro.dmg"/>
+        </exec>
+        <move file="${OutDir}/${DmgName}.ro.dmg" tofile="${OutDir}/${DmgName}.dmg"/>
     </target>
     <target name="SignMacDmg" description="Mac DMG Signing" depends="SignMacApp.Check,BuildMacDmg" if="WillSignMacApp">
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
@@ -488,12 +492,6 @@ Log=    console
         <!-- verify gatekeeper -->
         <exec executable="spctl" dir="${OutDir}" failonerror="true">
             <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}.dmg"/>
-        </exec>
-    </target>
-    <target name="ZipMacDmg" depends="SignMacDmg">
-        <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
-        <exec executable="bzip2" dir="${OutDir}" failonerror="true">
-            <arg line="--verbose --${bzip2compression} --keep ${DmgName}.dmg"/>
         </exec>
     </target>
 
@@ -585,7 +583,7 @@ Log=    console
         <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch}.deb"/>
     </target>
 
-    <target name="AllSetups" description="Build all setups" depends="Clean,ZipMacDmg,SignWinSetup,BuildLinuxDebs">
+    <target name="AllSetups" description="Build all setups" depends="Clean,SignMacDmg,SignWinSetup,BuildLinuxDebs">
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>

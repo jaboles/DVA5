@@ -18,6 +18,8 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import jb.common.ExceptionReporter;
@@ -197,9 +199,12 @@ public abstract class BaseUpdater
             Process p = new ProcessBuilder("hdiutil", "attach", "-mount", "required", installerPath).start();
             p.waitFor();
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            br.readLine();
-            String volumeInfo = br.readLine();
-            String volume = volumeInfo.split("\\s+", 3)[2];
+            List<String> lines = br.lines().collect(Collectors.toList());
+            Optional<String> volumeLine = lines.stream().filter(s -> s.startsWith("/dev/disk") && s.contains("Apple_HFS")).findFirst();
+            if (!volumeLine.isPresent()) {
+                logger.error("Could not find volume line in output: {}", String.join("\r\n", lines));
+            }
+            String volume = volumeLine.get().split("Apple_HFS", 2)[1].trim();
 
             // Write script to copy to Applications folder, unmount and relaunch.
             File updateScript = File.createTempFile("dva_update", "");
