@@ -169,7 +169,12 @@ public class GtfsTimetableTranslator
 
                     for (Trip blockTrip : getLaterTripsInSameBlock(tripTimeAndPlace.Trip))
                     {
-                        List<NormalizedStopTime> blockStopTimes = applyRealtimeInfo(stopTimesByTrip.get(blockTrip).stream(), dateCopy)
+                        List<StopTime> blockStopTimesUnnormalized = stopTimesByTrip.get(blockTrip);
+                        if (blockStopTimesUnnormalized == null) {
+                            continue;
+                        }
+
+                        List<NormalizedStopTime> blockStopTimes = applyRealtimeInfo(blockStopTimesUnnormalized.stream(), dateCopy)
                                 .map(bst -> new NormalizedStopTime(bst, dateCopy))
                                 .collect(Collectors.toList());
 
