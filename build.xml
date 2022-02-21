@@ -370,14 +370,6 @@
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --deep --verify DVA.app"/>
         </exec>
-        <!-- notarize -->
-        <exec executable="bash" dir="${OutDir}" failonerror="true">
-            <arg line="../../notarize.sh DVA.app"/>
-        </exec>
-        <!-- verify gatekeeper -->
-        <exec executable="spctl" dir="${OutDir}" failonerror="true">
-            <arg line="-vv --assess --type execute DVA.app"/>
-        </exec>
     </target>
 
     <target name="ResHack">
