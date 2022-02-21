@@ -101,7 +101,7 @@
         <get src="https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.tar.gz/download" dest="${ToolsDir}/ant-contrib.tar.gz" usetimestamp="true"/>
         <untar src="${ToolsDir}/ant-contrib.tar.gz" dest="${ToolsDir}" compression="gzip" overwrite="false" />
     </target>
-    <target name="FetchDeps.Mac" if="isMac">
+    <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
         <!-- JRE: Mac x64 -->
         <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jdk\mac" compression="gzip" overwrite="false">
@@ -212,7 +212,7 @@
             <arg line="install fakeroot"/>
         </exec>
     </target>
-    <target name="FetchDeps.Windows" if="isWindows" depends="FetchDeps.BuildForWindows">
+    <target name="FetchDeps.Windows" if="isWindows" depends="FetchDeps.Common,FetchDeps.BuildForWindows">
         <!-- install Inno Setup -->
         <condition property="innoSetupCompilerAvailable" value="1">
             <available file="${InnoSetupCompiler}"/>
