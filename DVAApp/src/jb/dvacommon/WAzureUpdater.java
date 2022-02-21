@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.StreamSupport;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
@@ -65,6 +66,9 @@ public class WAzureUpdater extends BaseUpdater
 
     public static void main(String[] args) throws InvalidKeyException, URISyntaxException, StorageException, IOException
     {
+        for (Map.Entry<String, String> e : System.getenv().entrySet()) {
+            System.out.println(e.getKey() + " -> " + e.getValue());
+        }
         String connectionString = System.getenv("AZURE_SECRET") != null
                 ? System.getenv("AZURE_SECRET")
                 : FileUtilities.readAllText("azure.secret").trim();
