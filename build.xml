@@ -235,6 +235,10 @@
         </antcall>
     </target>
     <target name="FetchDeps.Linux" if="isLinux" depends="FetchDeps.Common,FetchDeps.BuildForLinux">
+        <!-- Protocol Buffers compiler -->
+        <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
+        <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
+        <chmod perm="u+x" file="${ToolsDir}/protoc/bin/protoc"/>
     </target>
 
     <!-- Increments the build number -->
