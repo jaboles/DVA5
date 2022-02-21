@@ -445,6 +445,7 @@ Log=    console
             <arg value="(gc DVAApp/src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
         </exec>
         <echo level="info">Read version string: ${DVAVersion}</echo>
+        <echo file="${OutDir}/version.txt">${DVAVersion}</echo>
     </target>
 
     <!-- Build Mac setup -->

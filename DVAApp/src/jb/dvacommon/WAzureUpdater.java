@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,15 +70,6 @@ public class WAzureUpdater extends BaseUpdater
         CloudBlobClient serviceClient = account.createCloudBlobClient();
 
         String cmd = args[0];
-
-        CloudBlobContainer versionContainer = null;
-        if (args.length > 1) {
-            String version = args[1];
-            // Container name must be lower case.
-            String containerName = version.replace('.',  '-');
-            versionContainer = serviceClient.getContainerReference(containerName);
-        }
-
         CloudBlobContainer metadataContainer = serviceClient.getContainerReference(MetadataContainerName);
         CloudBlobContainer soundjarsContainer = serviceClient.getContainerReference(SoundJarsContainerName);
 
@@ -86,28 +79,38 @@ public class WAzureUpdater extends BaseUpdater
         metadataContainer.createIfNotExists();
         metadataContainer.uploadPermissions(bcp);
 
-        if (cmd.equals("uploadversion") && versionContainer != null)
+        if (cmd.equals("uploadversion"))
         {
+            String version = null;
+            if (args.length > 1) {
+                version = args[1];
+            } else {
+                version = "0." + Files.readString(Paths.get("build/Output/version.txt"));
+            }
+            CloudBlobContainer versionContainer = getVersionContainer(serviceClient, version);
+
             versionContainer.createIfNotExists();
             versionContainer.uploadPermissions(bcp);
 
             // Upload an image file.
             File[] artifacts = new File[] {
-                    new File("/Users/jb/Software/DVA/build/Output/new.html"),
-                    new File("/Users/jb/Software/DVA/build/Output/DVA5.dmg"),
-                    new File("/Users/jb/Software/DVA/build/Output/DVA5.dmg.bz2"),
-                    new File("/Users/jb/Software/DVA/build/Output/DVA5Setup.exe"),
-                    new File("/Users/jb/Software/DVA/build/Output/DVA5-x86_64.deb"),
-                    new File("/Users/jb/Software/DVA/build/Output/DVA5-aarch64.deb"),
+                    new File("build/Output/new.html"),
+                    new File("build/Output/DVA5.dmg"),
+                    new File("build/Output/DVA5.dmg.bz2"),
+                    new File("build/Output/DVA5Setup.exe"),
+                    new File("build/Output/DVA5-x86_64.deb"),
+                    new File("build/Output/DVA5-aarch64.deb"),
                 };
             for (File f : artifacts)
             {
-                uploadArtifact(f, versionContainer);
+                if (f.exists())
+                    uploadArtifact(f, versionContainer);
             }
             updateVersions(serviceClient, metadataContainer);
         }
         else if (cmd.equals("deleteversion"))
         {
+            CloudBlobContainer versionContainer = getVersionContainer(serviceClient, args[1]);
             deleteContainer(versionContainer);
             updateVersions(serviceClient, metadataContainer);
         }
@@ -186,6 +189,13 @@ public class WAzureUpdater extends BaseUpdater
         versionContainer.delete();
         System.out.println("done");
     }
+
+    private static CloudBlobContainer getVersionContainer(CloudBlobClient serviceClient, String version) throws URISyntaxException, StorageException {
+        // Container name must be lower case.
+        String containerName = version.replace('.',  '-');
+        return serviceClient.getContainerReference(containerName);
+    }
+
     private static String[] getVersions(CloudBlobClient serviceClient)
     {
         return StreamSupport.stream(serviceClient.listContainers().spliterator(), false)
