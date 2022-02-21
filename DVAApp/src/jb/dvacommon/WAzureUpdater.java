@@ -65,8 +65,8 @@ public class WAzureUpdater extends BaseUpdater
 
     public static void main(String[] args) throws InvalidKeyException, URISyntaxException, StorageException, IOException
     {
-        String connectionString = System.getenv("Azure_Secret") != null
-                ? System.getenv("Azure_Secret")
+        String connectionString = System.getenv("AZURE_SECRET") != null
+                ? System.getenv("AZURE_SECRET")
                 : FileUtilities.readAllText("azure.secret").trim();
         CloudStorageAccount account = CloudStorageAccount.parse(connectionString);
         CloudBlobClient serviceClient = account.createCloudBlobClient();
