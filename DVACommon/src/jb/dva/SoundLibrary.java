@@ -131,6 +131,8 @@ public class SoundLibrary implements Serializable {
     private void populateUrlTable(List<URL> urls) throws IOException
     {
         logger.debug("Populating library {}", getName());
+        // Deal with filenames that are too long by reading their name from the properties file.
+        Map<String, URL> truncated = new HashMap<String, URL>();
         for (URL u : urls)
         {
             String urlString = u.toString();
@@ -138,48 +140,14 @@ public class SoundLibrary implements Serializable {
                     urlString.toLowerCase().endsWith(".wav") ||
                     urlString.toLowerCase().endsWith(".mp3")) {
                 // Found a sound file
-
-                boolean isFalling = false;
                 String canonicalName = urlString.substring(urlString.lastIndexOf('/')+1);
                 if (canonicalName.lastIndexOf('.') > 0) canonicalName = canonicalName.substring(0, canonicalName.lastIndexOf('.'));
-                if (canonicalName.endsWith(".f")) {
-                    // 'Falling inflection' sound
-                    isFalling = true;
-                    canonicalName = canonicalName.substring(0, canonicalName.length() - 2);
-                }
-                String translated = canonicalName.toLowerCase();
-
-                canonicalNameMap.put(translated, canonicalName);
-
-                SoundReference ref;
-                if (soundMap.containsKey(translated)) {
-                    ref = soundMap.get(translated);
+                if (canonicalName.endsWith(".truncated")) {
+                    canonicalName = canonicalName.substring(0, canonicalName.length() - 10);
+                    truncated.put(canonicalName, u);
                 } else {
-                    ref = new SoundReference();
-                    ref.canonicalName = canonicalName;
-                    soundMap.put(translated, ref);
+                    putSound(canonicalName, u);
                 }
-
-                // The cityrail sound files have two sets -- regular inflection named e.g. Central.mp3
-                // and falling inflection named e.g. Central.f.mp3
-                // Eventually regular inflection would be used for intermediate words in a sentence and
-                // falling inflection at the end of a sentence, but this is not yet implemented.
-                if (isFalling) {
-                    ref.falling = u;
-                    if (ref.regular != null) {
-                        ref.rising = ref.regular;
-                        ref.regular = null;
-                    }
-                } else {
-                    if (ref.falling != null) {
-                        ref.rising = u;
-                    } else {
-                        ref.regular = u;
-                    }
-                }
-
-                if (translated.length() > longestSoundName)
-                    longestSoundName = translated.length();
             }
             else if (urlString.toLowerCase().endsWith(".png") ||
                     urlString.toLowerCase().endsWith(".jpg") ||
@@ -201,7 +169,53 @@ public class SoundLibrary implements Serializable {
                 properties.load(u.openStream());
             }
         }
+
+        for (Entry<String, URL> t : truncated.entrySet()) {
+            putSound(properties.getProperty(t.getKey()), t.getValue());
+        }
         logger.info("Populated {} with {} items", getName(), canonicalNameMap.size());
+    }
+
+    private void putSound(String canonicalName, URL u) {
+        boolean isFalling = false;
+        if (canonicalName.endsWith(".f")) {
+            // 'Falling inflection' sound
+            isFalling = true;
+            canonicalName = canonicalName.substring(0, canonicalName.length() - 2);
+        }
+        String translated = canonicalName.toLowerCase();
+
+        canonicalNameMap.put(translated, canonicalName);
+
+        SoundReference ref;
+        if (soundMap.containsKey(translated)) {
+            ref = soundMap.get(translated);
+        } else {
+            ref = new SoundReference();
+            ref.canonicalName = canonicalName;
+            soundMap.put(translated, ref);
+        }
+
+        // The cityrail sound files have two sets -- regular inflection named e.g. Central.mp3
+        // and falling inflection named e.g. Central.f.mp3
+        // Eventually regular inflection would be used for intermediate words in a sentence and
+        // falling inflection at the end of a sentence, but this is not yet implemented.
+        if (isFalling) {
+            ref.falling = u;
+            if (ref.regular != null) {
+                ref.rising = ref.regular;
+                ref.regular = null;
+            }
+        } else {
+            if (ref.falling != null) {
+                ref.rising = u;
+            } else {
+                ref.regular = u;
+            }
+        }
+
+        if (translated.length() > longestSoundName)
+            longestSoundName = translated.length();
     }
 
     public boolean contains(String s) {
