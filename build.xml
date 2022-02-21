@@ -588,9 +588,14 @@ Log=    console
         <exec executable="sh" outputproperty="debInstalledSize">
             <arg line="-c &quot;echo `du -d 0 -k build/Output/debian | cut -f 1`&quot;"/>
         </exec>
-        <exec executable="sed" dir="${basedir}" failonerror="true">
+        <exec executable="sed" dir="${basedir}" osfamily="mac" failonerror="true">
             <arg value="-i"/>
             <arg value=".bak"/>
+            <arg value="s/^Version:.*/Version: ${DVAVersion}/;s/^Installed\-Size:.*/Installed\-Size: ${debInstalledSize}/;s/^Architecture:.*/Architecture: ${arch.debian}/"/>
+            <arg value="${DpkgRoot}/DEBIAN/control"/>
+        </exec>
+        <exec executable="sed" dir="${basedir}" osfamily="unix" failonerror="true">
+            <arg value="-i.bak"/>
             <arg value="s/^Version:.*/Version: ${DVAVersion}/;s/^Installed\-Size:.*/Installed\-Size: ${debInstalledSize}/;s/^Architecture:.*/Architecture: ${arch.debian}/"/>
             <arg value="${DpkgRoot}/DEBIAN/control"/>
         </exec>
