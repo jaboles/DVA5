@@ -11,7 +11,7 @@ fi
 
 password=''
 if [[ "$SYSTEM_COLLECTIONURI" == "https://jonathanboles.visualstudio.com/" ]]; then
-  password="@env:DVANotarizationPassword"
+  password="@env:DVANOTARIZATIONPASSWORD"
 else
   password="@keychain:DVAnotarization"
 fi
