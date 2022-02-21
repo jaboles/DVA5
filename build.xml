@@ -444,6 +444,10 @@ Log=    console
             <arg value="-c"/>
             <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
+        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="unix" failonerror="true">
+            <arg value="-c"/>
+            <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
+        </exec>
         <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows" failonerror="true">
             <arg value="-command"/>
             <arg value="(gc DVAApp/src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
