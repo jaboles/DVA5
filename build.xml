@@ -446,7 +446,7 @@ Log=    console
         </exec>
         <exec executable="/bin/bash" outputproperty="DVAVersion" osfamily="unix" failonerror="true">
             <arg value="-c"/>
-            <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
+            <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep -P '&quot;\d+\.\d+\.\d+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
         <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows" failonerror="true">
             <arg value="-command"/>
