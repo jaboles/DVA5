@@ -358,7 +358,7 @@
                 <equals arg1="${hostname}" arg2="jb"/>
                 <equals arg1="${hostname}" arg2="jb.local"/>
                 <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
-                <equals arg1="${env.BUILD_QUEUEDBY}" arg2="Jonathan Boles"/>
+                <equals arg1="${env.SYSTEM_COLLECTIONURI}" arg2="https://jonathanboles.visualstudio.com/"/>
             </or>
         </condition>
     </target>
