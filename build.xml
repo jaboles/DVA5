@@ -440,11 +440,11 @@ Log=    console
 
     <target name="SetupCommon" description="common setup crap">
         <copy file="DVAApp/resources/new.html" todir="${OutDir}"/>
-        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="mac" failonerror="true">
+        <exec executable="/bin/bash" outputproperty="DVAVersion" osfamily="mac" failonerror="true">
             <arg value="-c"/>
             <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
-        <exec executable="/bin/sh" outputproperty="DVAVersion" osfamily="unix" failonerror="true">
+        <exec executable="/bin/bash" outputproperty="DVAVersion" osfamily="unix" failonerror="true">
             <arg value="-c"/>
             <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
