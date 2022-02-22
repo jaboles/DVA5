@@ -364,7 +364,7 @@
     </target>
     <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,BuildMacApp" if="WillSignMacApp">
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
-            <arg line="-v --force --deep --options runtime --timestamp --sign '${SignIdentity}' DVA.app"/>
+            <arg line="-v --force --deep --options runtime --timestamp --entitlements ../../mac/entitlements.plist --sign '${SignIdentity}' DVA.app"/>
         </exec>
         <!-- verify codesign -->
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
