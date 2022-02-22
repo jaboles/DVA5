@@ -1,11 +1,6 @@
 #!/bin/sh
-
-realpath() {
-	echo $(perl -e 'use Cwd "abs_path"; print abs_path(@ARGV[0])' -- "$1")
-}
-
-BASEDIR=`dirname "$0"`
-DOCKICON=`realpath $BASEDIR/../Resources/dva.icns`
+BASEDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+DOCKICON=`echo "$BASEDIR" | sed -e 's/MacOS/Resources\/dva.icns/'`
 cd "$BASEDIR"
 exec ./jre/bin/java \
     -Xdock:name=DVA \
