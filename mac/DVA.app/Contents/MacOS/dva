@@ -7,7 +7,6 @@ realpath() {
 BASEDIR=`dirname "$0"`
 DOCKICON=`realpath $BASEDIR/../Resources/dva.icns`
 cd "$BASEDIR"
-xattr -dr ./ffmpeg
 exec ./jre/bin/java \
     -Xdock:name=DVA \
     -Xdock:icon=$DOCKICON \
