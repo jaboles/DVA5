@@ -321,7 +321,7 @@
             <arg line="-replace CFBundleVersion -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
         <exec executable="plutil" dir="${OutDir}" failonerror="true">
-            <arg line="-replace NSHumanReadableCopyright -string &quot;Copyright © Jonathan Boles 1999-2021&quot; DVA.app/Contents/Info.plist"/>
+            <arg line="-replace NSHumanReadableCopyright -string &quot;Copyright © Jonathan Boles 1999-2022&quot; DVA.app/Contents/Info.plist"/>
         </exec>
         <copy todir="${AppBundleContents}" preservelastmodified="true">
             <fileset dir=".">
@@ -433,11 +433,11 @@ Log=    console
 
     <target name="SetupCommon" description="common setup crap">
         <copy file="DVAApp/resources/new.html" todir="${OutDir}"/>
-        <exec executable="/bin/bash" outputproperty="DVAVersion" osfamily="mac" failonerror="true">
+        <exec executable="sh" outputproperty="DVAVersion" osfamily="mac" failonerror="true">
             <arg value="-c"/>
             <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
-        <exec executable="/bin/bash" outputproperty="DVAVersion" osfamily="unix" failonerror="true">
+        <exec executable="sh" outputproperty="DVAVersion" osfamily="unix" failonerror="true">
             <arg value="-c"/>
             <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep -P '&quot;\d+\.\d+\.\d+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
         </exec>
@@ -466,15 +466,10 @@ Log=    console
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
             <arg line="attach ${DmgName}.dmg"/>
         </exec>
-        <copy todir="${DmgMountPoint}" preservelastmodified="true">
-            <fileset dir="${OutDir}">
-                <include name="DVA.app/**"/>
-            </fileset>
-        </copy>
-        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/dva"/>
-        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/ffmpeg"/>
-        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/bin/java"/>
-        <chmod perm="u+x" file="${DmgMountPoint}/DVA.app/Contents/MacOS/jre/lib/jspawnhelper"/>
+        <exec executable="sh" dir="${OutDir}" failonerror="true">
+            <arg value="-c"/>
+            <arg value="cp -Rfp DVA.app '${DmgMountPoint}'"/>
+        </exec>
         <exec executable="osascript" failonerror="true">
             <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
         </exec>
@@ -500,7 +495,7 @@ Log=    console
             <arg line="-v --verify ${DmgName}.dmg"/>
         </exec>
         <!-- Notarize -->
-        <exec executable="bash" dir="${OutDir}" failonerror="true">
+        <exec executable="sh" dir="${OutDir}" failonerror="true">
             <arg line="../../notarize.sh ${DmgName}.dmg"/>
         </exec>
         <!-- verify gatekeeper -->
