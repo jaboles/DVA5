@@ -26,7 +26,8 @@ public class SoundLibraryListCellRenderer extends DefaultListCellRenderer {
 
         JLabel label = (JLabel)super.getListCellRendererComponent(list, s, index, selected, expanded);
         SoundLibrary obj = (SoundLibrary)value;
-        label.setIcon(shrinkIcon(obj.getIcon()));
+        if (obj.getIcon() != null)
+            label.setIcon(shrinkIcon(obj.getIcon()));
         return label;
     }
 
