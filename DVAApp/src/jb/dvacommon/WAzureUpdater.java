@@ -69,8 +69,8 @@ public class WAzureUpdater extends BaseUpdater
         for (Map.Entry<String, String> e : System.getenv().entrySet()) {
             System.out.println(e.getKey() + " -> " + e.getValue());
         }
-        String connectionString = System.getenv("AZURE_SECRET") != null
-                ? System.getenv("AZURE_SECRET")
+        String connectionString = System.getenv("AGENT_TEMPDIRECTORY") != null
+                ? FileUtilities.readAllText(System.getenv("AGENT_TEMPDIRECTORY") + "/azure.secret").trim()
                 : FileUtilities.readAllText("azure.secret").trim();
         CloudStorageAccount account = CloudStorageAccount.parse(connectionString);
         CloudBlobClient serviceClient = account.createCloudBlobClient();

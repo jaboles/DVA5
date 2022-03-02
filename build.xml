@@ -537,7 +537,7 @@ Log=    console
         </condition>
         <available file="/Users/jb/Software/JonathanBoles.pvk" property="SignKey" value="/Users/jb/Software/JonathanBoles.pvk"/>
         <available file="/Users/jb/Software/JonathanBoles.spc" property="SignCert" value="/Users/jb/Software/JonathanBoles.spc"/>
-        <available file="JonathanBoles.pfx" property="SignCert" value="JonathanBoles.pfx"/>
+        <available file="${env.AGENT_TEMPDIRECTORY}/JonathanBoles.pfx" property="SignCert" value="${AGENT_TEMPDIRECTORY}\JonathanBoles.pfx"/>
         <echo level="info">Signing cert: ${SignCert}</echo>
     </target>
     <target name="SignWinFile" depends="SignWin.Check" if="WillSignWin">
