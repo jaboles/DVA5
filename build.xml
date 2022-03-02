@@ -545,8 +545,8 @@ Log=    console
         <exec executable="signcode" osfamily="mac" failonerror="true">
             <arg line="-a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; ${file}"/>
         </exec>
-        <exec executable="signtool" osfamily="windows" failonerror="true">
-            <arg line="sign /t http://timestamp.digicert.com /f ${SignCert} /d &quot;DVA&quot; ${file}"/>
+        <exec executable="C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x86\signtool.exe" osfamily="windows" failonerror="true">
+            <arg line="sign /f ${SignCert} /fd SHA256 /t http://timestamp.digicert.com /td SHA256 /d &quot;DVA&quot; ${file}"/>
         </exec>
     </target>
     <target name="SignWinSetup" depends="BuildWinSetup">
