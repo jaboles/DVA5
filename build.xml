@@ -34,9 +34,6 @@
 
     <!-- Mac signing identity in Keychain -->
     <property name="SignIdentity" value="Developer ID Application: Jonathan Boles (W2WXX3D2U6)"/>
-    <!-- Windows signing cert paths. -->
-    <property name="SignKey" value="/Users/jb/Software/jb.pvk"/>
-    <property name="SignCert" value="/Users/jb/Software/jb.spc"/>
 
     <!-- Windows setup -->
     <property name="Wine"            value="wine"/>
@@ -351,9 +348,9 @@
         <move file="${OutDir}/DVA.app/Contents/MacOS/jre/legal" tofile="${OutDir}/DVA.app/Contents/Resources/legal"/>
     </target>
 
-    <target name="SignMacApp.Check">
+    <target name="SignMac.Check">
         <echo level="info">Running on ${hostname}</echo>
-        <condition property="WillSignMacApp">
+        <condition property="WillSignMac">
             <or>
                 <equals arg1="${hostname}" arg2="jb"/>
                 <equals arg1="${hostname}" arg2="jb.local"/>
@@ -362,7 +359,7 @@
             </or>
         </condition>
     </target>
-    <target name="SignMacApp" description="Mac App Signing" depends="SignMacApp.Check,BuildMacApp" if="WillSignMacApp">
+    <target name="SignMacApp" description="Mac App Signing" depends="SignMac.Check,BuildMacApp" if="WillSignMac">
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --force --deep --options runtime --timestamp --entitlements ../../mac/entitlements.plist --sign '${SignIdentity}' DVA.app"/>
         </exec>
@@ -429,6 +426,18 @@ Log=    console
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
+        <antcall target="SignWinFile">
+            <param name="file" value="${WinOutDir32}DVA.exe"/>
+        </antcall>
+        <antcall target="SignWinFile">
+            <param name="file" value="${WinOutDir64}DVA.exe"/>
+        </antcall>
+        <antcall target="SignWinFile">
+            <param name="file" value="${WinOutDir32}DVA.scr"/>
+        </antcall>
+        <antcall target="SignWinFile">
+            <param name="file" value="${WinOutDir64}DVA.scr"/>
+        </antcall>
     </target>
 
     <target name="SetupCommon" description="common setup crap">
@@ -486,7 +495,7 @@ Log=    console
         </exec>
         <move file="${OutDir}/${DmgName}.ro.dmg" tofile="${OutDir}/${DmgName}.dmg"/>
     </target>
-    <target name="SignMacDmg" description="Mac DMG Signing" depends="SignMacApp.Check,BuildMacDmg" if="WillSignMacApp">
+    <target name="SignMacDmg" description="Mac DMG Signing" depends="SignMac.Check,BuildMacDmg" if="WillSignMac">
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}.dmg"/>
         </exec>
@@ -519,14 +528,31 @@ Log=    console
     </target>
 
     <!-- Sign windows setup -->
-    <target name="SignWinSetup.Check">
-        <echo level="info">Checking for ${SignKey}</echo>
-        <available file="${SignKey}" property="SignKeyExists"/>
+    <target name="SignWin.Check">
+        <condition property="WillSignWin">
+            <or>
+                <available file="/Users/jb/Software/JonathanBoles.pvk"/>
+                <equals arg1="${env.SYSTEM_COLLECTIONURI}" arg2="https://jonathanboles.visualstudio.com/"/>
+            </or>
+        </condition>
+        <available file="/Users/jb/Software/JonathanBoles.pvk" property="SignKey" value="/Users/jb/Software/JonathanBoles.pvk"/>
+        <available file="/Users/jb/Software/JonathanBoles.spc" property="SignCert" value="/Users/jb/Software/JonathanBoles.spc"/>
+        <available file="JonathanBoles.pfx" property="SignCert" value="JonathanBoles.pfx"/>
+        <echo level="info">Signing cert: ${SignCert}</echo>
     </target>
-    <target name="SignWinSetup" depends="SignWinSetup.Check,BuildWinSetup" if="SignKeyExists">
-        <exec executable="signcode" dir="${OutDir}" failonerror="true">
-            <arg line="signcode -a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; DVA5Setup.exe"/>
+    <target name="SignWinFile" depends="SignWin.Check" if="WillSignWin">
+        <echo message="Signing: ${file}"/>
+        <exec executable="signcode" osfamily="mac" failonerror="true">
+            <arg line="-a sha1 -t http://timestamp.digicert.com -spc ${SignCert} -pvk ${SignKey} -n &quot;DVA&quot; ${file}"/>
         </exec>
+        <exec executable="signtool" osfamily="windows" failonerror="true">
+            <arg line="sign /t http://timestamp.digicert.com /f ${SignCert} /d &quot;DVA&quot; ${file}"/>
+        </exec>
+    </target>
+    <target name="SignWinSetup" depends="BuildWinSetup">
+        <antcall target="SignWinFile">
+            <param name="file" value="${OutDir}/DVA5Setup.exe" />
+        </antcall>
     </target>
 
     <!-- Linux Debian Setups -->
