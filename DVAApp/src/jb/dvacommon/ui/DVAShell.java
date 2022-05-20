@@ -194,10 +194,18 @@ public class DVAShell
     };
 
     @SuppressWarnings("unused")
-    public Action showIndicatorsTimetablePanelAction = new AbstractAction("Go to Indicators, Timetable") {
+    public Action showIndicatorsRecurringPanelAction = new AbstractAction("Go to Indicators, Recurring") {
         public void actionPerformed(ActionEvent e) {
             tabbedPane.setSelectedIndex(1);
             plasmaUI.setTabIndex(1);
+        }
+    };
+
+    @SuppressWarnings("unused")
+    public Action showIndicatorsTimetablePanelAction = new AbstractAction("Go to Indicators, Timetable") {
+        public void actionPerformed(ActionEvent e) {
+            tabbedPane.setSelectedIndex(1);
+            plasmaUI.setTabIndex(2);
         }
     };
 

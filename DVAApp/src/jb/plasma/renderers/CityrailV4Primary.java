@@ -13,7 +13,8 @@ public class CityrailV4Primary extends CityrailV4Landscape
     private BufferedImage LineLogo;
     private CityrailLine Line;
 
-    public CityrailV4Primary() {
+    public CityrailV4Primary(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
         stationListInc = 0.0528 / PlasmaPanel.FPS;
         stationListSeparation = 0.10;
         stationListPosInitial = 0.35 + (1 * stationListSeparation);

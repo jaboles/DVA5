@@ -36,7 +36,10 @@
                 <filler width="10"/>
                 <vbox>
                     <panel layout="BorderLayout">
-                        <button constraints="BorderLayout.NORTH" id="playStopButton" action="announceAction"/>
+                        <vbox constraints="BorderLayout.NORTH">
+                            <button id="playStopButton" action="announceAction"/>
+                            <button id="updateIndicatorsButton" action="updateIndicatorsAction"/>
+                        </vbox>
                         <label constraints="BorderLayout.CENTER" text="                   "/>
                     </panel>
                     <panel layout="BorderLayout">
@@ -44,6 +47,24 @@
                     </panel>
                 </vbox>
             </hbox>
+        </panel>
+        <panel name="Recurring" layout="FlowLayout">
+            <vbox>
+                <hbox>
+                    <vbox id="recurringDeparture" />
+                    <filler width="10"/>
+                    <vbox>
+                        <button id="playStopButton2" action="announceAction"/>
+                        <button id="updateIndicatorsButton2" action="updateIndicatorsAction"/>
+                    </vbox>
+                </hbox>
+                <panel layout="FlowLayout">
+                    <label text="Then every "/>
+                    <spinner id="recurringIntervalValue" text="10"/>
+                    <label text=" minutes until "/>
+                    <textfield id="recurringEndValue" text="23:59"/>
+                </panel>
+            </vbox>
         </panel>
         <panel name="Timetable" layout="FlowLayout">
             <vbox>

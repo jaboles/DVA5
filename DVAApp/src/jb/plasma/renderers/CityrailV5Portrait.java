@@ -25,7 +25,8 @@ public class CityrailV5Portrait extends CityrailV4and5
     private BufferedImage airportIcon;
     protected static final double AirportIconWidth = 0.05;
 
-    public CityrailV5Portrait() {
+    public CityrailV5Portrait(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
         stationListInc = 0.04 / PlasmaPanel.FPS;
         stationListSeparation = 0.056;
         stationListPosInitial = 0.14 + (1 * stationListSeparation);
@@ -132,7 +133,9 @@ public class CityrailV5Portrait extends CityrailV4and5
                 }
             }
 
-            drawStringR(d0.Platform, RightMargin, top + 0.28, TextColor, PlatformDepartsFont);
+            if (d0.Platform > 0) {
+                drawStringR(d0.Platform, RightMargin, top + 0.28, TextColor, PlatformDepartsFont);
+            }
             if (d0.DueOut != null) {
                 Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
                 int h = dueOut.getValue0();
@@ -149,9 +152,12 @@ public class CityrailV5Portrait extends CityrailV4and5
             if (d0.Type != null && d0.Type.length() > 0) {
                 drawMiniTextBox(g, LeftMargin + x + 0.015, 0.75, d0.Type);
             }
+
+            if (d0.Platform > 0) {
+                drawStringR("Platform", RightMargin, top + 0.22, TextColor, PlatformDepartsLabelFont);
+            }
         }
 
-        drawStringR("Platform", RightMargin, top + 0.22, TextColor, PlatformDepartsLabelFont);
         drawStringR("Departs", RightMargin,  0.72, TextColor, PlatformDepartsLabelFont);
 
         drawLine(LeftMargin, top + 0.19, RightMargin, top + 0.19, TextColor);
@@ -231,7 +237,9 @@ public class CityrailV5Portrait extends CityrailV4and5
     private void drawNextDeparture(Graphics g, DepartureData d, double y)
     {
         drawString(d.Destination, LeftMargin, y, TextColor, NextDestinationFont);
-        drawStringC(d.Platform, 0.55, y, TextColor, NextDestinationFont);
+        if (d.Platform > 0) {
+            drawStringC(d.Platform, 0.55, y, TextColor, NextDestinationFont);
+        }
         if (d.DueOut != null) {
             Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);
             int h = dueOut.getValue0();

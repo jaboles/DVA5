@@ -12,7 +12,7 @@ public class PlasmaSession
 {
     final static Logger logger = LogManager.getLogger(PlasmaSession.class);
     // List of departures to display
-    private final List<DepartureData> data;
+    private List<DepartureData> data;
     // All active renderers, so they can be notified when a departure has been popped off the front of the list
     private final List<Drawer> drawers;
     // All open plasma windows, so they can be all closed when the session is stopped
@@ -61,6 +61,12 @@ public class PlasmaSession
             }
         }
 
+        dataChanged(data);
+    }
+
+    public void dataChanged(List<DepartureData> newData)
+    {
+        data = newData;
         for (Drawer d : drawers)
         {
             d.dataChanged(data);

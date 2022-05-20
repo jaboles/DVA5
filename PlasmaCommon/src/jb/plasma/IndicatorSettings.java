@@ -16,6 +16,9 @@ public class IndicatorSettings
     private final String announcementTimes;
     private final String announcementVoice;
     private final boolean coalesceStationSequences;
+    private final DepartureData recurringDepartureData;
+    private final int recurringInterval;
+    private final String recurringEnd;
 
     public IndicatorSettings(boolean useSchedule,
                              List<String> renderers,
@@ -24,6 +27,9 @@ public class IndicatorSettings
                              String announcementVoice,
                              boolean coalesceStationSequences,
                              List<DepartureData> departureData,
+                             DepartureData recurringDepartureData,
+                             int recurringInterval,
+                             String recurringEnd,
                              String gtfsStation,
                              boolean filterPlatform,
                              String gtfsPlatform,
@@ -42,6 +48,9 @@ public class IndicatorSettings
         this.gtfsPlatform = gtfsPlatform;
         this.filterRoute = filterRoute;
         this.gtfsRoute = gtfsRoute;
+        this.recurringDepartureData = recurringDepartureData;
+        this.recurringInterval = recurringInterval;
+        this.recurringEnd = recurringEnd;
     }
 
     public List<DepartureData> getDepartureData() { return departureData; }
@@ -53,10 +62,16 @@ public class IndicatorSettings
     public String announcementTimes() { return announcementTimes; }
 
     public String announcementVoice() { return announcementVoice; }
-    
+
     public boolean coalesceStationSequences() { return coalesceStationSequences; }
 
     public List<String> getRenderers() { return renderers; }
+
+    public DepartureData getRecurringDepartureData() { return recurringDepartureData; }
+
+    public int getRecurringInterval() { return recurringInterval; }
+
+    public String getRecurringEnd() { return recurringEnd; }
 
     public String getGtfsStation() { return gtfsStation; }
 

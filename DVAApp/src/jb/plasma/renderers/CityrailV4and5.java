@@ -15,14 +15,15 @@ import java.time.format.DateTimeFormatter;
 
 public abstract class CityrailV4and5 extends Cityrail
 {
+    public static final Color Orange = new Color(255, 128, 0);
     protected static final Color BackgroundColor = Color.white;
-    protected static final Color HeaderBackgroundColor = new Color(255, 128, 0);
     protected static final Color HeaderTextColor = Color.white;
-    protected static final Color OrangeTextColor = new Color(255, 128, 0);
+    protected static final Color OrangeTextColor = Orange;
     protected static final double LeftMargin = 0.03;
     protected static final double RightMargin = 0.97;
     protected static final DateTimeFormatter DueOutFormat = DateTimeFormatter.ofPattern("H:mm");
 
+    protected Color HeaderBackgroundColor;
     protected Font HeaderFont;
     protected Font HeaderTimeNowFont;
     protected Font DestinationFont;
@@ -30,6 +31,10 @@ public abstract class CityrailV4and5 extends Cityrail
     protected Font PlatformDepartsFont;
     protected Font PlatformDepartsFontSmall;
     protected Font TextBoxFont;
+
+    public CityrailV4and5(Color headerBackgroundColor) {
+        HeaderBackgroundColor = headerBackgroundColor;
+    }
 
     public void paintInfrequent(Graphics g)
     {

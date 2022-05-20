@@ -39,6 +39,8 @@ public class CityrailLine
     public static final CityrailLine STH;
     public static final CityrailLine WST;
 
+    public static final CityrailLine SBM;
+
     // 'Official' Cityrail colours
     public static final Color grey = new Color(154, 164, 168);
     public static final Color red = new Color(207, 17, 43);
@@ -52,6 +54,8 @@ public class CityrailLine
     //public static final Color lightBlue = new Color(121, 213, 242);
     //public static final Color lightPurple = new Color(140, 127, 179);
     public static final Color orange = new Color(229, 109, 44);
+
+    public static final Color busesBlue = new Color(27, 166, 229);
 
     static
     {
@@ -76,9 +80,11 @@ public class CityrailLine
         STH = new CityrailLine("NSW TrainLink Southern", grey, orange, Color.white, true, "T.svg");
         WST = new CityrailLine("NSW TrainLink Western", grey, orange, Color.white, true, "T.svg");
 
+        SBM = new CityrailLine("Sydney Bus Museum", busesBlue, Color.white, false, "B.svg");
+
         CityrailLine[] lines = new CityrailLine[] {
                 T1_NORTH_SHORE, T1_WESTERN, T2, T3, T4, T5, T7, T8, T9,
-                BMT, CCN, SCO, SHL, HUN, NRC, NRW, STH, WST
+                BMT, CCN, SCO, SHL, HUN, NRC, NRW, STH, WST, SBM
         };
         for (CityrailLine line : lines) {
             allLines.put(line.Name, line);

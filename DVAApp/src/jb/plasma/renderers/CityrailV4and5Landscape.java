@@ -6,6 +6,10 @@ import java.awt.*;
 
 public abstract class CityrailV4and5Landscape extends CityrailV4and5
 {
+    public CityrailV4and5Landscape(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
+    }
+
     public void dimensionsChanged()
     {
         HeaderFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.075));

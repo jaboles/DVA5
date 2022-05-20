@@ -238,6 +238,9 @@ public class Settings {
                 prefs.get(key + "AnnouncementVoice", "CityRail (Male)"),
                 prefs.getBoolean(key + "CoalesceStationSequences", true),
                 departureData,
+                getIndicatorDepartureData(key + "RecurringDepartureData"),
+                prefs.getInt(key + "RecurringInterval", 10),
+                prefs.get(key + "RecurringEnd", "23:59"),
                 prefs.get(key + "GtfsStation", ""),
                 prefs.getBoolean(key + "FilterPlatform", true),
                 prefs.get(key + "GtfsPlatform", ""),
@@ -282,6 +285,10 @@ public class Settings {
         {
             setIndicatorDepartureData(key + "DepartureData" + i, is.getDepartureData().get(i));
         }
+
+        setIndicatorDepartureData(key + "RecurringDepartureData", is.getRecurringDepartureData());
+        prefs.putInt(key + "RecurringInterval", is.getRecurringInterval());
+        prefs.put(key + "RecurringEnd", is.getRecurringEnd());
 
         prefs.put(key + "GtfsStation", is.getGtfsStation());
         prefs.putBoolean(key + "FilterPlatform", is.filterPlatform());

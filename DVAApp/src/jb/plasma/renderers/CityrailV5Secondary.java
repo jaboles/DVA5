@@ -14,6 +14,10 @@ public class CityrailV5Secondary extends CityrailV5Landscape
     private CityrailLine Line1;
     private CityrailLine Line2;
 
+    public CityrailV5Secondary(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
+    }
+
     public Dimension getAspectRatio()
     {
         return LANDSCAPE_1610;
@@ -86,10 +90,13 @@ public class CityrailV5Secondary extends CityrailV5Landscape
     private void DrawDeparture(DepartureData d, Graphics g, double y, BufferedImage lineLogo)
     {
         String dueOutString;
-        drawStringR("Platform", RightMargin, y + 0.05, TextColor, PlatformDepartsLabelFont);
         drawStringR("Departs", RightMargin, y + 0.27, TextColor, PlatformDepartsLabelFont);
 
         if (d != null) {
+            if (d.Platform > 0) {
+                drawStringR("Platform", RightMargin, y + 0.05, TextColor, PlatformDepartsLabelFont);
+            }
+
             double destinationLeft = LeftMargin;
             if (lineLogo != null) {
                 drawImage(lineLogo, LeftMargin, y);
@@ -100,7 +107,9 @@ public class CityrailV5Secondary extends CityrailV5Landscape
                 drawString(d.Destination2, destinationLeft + 0.005, y + 0.19, TextColor, Destination2Font);
             }
 
-            drawStringR(d.Platform, RightMargin, y + 0.17, TextColor, PlatformDepartsFontSmall);
+            if (d.Platform > 0) {
+                drawStringR(d.Platform, RightMargin, y + 0.17, TextColor, PlatformDepartsFontSmall);
+            }
             if (d.DueOut != null) {
                 Pair<Integer, Integer> dueOut = getDueOut(d.DueOut);
                 int h = dueOut.getValue0();
@@ -113,7 +122,11 @@ public class CityrailV5Secondary extends CityrailV5Landscape
                     drawStringR(dueOutString, RightMargin, y + 0.38, TextColor, PlatformDepartsFontSmall);
                 }
             }
-            double x = drawMiniTextBox(g, LeftMargin, y + 0.24, d.Cars + " cars");
+
+            double x = 0;
+            if (d.Cars > 0) {
+                x = drawMiniTextBox(g, LeftMargin, y + 0.24, d.Cars + " cars");
+            }
             if (d.Type != null && d.Type.length() > 0) {
                 drawMiniTextBox(g, LeftMargin + x + 0.01, y + 0.24, d.Type);
             }

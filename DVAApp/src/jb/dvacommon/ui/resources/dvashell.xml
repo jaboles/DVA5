@@ -4,6 +4,7 @@
         <menu text="Application" mnemonic="VK_A">
             <menuitem action="showDVAPanelAction" icon="null" mnemonic="VK_D" accelerator="MENU_DVA_SHOW_DVA_PANEL_ACCELERATOR"/>
             <menuitem action="showIndicatorsManualPanelAction" icon="null" mnemonic="VK_M" accelerator="MENU_DVA_SHOW_INDICATORS_MANUAL_PANEL_ACCELERATOR"/>
+            <menuitem action="showIndicatorsRecurringPanelAction" icon="null" mnemonic="VK_R" accelerator="MENU_DVA_SHOW_INDICATORS_RECURRING_PANEL_ACCELERATOR"/>
             <menuitem action="showIndicatorsTimetablePanelAction" icon="null" mnemonic="VK_I" accelerator="MENU_DVA_SHOW_INDICATORS_TIMETABLE_PANEL_ACCELERATOR"/>
             <separator />
             <menuitem action="voiceLibraryToggleAction" icon="null" mnemonic="VK_V" />

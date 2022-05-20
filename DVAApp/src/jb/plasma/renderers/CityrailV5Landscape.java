@@ -10,6 +10,10 @@ public abstract class CityrailV5Landscape extends CityrailV4and5Landscape
     protected static final double AirportIconWidth = 0.035;
     protected BufferedImage airportIcon;
 
+    public CityrailV5Landscape(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
+    }
+
     public void dimensionsChanged()
     {
         super.dimensionsChanged();

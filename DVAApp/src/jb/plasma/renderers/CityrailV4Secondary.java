@@ -14,6 +14,10 @@ public class CityrailV4Secondary extends CityrailV4Landscape
     private CityrailLine Line1;
     private CityrailLine Line2;
 
+    public CityrailV4Secondary(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
+    }
+
     public Dimension getAspectRatio()
     {
         return LANDSCAPE_1610;

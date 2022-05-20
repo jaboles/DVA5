@@ -22,7 +22,8 @@ public class CityrailV4Portrait extends CityrailV4
     private final double nswTrainlinkTopOffset = 0.08;
     private double initialTop = 0;
 
-    public CityrailV4Portrait(boolean isConcourse) {
+    public CityrailV4Portrait(boolean isConcourse, Color headerBackgroundColor) {
+        super(headerBackgroundColor);
         this.isConcourse = isConcourse;
         if (!isConcourse) {
             this.initialTop = 0.06;

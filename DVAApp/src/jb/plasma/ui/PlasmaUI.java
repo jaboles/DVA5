@@ -79,7 +79,16 @@ public class PlasmaUI
     private final DeparturePanel[] departurePanels = new DeparturePanel[3];
     @SuppressWarnings("UnusedDeclaration") private XVBox departuresList;
     @SuppressWarnings("UnusedDeclaration") private JButton playStopButton;
+    @SuppressWarnings("UnusedDeclaration") private JButton updateIndicatorsButton;
     @SuppressWarnings("UnusedDeclaration") private JButton promoteDeparturesButton;
+
+    // Recurring section
+    private DeparturePanel recurringDeparturePanel;
+    @SuppressWarnings("UnusedDeclaration") private XVBox recurringDeparture;
+    @SuppressWarnings("UnusedDeclaration") private JSpinner recurringIntervalValue;
+    @SuppressWarnings("UnusedDeclaration") private JTextField recurringEndValue;
+    @SuppressWarnings("UnusedDeclaration") private JButton playStopButton2;
+    @SuppressWarnings("UnusedDeclaration") private JButton updateIndicatorsButton2;
 
     // Timetables section
     @SuppressWarnings("UnusedDeclaration") private JLabel gtfsInfo;
@@ -110,15 +119,16 @@ public class PlasmaUI
 
             // Instantiate the available renderers and announcers
             Drawer[] renderers = new Drawer[] {
-                new CityrailV5Portrait(),
-                new CityrailV5Primary(), new CityrailV5Secondary(),
-                new CityrailV4Portrait(false),
-                new CityrailV4Portrait(true),
-                new CityrailV4Primary(), new CityrailV4Secondary(),
+                new CityrailV5Portrait(CityrailV4and5.Orange),
+                new CityrailV5Primary(CityrailV4and5.Orange, null), new CityrailV5Secondary(CityrailV4and5.Orange),
+                new CityrailV4Portrait(false, CityrailV4and5.Orange),
+                new CityrailV4Portrait(true, CityrailV4and5.Orange),
+                new CityrailV4Primary(CityrailV4and5.Orange), new CityrailV4Secondary(CityrailV4and5.Orange),
                 new CityrailV3Primary(), new CityrailV3Secondary(),
                 new CityrailV2(false), new CityrailV1Portrait(true, true), new CityrailV1Landscape(true, false),
                 new CityrailV1Portrait(false, true), new CityrailV1Landscape(false, false),
-                new OlympicParkLED() };
+                new OlympicParkLED(),
+                new CityrailV5Primary(CityrailLine.busesBlue, "Sydney Bus Museum") };
 
             Announcer[] announcers = new Announcer[] {
                 new CityrailStandard("Sydney-Male", true),
@@ -168,6 +178,11 @@ public class PlasmaUI
                 departuresList.add(departurePanels[i].getPanel());
             }
 
+            recurringDeparturePanel = new DeparturePanel("All Trains:",
+                    dva,
+                    dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary() : null);
+            recurringDeparture.add(recurringDeparturePanel.getPanel(), 0);
+
             timetableTranslator = GtfsTimetableTranslator.getInstance();
             gtfsInfo.setText("TfNSW GTFS timetable");
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -202,6 +217,7 @@ public class PlasmaUI
                 for (DeparturePanel departurePanel : departurePanels) {
                     departurePanel.setScriptVoice((playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary());
                 }
+                recurringDeparturePanel.setScriptVoice((playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary());
             });
         } catch (Exception e) {
             ExceptionReporter.reportException(e);
@@ -229,6 +245,29 @@ public class PlasmaUI
                 dd = new LinkedList<>();
                 for (DeparturePanel departurePanel : departurePanels) {
                     dd.add(departurePanel.getData());
+                }
+            } catch (IndexOutOfBoundsException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "IndexOutOfBoundsException, check entered departure times are valid.");
+            }
+            return dd;
+        } else if (tabbedPane.getSelectedIndex() == 1) {
+            try {
+                String[] values = recurringEndValue.getText().split(":");
+                int h = Integer.parseInt(values[0]);
+                int m = Integer.parseInt(values[1]);
+                LocalDateTime end = LocalDateTime.now()
+                        .withHour(h)
+                        .withMinute(m)
+                        .withSecond(40);
+
+                dd = new LinkedList<>();
+                LocalDateTime start = recurringDeparturePanel.getData().DueOut;
+                for (LocalDateTime t = start; t.compareTo(end) <= 0; t = t.plusMinutes((Integer)recurringIntervalValue.getValue()))
+                {
+                    DepartureData d = recurringDeparturePanel.getData();
+                    d.DueOut = t;
+                    dd.add(d);
                 }
             } catch (IndexOutOfBoundsException ex) {
                 JOptionPane.showMessageDialog(null,
@@ -412,6 +451,7 @@ public class PlasmaUI
 
                 stopAction.setEnabled(true);
                 playStopButton.setAction(stopAction);
+                playStopButton2.setAction(stopAction);
                 announceAction.setEnabled(false);
 
                 new Thread(() -> {
@@ -421,6 +461,7 @@ public class PlasmaUI
                         stopAction.setEnabled(false);
                         announceAction.setEnabled(true);
                         playStopButton.setAction(announceAction);
+                        playStopButton2.setAction(announceAction);
                     } catch (InterruptedException ignored) {
                     }
                 }).start();
@@ -450,6 +491,9 @@ public class PlasmaUI
                 dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getName() : null,
                 coalesceStationSequencesCheckbox.isSelected(),
                 data,
+                recurringDeparturePanel.getData(),
+                (Integer)recurringIntervalValue.getValue(),
+                recurringEndValue.getText(),
                 gtfsStation.getSelectedItemTyped().toString(),
                 filterPlatform.isSelected(),
                 gtfsPlatform.getSelectedItemTyped().toString(),
@@ -485,6 +529,10 @@ public class PlasmaUI
         for (int i = 0; i < departurePanels.length; i++) {
             departurePanels[i].setData(settings.getDepartureData().get(i));
         }
+
+        recurringDeparturePanel.setData(settings.getRecurringDepartureData());
+        recurringIntervalValue.setValue(settings.getRecurringInterval());
+        recurringEndValue.setText(settings.getRecurringEnd());
 
         for (int i = 0; i < gtfsStation.getItemCount(); i++)
             if (gtfsStation.getItemAt(i).toString().equals(settings.getGtfsStation())) {
@@ -574,11 +622,22 @@ public class PlasmaUI
         }
     };
 
+    public Action updateIndicatorsAction = new AbstractAction("Update Indicators", new ThemedFlatSVGIcon("play")) {
+        public void actionPerformed(ActionEvent e)
+        {
+            departureData = getDepartureData();
+            if (session != null) {
+                session.dataChanged(departureData);
+            }
+        }
+    };
+
     public final Action stopAction = new AbstractAction("Stop", new ThemedFlatSVGIcon("stop")) {
         public void actionPerformed(ActionEvent e) {
             stopAction.setEnabled(false);
             announceAction.setEnabled(true);
             playStopButton.setAction(announceAction);
+            playStopButton2.setAction(announceAction);
             player.stopPlaying();
         }
     };

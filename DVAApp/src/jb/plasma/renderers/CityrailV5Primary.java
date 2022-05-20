@@ -12,8 +12,12 @@ public class CityrailV5Primary extends CityrailV5Landscape
 {
     private BufferedImage LineLogo;
     private CityrailLine Line;
+    private final String name;
 
-    public CityrailV5Primary() {
+    public CityrailV5Primary(Color headerBackgroundColor, String name) {
+        super(headerBackgroundColor);
+        if (name == null) name = "CityRail V5 Dual-screen Primary (Landscape 16:10)";
+        this.name = name;
         stationListInc = 0.0528 / PlasmaPanel.FPS;
         stationListSeparation = 0.10;
         stationListPosInitial = 0.35 + (1 * stationListSeparation);
@@ -27,7 +31,7 @@ public class CityrailV5Primary extends CityrailV5Landscape
 
     public String toString()
     {
-        return "CityRail V5 Dual-screen Primary (Landscape 16:10)";
+        return name;
     }
 
     public void dataChanged(java.util.List<DepartureData> data)
@@ -64,10 +68,13 @@ public class CityrailV5Primary extends CityrailV5Landscape
         drawString("Next service", LeftMargin, 0.08, HeaderTextColor, HeaderFont);
         drawStringR(TimeFormat.format(timeNow), 0.98, 0.08, HeaderTextColor, HeaderFont);
         drawString("Time now", 0.65, 0.08, HeaderTextColor, HeaderTimeNowFont);
-        drawStringR("Platform", RightMargin, 0.16, TextColor, PlatformDepartsLabelFont);
         drawStringR("Departs", RightMargin, 0.8, TextColor, PlatformDepartsLabelFont);
 
         if (d0 != null) {
+            if (d0.Platform > 0) {
+                drawStringR("Platform", RightMargin, 0.16, TextColor, PlatformDepartsLabelFont);
+            }
+
             double departureLeft = LeftMargin;
             if (LineLogo != null) {
                 drawImage(LineLogo, LeftMargin, 0.12);
@@ -78,7 +85,9 @@ public class CityrailV5Primary extends CityrailV5Landscape
                 drawString(d0.Destination2, departureLeft + 0.005, 0.31, TextColor, Destination2Font);
             }
 
-            drawStringR(d0.Platform, RightMargin, 0.28, TextColor, PlatformDepartsFont);
+            if (d0.Platform > 0) {
+                drawStringR(d0.Platform, RightMargin, 0.28, TextColor, PlatformDepartsFont);
+            }
             if (d0.DueOut != null) {
                 Pair<Integer, Integer> dueOut = getDueOut(d0.DueOut);
                 int h = dueOut.getValue0();
@@ -94,7 +103,9 @@ public class CityrailV5Primary extends CityrailV5Landscape
 
             double textboxWidth = (double)Math.max(g.getFontMetrics(TextBoxFont).stringWidth(d0.Cars + " cars"),
                     g.getFontMetrics(TextBoxFont).stringWidth(d0.Type != null ? d0.Type : "")) / width + 0.02;
-            drawMiniTextBox(0.97 - textboxWidth, 0.39, textboxWidth, d0.Cars + " cars");
+            if (d0.Cars > 0) {
+                drawMiniTextBox(0.97 - textboxWidth, 0.39, textboxWidth, d0.Cars + " cars");
+            }
             if (d0.Type != null && d0.Type.length() > 0) {
                 drawMiniTextBox(0.97 - textboxWidth, 0.46, textboxWidth, d0.Type);
             }

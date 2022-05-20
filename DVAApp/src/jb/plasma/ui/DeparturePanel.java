@@ -83,8 +83,8 @@ public class DeparturePanel
             if (!SwingEngine.isMacOSX())
                 ((GridLayout)gridPanel.getLayout()).setHgap(5);
 
-            carsValue.setModel(new SpinnerNumberModel(8, 1, 32, 1));
-            platformValue.setModel(new SpinnerNumberModel(1, 1, 99, 1));
+            carsValue.setModel(new SpinnerNumberModel(8, 0, 32, 1));
+            platformValue.setModel(new SpinnerNumberModel(1, 0, 99, 1));
 
             for (String s : DepartureData.DefaultServiceTypes)
             {

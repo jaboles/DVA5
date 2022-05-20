@@ -6,6 +6,10 @@ public abstract class CityrailV4 extends CityrailV4and5
 {
     protected static final Color TextColor = new Color(0, 0, 50);
 
+    public CityrailV4(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
+    }
+
     public void paintInfrequent(Graphics g)
     {
         super.paintInfrequent(g);

@@ -6,6 +6,10 @@ public abstract class CityrailV4Landscape extends CityrailV4and5Landscape
 {
     protected static final Color TextColor = new Color(0, 0, 50);
 
+    public CityrailV4Landscape(Color headerBackgroundColor) {
+        super(headerBackgroundColor);
+    }
+
     protected void drawMiniTextBox(double x, double y, String s)
     {
         double h = 0.06;
