@@ -240,6 +240,7 @@ public class Settings {
                 departureData,
                 getIndicatorDepartureData(key + "RecurringDepartureData"),
                 prefs.getInt(key + "RecurringInterval", 10),
+                prefs.getBoolean(key + "RecurringEndSelected", true),
                 prefs.get(key + "RecurringEnd", "23:59"),
                 prefs.get(key + "GtfsStation", ""),
                 prefs.getBoolean(key + "FilterPlatform", true),
@@ -288,6 +289,7 @@ public class Settings {
 
         setIndicatorDepartureData(key + "RecurringDepartureData", is.getRecurringDepartureData());
         prefs.putInt(key + "RecurringInterval", is.getRecurringInterval());
+        prefs.putBoolean(key + "RecurringEndSelected", is.getRecurringEndSelected());
         prefs.put(key + "RecurringEnd", is.getRecurringEnd());
 
         prefs.put(key + "GtfsStation", is.getGtfsStation());

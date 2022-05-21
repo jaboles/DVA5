@@ -18,6 +18,7 @@ public class IndicatorSettings
     private final boolean coalesceStationSequences;
     private final DepartureData recurringDepartureData;
     private final int recurringInterval;
+    private final boolean recurringEndSelected;
     private final String recurringEnd;
 
     public IndicatorSettings(boolean useSchedule,
@@ -29,6 +30,7 @@ public class IndicatorSettings
                              List<DepartureData> departureData,
                              DepartureData recurringDepartureData,
                              int recurringInterval,
+                             boolean recurringEndSelected,
                              String recurringEnd,
                              String gtfsStation,
                              boolean filterPlatform,
@@ -50,6 +52,7 @@ public class IndicatorSettings
         this.gtfsRoute = gtfsRoute;
         this.recurringDepartureData = recurringDepartureData;
         this.recurringInterval = recurringInterval;
+        this.recurringEndSelected = recurringEndSelected;
         this.recurringEnd = recurringEnd;
     }
 
@@ -70,6 +73,8 @@ public class IndicatorSettings
     public DepartureData getRecurringDepartureData() { return recurringDepartureData; }
 
     public int getRecurringInterval() { return recurringInterval; }
+
+    public boolean getRecurringEndSelected() { return recurringEndSelected; }
 
     public String getRecurringEnd() { return recurringEnd; }
 

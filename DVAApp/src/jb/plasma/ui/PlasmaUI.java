@@ -21,7 +21,6 @@ import jb.common.sound.Player;
 import jb.common.ui.*;
 import jb.dva.DVAManager;
 import jb.dva.Script;
-import jb.dva.SoundLibrary;
 import jb.dvacommon.Settings;
 import jb.dvacommon.ui.ProgressWindow;
 import jb.dvacommon.ui.ThemedFlatSVGIcon;
@@ -86,6 +85,7 @@ public class PlasmaUI
     private DeparturePanel recurringDeparturePanel;
     @SuppressWarnings("UnusedDeclaration") private XVBox recurringDeparture;
     @SuppressWarnings("UnusedDeclaration") private JSpinner recurringIntervalValue;
+    @SuppressWarnings("UnusedDeclaration") private JCheckBox recurringEndCheckbox;
     @SuppressWarnings("UnusedDeclaration") private JTextField recurringEndValue;
     @SuppressWarnings("UnusedDeclaration") private JButton playStopButton2;
     @SuppressWarnings("UnusedDeclaration") private JButton updateIndicatorsButton2;
@@ -181,6 +181,12 @@ public class PlasmaUI
                     dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary() : null);
             recurringDeparture.add(recurringDeparturePanel.getPanel(), 0);
 
+            ActionListener recurringEndCheckboxChanged = e -> {
+                recurringEndValue.setEnabled(recurringEndCheckbox.isSelected());
+            };
+            recurringEndCheckboxChanged.actionPerformed(null);
+            recurringEndCheckbox.addActionListener(recurringEndCheckboxChanged);
+
             timetableTranslator = GtfsTimetableTranslator.getInstance();
             gtfsInfo.setText("TfNSW GTFS timetable");
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -251,16 +257,21 @@ public class PlasmaUI
             return dd;
         } else if (tabbedPane.getSelectedIndex() == 1) {
             try {
-                String[] values = recurringEndValue.getText().split(":");
-                int h = Integer.parseInt(values[0]);
-                int m = Integer.parseInt(values[1]);
-                LocalDateTime end = LocalDateTime.now()
-                        .withHour(h)
-                        .withMinute(m)
-                        .withSecond(40);
+                LocalDateTime start = recurringDeparturePanel.getData().DueOut;
+                LocalDateTime end = null;
+                if (recurringEndCheckbox.isSelected()) {
+                    String[] values = recurringEndValue.getText().split(":");
+                    int h = Integer.parseInt(values[0]);
+                    int m = Integer.parseInt(values[1]);
+                    end = LocalDateTime.now()
+                            .withHour(h)
+                            .withMinute(m)
+                            .withSecond(40);
+                } else {
+                    end = start.plusYears(1);
+                }
 
                 dd = new LinkedList<>();
-                LocalDateTime start = recurringDeparturePanel.getData().DueOut;
                 for (LocalDateTime t = start; t.compareTo(end) <= 0; t = t.plusMinutes((Integer)recurringIntervalValue.getValue()))
                 {
                     DepartureData d = recurringDeparturePanel.getData();
@@ -517,6 +528,7 @@ public class PlasmaUI
                 data,
                 recurringDeparturePanel.getData(),
                 (Integer)recurringIntervalValue.getValue(),
+                recurringEndCheckbox.isSelected(),
                 recurringEndValue.getText(),
                 gtfsStation.getSelectedItemTyped().toString(),
                 filterPlatform.isSelected(),

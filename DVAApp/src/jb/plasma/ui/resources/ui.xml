@@ -58,10 +58,12 @@
                         <button id="updateIndicatorsButton2" action="updateIndicatorsAction"/>
                     </vbox>
                 </hbox>
+                <filler height="30"/>
                 <panel layout="FlowLayout">
                     <label text="Then every "/>
                     <spinner id="recurringIntervalValue" text="10"/>
-                    <label text=" minutes until "/>
+                    <label text=" minutes "/>
+                    <checkbox id="recurringEndCheckbox" text="until "/>
                     <textfield id="recurringEndValue" text="23:59"/>
                 </panel>
             </vbox>
