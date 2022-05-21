@@ -28,18 +28,20 @@ public class PlasmaWindow extends JFrame
 {
     public static class Mode
     {
-        public static final Mode WINDOWED =                        new Mode(false, false, false, false, false);
-        public static final Mode FULLSCREEN =                      new Mode(true, true, false, false, false);
-        public static final Mode SCREENSAVER =                     new Mode(true, true, true, true, true);
-        public static final Mode SCREENSAVER_PREVIEW =             new Mode(true, true, true, false, false);
-        public static final Mode SCREENSAVER_PREVIEW_MINI_WINDOW = new Mode(false, true, false, true, true);
+        public static final Mode WINDOWED =                        new Mode(false, false, false, false, false, true);
+        public static final Mode FULLSCREEN_PREVIEW =              new Mode(false, false, false, false, false, false);
+        public static final Mode FULLSCREEN =                      new Mode(true, true, false, false, false, true);
+        public static final Mode SCREENSAVER =                     new Mode(true, true, true, true, true, true);
+        public static final Mode SCREENSAVER_PREVIEW =             new Mode(true, true, true, false, false, true);
+        public static final Mode SCREENSAVER_PREVIEW_MINI_WINDOW = new Mode(false, true, false, true, true, true);
 
-        private Mode(boolean isFullScreen, boolean isUndecorated, boolean closeOnEvent, boolean terminateOnClose, boolean limitToOneScreen) {
+        private Mode(boolean isFullScreen, boolean isUndecorated, boolean closeOnEvent, boolean terminateOnClose, boolean limitToOneScreen, boolean endSessionOnClose) {
             IsFullScreen = isFullScreen;
             IsUndecorated = isUndecorated;
             CloseOnEvent = closeOnEvent;
             TerminateOnClose = terminateOnClose;
             LimitToOneScreen = limitToOneScreen;
+            EndSessionOnClose = endSessionOnClose;
         }
 
         public final boolean IsFullScreen;
@@ -47,12 +49,15 @@ public class PlasmaWindow extends JFrame
         public final boolean CloseOnEvent;
         public final boolean TerminateOnClose;
         public final boolean LimitToOneScreen;
+        public final boolean EndSessionOnClose;
     }
 
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
     public Action announceAction;
+    private final PlasmaUI controller;
+    private final PlasmaWindow.Mode mode;
 
     public PlasmaWindow(final PlasmaUI controller, final Mode mode, GraphicsDevice graphicsDevice, String title, Dimension size, Dimension aspectRatio, JPanel plasmaPanel) {
         super(mode.IsFullScreen ? graphicsDevice.getDefaultConfiguration() : null);
@@ -62,6 +67,8 @@ public class PlasmaWindow extends JFrame
                 controller.announce();
             }
         };
+        this.controller = controller;
+        this.mode = mode;
 
         SwingEngine renderer = new SwingEngine(this);
         if (!mode.IsFullScreen)
@@ -144,13 +151,9 @@ public class PlasmaWindow extends JFrame
             addMouseListener(ml);
         }
 
-        addWindowListener(new WindowAdapter() {
-            public void windowClosed(WindowEvent e) {
-                controller.stopSession();
-                if (mode.TerminateOnClose)
-                    System.exit(0);
-            }
-        });
+        if (mode.EndSessionOnClose) {
+            addWindowListener(windowAdapter);
+        }
 
         // Set window properties depending on whether full screen mode was requested or not.
         if (mode.IsFullScreen) {
@@ -183,4 +186,19 @@ public class PlasmaWindow extends JFrame
             super.setVisible(true);
         }
     }
+
+    public void disposeOnly() {
+        if (mode.EndSessionOnClose) {
+            this.removeWindowListener(windowAdapter);
+        }
+        this.dispose();
+    }
+
+    private WindowAdapter windowAdapter = new WindowAdapter() {
+        public void windowClosed(WindowEvent e) {
+            controller.stopSession();
+            if (mode.TerminateOnClose)
+                System.exit(0);
+        }
+    };
 }

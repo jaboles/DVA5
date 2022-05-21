@@ -313,8 +313,10 @@ public class PlasmaUI
     // indicator windows on an event (e.g. screen saver 'preview', and whether
     // to terminate the application fully
     // on an event (e.g. when running as an actual screen saver).
-    public List<Window> showIndicatorBoard(PlasmaWindow.Mode mode, Dimension size)
+    public List<PlasmaWindow> showIndicatorBoard(PlasmaWindow.Mode mode, Dimension size)
     {
+        stopSession();
+
         departureData = getDepartureData();
         if (departureData == null) return null;
 
@@ -356,7 +358,7 @@ public class PlasmaUI
 
         // Create a window for each renderer selected for use
         List<Drawer> drawers = new LinkedList<>();
-        List<Window> windows = new LinkedList<>();
+        List<PlasmaWindow> windows = new LinkedList<>();
         for (int i = 0; i < maxScreens; i++) {
             JComboBox<Drawer> rendererComboBox = rendererComboBoxes.get(i);
             if (rendererComboBox.getSelectedItem() instanceof NullDrawer)
@@ -375,6 +377,27 @@ public class PlasmaUI
                 w.paint(w.getGraphics());
                 w.setVisible(true);
                 windows.add(w);
+
+                if (mode.IsFullScreen && i > 0 && rendererComboBoxes.get(0).getSelectedItem() instanceof NullDrawer) {
+                    // Full screen mode with main window still visible - add operator preview window
+                    d = (Drawer) (rendererComboBox.getItemAt(rendererComboBox.getSelectedIndex())).clone();
+                    drawers.add(d);
+                    d.dataChanged(departureData);
+                    p = new PlasmaPanel(d);
+                    int width = 300;
+                    int height = 200;
+                    if (aspectRatio.getWidth() > aspectRatio.getHeight()) {
+                        height = (int)(width * aspectRatio.getHeight() / aspectRatio.getWidth());
+                    } else {
+                        width = (int)(height * aspectRatio.getWidth() / aspectRatio.getHeight());
+                    }
+                    w = new PlasmaWindow(this, PlasmaWindow.Mode.FULLSCREEN_PREVIEW, null, "Preview - " + d.toString(), new Dimension(width, height), aspectRatio,
+                            new ProportionalPanel(aspectRatio, p, Color.black));
+                    w.paint(w.getGraphics());
+                    w.setVisible(true);
+                    w.pack();
+                    windows.add(w);
+                }
             } catch (CloneNotSupportedException e) {
                 ExceptionReporter.reportException(e);
             }
@@ -402,6 +425,7 @@ public class PlasmaUI
                 announce = this::announce;
             }
         }
+
         session = new PlasmaSession(windows, announce, departureData, drawers, announcementTimes);
         return windows;
     }

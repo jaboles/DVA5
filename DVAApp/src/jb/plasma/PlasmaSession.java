@@ -1,8 +1,9 @@
 package jb.plasma;
-import java.awt.Window;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
+import jb.plasma.ui.PlasmaWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +17,7 @@ public class PlasmaSession
     // All active renderers, so they can be notified when a departure has been popped off the front of the list
     private final List<Drawer> drawers;
     // All open plasma windows, so they can be all closed when the session is stopped
-    private final List<Window> windows;
+    private final List<PlasmaWindow> windows;
     // Timer to manage de-queueing and playing announcements
     private final javax.swing.Timer timer;
     // When announcements should be played (in minutes) before the due-out time
@@ -24,7 +25,7 @@ public class PlasmaSession
     // Functor to play the announcement
     private final Runnable announce;
 
-    public PlasmaSession(List<Window> windows, final Runnable announce, List<DepartureData> data, List<Drawer> drawers, int[] announcementTimes)
+    public PlasmaSession(List<PlasmaWindow> windows, final Runnable announce, List<DepartureData> data, List<Drawer> drawers, int[] announcementTimes)
     {
         this.announce = announce;
         this.data = data;
@@ -39,7 +40,7 @@ public class PlasmaSession
     // Stop session, close all windows, stop the timer.
     public void stop() {
         timer.stop();
-        windows.forEach(Window::dispose);
+        windows.forEach(PlasmaWindow::disposeOnly);
         windows.clear();
     }
 
