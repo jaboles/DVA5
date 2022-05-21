@@ -25,8 +25,7 @@ import jb.dvacommon.Settings;
 import jb.dvacommon.ui.ProgressWindow;
 import jb.dvacommon.ui.ThemedFlatSVGIcon;
 import jb.plasma.*;
-import jb.plasma.announcers.CityrailStandard;
-import jb.plasma.announcers.NswCountry;
+import jb.plasma.announcers.*;
 import jb.plasma.gtfs.GtfsGenerator;
 import jb.plasma.gtfs.GtfsTimetableTranslator;
 import jb.plasma.gtfs.Stop;
@@ -134,7 +133,8 @@ public class PlasmaUI
                 new CityrailStandard("Sydney-Male", true),
                 new CityrailStandard("Sydney-Female", false),
                 new NswCountry("Sydney-Male", true),
-                new NswCountry("Sydney-Female", false)
+                new NswCountry("Sydney-Female", false),
+                new SydneyBusMuseum()
             };
 
             // Populate the comboboxes with them, the second combobox has the
