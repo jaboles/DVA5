@@ -30,9 +30,9 @@ public abstract class Drawer implements Cloneable
     protected List<DepartureData> DepartureData;
 
     // Aspect ratios
-    protected static final Dimension LANDSCAPE_43 = new Dimension(4, 3);
-    protected static final Dimension LANDSCAPE_1610 = new Dimension(16, 10);
-    protected static final Dimension PORTRAIT_1610 = new Dimension(10, 16);
+    protected static final int LANDSCAPE_43 = 0;
+    protected static final int LANDSCAPE_WS = 1;
+    protected static final int PORTRAIT_WS = 2;
 
     public final static Map<Object, Object> RENDERING_HINTS = Map.of(
             KEY_ANTIALIASING,        VALUE_ANTIALIAS_ON,
@@ -60,7 +60,7 @@ public abstract class Drawer implements Cloneable
     public abstract void dimensionsChanged();
 
     // Renderers should return the aspect ratio they will render in
-    public abstract Dimension getAspectRatio();
+    public abstract int getAspectRatio();
 
     // Renderers should return their name
     public abstract String toString();
@@ -243,5 +243,23 @@ public abstract class Drawer implements Cloneable
             ExceptionReporter.reportException(e);
             return null;
         }
+    }
+
+    public static Dimension convertAspectRatio(int aspectRatio, DisplayMode fullscreenDisplayMode) {
+        if (fullscreenDisplayMode != null) {
+            if (aspectRatio == LANDSCAPE_WS && fullscreenDisplayMode.getWidth() > fullscreenDisplayMode.getHeight()) {
+                return new Dimension(fullscreenDisplayMode.getWidth(), fullscreenDisplayMode.getHeight());
+            } else if (aspectRatio == PORTRAIT_WS && fullscreenDisplayMode.getWidth() < fullscreenDisplayMode.getHeight()) {
+                return new Dimension(fullscreenDisplayMode.getWidth(), fullscreenDisplayMode.getHeight());
+            }
+        }
+
+        switch (aspectRatio) {
+            case LANDSCAPE_43: return new Dimension(4, 3);
+            case LANDSCAPE_WS: return new Dimension(16, 10);
+            case PORTRAIT_WS: return new Dimension(10, 16);
+        }
+
+        return null;
     }
 }

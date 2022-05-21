@@ -143,9 +143,7 @@ public class PlasmaUI
             for (int i = 0; i < 3; i++)
             {
                 JComboBox<Drawer> cb = new JComboBox<>();
-                if (i > 0) {
-                    cb.addItem(new NullDrawer());
-                }
+                cb.addItem(new NullDrawer());
                 for (Drawer d : renderers) {
                     cb.addItem(d);
                 }
@@ -370,8 +368,10 @@ public class PlasmaUI
                 drawers.add(d);
                 d.dataChanged(departureData);
                 PlasmaPanel p = new PlasmaPanel(d);
-                PlasmaWindow w = new PlasmaWindow(this, mode, i, d.toString(), size, d.getAspectRatio(), new ProportionalPanel(d
-                        .getAspectRatio(), p, Color.black));
+                GraphicsDevice gd = mode.IsFullScreen ? GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[i] : null;
+                Dimension aspectRatio = Drawer.convertAspectRatio(d.getAspectRatio(), gd != null ? gd.getDisplayMode() : null);
+                PlasmaWindow w = new PlasmaWindow(this, mode, gd, d.toString(), size, aspectRatio,
+                        new ProportionalPanel(aspectRatio, p, Color.black));
                 w.paint(w.getGraphics());
                 w.setVisible(true);
                 windows.add(w);
@@ -622,7 +622,7 @@ public class PlasmaUI
         }
     };
 
-    public Action updateIndicatorsAction = new AbstractAction("Update Indicators", new ThemedFlatSVGIcon("play")) {
+    public Action updateIndicatorsAction = new AbstractAction("Refresh Indicators", new ThemedFlatSVGIcon("refresh")) {
         public void actionPerformed(ActionEvent e)
         {
             departureData = getDepartureData();

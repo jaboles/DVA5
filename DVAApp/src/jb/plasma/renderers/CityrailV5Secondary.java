@@ -18,14 +18,14 @@ public class CityrailV5Secondary extends CityrailV5Landscape
         super(headerBackgroundColor);
     }
 
-    public Dimension getAspectRatio()
+    public int getAspectRatio()
     {
-        return LANDSCAPE_1610;
+        return LANDSCAPE_WS;
     }
 
     public String toString()
     {
-        return "CityRail V5 Dual-screen Secondary (Landscape 16:10)";
+        return "CityRail V5 Dual-screen Secondary (Landscape w/s)";
     }
 
     public void dataChanged(java.util.List<DepartureData> data)

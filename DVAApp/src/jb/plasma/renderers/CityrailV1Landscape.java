@@ -25,7 +25,7 @@ public class CityrailV1Landscape extends CityrailV1
         stationListPos = stationListPosInitial;
     }
 
-    public Dimension getAspectRatio() { return LANDSCAPE_43; }
+    public int getAspectRatio() { return LANDSCAPE_43; }
     public String toString() { return "CityRail " + (isv11? "V1.1" : "V1") + " " + (isConcourse? "Concourse" : "Platform") + " (Landscape 4:3)"; }
 
     public void dimensionsChanged()

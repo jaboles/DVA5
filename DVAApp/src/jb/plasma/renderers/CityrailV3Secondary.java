@@ -22,8 +22,8 @@ public class CityrailV3Secondary extends CityrailV3
     public CityrailV3Secondary() {
     }
 
-    public Dimension getAspectRatio() { return LANDSCAPE_1610; }
-    public String toString() { return "CityRail V3 Dual-screen Secondary (Landscape 16:10)"; }
+    public int getAspectRatio() { return LANDSCAPE_WS; }
+    public String toString() { return "CityRail V3 Dual-screen Secondary (Landscape w/s)"; }
 
     public void dimensionsChanged()
     {

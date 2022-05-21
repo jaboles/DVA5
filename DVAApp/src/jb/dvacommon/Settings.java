@@ -319,6 +319,8 @@ public class Settings {
             putColor(k + "TextColor", d.TextColorOverride);
         if (d.CustomAnnouncementPath != null)
             prefs.put(k + "CustomAnnouncement", d.CustomAnnouncementPath);
+        else
+            prefs.remove(k + "CustomAnnouncement");
     }
 
     public static String getLookAndFeelName() {

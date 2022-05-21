@@ -21,14 +21,14 @@ public class CityrailV4Primary extends CityrailV4Landscape
         stationListPos = stationListPosInitial;
     }
 
-    public Dimension getAspectRatio()
+    public int getAspectRatio()
     {
-        return LANDSCAPE_1610;
+        return LANDSCAPE_WS;
     }
 
     public String toString()
     {
-        return "CityRail V4 Dual-screen Platform Primary (Landscape 16:10)";
+        return "CityRail V4 Dual-screen Platform Primary (Landscape w/s)";
     }
 
     public void dataChanged(java.util.List<DepartureData> data)

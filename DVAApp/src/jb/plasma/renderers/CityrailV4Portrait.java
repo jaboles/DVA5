@@ -35,14 +35,14 @@ public class CityrailV4Portrait extends CityrailV4
         stationListPos = stationListPosInitial;
     }
 
-    public Dimension getAspectRatio()
+    public int getAspectRatio()
     {
-        return PORTRAIT_1610;
+        return PORTRAIT_WS;
     }
 
     public String toString()
     {
-        return "CityRail V4 Single-screen " + (isConcourse? "Concourse" : "Platform") + " (Portrait 16:10)";
+        return "CityRail V4 Single-screen " + (isConcourse? "Concourse" : "Platform") + " (Portrait w/s)";
     }
 
     public void dimensionsChanged()

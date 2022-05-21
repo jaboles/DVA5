@@ -17,7 +17,7 @@ public class OlympicParkLED extends Drawer {
     private int lastSecond = 0;
 
     public String toString() { return "Olympic Park LED"; }
-    public Dimension getAspectRatio() { return LANDSCAPE_1610; }
+    public int getAspectRatio() { return LANDSCAPE_WS; }
 
     public void dimensionsChanged() {
         SmallFont = Resources.LedBoard7.deriveFont(Font.PLAIN, (int)(height * 0.08));

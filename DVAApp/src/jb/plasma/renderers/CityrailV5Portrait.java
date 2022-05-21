@@ -33,14 +33,14 @@ public class CityrailV5Portrait extends CityrailV4and5
         stationListPos = stationListPosInitial;
     }
 
-    public Dimension getAspectRatio()
+    public int getAspectRatio()
     {
-        return PORTRAIT_1610;
+        return PORTRAIT_WS;
     }
 
     public String toString()
     {
-        return "CityRail V5 Single-screen (Portrait 16:10)";
+        return "CityRail V5 Single-screen (Portrait w/s)";
     }
 
     public void dimensionsChanged()

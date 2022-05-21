@@ -40,7 +40,7 @@ public class PlasmaRendererListCellRenderer implements ListCellRenderer<Drawer> 
             d.dataChanged(sampleData);
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
-            JPanel preview = new ProportionalPanel(d.getAspectRatio(), new PlasmaPanel(d), null);
+            JPanel preview = new ProportionalPanel(Drawer.convertAspectRatio(d.getAspectRatio(), null), new PlasmaPanel(d), null);
             preview.setPreferredSize(new Dimension(120, 75));
             panel.setBackground(background);
             panel.add(preview, BorderLayout.WEST);

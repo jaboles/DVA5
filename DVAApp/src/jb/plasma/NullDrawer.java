@@ -10,9 +10,9 @@ public class NullDrawer extends Drawer
     }
 
     @Override
-    public Dimension getAspectRatio()
+    public int getAspectRatio()
     {
-        return null;
+        return 0;
     }
 
     @Override

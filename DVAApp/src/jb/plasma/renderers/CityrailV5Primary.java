@@ -16,7 +16,7 @@ public class CityrailV5Primary extends CityrailV5Landscape
 
     public CityrailV5Primary(Color headerBackgroundColor, String name) {
         super(headerBackgroundColor);
-        if (name == null) name = "CityRail V5 Dual-screen Primary (Landscape 16:10)";
+        if (name == null) name = "CityRail V5 Dual-screen Primary (Landscape w/s)";
         this.name = name;
         stationListInc = 0.0528 / PlasmaPanel.FPS;
         stationListSeparation = 0.10;
@@ -24,9 +24,9 @@ public class CityrailV5Primary extends CityrailV5Landscape
         stationListPos = stationListPosInitial;
     }
 
-    public Dimension getAspectRatio()
+    public int getAspectRatio()
     {
-        return LANDSCAPE_1610;
+        return LANDSCAPE_WS;
     }
 
     public String toString()

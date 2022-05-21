@@ -1,9 +1,6 @@
 package jb.plasma.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -57,8 +54,8 @@ public class PlasmaWindow extends JFrame
     @SuppressWarnings("unused")
     public Action announceAction;
 
-    public PlasmaWindow(final PlasmaUI controller, final Mode mode, int index, String title, Dimension size, Dimension aspectRatio, JPanel plasmaPanel) {
-        super(mode.IsFullScreen ? (GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[index]).getDefaultConfiguration() : null);
+    public PlasmaWindow(final PlasmaUI controller, final Mode mode, GraphicsDevice graphicsDevice, String title, Dimension size, Dimension aspectRatio, JPanel plasmaPanel) {
+        super(mode.IsFullScreen ? graphicsDevice.getDefaultConfiguration() : null);
 
         announceAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
@@ -159,7 +156,7 @@ public class PlasmaWindow extends JFrame
         if (mode.IsFullScreen) {
             setUndecorated(true);
             setResizable(false);
-            GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[index].setFullScreenWindow(this);
+            graphicsDevice.setFullScreenWindow(this);
             validate();
         } else {
             setUndecorated(mode.IsUndecorated);

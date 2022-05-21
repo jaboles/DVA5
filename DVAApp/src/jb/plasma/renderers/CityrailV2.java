@@ -31,8 +31,8 @@ public class CityrailV2 extends Cityrail
         stationListPos = stationListPosInitial;
     }
 
-    public Dimension getAspectRatio() { return PORTRAIT_1610; }
-    public String toString() { return "CityRail V2 " + (isConcourse? "Concourse" : "Platform") + " (Portrait 16:10)"; }
+    public int getAspectRatio() { return PORTRAIT_WS; }
+    public String toString() { return "CityRail V2 " + (isConcourse? "Concourse" : "Platform") + " (Portrait w/s)"; }
 
     public void dimensionsChanged()
     {

@@ -27,8 +27,8 @@ public class CityrailV3Primary extends CityrailV3
         stationListPos = stationListPosInitial;
     }
 
-    public Dimension getAspectRatio() { return LANDSCAPE_1610; }
-    public String toString() { return "CityRail V3 Dual-screen Primary (Landscape 16:10)"; }
+    public int getAspectRatio() { return LANDSCAPE_WS; }
+    public String toString() { return "CityRail V3 Dual-screen Primary (Landscape w/s)"; }
 
     public void dimensionsChanged()
     {
