@@ -431,10 +431,7 @@ public class PlasmaUI
                 announcementTimes = null;
             }
 
-            if (playAnnouncementCheckbox.isSelected())
-            {
-                announce = this::announce;
-            }
+            announce = this::announce;
         }
 
         session = new PlasmaSession(windows, announce, departureData, drawers, announcementTimes);
@@ -451,7 +448,7 @@ public class PlasmaUI
 
     public void announce()
     {
-        if (departureData != null && departureData.size() > 0)
+        if (playAnnouncementCheckbox.isSelected() && departureData != null && departureData.size() > 0)
         {
             Player player = null;
             if (departureData.get(0).CustomAnnouncementPath != null)
@@ -566,7 +563,11 @@ public class PlasmaUI
             departurePanels[i].setData(settings.getDepartureData().get(i));
         }
 
-        recurringDeparturePanel.setData(settings.getRecurringDepartureData());
+        var recurringDepartureData = settings.getRecurringDepartureData();
+        // Next departure set to multiple of interval minutes
+        LocalDateTime now = LocalDateTime.now();
+        recurringDepartureData.DueOut = now.withMinute(0).plusMinutes((int)((now.getMinute() / settings.getRecurringInterval() + 1) * settings.getRecurringInterval()));
+        recurringDeparturePanel.setData(recurringDepartureData);
         recurringIntervalValue.setValue(settings.getRecurringInterval());
         recurringEndValue.setText(settings.getRecurringEnd());
 
