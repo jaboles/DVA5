@@ -35,6 +35,8 @@ public class WAzureUpdater extends BaseUpdater
     public static final String MetadataContainerName = "metadata";
     public static final String SoundJarsContainerName = "soundjars";
     public static final String ExceptionsContainerName = "exceptions";
+    public static final String TempContainerName = "temp";
+    public static final String ScreenshotsContainerName = "screenshots";
 
     public static final String PersistedLastModifiedTimestamp = "PersistedLastModifiedTimestamp";
 
@@ -171,7 +173,7 @@ public class WAzureUpdater extends BaseUpdater
 
         String[] artifactNames = Arrays.stream(files).map(File::getName).toArray(String[]::new);
 
-        System.out.print("Uploading artifact list" + listBlob.getName() + " ... ");
+        System.out.print("Uploading artifact list: " + listBlob.getName() + " ... ");
         listBlob.deleteIfExists();
         listBlob.uploadText(StringUtilities.join("\n", artifactNames));
         System.out.println("done");
@@ -183,10 +185,20 @@ public class WAzureUpdater extends BaseUpdater
 
         String[] versions = getVersions(serviceClient);
 
-        System.out.print("Uploading version list" + versionsList.getName() + " ... ");
+        System.out.print("Uploading version list: " + versionsList.getName() + " ... ");
         versionsList.deleteIfExists();
         versionsList.uploadText(StringUtilities.join("\n", versions));
         System.out.println("done");
+
+        BlobContainerPermissions bcp = new BlobContainerPermissions();
+        bcp.setPublicAccess(BlobContainerPublicAccessType.CONTAINER);
+        for (String version : versions) {
+            System.out.print("Set public permissions for version: " + version + " ... ");
+            CloudBlobContainer versionContainer = getVersionContainer(serviceClient, version);
+            versionContainer.createIfNotExists();
+            versionContainer.uploadPermissions(bcp);
+            System.out.println("done");
+        }
     }
 
     private static void deleteContainer(CloudBlobContainer versionContainer) throws StorageException
@@ -208,6 +220,8 @@ public class WAzureUpdater extends BaseUpdater
                 .filter(c -> !c.getName().equals(MetadataContainerName))
                 .filter(c -> !c.getName().equals(SoundJarsContainerName))
                 .filter(c -> !c.getName().equals(ExceptionsContainerName))
+                .filter(c -> !c.getName().equals(ScreenshotsContainerName))
+                .filter(c -> !c.getName().equals(TempContainerName))
                 .map(c -> c.getName().replace('-', '.')).toArray(String[]::new);
     }
 }
