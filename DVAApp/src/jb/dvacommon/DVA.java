@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 public class DVA {
     private static final Logger logger = LogManager.getLogger(DVA.class);
-    public static final String VersionString = "5.5.5";
+    public static final String VersionString = "5.5.6";
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2022";
 
     private DVAShell mainWindow;
