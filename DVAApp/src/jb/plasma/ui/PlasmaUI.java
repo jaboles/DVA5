@@ -381,7 +381,16 @@ public class PlasmaUI
                 drawers.add(d);
                 d.dataChanged(departureData);
                 PlasmaPanel p = new PlasmaPanel(d);
-                GraphicsDevice gd = mode.IsFullScreen ? GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[i] : null;
+
+                ArrayList<GraphicsDevice> graphicsDevices = new ArrayList<>();
+                graphicsDevices.add(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
+                for (GraphicsDevice gd : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
+                    if (gd != GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()) {
+                        graphicsDevices.add(gd);
+                    }
+                }
+
+                GraphicsDevice gd = mode.IsFullScreen ? graphicsDevices.get(i) : null;
                 Dimension aspectRatio = Drawer.convertAspectRatio(d.getAspectRatio(), gd != null ? gd.getDisplayMode() : null);
                 PlasmaWindow w = new PlasmaWindow(this, mode, gd, d.toString(), size, aspectRatio,
                         new ProportionalPanel(aspectRatio, p, Color.black));
