@@ -109,14 +109,25 @@
     <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
         <!-- JRE: Mac x64 -->
         <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jdk\mac" compression="gzip" overwrite="false">
+        <untar dest="${ToolsDir}\jdk\mac-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
         <antcall target="FetchDeps.JlinkOptimizeJre">
-            <param name="jrefolder" value="mac"/>
+            <param name="jrefolder" value="mac-x86_64"/>
+        </antcall>
+        <!-- JRE: Mac aarch64 -->
+        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\mac-aarch64" compression="gzip" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </untar>
+        <antcall target="FetchDeps.JlinkOptimizeJre">
+            <param name="jrefolder" value="mac-aarch64"/>
         </antcall>
         <!-- Protocol Buffers compiler -->
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-osx-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
@@ -301,23 +312,35 @@
     </target>
 
     <!-- Builds the Mac app bundle. Windows uses a stub .exe launcher so no need to update it. -->
-    <target name="BuildMacApp" description="Update contents of the mac app" if="isMac" depends="CreateJar,SetupCommon">
-        <property name="AppBundleContents" value="${OutDir}/DVA.app/Contents/MacOS"/>
-        <copy todir="${OutDir}">
+    <target name="BuildMacApps" if="isMac" depends="CreateJar,SetupCommon">
+        <antcall target="BuildMacApp">
+            <param name="arch" value="x86_64"/>
+        </antcall>
+        <antcall target="BuildMacApp">
+            <param name="arch" value="aarch64"/>
+        </antcall>
+    </target>
+    <target name="BuildMacApp" description="Update contents of the mac app" if="isMac">
+        <!-- Params:
+             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+        -->
+        <echo>Building Mac .app for arch: ${arch}</echo>
+        <property name="AppBundleContents" value="${OutDir}/${arch}/DVA.app/Contents/MacOS"/>
+        <copy todir="${OutDir}/${arch}">
             <fileset dir="mac">
                 <include name="DVA.app/**"/>
             </fileset>
         </copy>
-        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
             <arg line="-replace CFBundleGetInfoString -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
-        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
             <arg line="-replace CFBundleShortVersionString -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
-        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
             <arg line="-replace CFBundleVersion -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
-        <exec executable="plutil" dir="${OutDir}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
             <arg line="-replace NSHumanReadableCopyright -string &quot;Copyright © Jonathan Boles 1999-2022&quot; DVA.app/Contents/Info.plist"/>
         </exec>
         <copy todir="${AppBundleContents}" preservelastmodified="true">
@@ -331,13 +354,13 @@
             <fileset dir="jars">
                 <include name="*.jar"/>
             </fileset>
-            <fileset dir="ffmpeg/mac">
+            <fileset dir="ffmpeg/mac-${arch}">
                 <include name="*"/>
             </fileset>
         </copy>
         <delete failonerror="false" dir="${AppBundleContents}/jre"/>
         <copy todir="${AppBundleContents}/jre" preservelastmodified="true">
-            <fileset dir="${ToolsDir}/jre/mac">
+            <fileset dir="${ToolsDir}/jre/mac-${arch}">
                 <include name="**"/>
             </fileset>
         </copy>
@@ -345,7 +368,7 @@
         <chmod perm="u+x" file="${AppBundleContents}/ffmpeg"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/bin/java"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/lib/jspawnhelper"/>
-        <move file="${OutDir}/DVA.app/Contents/MacOS/jre/legal" tofile="${OutDir}/DVA.app/Contents/Resources/legal"/>
+        <move file="${AppBundleContents}/jre/legal" tofile="${OutDir}/${arch}/DVA.app/Contents/Resources/legal"/>
     </target>
 
     <target name="SignMac.Check">
@@ -355,17 +378,20 @@
                 <equals arg1="${hostname}" arg2="jb"/>
                 <equals arg1="${hostname}" arg2="jb.local"/>
                 <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
+                <equals arg1="${hostname}" arg2="MacBook-Air.local"/>
                 <equals arg1="${env.SYSTEM_COLLECTIONURI}" arg2="https://jonathanboles.visualstudio.com/"/>
             </or>
         </condition>
     </target>
-    <target name="SignMacApp" description="Mac App Signing" depends="SignMac.Check,BuildMacApp" if="WillSignMac">
+    <target name="SignMacApps" description="Mac App Signing" depends="SignMac.Check,BuildMacApps" if="WillSignMac">
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
-            <arg line="-v --force --deep --options runtime --timestamp --entitlements ../../mac/entitlements.plist --sign '${SignIdentity}' DVA.app"/>
+            <arg line="-v --force --deep --options runtime --timestamp --entitlements ../../mac/entitlements.plist --sign '${SignIdentity}' x86_64/DVA.app"/>
+            <arg line="-v --force --deep --options runtime --timestamp --entitlements ../../mac/entitlements.plist --sign '${SignIdentity}' aarch64/DVA.app"/>
         </exec>
         <!-- verify codesign -->
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
-            <arg line="-v --deep --verify DVA.app"/>
+            <arg line="-v --deep --verify x86_64/DVA.app"/>
+            <arg line="-v --deep --verify aarch64/DVA.app"/>
         </exec>
     </target>
 
@@ -459,43 +485,66 @@ Log=    console
     </target>
 
     <!-- Build Mac setup -->
-    <target name="BuildMacDmg" description  ="Build Mac DMG" if="isMac" depends="SignMacApp">
+    <target name="BuildMacDmgs" if="isMac" depends="SignMacApps">
+        <antcall target="BuildMacDmg">
+            <param name="arch" value="x86_64"/>
+        </antcall>
+        <antcall target="BuildMacDmg">
+            <param name="arch" value="aarch64"/>
+        </antcall>
+        <copy tofile="${OutDir}/${DmgName}.dmg.bz2" file="${OutDir}/${DmgName}-x86_64.dmg.bz2" overwrite="true"/>
+        <copy tofile="${OutDir}/${DmgName}.dmg" file="${OutDir}/${DmgName}-x86_64.dmg" overwrite="true"/>
+    </target>
+    <target name="BuildMacDmg" description="Build Mac DMG" if="isMac">
+        <!-- Params:
+             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+        -->
+        <echo>Building Mac DMG for arch: ${arch}</echo>
         <property name="DmgVolumeName" value="DVA 5"/>
         <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-        <delete file="${OutDir}/${DmgName}.ro.dmg" failonerror="false"/>
-        <delete file="${OutDir}/${DmgName}.dmg" failonerror="false"/>
-        <delete file="${OutDir}/${DmgName}.dmg.bz2" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}-${arch}.ro.dmg" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}-${arch}.dmg" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}-${arch}.dmg.bz2" failonerror="false"/>
         <exec executable="sh" outputproperty="dmgSizeMb">
-            <arg line="-c &quot;echo $((`du -d 0 -m build/Output/DVA.app | cut -f 1` + 5))&quot;"/>
+            <arg line="-c &quot;echo $((`du -d 0 -m build/Output/${arch}/DVA.app | cut -f 1` + 5))&quot;"/>
         </exec>
         <echo>Creating .DMG with ${dmgSizeMb} mb</echo>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}.dmg"/>
+            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}-${arch}.dmg"/>
         </exec>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="attach ${DmgName}.dmg"/>
+            <arg line="attach ${DmgName}-${arch}.dmg"/>
         </exec>
-        <exec executable="sh" dir="${OutDir}" failonerror="true">
+        <exec executable="sh" dir="${OutDir}/${arch}" failonerror="true">
             <arg value="-c"/>
             <arg value="cp -Rfp DVA.app '${DmgMountPoint}'"/>
         </exec>
         <exec executable="osascript" failonerror="true">
             <arg line="-e 'tell application &quot;Finder&quot; to make alias file to posix file &quot;/Applications&quot; at posix file &quot;${DmgMountPoint}&quot;'"/>
         </exec>
-        <sleep seconds="1"/>
+        <sleep seconds="2"/>
         <exec executable="hdiutil" failonerror="true">
             <arg line="detach '${DmgMountPoint}'"/>
         </exec>
         <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
         <exec executable="bzip2" dir="${OutDir}" failonerror="true">
-            <arg line="--verbose --${bzip2compression} --keep ${DmgName}.dmg"/>
+            <arg line="--verbose --${bzip2compression} --keep ${DmgName}-${arch}.dmg"/>
         </exec>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="convert ${DmgName}.dmg -format UDBZ -o ${DmgName}.ro.dmg"/>
+            <arg line="convert ${DmgName}-${arch}.dmg -format UDBZ -o ${DmgName}-${arch}.ro.dmg"/>
         </exec>
-        <move file="${OutDir}/${DmgName}.ro.dmg" tofile="${OutDir}/${DmgName}.dmg"/>
+        <move file="${OutDir}/${DmgName}-${arch}.ro.dmg" tofile="${OutDir}/${DmgName}-${arch}.dmg"/>
     </target>
-    <target name="SignMacDmg" description="Mac DMG Signing" depends="SignMac.Check,BuildMacDmg" if="WillSignMac">
+    <target name="SignMacDmgs" description="Mac DMG Signing" depends="SignMac.Check,BuildMacDmgs" if="WillSignMac">
+        <antcall target="SignMacDmg">
+            <param name="arch" value="x86_64"/>
+        </antcall>
+        <antcall target="SignMacDmg">
+            <param name="arch" value="aarch64"/>
+        </antcall>
+
+        <!-- still notarize the vanilla DMG for older versions to successfully update -->
+        <echo>Signing Mac DMG (legacy)</echo>
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}.dmg"/>
         </exec>
@@ -504,12 +553,33 @@ Log=    console
             <arg line="-v --verify ${DmgName}.dmg"/>
         </exec>
         <!-- Notarize -->
-        <exec executable="sh" dir="${OutDir}" failonerror="true">
-            <arg line="../../notarize.sh ${DmgName}.dmg"/>
+        <exec executable="sh" failonerror="true">
+            <arg line="./notarize.sh ${OutDir}/${DmgName}.dmg"/>
         </exec>
         <!-- verify gatekeeper -->
         <exec executable="spctl" dir="${OutDir}" failonerror="true">
             <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}.dmg"/>
+        </exec>
+    </target>
+    <target name="SignMacDmg">
+        <!-- Params:
+             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+        -->
+        <echo>Signing Mac DMG for arch: ${arch}</echo>
+        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+            <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}-${arch}.dmg"/>
+        </exec>
+        <!-- verify codesign -->
+        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+            <arg line="-v --verify ${DmgName}-${arch}.dmg"/>
+        </exec>
+        <!-- Notarize -->
+        <exec executable="sh" failonerror="true">
+            <arg line="./notarize.sh ${OutDir}/${DmgName}-${arch}.dmg"/>
+        </exec>
+        <!-- verify gatekeeper -->
+        <exec executable="spctl" dir="${OutDir}" failonerror="true">
+            <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}-${arch}.dmg"/>
         </exec>
     </target>
 
@@ -630,7 +700,7 @@ Log=    console
         <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch}.deb"/>
     </target>
 
-    <target name="AllSetups" description="Build all setups" depends="Clean,SignMacDmg,SignWinSetup,BuildLinuxDebs">
+    <target name="AllSetups" description="Build all setups" depends="Clean,SignMacDmgs,SignWinSetup,BuildLinuxDebs">
         <java jar="${AppBundleContents}/DVA.jar" fork="true">
             <arg value="/clearsettings"/>
         </java>
