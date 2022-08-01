@@ -6,6 +6,9 @@
     <property name="ClassesDir" value="build/classes"/>
     <property name="OutDir" value="build${file.separator}Output"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
+    <property name="JavaVersionMajor" value="11"/>
+    <property name="JavaVersionPlus" value="11.0.16%2b8"/>
+    <property name="JavaVersionUnderscore" value="11.0.16_8"/>
     <path id="jars">
         <fileset dir="jars">
             <include name="*" />
@@ -108,7 +111,7 @@
     </target>
     <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
         <!-- JRE: Mac x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jdk\mac-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
@@ -119,7 +122,7 @@
             <param name="jrefolder" value="mac-x86_64"/>
         </antcall>
         <!-- JRE: Mac aarch64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_mac_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jdk\mac-aarch64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
@@ -142,7 +145,7 @@
         <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}/winrun4j.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
         <!-- JRE: Win x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jdk\win64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x64_windows_*.zip"/>
@@ -153,7 +156,7 @@
             <param name="jrefolder" value="win64"/>
         </antcall>
         <!-- JRE: Win x86 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x86-32_windows_hotspot_11.0.13_8.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jdk\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x86-32_windows_*.zip"/>
@@ -220,7 +223,7 @@
     </target>
     <target name="FetchDeps.BuildForLinux" depends="FetchDeps.Common">
         <!-- JRE: Linux x64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_x64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jdk\linux-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x64_linux_*.tar.gz"/>
@@ -231,7 +234,7 @@
             <param name="jrefolder" value="linux-x86_64"/>
         </antcall>
         <!-- JRE: Linux aarch64 -->
-        <get src="https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.13%2B8/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.13_8.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_aarch64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jdk\linux-aarch64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_aarch64_linux_*.tar.gz"/>
