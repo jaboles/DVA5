@@ -259,7 +259,7 @@
     </target>
 
     <!-- After Eclipse compile task, prepare JAR file -->
-    <target name="CreateJar" description="Create Jar file" depends="Compile,IncrementBuildNumber">
+    <target name="CreateJar" description="Create Jar file" depends="Compile">
         <manifestclasspath property="ManifestClasspath" jarfile="jars/dummy.jar">
             <classpath refid="jars" />
         </manifestclasspath>
