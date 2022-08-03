@@ -111,8 +111,8 @@ public class WAzureUpdater extends BaseUpdater
                     // Mac
                     new File("build/Output/DVA5.dmg"),
                     new File("build/Output/DVA5.dmg.bz2"),
-                    new File("build/Output/x86_64/DVA5-x86_64.dmg"),
-                    new File("build/Output/aarch64/DVA5-aarch64.dmg"),
+                    new File("build/Output/DVA5-x86_64.dmg"),
+                    new File("build/Output/DVA5-aarch64.dmg"),
 
                     // Windows
                     new File("build/Output/DVA5Setup.exe"),
