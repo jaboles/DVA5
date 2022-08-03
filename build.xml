@@ -672,7 +672,7 @@ Log=    console
                 <include name="**"/>
             </fileset>
         </copy>
-        <copy todir="${AppBundleContents}/jre" preservelastmodified="true">
+        <copy todir="${DpkgRoot}/usr/share/dva/jre" preservelastmodified="true">
             <fileset dir="${ToolsDir}/jre/linux-${arch}">
                 <include name="**"/>
             </fileset>
