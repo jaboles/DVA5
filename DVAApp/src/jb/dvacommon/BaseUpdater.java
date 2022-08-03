@@ -127,7 +127,7 @@ public abstract class BaseUpdater
     {
         String filename;
         if (OSDetection.isMac())
-            filename = "DVA5.dmg";
+            filename = "DVA5-" + System.getProperty("os.arch") + ".dmg";
         else if (OSDetection.isWindows())
             filename = "DVA5Setup.exe";
         else

@@ -63,7 +63,25 @@
     <condition property="isLinux">
         <os family="unix" />
     </condition>
-    <exec if:set="isMac" executable="uname" outputproperty="machineArch">
+    <exec if:set="isMac" executable="sysctl" outputproperty="sysctlProctranslated">
+        <arg value="sysctl.proc_translated"/>
+    </exec>
+    <condition property="machineArch" value="arm64">
+        <and>
+            <isset property="isMac"/>
+            <or>
+                <equals arg1="${sysctlProctranslated}" arg2="sysctl.proc_translated: 0" />
+                <equals arg1="${sysctlProctranslated}" arg2="sysctl.proc_translated: 1" />
+            </or>
+        </and>
+    </condition>
+    <condition property="machineArch" value="x86_64">
+        <and>
+            <isset property="isMac"/>
+            <equals arg1="${sysctlProctranslated}" arg2="sysctl: unknown oid 'sysctl.proc_translated'" />
+        </and>
+    </condition>
+    <exec if:set="isLinux" executable="uname" outputproperty="machineArch">
         <arg value="-m"/>
     </exec>
     <condition property="isIntelMac">
@@ -89,20 +107,6 @@
 
     <!-- Fetch build dependencies -->
     <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Mac.Intel,FetchDeps.Windows"/>
-    <target name="FetchDeps.JlinkOptimizeJre">
-        <echo>Calling jlink to optimize JRE into ${ToolsDir}/jre/${jrefolder}</echo>
-        <delete dir="${ToolsDir}/jre/${jrefolder}"/>
-        <exec executable="${env.JAVA_HOME}/bin/jlink">
-            <arg value="--module-path"/>
-            <arg value="${ToolsDir}/jdk/${jrefolder}/jmods"/>
-            <arg value="--add-modules"/>
-            <arg value="${JlinkModules}"/>
-            <arg value="--no-header-files"/>
-            <arg value="--no-man-pages"/>
-            <arg value="--output"/>
-            <arg value="${ToolsDir}/jre/${jrefolder}"/>
-        </exec>
-    </target>
     <target name="FetchDeps.Common">
         <mkdir dir="${ToolsDir}"/>
         <!-- Ant-Contrib -->
@@ -110,28 +114,23 @@
         <untar src="${ToolsDir}/ant-contrib.tar.gz" dest="${ToolsDir}" compression="gzip" overwrite="false" />
     </target>
     <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
-        <!-- JRE: Mac x64 -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jdk\mac-x86_64" compression="gzip" overwrite="false">
+        <!-- JRE: Mac -->
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jre\mac-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
+                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <antcall target="FetchDeps.JlinkOptimizeJre">
-            <param name="jrefolder" value="mac-x86_64"/>
-        </antcall>
-        <!-- JRE: Mac aarch64 -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jdk\mac-aarch64" compression="gzip" overwrite="false">
+        <delete dir="${ToolsDir}/jre/mac-x86_64/Contents/Home/man"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_aarch64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jre\mac-arm64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
+                <include name="OpenJDK*-jre_aarch64_mac_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <antcall target="FetchDeps.JlinkOptimizeJre">
-            <param name="jrefolder" value="mac-aarch64"/>
-        </antcall>
+        <delete dir="${ToolsDir}/jre/mac-arm64/Contents/Home/man"/>
         <!-- Protocol Buffers compiler -->
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-osx-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
@@ -144,28 +143,21 @@
         <!-- WinRun4J -->
         <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}/winrun4j.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
-        <!-- JRE: Win x64 -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
-        <unzip dest="${ToolsDir}\jdk\win64" overwrite="false">
+        <!-- JRE: Win -->
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jdk_x64_windows_*.zip"/>
+                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <antcall target="FetchDeps.JlinkOptimizeJre">
-            <param name="jrefolder" value="win64"/>
-        </antcall>
-        <!-- JRE: Win x86 -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
-        <unzip dest="${ToolsDir}\jdk\win32" overwrite="false">
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <unzip dest="${ToolsDir}\jre\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jdk_x86-32_windows_*.zip"/>
+                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <antcall target="FetchDeps.JlinkOptimizeJre">
-            <param name="jrefolder" value="win32"/>
-        </antcall>
         <!-- download Inno Setup -->
         <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
     </target>
@@ -222,28 +214,21 @@
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
     </target>
     <target name="FetchDeps.BuildForLinux" depends="FetchDeps.Common">
-        <!-- JRE: Linux x64 -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jdk\linux-x86_64" compression="gzip" overwrite="false">
+        <!-- JRE: Linux -->
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jre\linux-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jdk_x64_linux_*.tar.gz"/>
+                <include name="OpenJDK*-jre_x64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <antcall target="FetchDeps.JlinkOptimizeJre">
-            <param name="jrefolder" value="linux-x86_64"/>
-        </antcall>
-        <!-- JRE: Linux aarch64 -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_aarch64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jdk\linux-aarch64" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_aarch64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jre\linux-aarch64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jdk_aarch64_linux_*.tar.gz"/>
+                <include name="OpenJDK*-jre_aarch64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <antcall target="FetchDeps.JlinkOptimizeJre">
-            <param name="jrefolder" value="linux-aarch64"/>
-        </antcall>
     </target>
     <target name="FetchDeps.Linux" if="isLinux" depends="FetchDeps.Common,FetchDeps.BuildForLinux">
         <!-- Protocol Buffers compiler -->
@@ -314,36 +299,55 @@
         </copy>
     </target>
 
+    <target name="JlinkOptimizeJre">
+        <echo>Calling jlink (${jdkfolder}/${jlinkrelative}) to optimize JRE into ${output}</echo>
+        <delete dir="${ToolsDir}/jre/${jdkfolder}"/>
+        <chmod perm="u+x" file="${ToolsDir}/jdk/${jdkfolder}/${jlinkrelative}"/>
+        <exec executable="${ToolsDir}/jdk/${jdkfolder}/${jlinkrelative}">
+            <arg value="--module-path"/>
+            <arg value="${ToolsDir}/jdk/${jdkfolder}/jmods"/>
+            <arg value="--add-modules"/>
+            <arg value="${JlinkModules}"/>
+            <arg value="--no-header-files"/>
+            <arg value="--no-man-pages"/>
+            <arg value="--output"/>
+            <arg value="${output}"/>
+        </exec>
+    </target>
+
     <!-- Builds the Mac app bundle. Windows uses a stub .exe launcher so no need to update it. -->
     <target name="BuildMacApps" if="isMac" depends="CreateJar,SetupCommon">
         <antcall target="BuildMacApp">
             <param name="arch" value="x86_64"/>
+            <param name="arch.java" value="x86_64"/>
         </antcall>
         <antcall target="BuildMacApp">
-            <param name="arch" value="aarch64"/>
+            <param name="arch" value="arm64"/>
+            <param name="arch.java" value="aarch64"/>
         </antcall>
     </target>
     <target name="BuildMacApp" description="Update contents of the mac app" if="isMac">
         <!-- Params:
-             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+             ${arch}        - the arch identifier from uname -m (x86_64, arm64)
+             ${arch.java}   - the arch identifier as it would be in Java (x86_64, aarch64)
         -->
         <echo>Building Mac .app for arch: ${arch}</echo>
-        <property name="AppBundleContents" value="${OutDir}/${arch}/DVA.app/Contents/MacOS"/>
-        <copy todir="${OutDir}/${arch}">
+        <property name="AppBundleContents" value="${OutDir}/${arch.java}/DVA.app/Contents/MacOS"/>
+        <copy todir="${OutDir}/${arch.java}">
             <fileset dir="mac">
                 <include name="DVA.app/**"/>
             </fileset>
         </copy>
-        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch.java}" failonerror="true">
             <arg line="-replace CFBundleGetInfoString -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
-        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch.java}" failonerror="true">
             <arg line="-replace CFBundleShortVersionString -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
-        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch.java}" failonerror="true">
             <arg line="-replace CFBundleVersion -string ${DVAVersion} DVA.app/Contents/Info.plist"/>
         </exec>
-        <exec executable="plutil" dir="${OutDir}/${arch}" failonerror="true">
+        <exec executable="plutil" dir="${OutDir}/${arch.java}" failonerror="true">
             <arg line="-replace NSHumanReadableCopyright -string &quot;Copyright © Jonathan Boles 1999-2022&quot; DVA.app/Contents/Info.plist"/>
         </exec>
         <copy todir="${AppBundleContents}" preservelastmodified="true">
@@ -363,7 +367,7 @@
         </copy>
         <delete failonerror="false" dir="${AppBundleContents}/jre"/>
         <copy todir="${AppBundleContents}/jre" preservelastmodified="true">
-            <fileset dir="${ToolsDir}/jre/mac-${arch}">
+            <fileset dir="${ToolsDir}/jre/mac-${arch}/Contents/Home">
                 <include name="**"/>
             </fileset>
         </copy>
@@ -371,7 +375,7 @@
         <chmod perm="u+x" file="${AppBundleContents}/ffmpeg"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/bin/java"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/lib/jspawnhelper"/>
-        <move file="${AppBundleContents}/jre/legal" tofile="${OutDir}/${arch}/DVA.app/Contents/Resources/legal"/>
+        <move file="${AppBundleContents}/jre/legal" tofile="${OutDir}/${arch.java}/DVA.app/Contents/Resources/legal"/>
     </target>
 
     <target name="SignMac.Check">
@@ -490,35 +494,35 @@ Log=    console
     <!-- Build Mac setup -->
     <target name="BuildMacDmgs" if="isMac" depends="SignMacApps">
         <antcall target="BuildMacDmg">
-            <param name="arch" value="x86_64"/>
+            <param name="arch.java" value="x86_64"/>
         </antcall>
         <antcall target="BuildMacDmg">
-            <param name="arch" value="aarch64"/>
+            <param name="arch.java" value="aarch64"/>
         </antcall>
         <copy tofile="${OutDir}/${DmgName}.dmg.bz2" file="${OutDir}/${DmgName}-x86_64.dmg.bz2" overwrite="true"/>
         <copy tofile="${OutDir}/${DmgName}.dmg" file="${OutDir}/${DmgName}-x86_64.dmg" overwrite="true"/>
     </target>
     <target name="BuildMacDmg" description="Build Mac DMG" if="isMac">
         <!-- Params:
-             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+             ${arch.java}   - the arch identifier as it would be in Java (x86_64, aarch64)
         -->
-        <echo>Building Mac DMG for arch: ${arch}</echo>
+        <echo>Building Mac DMG for arch: ${arch.java}</echo>
         <property name="DmgVolumeName" value="DVA 5"/>
         <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-        <delete file="${OutDir}/${DmgName}-${arch}.ro.dmg" failonerror="false"/>
-        <delete file="${OutDir}/${DmgName}-${arch}.dmg" failonerror="false"/>
-        <delete file="${OutDir}/${DmgName}-${arch}.dmg.bz2" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}-${arch.java}.ro.dmg" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}-${arch.java}.dmg" failonerror="false"/>
+        <delete file="${OutDir}/${DmgName}-${arch.java}.dmg.bz2" failonerror="false"/>
         <exec executable="sh" outputproperty="dmgSizeMb">
-            <arg line="-c &quot;echo $((`du -d 0 -m build/Output/${arch}/DVA.app | cut -f 1` + 5))&quot;"/>
+            <arg line="-c &quot;echo $((`du -d 0 -m build/Output/${arch.java}/DVA.app | cut -f 1` + 5))&quot;"/>
         </exec>
         <echo>Creating .DMG with ${dmgSizeMb} mb</echo>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}-${arch}.dmg"/>
+            <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}-${arch.java}.dmg"/>
         </exec>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="attach ${DmgName}-${arch}.dmg"/>
+            <arg line="attach ${DmgName}-${arch.java}.dmg"/>
         </exec>
-        <exec executable="sh" dir="${OutDir}/${arch}" failonerror="true">
+        <exec executable="sh" dir="${OutDir}/${arch.java}" failonerror="true">
             <arg value="-c"/>
             <arg value="cp -Rfp DVA.app '${DmgMountPoint}'"/>
         </exec>
@@ -531,19 +535,19 @@ Log=    console
         </exec>
         <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
         <exec executable="bzip2" dir="${OutDir}" failonerror="true">
-            <arg line="--verbose --${bzip2compression} --keep ${DmgName}-${arch}.dmg"/>
+            <arg line="--verbose --${bzip2compression} --keep ${DmgName}-${arch.java}.dmg"/>
         </exec>
         <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
-            <arg line="convert ${DmgName}-${arch}.dmg -format UDBZ -o ${DmgName}-${arch}.ro.dmg"/>
+            <arg line="convert ${DmgName}-${arch.java}.dmg -format UDBZ -o ${DmgName}-${arch.java}.ro.dmg"/>
         </exec>
-        <move file="${OutDir}/${DmgName}-${arch}.ro.dmg" tofile="${OutDir}/${DmgName}-${arch}.dmg"/>
+        <move file="${OutDir}/${DmgName}-${arch.java}.ro.dmg" tofile="${OutDir}/${DmgName}-${arch.java}.dmg"/>
     </target>
     <target name="SignMacDmgs" description="Mac DMG Signing" depends="SignMac.Check,BuildMacDmgs" if="WillSignMac">
         <antcall target="SignMacDmg">
-            <param name="arch" value="x86_64"/>
+            <param name="arch.java" value="x86_64"/>
         </antcall>
         <antcall target="SignMacDmg">
-            <param name="arch" value="aarch64"/>
+            <param name="arch.java" value="aarch64"/>
         </antcall>
 
         <!-- still notarize the vanilla DMG for older versions to successfully update -->
@@ -566,23 +570,23 @@ Log=    console
     </target>
     <target name="SignMacDmg">
         <!-- Params:
-             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+             ${arch.java}   - the arch identifier as it would be in Java (x86_64, aarch64)
         -->
         <echo>Signing Mac DMG for arch: ${arch}</echo>
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
-            <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}-${arch}.dmg"/>
+            <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}-${arch.java}.dmg"/>
         </exec>
         <!-- verify codesign -->
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
-            <arg line="-v --verify ${DmgName}-${arch}.dmg"/>
+            <arg line="-v --verify ${DmgName}-${arch.java}.dmg"/>
         </exec>
         <!-- Notarize -->
         <exec executable="sh" failonerror="true">
-            <arg line="./notarize.sh ${OutDir}/${DmgName}-${arch}.dmg"/>
+            <arg line="./notarize.sh ${OutDir}/${DmgName}-${arch.java}.dmg"/>
         </exec>
         <!-- verify gatekeeper -->
         <exec executable="spctl" dir="${OutDir}" failonerror="true">
-            <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}-${arch}.dmg"/>
+            <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}-${arch.java}.dmg"/>
         </exec>
     </target>
 
@@ -634,16 +638,19 @@ Log=    console
     <target name="BuildLinuxDebs" if="buildLinux" depends="CreateJar,SetupCommon">
         <antcall target="BuildLinuxDeb">
             <param name="arch" value="x86_64"/>
+            <param name="arch.java" value="x86_64"/>
             <param name="arch.debian" value="amd64"/>
         </antcall>
         <antcall target="BuildLinuxDeb">
-            <param name="arch" value="aarch64"/>
+            <param name="arch" value="arm64"/>
+            <param name="arch.java" value="aarch64"/>
             <param name="arch.debian" value="arm64"/>
         </antcall>
     </target>
     <target name="BuildLinuxDeb">
         <!-- Params:
-             ${arch}        - the arch identifier as it would be in Java (x86_64, aarch64)
+             ${arch}        - the arch identifier from uname -m (x86_64, arm64)
+             ${arch.java}   - the arch identifier as it would be in Java (x86_64, aarch64)
              ${arch.debian} - the corresponding Debian arch identifier (amd64, arm64)
         -->
         <echo>Building .DEB for arch: ${arch} (debian arch: ${arch.debian})</echo>
@@ -665,7 +672,7 @@ Log=    console
                 <include name="**"/>
             </fileset>
         </copy>
-        <copy todir="${DpkgRoot}/usr/share/dva/jre" preservelastmodified="true">
+        <copy todir="${AppBundleContents}/jre" preservelastmodified="true">
             <fileset dir="${ToolsDir}/jre/linux-${arch}">
                 <include name="**"/>
             </fileset>
