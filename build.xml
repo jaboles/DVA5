@@ -702,7 +702,7 @@ Log=    console
             <arg value="--build"/>
             <arg value="debian"/>
         </exec>
-        <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch}.deb"/>
+        <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch.java}.deb"/>
     </target>
 
     <target name="AllSetups" description="Build all setups" depends="Clean,SignMacDmgs,SignWinSetup,BuildLinuxDebs">
