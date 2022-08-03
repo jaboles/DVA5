@@ -223,7 +223,7 @@
             <cutdirsmapper dirs="1"/>
         </untar>
         <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_aarch64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\linux-aarch64" compression="gzip" overwrite="false">
+        <untar dest="${ToolsDir}\jre\linux-arm64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jre_aarch64_linux_*.tar.gz"/>
             </fileset>
@@ -235,11 +235,6 @@
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
         <chmod perm="u+x" file="${ToolsDir}/protoc/bin/protoc"/>
-    </target>
-
-    <!-- Increments the build number -->
-    <target name="IncrementBuildNumber" description="Increment build number">
-        <buildnumber file="DVAApp/resources/buildnumber.txt"/>
     </target>
 
     <target name="Clean" description="Clean output folder">
