@@ -3,6 +3,7 @@ package jb.plasma.gtfs;
 import com.google.transit.realtime.GtfsRealtime1007Extension;
 import jb.plasma.DepartureData;
 import jb.plasma.GtfsDepartureData;
+import jb.plasma.Phraser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
@@ -116,13 +117,14 @@ public class GtfsTimetableTranslator
         System.gc();
 
         LocalDate today = LocalDate.now();
+        Phraser phraser = new Phraser();
         return applyRealtimeInfo(stopsAtSelectedLocation.stream(), today)
             .filter(st -> st.Pickup)
             .filter(st -> routes == null || routes.contains(st.Trip.Route))
             .flatMap(st -> expandTrips(st, stopTimesByTrip))
             .sorted(Comparator.comparing(t -> t.At))
             .limit(limit > 0 ? limit : Integer.MAX_VALUE)
-            .map(GtfsDepartureData::new);
+            .map(ti -> new GtfsDepartureData(ti, phraser));
     }
 
     private Stream<TripInstance> expandTrips(StopTime tripTimeAndPlace, Map<Trip, List<StopTime>> stopTimesByTrip)

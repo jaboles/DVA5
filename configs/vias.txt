@@ -1,5 +1,5 @@
 # This file controls the addition of "... via X" to the destination when generating
-# an announcement from the indicator board.
+# an announcement from the indicator board, or when using GTFS data.
 #
 # Entries format: [A],B,C,[D]
 # If a train is routed A->B->C, "... via B" will be added to the destination.
@@ -8,13 +8,10 @@
 # If D (optional) is provided, "... via B" will be replaced with "... via D"
 
 
-# Northern/North Shore line
+# Northern/North Shore/North West Metro line
 ,Gordon,Hornsby
-,Macquarie University,Hornsby
-,Strathfield,Epping
-,Macquarie University,Epping
-,Strathfield,Central
-,Macquarie University,Chatswood
+,Strathfield,Hornsby
+Epping,Strathfield,Central
 ,Gordon,Chatswood
 
 # Airport Stations

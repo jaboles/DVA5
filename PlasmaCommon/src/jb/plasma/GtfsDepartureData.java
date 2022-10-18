@@ -13,12 +13,12 @@ public class GtfsDepartureData extends DepartureData
     private static final Logger Logger = LogManager.getLogger(GtfsDepartureData.class);
     private final TripInstance tripInstance;
 
-    public GtfsDepartureData(TripInstance ti)
+    public GtfsDepartureData(TripInstance ti, Phraser phraser)
     {
         String[] headsignParts = ti.Trip.Headsign.split(" via ");
         CityrailLine line = CityrailLine.get(ti.Trip.Route.Description);
+
         this.Destination = substitute(headsignParts[0], true, line);
-        this.Destination2 = headsignParts.length >= 2 ? "via " + substitute(headsignParts[1], true, line) : "";
         this.Line = ti.Trip.Route.Description;
         this.Type = ti.LimitedStops ? "Limited Stops" : "All Stops";
         this.Cars = ti.Trip.Cars;
@@ -39,8 +39,15 @@ public class GtfsDepartureData extends DepartureData
 
             stops.add(new Stop(substitute(stopName, false, line), carRangeString, airport));
         }
+
         this.Stops = stops.toArray(new Stop[0]);
         this.DueOut = ti.At;
+
+        if (headsignParts.length >= 2) {
+            this.Destination2 = "via " + substitute(headsignParts[1], true, line);
+        } else {
+            this.Destination2 = phraser.getVia(this);
+        }
 
         this.tripInstance = ti;
     }
