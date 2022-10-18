@@ -42,8 +42,17 @@ public class LoadWindow {
             Dimension imageDimensions = imagePanel.getPreferredSize();
 
             // Read build number
-            Properties props = new Properties();
-            props.load(LoadWindow.class.getResourceAsStream("/buildnumber.txt"));
+            String buildNumber = "";
+            try
+            {
+                Properties props = new Properties();
+                props.load(LoadWindow.class.getResourceAsStream("/buildnumber.txt"));
+                buildNumber = props.getProperty("build.number");
+            }
+            catch (NullPointerException e)
+            {
+                buildNumber = "DEV";
+            }
 
             JLabel dvaLabel = new JLabel("DVA");
             dvaLabel.setFont(Resources.ArialBold.deriveFont(Font.PLAIN, 86));
@@ -58,7 +67,7 @@ public class LoadWindow {
             loadLabel.setLocation(12, imageDimensions.height - 24);
             imagePanel.add(loadLabel, 0);
 
-            versionLabel = new JLabel(DVA.VersionString + " (" + props.getProperty("build.number") + ")");
+            versionLabel = new JLabel(DVA.VersionString + " (" + buildNumber + ")");
             versionLabel.setFont(imageFont);
             versionLabel.setForeground(Color.white);
             versionLabel.setLocation(imageDimensions.width - versionLabel.getPreferredSize().width - 12, imageDimensions.height - 24);
@@ -66,7 +75,7 @@ public class LoadWindow {
 
             String aboutText = aboutTextPane.getText();
             aboutText = aboutText.replace("$VERSION$", DVA.VersionString);
-            aboutText = aboutText.replace("$BUILDNUMBER$", props.getProperty("build.number", "[no build number]"));
+            aboutText = aboutText.replace("$BUILDNUMBER$", buildNumber);
             aboutText = aboutText.replace("$RAILWAVSURL$", "http://railwavs.railmedia.com.au");
             aboutText = aboutText.replace("$EMAIL$", "jaboles@fastmail.fm");
             aboutText = aboutText.replace("$COPYRIGHT$",  DVA.CopyrightMessage);

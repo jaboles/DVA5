@@ -721,8 +721,12 @@ Log=    console
         </copy>
     </target>
 
-    <target name="Run" description="Fast dev build" depends="BuildMacApp">
-        <exec executable="build/Output/DVA.app/Contents/MacOS/dva"/>
+    <target name="Run" description="Fast dev build" depends="CreateJar,SetupCommon">
+        <antcall target="BuildMacApp">
+            <param name="arch" value="arm64"/>
+            <param name="arch.java" value="aarch64"/>
+        </antcall>
+        <exec executable="build/Output/aarch64/DVA.app/Contents/MacOS/dva"/>
     </target>
 
     <target name="SoundJars">
