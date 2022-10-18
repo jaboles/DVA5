@@ -10,14 +10,8 @@
 
 
 # Airport stations
-Domestic Airport,Domestic,Sydney-Male
-Domestic Terminal,Domestic,Sydney-Male
-Domestic Airport,Domestic Terminal,Sydney-Female
-Domestic,Domestic Terminal,Sydney-Female
-International Airport,International,Sydney-Male
-International Terminal,International,Sydney-Male
-International Airport,International Terminal,Sydney-Female
-International,International Terminal,Sydney-Female
+Domestic Terminal,Domestic Airport
+International Terminal,International Airport
 
 # New stations
 Shellharbour Junction,Dunmore,Sydney-Male
