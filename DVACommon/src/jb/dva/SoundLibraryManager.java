@@ -11,7 +11,10 @@ import java.util.stream.Collectors;
 
 public class SoundLibraryManager {
     private Map<String, SoundLibrary> soundLibraryMap = new LinkedHashMap<>();
-    private final ObjectCache<SoundLibrary> soundLibraryCache;
+    private ObjectCache<SoundLibrary> soundLibraryCache = null;
+    private final File temp;
+    private final boolean specialSoundsEnabled;
+    private final String cacheUniverse;
 
     // 'Special' sounds which are only shown after enabling the option
     private static final Set<String> SPECIAL_SOUNDS = Arrays.stream(new String[] {
@@ -28,8 +31,14 @@ public class SoundLibraryManager {
     }).collect(Collectors.toMap(v -> v[0], v -> v[1]));
 
     public SoundLibraryManager(File temp, String cacheUniverse, boolean specialSoundsEnabled) throws Exception {
-        final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(temp, "soundlibrarymap2_" + cacheUniverse);
-        soundLibraryCache = new ObjectCache<>(temp, "soundlibrary2_" + cacheUniverse);
+        this.temp = temp;
+        this.cacheUniverse = cacheUniverse;
+        this.specialSoundsEnabled = specialSoundsEnabled;
+    }
+
+    public void loadAllSoundLibraries(Consumer<String> progress) throws Exception {
+        final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(temp, "soundlibrarymap3_" + cacheUniverse);
+        soundLibraryCache = new ObjectCache<>(temp, "soundlibrary3_" + cacheUniverse);
 
         populateSoundLibraries(specialSoundsEnabled);
 
@@ -44,9 +53,7 @@ public class SoundLibraryManager {
                 library.addFallback(soundLibraryMap.get(FALLBACK_LIBRARIES.get(library.getName())));
             }
         }
-    }
 
-    public void loadAllSoundLibraries(Consumer<String> progress) throws Exception {
         for (final Map.Entry<String, SoundLibrary> entry : soundLibraryMap.entrySet()) {
             if (progress != null)
                 progress.accept(entry.getValue().getName());
@@ -134,13 +141,9 @@ public class SoundLibraryManager {
 
     public static File getSoundJarsFolder()
     {
-        if (OSDetection.isWindows())
+        if (OSDetection.isWindows() || OSDetection.isMac())
         {
             return new File(FileUtilities.getUserApplicationDataFolder(), "DVA");
-        }
-        else if (OSDetection.isMac())
-        {
-            return new File("/Users/Shared/Library/Application Support/DVA");
         }
         else
         {
