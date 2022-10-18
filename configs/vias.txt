@@ -17,6 +17,8 @@ Epping,Strathfield,Central
 # Airport Stations
 ,Domestic Airport,International Airport,Airport stations
 ,International Airport,Domestic Airport,Airport stations
+,Domestic,International,Airport stations
+,International,Domestic,Airport stations
 
 # Bankstown/South/Old Main South/East Hills lines
 ,Regents Park,Bankstown

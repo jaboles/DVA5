@@ -11,7 +11,9 @@
 
 # Airport stations
 Domestic Terminal,Domestic Airport
+Domestic,Domestic Airport
 International Terminal,International Airport
+International,International Airport
 
 # New stations
 Shellharbour Junction,Dunmore,Sydney-Male
