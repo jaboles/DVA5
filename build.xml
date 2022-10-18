@@ -567,7 +567,7 @@ Log=    console
         <!-- Params:
              ${arch.java}   - the arch identifier as it would be in Java (x86_64, aarch64)
         -->
-        <echo>Signing Mac DMG for arch: ${arch}</echo>
+        <echo>Signing Mac DMG for arch: ${arch.java}</echo>
         <exec executable="codesign" dir="${OutDir}" failonerror="true">
             <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}-${arch.java}.dmg"/>
         </exec>
