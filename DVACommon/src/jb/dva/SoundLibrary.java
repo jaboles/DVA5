@@ -12,7 +12,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.jar.JarEntry;
@@ -140,13 +143,17 @@ public class SoundLibrary implements Serializable {
                     urlString.toLowerCase().endsWith(".wav") ||
                     urlString.toLowerCase().endsWith(".mp3")) {
                 // Found a sound file
-                String canonicalName = urlString.substring(urlString.lastIndexOf('/')+1);
-                if (canonicalName.lastIndexOf('.') > 0) canonicalName = canonicalName.substring(0, canonicalName.lastIndexOf('.'));
-                if (canonicalName.endsWith(".truncated")) {
-                    canonicalName = canonicalName.substring(0, canonicalName.length() - 10);
-                    truncated.put(canonicalName, u);
-                } else {
-                    putSound(canonicalName, u);
+                try {
+                    String canonicalName = URLDecoder.decode(urlString.substring(urlString.lastIndexOf('/')+1), StandardCharsets.UTF_8.name());
+                    if (canonicalName.lastIndexOf('.') > 0) canonicalName = canonicalName.substring(0, canonicalName.lastIndexOf('.'));
+                    if (canonicalName.endsWith(".truncated")) {
+                        canonicalName = canonicalName.substring(0, canonicalName.length() - 10);
+                        truncated   .put(canonicalName, u);
+                    } else {
+                        putSound(canonicalName, u);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    // not going to happen - value came from JDK's own StandardCharsets
                 }
             }
             else if (urlString.toLowerCase().endsWith(".png") ||
