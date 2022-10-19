@@ -17,7 +17,10 @@ public class IndicatorSettings
     private final String announcementVoice;
     private final boolean coalesceStationSequences;
     private final DepartureData recurringDepartureData;
+    private final boolean recurringIntervalSelected;
     private final int recurringInterval;
+    private final boolean recurringTimesSelected;
+    private final String recurringTimes;
     private final boolean recurringEndSelected;
     private final String recurringEnd;
 
@@ -29,7 +32,10 @@ public class IndicatorSettings
                              boolean coalesceStationSequences,
                              List<DepartureData> departureData,
                              DepartureData recurringDepartureData,
+                             boolean recurringIntervalSelected,
                              int recurringInterval,
+                             boolean recurringTimesSelected,
+                             String recurringTimes,
                              boolean recurringEndSelected,
                              String recurringEnd,
                              String gtfsStation,
@@ -51,7 +57,10 @@ public class IndicatorSettings
         this.filterRoute = filterRoute;
         this.gtfsRoute = gtfsRoute;
         this.recurringDepartureData = recurringDepartureData;
+        this.recurringIntervalSelected = recurringIntervalSelected;
         this.recurringInterval = recurringInterval;
+        this.recurringTimesSelected = recurringTimesSelected;
+        this.recurringTimes = recurringTimes;
         this.recurringEndSelected = recurringEndSelected;
         this.recurringEnd = recurringEnd;
     }
@@ -72,7 +81,13 @@ public class IndicatorSettings
 
     public DepartureData getRecurringDepartureData() { return recurringDepartureData; }
 
+    public boolean getRecurringIntervalSelected() { return recurringEndSelected; }
+
     public int getRecurringInterval() { return recurringInterval; }
+
+    public boolean getRecurringTimesSelected() { return recurringTimesSelected; }
+
+    public String getRecurringTimes() { return recurringTimes; }
 
     public boolean getRecurringEndSelected() { return recurringEndSelected; }
 

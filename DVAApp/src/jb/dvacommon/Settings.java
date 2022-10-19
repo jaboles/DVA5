@@ -239,7 +239,10 @@ public class Settings {
                 prefs.getBoolean(key + "CoalesceStationSequences", true),
                 departureData,
                 getIndicatorDepartureData(key + "RecurringDepartureData"),
+                prefs.getBoolean(key + "RecurringIntervalSelected", true),
                 prefs.getInt(key + "RecurringInterval", 10),
+                prefs.getBoolean(key + "RecurringTimesSelected", false),
+                prefs.get(key + "RecurringTimes", "9:50, 10:20, 10:50, 11:20, 11:50, 12:20, 13:05, 13:50, 14:20, 14:50, 15:20, 15:50"),
                 prefs.getBoolean(key + "RecurringEndSelected", true),
                 prefs.get(key + "RecurringEnd", "23:59"),
                 prefs.get(key + "GtfsStation", ""),
@@ -288,7 +291,10 @@ public class Settings {
         }
 
         setIndicatorDepartureData(key + "RecurringDepartureData", is.getRecurringDepartureData());
+        prefs.putBoolean(key + "ReecurringIntervalSelected", is.getRecurringIntervalSelected());
         prefs.putInt(key + "RecurringInterval", is.getRecurringInterval());
+        prefs.putBoolean(key + "ReecurringTimesSelected", is.getRecurringTimesSelected());
+        prefs.put(key + "RecurringTimes", is.getRecurringTimes());
         prefs.putBoolean(key + "RecurringEndSelected", is.getRecurringEndSelected());
         prefs.put(key + "RecurringEnd", is.getRecurringEnd());
 

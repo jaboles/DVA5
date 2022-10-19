@@ -59,12 +59,16 @@
                     </vbox>
                 </hbox>
                 <filler height="30"/>
-                <panel layout="FlowLayout">
-                    <label text="Then every "/>
+                <panel layout="FlowLayout(FlowLayout.LEADING)">
+                    <radiobutton id="recurringIntervalRadioButton" text="Then every " selected="true"/>
                     <spinner id="recurringIntervalValue" text="10"/>
-                    <label text=" minutes "/>
-                    <checkbox id="recurringEndCheckbox" text="until "/>
+                    <label text=" minutes"/>
+                    <checkbox id="recurringEndCheckbox" text=" until "/>
                     <textfield id="recurringEndValue" text="23:59"/>
+                </panel>
+                <panel layout="FlowLayout(FlowLayout.LEADING)">
+                    <radiobutton id="recurringTimesRadioButton" text="Then at the following times:"/>
+                    <textfield id="recurringTimesValue" columns="60" text="9:50, 10:20, 10:50, 11:20, 11:50, 12:20, 13:05, 13:50, 14:20, 14:50, 15:20, 15:50"/>
                 </panel>
             </vbox>
         </panel>

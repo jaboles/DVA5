@@ -82,12 +82,15 @@ public class PlasmaUI
 
     // Recurring section
     private DeparturePanel recurringDeparturePanel;
+    private JRadioButton recurringIntervalRadioButton;
     @SuppressWarnings("UnusedDeclaration") private XVBox recurringDeparture;
     @SuppressWarnings("UnusedDeclaration") private JSpinner recurringIntervalValue;
     @SuppressWarnings("UnusedDeclaration") private JCheckBox recurringEndCheckbox;
     @SuppressWarnings("UnusedDeclaration") private JTextField recurringEndValue;
     @SuppressWarnings("UnusedDeclaration") private JButton playStopButton2;
     @SuppressWarnings("UnusedDeclaration") private JButton updateIndicatorsButton2;
+    private JRadioButton recurringTimesRadioButton;
+    private JTextField recurringTimesValue;
 
     // Timetables section
     @SuppressWarnings("UnusedDeclaration") private JLabel gtfsInfo;
@@ -115,6 +118,10 @@ public class PlasmaUI
             RotatedIcon ri = new RotatedIcon(ti, RotatedIcon.Rotate.DOWN);
             promoteDeparturesButton.setIcon(ri);
             tabbedPane.putClientProperty(TABBED_PANE_TAB_AREA_ALIGNMENT, TABBED_PANE_ALIGN_CENTER);
+
+            ButtonGroup recurringRadioButtons = new ButtonGroup();
+            recurringRadioButtons.add(recurringIntervalRadioButton);
+            recurringRadioButtons.add(recurringTimesRadioButton);
 
             // Instantiate the available renderers and announcers
             Drawer[] renderers = new Drawer[] {
@@ -182,10 +189,20 @@ public class PlasmaUI
             recurringDeparture.add(recurringDeparturePanel.getPanel(), 0);
 
             ActionListener recurringEndCheckboxChanged = e -> {
-                recurringEndValue.setEnabled(recurringEndCheckbox.isSelected());
+                recurringEndValue.setEnabled(recurringEndCheckbox.isSelected() && recurringIntervalRadioButton.isSelected());
             };
             recurringEndCheckboxChanged.actionPerformed(null);
             recurringEndCheckbox.addActionListener(recurringEndCheckboxChanged);
+
+            ActionListener recurringRadioButtonChanged = e -> {
+                recurringIntervalValue.setEnabled(recurringIntervalRadioButton.isSelected());
+                recurringEndCheckbox.setEnabled(recurringIntervalRadioButton.isSelected());
+                recurringEndValue.setEnabled(recurringEndCheckbox.isSelected() && recurringIntervalRadioButton.isSelected());
+                recurringTimesValue.setEnabled(recurringTimesRadioButton.isSelected());
+            };
+            recurringRadioButtonChanged.actionPerformed(null);
+            recurringIntervalRadioButton.addActionListener(recurringRadioButtonChanged);
+            recurringTimesRadioButton.addActionListener(recurringRadioButtonChanged);
 
             timetableTranslator = GtfsTimetableTranslator.getInstance();
             gtfsInfo.setText("TfNSW GTFS timetable");
@@ -272,15 +289,38 @@ public class PlasmaUI
                 }
 
                 dd = new LinkedList<>();
-                for (LocalDateTime t = start; t.compareTo(end) <= 0; t = t.plusMinutes((Integer)recurringIntervalValue.getValue()))
+                if (recurringIntervalRadioButton.isSelected())
                 {
-                    DepartureData d = recurringDeparturePanel.getData();
-                    d.DueOut = t;
-                    dd.add(d);
+                    for (LocalDateTime t = start; t.compareTo(end) <= 0; t = t.plusMinutes((Integer)recurringIntervalValue.getValue()))
+                    {
+                        DepartureData d = recurringDeparturePanel.getData();
+                        d.DueOut = t;
+                        dd.add(d);
+                    }
                 }
+                else if (recurringTimesRadioButton.isSelected())
+                {
+                    String[] timeStrs = recurringTimesValue.getText().split(",");
+                    LocalDateTime now = LocalDateTime.now();
+                    for (String timeStr : timeStrs)
+                    {
+                        int h = Integer.parseInt(timeStr.trim().split(":")[0]);
+                        int m = Integer.parseInt(timeStr.trim().split(":")[1]);
+                        LocalDateTime t = now.withHour(h).withMinute(m);
+                        if (t.isAfter(now))
+                        {
+                            DepartureData d = recurringDeparturePanel.getData();
+                            d.DueOut = t;
+                            dd.add(d);
+                        }
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "NumberFormatException: " + ex.getMessage() + ". Check entered departure times are valid.");
             } catch (IndexOutOfBoundsException ex) {
                 JOptionPane.showMessageDialog(null,
-                        "IndexOutOfBoundsException, check entered departure times are valid.");
+                        "IndexOutOfBoundsException: " + ex.getMessage() + ". Check entered departure times are valid.");
             }
             return dd;
         } else {
@@ -533,7 +573,10 @@ public class PlasmaUI
                 coalesceStationSequencesCheckbox.isSelected(),
                 data,
                 recurringDeparturePanel.getData(),
+                recurringIntervalRadioButton.isSelected(),
                 (Integer)recurringIntervalValue.getValue(),
+                recurringTimesRadioButton.isSelected(),
+                recurringTimesValue.getText(),
                 recurringEndCheckbox.isSelected(),
                 recurringEndValue.getText(),
                 gtfsStation.getSelectedItemTyped().toString(),
@@ -577,7 +620,11 @@ public class PlasmaUI
         LocalDateTime now = LocalDateTime.now();
         recurringDepartureData.DueOut = now.withMinute(0).plusMinutes((int)((now.getMinute() / settings.getRecurringInterval() + 1) * settings.getRecurringInterval()));
         recurringDeparturePanel.setData(recurringDepartureData);
+        recurringIntervalRadioButton.setSelected(settings.getRecurringIntervalSelected());
         recurringIntervalValue.setValue(settings.getRecurringInterval());
+        recurringTimesRadioButton.setSelected(settings.getRecurringTimesSelected());
+        recurringTimesValue.setText(settings.getRecurringTimes());
+        recurringEndCheckbox.setSelected(settings.getRecurringEndSelected());
         recurringEndValue.setText(settings.getRecurringEnd());
 
         for (int i = 0; i < gtfsStation.getItemCount(); i++)
