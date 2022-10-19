@@ -148,7 +148,7 @@ public class SoundLibrary implements Serializable {
                     if (canonicalName.lastIndexOf('.') > 0) canonicalName = canonicalName.substring(0, canonicalName.lastIndexOf('.'));
                     if (canonicalName.endsWith(".truncated")) {
                         canonicalName = canonicalName.substring(0, canonicalName.length() - 10);
-                        truncated   .put(canonicalName, u);
+                        truncated.put(canonicalName, u);
                     } else {
                         putSound(canonicalName, u);
                     }
