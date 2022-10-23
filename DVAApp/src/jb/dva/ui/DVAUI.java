@@ -134,8 +134,10 @@ public class DVAUI {
             };
             dvaTextArea.initialize(dvaManager, currentScript, indicatorIconLabel, verifyHandler, suggestedSoundList, suggestedSoundListModel);
 
-            voiceComboBox.setListData(availableSoundLibraries.values().toArray(SoundLibrary[]::new));
-            voiceComboBox.setSelectedIndex(0);
+            voiceComboBox.setListData(availableSoundLibraries.values().stream().sorted().toArray(SoundLibrary[]::new));
+            if (Settings.getSelectedSoundLibraryIndex() < availableSoundLibraries.size()) {
+                voiceComboBox.setSelectedIndex(Settings.getSelectedSoundLibraryIndex());
+            }
             voiceComboBox.setCellRenderer(new SoundLibraryListCellRenderer());
 
             suggestedSoundList.setCellRenderer(new SoundListCellRenderer());
@@ -155,6 +157,7 @@ public class DVAUI {
                 inflectionPanel.setVisible(selectedLibrary1.supportsInflections());
                 dvaTextArea.verify();
                 suggestedSoundList.setSelectedIndex(0);
+                Settings.setSelectedSoundLibraryIndex(voiceComboBox.getSelectedIndex());
             });
 
             inflectionListModel = new DefaultListModel<>();

@@ -186,6 +186,10 @@ public class Settings {
         } catch (BackingStoreException e) { e.printStackTrace(System.err); }
     }
 
+    public static int getSelectedSoundLibraryIndex() { return prefs.getInt("selectedSoundLibrary", 0); }
+
+    public static void setSelectedSoundLibraryIndex(int index) { prefs.putInt("selectedSoundLibrary", index); }
+
     public static boolean specialSoundsEnabled() {
         return prefs.getBoolean("specialSounds", false);
     }

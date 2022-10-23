@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class SoundLibrary implements Serializable {
+public class SoundLibrary implements Serializable, Comparable {
     private static final long serialVersionUID = 1L;
     private final String name;
     private final List<File> files = new LinkedList<>();
@@ -252,5 +252,12 @@ public class SoundLibrary implements Serializable {
     public boolean supportsInflections()
     {
         return properties.getProperty("SupportsInflections", "").length() > 0;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (name.equals("All")) return 1;
+        else if (((SoundLibrary)o).name.equals("All")) return -1;
+        return name.compareTo(((SoundLibrary)o).name);
     }
 }
