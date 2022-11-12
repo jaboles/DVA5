@@ -184,10 +184,15 @@ public class SoundLibrary implements Serializable, Comparable {
     }
 
     private void putSound(String canonicalName, URL u) {
-        boolean isFalling = false;
+        boolean isEnding = false, isBeginning = false;
         if (canonicalName.endsWith(".f")) {
-            // 'Falling inflection' sound
-            isFalling = true;
+            // End of sentence sound
+            isEnding = true;
+            canonicalName = canonicalName.substring(0, canonicalName.length() - 2);
+        }
+        else if (canonicalName.endsWith(".b")) {
+            // Beginning of sentence sound
+            isBeginning = true;
             canonicalName = canonicalName.substring(0, canonicalName.length() - 2);
         }
         String translated = canonicalName.toLowerCase();
@@ -207,18 +212,12 @@ public class SoundLibrary implements Serializable, Comparable {
         // and falling inflection named e.g. Central.f.mp3
         // Eventually regular inflection would be used for intermediate words in a sentence and
         // falling inflection at the end of a sentence, but this is not yet implemented.
-        if (isFalling) {
-            ref.falling = u;
-            if (ref.regular != null) {
-                ref.rising = ref.regular;
-                ref.regular = null;
-            }
+        if (isBeginning) {
+            ref.beginning = u;
+        } else if (isEnding) {
+            ref.ending = u;
         } else {
-            if (ref.falling != null) {
-                ref.rising = u;
-            } else {
-                ref.regular = u;
-            }
+            ref.regular = u;
         }
 
         if (translated.length() > longestSoundName)

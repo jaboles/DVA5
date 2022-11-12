@@ -3,14 +3,16 @@ package jb.dva;
 public class SoundInflection
 {
     public static final int NONE = 0;
-    public static final int RISING = 1;
-    public static final int FALLING = 2;
+    public static final int BEGINNING = 1;
+    public static final int REGULAR = 2;
+    public static final int ENDING = 3;
 
     public static String getNameForInflection(int inflection) {
         switch (inflection) {
         case NONE: return "None";
-        case RISING: return "Rising";
-        case FALLING: return "Falling";
+        case BEGINNING: return "Beginning";
+        case REGULAR: return "Regular";
+        case ENDING: return "Ending";
         default: return null;
         }
     }
@@ -19,10 +21,12 @@ public class SoundInflection
         switch (name.trim()) {
             case "None":
                 return NONE;
-            case "Rising":
-                return RISING;
-            case "Falling":
-                return FALLING;
+            case "Beginning":
+                return BEGINNING;
+            case "Regular":
+                return REGULAR;
+            case "Ending":
+                return ENDING;
             default:
                 return -1;
         }

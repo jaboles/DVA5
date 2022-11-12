@@ -29,3 +29,6 @@ Newcastle Intg,Newcastle Interchange,Sydney-Female
 Newcastle Interchange,Newcastle,Sydney-Male
 Newcastle Intg,Newcastle,Sydney-Male
 
+# Melbourne
+Sydenham,Watergardens
+Spencer Street,Southern Cross

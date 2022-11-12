@@ -185,13 +185,17 @@ public class DVAUI {
                         if (selectedLibrary1.supportsInflections()) {
                             inflectionListModel.removeAllElements();
                             if (ref.regular != null) {
-                                inflectionListModel.addElement(SoundInflection.getNameForInflection(SoundInflection.NONE));
+                                if (ref.beginning == null && ref.ending == null) {
+                                    inflectionListModel.addElement(SoundInflection.getNameForInflection(SoundInflection.NONE));
+                                } else {
+                                    inflectionListModel.addElement(SoundInflection.getNameForInflection(SoundInflection.REGULAR));
+                                }
                             }
-                            if (ref.rising != null) {
-                                inflectionListModel.addElement(SoundInflection.getNameForInflection(SoundInflection.RISING));
+                            if (ref.beginning != null) {
+                                inflectionListModel.addElement(SoundInflection.getNameForInflection(SoundInflection.BEGINNING));
                             }
-                            if (ref.falling != null) {
-                                inflectionListModel.addElement(SoundInflection.getNameForInflection(SoundInflection.FALLING));
+                            if (ref.ending != null) {
+                                inflectionListModel.addElement(SoundInflection.getNameForInflection(SoundInflection.ENDING));
                             }
                             inflectionList.setSelectedIndex(-1);
                             inflectionList.setSelectedIndex(inflectionListModel.size() - 1);

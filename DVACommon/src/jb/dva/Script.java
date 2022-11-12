@@ -105,6 +105,7 @@ public class Script {
         canonical.append(s);
         pos += s.length();
 
+        String lastToken = null;
         int preferredInflection = SoundInflection.NONE;
         while (pos < length) {
             String token = findNextToken(pos, library);
@@ -116,10 +117,10 @@ public class Script {
                 }
                 canonical.append(token);
             } else if (token.length() == 1 && token.charAt(0) == '`') {
-                preferredInflection = SoundInflection.FALLING;
+                preferredInflection = SoundInflection.ENDING;
                 canonical.append(token);
             } else if (token.length() == 1 && token.charAt(0) == '^') {
-                preferredInflection = SoundInflection.RISING;
+                preferredInflection = SoundInflection.BEGINNING;
                 canonical.append(token);
             } else {
                 SoundReference ref = library.get(token);
@@ -128,23 +129,22 @@ public class Script {
                     int nextTokenPos = pos + token.length() + accumulateWhitespace(pos + token.length()).length();
                     String nextToken = (nextTokenPos < length) ? findNextToken(nextTokenPos, library) : null;
                     if (nextToken != null && nextToken.equals(",")) {
-                        preferredInflection = SoundInflection.RISING;
+                        preferredInflection = SoundInflection.REGULAR;
                     } else if (nextToken != null && nextToken.equals(".")) {
-                        preferredInflection = SoundInflection.FALLING;
+                        preferredInflection = SoundInflection.ENDING;
+                    } else if (lastToken == null || lastToken.equals(".")) {
+                        preferredInflection = SoundInflection.BEGINNING;
                     } else if (nextToken == null) {
-                        preferredInflection = SoundInflection.FALLING;
+                        preferredInflection = SoundInflection.REGULAR;
                     }
                 }
                 URL u;
-                if (preferredInflection == SoundInflection.RISING && ref.rising != null) {
-                    u = ref.rising;
-                } else if (preferredInflection == SoundInflection.FALLING && ref.falling != null) {
-                    u = ref.falling;
-                } else if (ref.regular == null) {
-                    if (ref.rising != null)
-                        u = ref.rising;
-                    else
-                        u = ref.falling;
+                if (preferredInflection == SoundInflection.BEGINNING && ref.beginning != null) {
+                    u = ref.beginning;
+                } else if (preferredInflection == SoundInflection.REGULAR && ref.regular != null) {
+                    u = ref.regular;
+                } else if (preferredInflection == SoundInflection.ENDING && ref.ending != null) {
+                    u = ref.ending;
                 } else {
                     u = ref.regular;
                 }
@@ -160,6 +160,7 @@ public class Script {
             s = accumulateWhitespace(pos);
             canonical.append(s);
             pos += s.length();
+            lastToken = token;
         }
     }
 

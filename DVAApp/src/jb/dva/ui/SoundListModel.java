@@ -105,22 +105,16 @@ public class SoundListModel extends AbstractListModel<SoundReference> {
         SoundReference ref = getElementAt(index);
         if (inflection == SoundInflection.NONE) {
             logger.debug("SoundListModel.getURLAt: inflection N - {}", ref.regular);
-            if (ref.regular == null) {
-                if (ref.falling != null) {
-                    logger.debug("Not available - falling back to F");
-                    return ref.falling;
-                } else {
-                    logger.debug("Not available - falling back to R");
-                    return ref.rising;
-                }
-            }
             return ref.regular;
-        } else if (inflection == SoundInflection.RISING) {
-            logger.debug("SoundListModel.getURLAt: inflection R - {}", ref.rising);
-            return ref.rising;
-        } else if (inflection == SoundInflection.FALLING) {
-            logger.debug("SoundListModel.getURLAt: inflection F - {}", ref.falling);
-            return ref.falling;
+        } else if (inflection == SoundInflection.BEGINNING) {
+            logger.debug("SoundListModel.getURLAt: inflection B - {}", ref.beginning);
+            return ref.beginning;
+        } else if (inflection == SoundInflection.REGULAR) {
+            logger.debug("SoundListModel.getURLAt: inflection R - {}", ref.regular);
+            return ref.regular;
+        } else if (inflection == SoundInflection.ENDING) {
+            logger.debug("SoundListModel.getURLAt: inflection E - {}", ref.ending);
+            return ref.ending;
         }
         return null;
     }
