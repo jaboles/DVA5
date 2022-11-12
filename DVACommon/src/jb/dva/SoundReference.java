@@ -3,7 +3,7 @@ import java.io.Serializable;
 import java.net.URL;
 
 public class SoundReference implements Serializable {
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     public SoundReference copy()
     {
