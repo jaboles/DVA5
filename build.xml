@@ -6,9 +6,9 @@
     <property name="ClassesDir" value="build/classes"/>
     <property name="OutDir" value="build${file.separator}Output"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
-    <property name="JavaVersionMajor" value="11"/>
-    <property name="JavaVersionPlus" value="11.0.16%2b8"/>
-    <property name="JavaVersionUnderscore" value="11.0.16_8"/>
+    <property name="JavaVersionMajor" value="17"/>
+    <property name="JavaVersionPlus" value="17.0.5%2b8"/>
+    <property name="JavaVersionUnderscore" value="17.0.5_8"/>
     <path id="jars">
         <fileset dir="jars">
             <include name="*" />
