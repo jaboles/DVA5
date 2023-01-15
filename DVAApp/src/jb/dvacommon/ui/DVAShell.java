@@ -15,6 +15,10 @@ import javax.swing.text.TextAction;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.OSDetection;
@@ -323,22 +327,34 @@ public class DVAShell
     public static String getLookAndFeelClassName(String lookAndFeelName) {
         switch (lookAndFeelName)
         {
-            case "light": return FlatLightLaf.class.getName();
-            case "dark": return FlatDarkLaf.class.getName();
+            case "light": return OSDetection.isMac() ? FlatMacLightLaf.class.getName() : FlatLightLaf.class.getName();
+            case "dark": return OSDetection.isMac() ? FlatMacDarkLaf.class.getName() : FlatDarkLaf.class.getName();
             case "auto":
                 if (OSDetection.isMac()) {
                     try {
-                        Process p = new ProcessBuilder("defaults", "read", "-g", "AppleInterfaceStyle").start();
+                        Process p = Runtime.getRuntime().exec("defaults read -g AppleInterfaceStyle");
                         p.waitFor();
                         BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
                         String line = br.readLine();
-                        return line != null && line.equals("Dark") ? FlatDarkLaf.class.getName() : FlatLightLaf.class.getName();
+                        return line != null && line.equals("Dark") ? FlatMacDarkLaf.class.getName() : FlatMacLightLaf.class.getName();
                     } catch (InterruptedException | IOException e) {
-                        return FlatLightLaf.class.getName();
+                        return FlatMacLightLaf.class.getName();
                     }
                 } else if (OSDetection.isWindows()) {
-
+                    try {
+                        if (Advapi32Util.registryGetIntValue(
+                                WinReg.HKEY_CURRENT_USER,
+                                "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+                                "AppsUseLightTheme") == 0) {
+                            return FlatDarkLaf.class.getName();
+                        } else {
+                            return FlatLightLaf.class.getName();
+                        }
+                    } catch (Exception e) {
+                        return FlatLightLaf.class.getName();
+                    }
                 }
+                return FlatLightLaf.class.getName();
             default: return UIManager.getSystemLookAndFeelClassName();
         }
     }

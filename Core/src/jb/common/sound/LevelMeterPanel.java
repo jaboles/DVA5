@@ -17,8 +17,8 @@ public class LevelMeterPanel extends JPanel {
     private final int orientation;
     private static final int ORIENTATION_HORIZONTAL = 0;
     private static final int ORIENTATION_VERTICAL = 1;
-    private static final int DIV_SIZE = 3;
-    private static final int DIV_GAP = 1;
+    private static final int DIV_SIZE = 2;
+    private static final int DIV_GAP = 0;
     private static final double YELLOW_THRESHOLD = 0.5;
     private static final double RED_THRESHOLD = 0.8;
 

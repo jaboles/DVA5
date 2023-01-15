@@ -336,7 +336,7 @@ public class Settings {
     }
 
     public static String getLookAndFeelName() {
-        return prefs.get("lookAndFeelName", "light");
+        return prefs.get("lookAndFeelName", "auto");
     }
 
     public static void setLookAndFeelName(String value) {

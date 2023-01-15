@@ -189,12 +189,11 @@ public class Player extends Thread {
 
             // Calc the sound power levels
             ais.process();
-            levels = ais.getLevels();
             //System.out.println("done processing");
 
             if (levelMeterThread != null)
             {
-                this.levelMeterThread.next(levels);
+                this.levelMeterThread.next(ais.getLevels(), clip.getMicrosecondLength() / 1000.0);
             }
             playClipAsync(clip);
 
@@ -209,7 +208,7 @@ public class Player extends Thread {
 
         if (levelMeterThread != null)
         {
-            this.levelMeterThread.next(null);
+            this.levelMeterThread.next(null, 0);
         }
     }
 
@@ -262,6 +261,7 @@ public class Player extends Thread {
     public static class LevelMeterThread extends Thread
     {
         private double[] levels;
+        private double durationSec;
         private final LevelMeterPanel levelMeterPanel;
 
         public LevelMeterThread(LevelMeterPanel levelMeterPanel)
@@ -286,18 +286,22 @@ public class Player extends Thread {
         {
             if (levels != null)
             {
-                for (double level : levels) {
-                    levelMeterPanel.setLevel(level / 70.0);
-                    Thread.sleep(1000 / GetDataLineLevelAudioInputStream.REFRESHES_PER_SEC);
+                long start = System.currentTimeMillis();
+                int index = 0;
+                while (index < levels.length) {
+                    levelMeterPanel.setLevel(levels[index]);
+                    index = (int)(((System.currentTimeMillis() - start) / durationSec / 1000) * levels.length);
+                    Thread.sleep(25);
                 }
-                levelMeterPanel.setLevel(0.1);
+                levelMeterPanel.setLevel(0);
             }
             wait();
         }
 
-        public synchronized void next(double[] levels)
+        public synchronized void next(double[] levels, double durationSec)
         {
             this.levels = levels;
+            this.durationSec = durationSec;
             notifyAll();
         }
     }

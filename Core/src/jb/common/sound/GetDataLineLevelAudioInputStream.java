@@ -80,7 +80,7 @@ public class GetDataLineLevelAudioInputStream extends AudioInputStream {
                 sum += Math.pow(sampleValue, 2);
             }
 
-            levels[i] = Math.sqrt((double)sum / (double)actualBytesUsedPerSample);
+            levels[i] = (Math.sqrt((double)sum / (double)actualBytesUsedPerSample) - 35.0) / 35.0;
             /*if (frameSize == 2)
             {
                 levels[i] = levels[i] / 256.0;
