@@ -2,8 +2,10 @@ package jb.dvacommon.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
+import jb.common.OSDetection;
 import jb.common.ui.SimpleEditorUndoRedoKit;
 import jb.common.ui.WindowUtils;
 import jb.dva.DVAManager;
@@ -322,6 +325,20 @@ public class DVAShell
         {
             case "light": return FlatLightLaf.class.getName();
             case "dark": return FlatDarkLaf.class.getName();
+            case "auto":
+                if (OSDetection.isMac()) {
+                    try {
+                        Process p = new ProcessBuilder("defaults", "read", "-g", "AppleInterfaceStyle").start();
+                        p.waitFor();
+                        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                        String line = br.readLine();
+                        return line != null && line.equals("Dark") ? FlatDarkLaf.class.getName() : FlatLightLaf.class.getName();
+                    } catch (InterruptedException | IOException e) {
+                        return FlatLightLaf.class.getName();
+                    }
+                } else if (OSDetection.isWindows()) {
+
+                }
             default: return UIManager.getSystemLookAndFeelClassName();
         }
     }

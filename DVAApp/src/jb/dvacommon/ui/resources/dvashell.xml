@@ -15,6 +15,7 @@
             <menu text="Theme" id="themeMenu">
                 <checkboxmenuitem action="themeAction" text="Light" actionCommand="light"/>
                 <checkboxmenuitem action="themeAction" text="Dark" actionCommand="dark"/>
+                <checkboxmenuitem action="themeAction" text="Auto" actionCommand="auto"/>
                 <checkboxmenuitem action="themeAction" text="Native" actionCommand="native"/>
             </menu>
             <separator />
