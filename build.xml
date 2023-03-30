@@ -380,7 +380,7 @@ Log=    console
         </antcall>
         <move tofile="${DistDir}/${DmgName}.dmg.bz2" file="${DistDir}/${DmgName}-x86_64.dmg.bz2" overwrite="true"/>
         <copy tofile="${DistDir}/${DmgName}.dmg" file="${DistDir}/${DmgName}-x86_64.dmg" overwrite="true"/>
-        <delete file="${DistDir}/${DmgName}-aarch64.dmg.bz2" overwrite="true"/>
+        <delete file="${DistDir}/${DmgName}-aarch64.dmg.bz2"/>
     </target>
     <target name="BuildMacDmg" description="Build Mac DMG" if="isMac">
         <!-- Params:
