@@ -480,7 +480,7 @@ Log=    console
         </exec>
         <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows" failonerror="true">
             <arg value="-command"/>
-            <arg value="(gc DVAApp/src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d\.\d\.\d)&quot;' | out-null; $matches[1]"/>
+            <arg value="(gc DVAApp/src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d+\.\d+\.\d+)&quot;' | out-null; $matches[1]"/>
         </exec>
         <echo level="info">Read version string: ${DVAVersion}</echo>
         <echo file="${OutDir}/version.txt">${DVAVersion}</echo>
