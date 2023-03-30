@@ -157,6 +157,8 @@
 
     <!-- After Eclipse compile task, prepare JAR file -->
     <target name="CreateJar" description="Create Jar file" depends="Compile">
+        <echo>build.number: ${env.BUILD_BUILDID}</echo>
+        <echo file="DVAApp/resources/buildnumber.txt" append="false">build.number: ${env.BUILD_BUILDID}</echo>
         <manifestclasspath property="ManifestClasspath" jarfile="jars/dummy.jar">
             <classpath refid="jars" />
         </manifestclasspath>
