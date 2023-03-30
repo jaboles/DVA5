@@ -603,12 +603,12 @@ Log=    console
     <target name="SignWin.Check">
         <condition property="WillSignWin">
             <or>
-                <available file="/Users/jb/Software/JonathanBoles.pfx"/>
+                <available file="/Users/jb/Software/JonathanBoles.p12"/>
                 <equals arg1="${env.SYSTEM_COLLECTIONURI}" arg2="https://jonathanboles.visualstudio.com/"/>
             </or>
         </condition>
-        <available file="/Users/jb/Software/JonathanBoles.pfx" property="SignCert" value="/Users/jb/Software/JonathanBoles.pfx"/>
-        <available file="${env.AGENT_TEMPDIRECTORY}/JonathanBoles.pfx" property="SignCert" value="${env.AGENT_TEMPDIRECTORY}\JonathanBoles.pfx"/>
+        <available file="/Users/jb/Software/JonathanBoles.p12" property="SignCert" value="/Users/jb/Software/JonathanBoles.p12"/>
+        <available file="${env.AGENT_TEMPDIRECTORY}/JonathanBoles.p12" property="SignCert" value="${env.AGENT_TEMPDIRECTORY}\JonathanBoles.p12"/>
         <echo level="info">Signing cert: ${SignCert}</echo>
     </target>
     <target name="SignWinFile" depends="SignWin.Check" if="WillSignWin">
