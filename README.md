@@ -14,6 +14,10 @@ Set up a departure screen showing your regular commute, create wacky announcemen
 - Supports multiple monitors and announcement styles
 - Screensaver mode on Windows
 
+### Download
+
+https://www.railpage.com.au/f-t11377028-0-asc-s0.htm
+
 [![Build status](https://jonathanboles.visualstudio.com/DVA/_apis/build/status/Build)](https://jonathanboles.visualstudio.com/DVA/_build/latest?definitionId=2)
 
 Build instructions for the curious minded tinkerer: https://raw.githack.com/jaboles/DVA5/master/building.html
