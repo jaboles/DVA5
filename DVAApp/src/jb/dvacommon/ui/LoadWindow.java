@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -53,6 +54,10 @@ public class LoadWindow {
                 }
             }
             catch (NullPointerException e)
+            {
+                buildNumber = "DEV";
+            }
+            catch (NumberFormatException e)
             {
                 buildNumber = "DEV";
             }

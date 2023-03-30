@@ -11,7 +11,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../jars/log4j-api-2.17.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../jars/log4j-api-2.20.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -20,7 +20,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../jars/jna-5.10.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../jars/jna-5.13.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -29,13 +29,13 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../jars/jna-platform-5.10.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../jars/jna-platform-5.13.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../jars/azure-core-0.7.0.jar!/" />
