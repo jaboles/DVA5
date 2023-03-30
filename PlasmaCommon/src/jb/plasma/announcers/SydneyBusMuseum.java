@@ -17,19 +17,25 @@ public class SydneyBusMuseum extends Announcer
         StringBuilder s = new StringBuilder("CHIMES");
         s.append(" The next bus to ");
         s.append(d.Destination);
-        s.append(" will depart in");
 
         int mins = (int)ChronoUnit.MINUTES.between(LocalDateTime.now(), d.DueOut);
         int hours = mins / 60;
         mins = mins % 60;
-        if (hours > 0) {
-            s.append(" ").append(hours).append(" hours");
-        }
-        if (hours > 0 && mins > 0) {
-            s.append(" and");
-        }
-        if (mins > 0) {
-            s.append(" ").append(mins).append(" minutes.");
+        if (hours == 0 && mins == 0) {
+            s.append(" will soon depart. ");
+        } else {
+            s.append(" will depart in");
+            if (hours > 0) {
+                s.append(" ").append(hours).append(" hours");
+            }
+            if (hours > 0 && mins > 0) {
+                s.append(" and");
+            }
+            if (mins > 1) {
+                s.append(" ").append(mins).append(" minutes.");
+            } else if (mins == 1) {
+                s.append(" ").append(mins).append(" minute.");
+            }
         }
 
         return s.toString();
