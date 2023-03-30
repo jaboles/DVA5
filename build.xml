@@ -24,7 +24,7 @@
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
     </condition>
-    <condition property="innosetupcompression" value="none" else="lzma2/ultra">
+    <condition property="innosetupcompression" value="none" else="lzma2/max">
         <isset property="fast"/>
     </condition>
     <condition property="dpkgcompression" value="none" else="xz">
@@ -379,7 +379,8 @@ Log=    console
             <param name="arch.java" value="aarch64"/>
         </antcall>
         <copy tofile="${DistDir}/${DmgName}.dmg.bz2" file="${DistDir}/${DmgName}-x86_64.dmg.bz2" overwrite="true"/>
-        <copy tofile="${DistDir}/${DmgName}.dmg" file="${DistDir}/${DmgName}-x86_64.dmg" overwrite="true"/>
+        <move tofile="${DistDir}/${DmgName}.dmg" file="${DistDir}/${DmgName}-x86_64.dmg" overwrite="true"/>
+        <delete file="${DistDir}/${DmgName}-aarch64.dmg"/>
     </target>
     <target name="BuildMacDmg" description="Build Mac DMG" if="isMac">
         <!-- Params:

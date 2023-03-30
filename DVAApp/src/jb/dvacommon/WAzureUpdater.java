@@ -103,23 +103,23 @@ public class WAzureUpdater extends BaseUpdater
             // Upload an image file.
             File[] artifacts = new File[] {
                     // New version summary
-                    new File("build/Output/new.html"),
+                    new File("build/Output/dist/new.html"),
 
                     // JAR
                     new File("build/Output/DVA.jar"),
 
                     // Mac
-                    new File("build/Output/DVA5.dmg"),
-                    new File("build/Output/DVA5.dmg.bz2"),
-                    new File("build/Output/DVA5-x86_64.dmg"),
-                    new File("build/Output/DVA5-aarch64.dmg"),
+                    new File("build/Output/dist/DVA5.dmg"),
+                    new File("build/Output/dist/DVA5.dmg.bz2"),
+                    new File("build/Output/dist/DVA5-x86_64.dmg"),
+                    new File("build/Output/dist/DVA5-aarch64.dmg"),
 
                     // Windows
-                    new File("build/Output/DVA5Setup.exe"),
+                    new File("build/Output/dist/DVA5Setup.exe"),
 
                     // Linux
-                    new File("build/Output/DVA5-x86_64.deb"),
-                    new File("build/Output/DVA5-aarch64.deb"),
+                    new File("build/Output/dist/DVA5-x86_64.deb"),
+                    new File("build/Output/dist/DVA5-aarch64.deb"),
                 };
             for (File f : artifacts)
             {
