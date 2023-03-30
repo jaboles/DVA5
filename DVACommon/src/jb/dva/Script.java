@@ -138,21 +138,28 @@ public class Script {
                         preferredInflection = SoundInflection.REGULAR;
                     }
                 }
-                URL u;
+                URL u = null;
                 if (preferredInflection == SoundInflection.BEGINNING && ref.beginning != null) {
                     u = ref.beginning;
                 } else if (preferredInflection == SoundInflection.REGULAR && ref.regular != null) {
                     u = ref.regular;
                 } else if (preferredInflection == SoundInflection.ENDING && ref.ending != null) {
                     u = ref.ending;
-                } else {
+                } else if (ref.regular != null) {
                     u = ref.regular;
+                } else if (ref.ending != null) {
+                    u = ref.ending;
+                } else if (ref.beginning != null) {
+                    u = ref.beginning;
                 }
                 preferredInflection = SoundInflection.NONE;
 
-                translatedData.add(u);
-                translatedDataOffsets.add(pos);
-                canonical.append(library.getCanonicalName(token));
+                if (u != null)
+                {
+                    translatedData.add(u);
+                    translatedDataOffsets.add(pos);
+                    canonical.append(library.getCanonicalName(token));
+                }
             }
 
             pos += token.length();

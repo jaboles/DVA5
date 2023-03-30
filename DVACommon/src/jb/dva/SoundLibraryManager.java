@@ -10,11 +10,12 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class SoundLibraryManager {
+    private static final String CacheUniverse = "4";
     private Map<String, SoundLibrary> soundLibraryMap = new LinkedHashMap<>();
     private ObjectCache<SoundLibrary> soundLibraryCache = null;
     private final File temp;
     private final boolean specialSoundsEnabled;
-    private final String cacheUniverse;
+    private final String dvaVersion;
 
     // 'Special' sounds which are only shown after enabling the option
     private static final Set<String> SPECIAL_SOUNDS = Arrays.stream(new String[] {
@@ -30,15 +31,15 @@ public class SoundLibraryManager {
             { "Sydney-Female (replaced low-quality sounds)", "Sydney-Female" },
     }).collect(Collectors.toMap(v -> v[0], v -> v[1]));
 
-    public SoundLibraryManager(File temp, String cacheUniverse, boolean specialSoundsEnabled) throws Exception {
+    public SoundLibraryManager(File temp, String dvaVersion, boolean specialSoundsEnabled) throws Exception {
         this.temp = temp;
-        this.cacheUniverse = cacheUniverse;
+        this.dvaVersion = dvaVersion;
         this.specialSoundsEnabled = specialSoundsEnabled;
     }
 
     public void loadAllSoundLibraries(Consumer<String> progress) throws Exception {
-        final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(temp, "soundlibrarymap3_" + cacheUniverse);
-        soundLibraryCache = new ObjectCache<>(temp, "soundlibrary3_" + cacheUniverse);
+        final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(temp, "soundlibrarymap_" + CacheUniverse + "_" + dvaVersion);
+        soundLibraryCache = new ObjectCache<>(temp, "soundlibrary_" + CacheUniverse + "_" + dvaVersion);
 
         populateSoundLibraries(specialSoundsEnabled);
 

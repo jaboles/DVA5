@@ -214,8 +214,10 @@ public class SoundLibrary implements Serializable, Comparable {
         // falling inflection at the end of a sentence, but this is not yet implemented.
         if (isBeginning) {
             ref.beginning = u;
+            if (ref.regular == null) ref.regular = u;
         } else if (isEnding) {
             ref.ending = u;
+            if (ref.regular == null) ref.regular = u;
         } else {
             ref.regular = u;
         }

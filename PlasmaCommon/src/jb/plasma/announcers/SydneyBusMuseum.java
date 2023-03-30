@@ -29,7 +29,7 @@ public class SydneyBusMuseum extends Announcer
             s.append(" and");
         }
         if (mins > 0) {
-            s.append(" ").append(mins).append(" minutes");
+            s.append(" ").append(mins).append(" minutes.");
         }
 
         return s.toString();
