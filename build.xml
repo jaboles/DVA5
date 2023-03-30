@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!-- Configuration of the Ant build system to generate a Jar file -->
-<project name="DVA" default="CreateJar" xmlns:if="ant:if" xmlns:unless="ant:unless">
+<project name="DVA" default="CreateJar">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname" failonerror="true"/>
     <property name="ClassesDir" value="build/classes"/>
@@ -29,27 +29,15 @@
         <isset property="fast"/>
     </condition>
 
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-        <classpath>
-            <pathelement location="${ToolsDir}/ant-contrib/ant-contrib-1.0b3.jar"/>
-        </classpath>
-    </taskdef>
-
     <!-- Mac signing identity in Keychain -->
     <property name="SignIdentity" value="Developer ID Application: Jonathan Boles (W2WXX3D2U6)"/>
 
     <!-- Windows setup -->
-    <property name="Wine"            value="wine"/>
-    <property name="WinePrefix"      value="${user.home}/.wine"/>
     <property name="ResHackerDir"    value="${ToolsDir}${file.separator}resource_hacker"/>
-    <property name="OutDirWine"      value="build\Output"/>
     <property name="WinRun4JDir"     value="${ToolsDir}${file.separator}winrun4j${file.separator}bin${file.separator}"/>
     <property name="WinOutDir32"     value="${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
     <property name="WinOutDir64"     value="${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
-    <condition property="InnoSetupCompiler" value="${WinePrefix}/drive_c/Program Files (x86)/Inno Setup 5/ISCC.exe"
-               else="c:\Program Files (x86)\Inno Setup 5\ISCC.exe">
-        <os family="mac"/>
-    </condition>
+    <property name="InnoSetupCompiler" value="c:\Program Files (x86)\Inno Setup 5\ISCC.exe"/>
     <property name="DmgName" value="DVA5"/>
     <property name="WindowsSetupName" value="DVA5Setup"/>
 
@@ -63,55 +51,11 @@
     <condition property="isLinux">
         <os family="unix" />
     </condition>
-    <exec if:set="isMac" executable="sysctl" outputproperty="sysctlProctranslated">
-        <arg value="sysctl.proc_translated"/>
-    </exec>
-    <condition property="machineArch" value="arm64">
-        <and>
-            <isset property="isMac"/>
-            <or>
-                <equals arg1="${sysctlProctranslated}" arg2="sysctl.proc_translated: 0" />
-                <equals arg1="${sysctlProctranslated}" arg2="sysctl.proc_translated: 1" />
-            </or>
-        </and>
-    </condition>
-    <condition property="machineArch" value="x86_64">
-        <and>
-            <isset property="isMac"/>
-            <equals arg1="${sysctlProctranslated}" arg2="sysctl: unknown oid 'sysctl.proc_translated'" />
-        </and>
-    </condition>
-    <exec if:set="isLinux" executable="uname" outputproperty="machineArch">
-        <arg value="-m"/>
-    </exec>
-    <condition property="isIntelMac">
-        <and>
-            <isset property="isMac"/>
-            <equals arg1="${machineArch}" arg2="x86_64" />
-        </and>
-    </condition>
-
-    <!-- Whether to build certain outputs based on OS/arch conditions -->
-    <condition property="buildWindows">
-        <or>
-            <isset property="isWindows"/>
-            <isset property="isIntelMac"/>
-        </or>
-    </condition>
-    <condition property="buildLinux">
-        <or>
-            <isset property="isLinux"/>
-            <isset property="isIntelMac"/>
-        </or>
-    </condition>
 
     <!-- Fetch build dependencies -->
-    <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Mac.Intel,FetchDeps.Windows"/>
+    <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Windows"/>
     <target name="FetchDeps.Common">
         <mkdir dir="${ToolsDir}"/>
-        <!-- Ant-Contrib -->
-        <get src="https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.tar.gz/download" dest="${ToolsDir}/ant-contrib.tar.gz" usetimestamp="true"/>
-        <untar src="${ToolsDir}/ant-contrib.tar.gz" dest="${ToolsDir}" compression="gzip" overwrite="false" />
     </target>
     <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
         <!-- JRE: Mac -->
@@ -136,7 +80,7 @@
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
         <chmod perm="u+x" file="${ToolsDir}/protoc/bin/protoc"/>
     </target>
-    <target name="FetchDeps.BuildForWindows">
+    <target name="FetchDeps.Windows" if="isWindows" depends="FetchDeps.Common">
         <!-- Resource Hacker -->
         <get src="http://www.angusj.com/resourcehacker/resource_hacker.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip src="${ToolsDir}/resource_hacker.zip" dest="${ResHackerDir}" overwrite="false"/>
@@ -160,60 +104,15 @@
         </unzip>
         <!-- download Inno Setup -->
         <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
-    </target>
-    <target name="FetchDeps.Mac.Intel" if="isIntelMac" depends="FetchDeps.BuildForWindows,FetchDeps.BuildForLinux">
-        <!-- Wine -->
-        <exec executable="which" outputproperty="testXquartz">
-            <arg value="xquartz"/>
-        </exec>
-        <exec executable="brew" if:blank="testXquartz" failonerror="true">
-            <arg line="install xquartz"/>
-        </exec>
-        <exec executable="which" outputproperty="testWine">
-            <arg value="wine"/>
-        </exec>
-        <exec executable="brew" if:blank="testWine" failonerror="true">
-            <arg line="tap homebrew/cask-versions"/>
-        </exec>
-        <exec executable="brew" if:blank="testWine" failonerror="true">
-            <arg line="install --cask --no-quarantine wine-stable"/>
-        </exec>
         <!-- install Inno Setup -->
-        <condition property="innoSetupCompilerAvailable" value="1">
-            <available file="${InnoSetupCompiler}"/>
-        </condition>
-        <exec executable="${Wine}" unless:set="innoSetupCompilerAvailable" failonerror="true">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg line="${ToolsDir}/is.exe /silent"/>
-        </exec>
-        <!-- Dpkg -->
-        <exec executable="which" outputproperty="testDpkg">
-            <arg value="dpkg"/>
-        </exec>
-        <exec executable="brew" if:blank="testDpkg" failonerror="true">
-            <arg line="install dpkg"/>
-        </exec>
-        <!-- Fakeroot -->
-        <exec executable="which" outputproperty="testFakeroot">
-            <arg value="fakeroot"/>
-        </exec>
-        <exec executable="brew" if:blank="testFakeroot" failonerror="true">
-            <arg line="install fakeroot"/>
-        </exec>
-    </target>
-    <target name="FetchDeps.Windows" if="isWindows" depends="FetchDeps.Common,FetchDeps.BuildForWindows">
-        <!-- install Inno Setup -->
-        <condition property="innoSetupCompilerAvailable" value="1">
-            <available file="${InnoSetupCompiler}"/>
-        </condition>
-        <exec executable="${ToolsDir}/is.exe" unless:set="innoSetupCompilerAvailable" failonerror="true">
+        <exec executable="${ToolsDir}/is.exe" failonerror="true">
             <arg line="/silent"/>
         </exec>
         <!-- Protocol Buffers compiler -->
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-win64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
     </target>
-    <target name="FetchDeps.BuildForLinux" depends="FetchDeps.Common">
+    <target name="FetchDeps.Linux" if="isLinux" depends="FetchDeps.Common">
         <!-- JRE: Linux -->
         <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jre\linux-x86_64" compression="gzip" overwrite="false">
@@ -229,8 +128,6 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-    </target>
-    <target name="FetchDeps.Linux" if="isLinux" depends="FetchDeps.Common,FetchDeps.BuildForLinux">
         <!-- Protocol Buffers compiler -->
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
@@ -413,58 +310,52 @@ Log=    console
 -addoverwrite ${ini}, 687,1,0
 -addoverwrite ${stringtable}, STRINGTABLE,1,0
 </echo>
-        <exec executable="${Wine}" osfamily="mac" failonerror="true">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg line="${ResHackerDir}/ResourceHacker.exe -script temp.rh -log console"/>
-        </exec>
-        <exec executable="${ResHackerDir}\ResourceHacker.exe" osfamily="windows" failonerror="true">
+        <exec executable="${ResHackerDir}\ResourceHacker.exe" failonerror="true">
             <arg line="-script temp.rh -log console"/>
         </exec>
         <delete file="temp.rh"/>
     </target>
     <target name="BuildWinExes">
-        <property name="WinOutDir32Wine" value="${OutDirWine}\win\i386\"/>
-        <property name="WinOutDir64Wine" value="${OutDirWine}\win\amd64\"/>
-        <copy tofile="${WinOutDir32}DVA.exe" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
-        <copy tofile="${WinOutDir64}DVA.exe" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
-        <copy tofile="${WinOutDir32}DVA.scr" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
-        <copy tofile="${WinOutDir64}DVA.scr" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
+        <copy tofile="${OutDir}\win\i386\DVA.exe" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
+        <copy tofile="${OutDir}\win\amd64\DVA.exe" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
+        <copy tofile="${OutDir}\win\i386\DVA.scr" file="${WinRun4JDir}WinRun4J.exe" overwrite="true"/>
+        <copy tofile="${OutDir}\win\amd64\DVA.scr" file="${WinRun4JDir}WinRun4J64.exe" overwrite="true"/>
 
         <antcall target="ResHack">
-            <param name="file" value="${WinOutDir32Wine}DVA.exe" />
+            <param name="file" value="${OutDir}\win\i386\DVA.exe" />
             <param name="icon" value="win\dva.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
-            <param name="file" value="${WinOutDir64Wine}DVA.exe" />
+            <param name="file" value="${OutDir}\win\amd64\DVA.exe" />
             <param name="icon" value="win\dva.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
-            <param name="file" value="${WinOutDir32Wine}DVA.scr" />
+            <param name="file" value="${OutDir}\win\i386\DVA.scr" />
             <param name="icon" value="win\pse.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="ResHack">
-            <param name="file" value="${WinOutDir64Wine}DVA.scr" />
+            <param name="file" value="${OutDir}\win\amd64\DVA.scr" />
             <param name="icon" value="win\pse.ico" />
             <param name="ini" value="win\DVA.ini" />
             <param name="stringtable" value="win\ScreenSaverStringTable.res"/>
         </antcall>
         <antcall target="SignWinFile">
-            <param name="file" value="${WinOutDir32}DVA.exe"/>
+            <param name="file" value="${OutDir}\win\i386\DVA.exe"/>
         </antcall>
         <antcall target="SignWinFile">
-            <param name="file" value="${WinOutDir64}DVA.exe"/>
+            <param name="file" value="${OutDir}\win\amd64\DVA.exe"/>
         </antcall>
         <antcall target="SignWinFile">
-            <param name="file" value="${WinOutDir32}DVA.scr"/>
+            <param name="file" value="${OutDir}\win\i386\DVA.scr"/>
         </antcall>
         <antcall target="SignWinFile">
-            <param name="file" value="${WinOutDir64}DVA.scr"/>
+            <param name="file" value="${OutDir}\win\amd64\DVA.scr"/>
         </antcall>
     </target>
 
@@ -586,15 +477,10 @@ Log=    console
     </target>
 
     <!-- Build windows setup -->
-    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes" if="buildWindows">
+    <target name="BuildWinSetup" description="Build Windows setup EXE" depends="CreateJar,SetupCommon,BuildWinExes">
         <echo level="info">Inno Setup compression: ${innosetupcompression}</echo>
         <property name="innosetupargs" value="/Qp /Dinnosetupcompression=${innosetupcompression} /Dversion=${DVAVersion} win\setup.iss"/>
-        <exec executable="${Wine}" osfamily="mac" failonerror="true">
-            <env key="WINEPREFIX" value="${WinePrefix}"/>
-            <arg value="${InnoSetupCompiler}"/>
-            <arg line="${innosetupargs}"/>
-        </exec>
-        <exec executable="${InnoSetupCompiler}" osfamily="windows" failonerror="true">
+        <exec executable="${InnoSetupCompiler}" failonerror="true">
             <arg line="${innosetupargs}"/>
         </exec>
     </target>
@@ -630,7 +516,7 @@ Log=    console
     </target>
 
     <!-- Linux Debian Setups -->
-    <target name="BuildLinuxDebs" if="buildLinux" depends="CreateJar,SetupCommon">
+    <target name="BuildLinuxDebs" depends="CreateJar,SetupCommon">
         <antcall target="BuildLinuxDeb">
             <param name="arch" value="x86_64"/>
             <param name="arch.java" value="x86_64"/>
@@ -703,22 +589,6 @@ Log=    console
             <arg value="debian"/>
         </exec>
         <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch.java}.deb"/>
-    </target>
-
-    <target name="AllSetups" description="Build all setups" depends="Clean,SignMacDmgs,SignWinSetup,BuildLinuxDebs">
-        <java jar="${AppBundleContents}/DVA.jar" fork="true">
-            <arg value="/clearsettings"/>
-        </java>
-        <echo level="info">Version ${DVAVersion}</echo>
-        <copy todir="build/TestUpdateDrop/${DVAVersion}">
-            <fileset dir="${OutDir}">
-                <include name="${DmgName}.dmg"/>
-                <include name="${DmgName}.dmg.bz2"/>
-                <include name="${WindowsSetupName}.exe"/>
-                <include name="DVA5*.deb"/>
-                <include name="new.html"/>
-            </fileset>
-        </copy>
     </target>
 
     <target name="Run" description="Fast dev build" depends="CreateJar,SetupCommon">
