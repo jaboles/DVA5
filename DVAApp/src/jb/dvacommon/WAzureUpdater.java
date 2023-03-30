@@ -68,9 +68,9 @@ public class WAzureUpdater extends BaseUpdater
 
     public static void main(String[] args) throws InvalidKeyException, URISyntaxException, StorageException, IOException
     {
-        for (Map.Entry<String, String> e : System.getenv().entrySet()) {
+        /*for (Map.Entry<String, String> e : System.getenv().entrySet()) {
             System.out.println(e.getKey() + " -> " + e.getValue());
-        }
+        }*/
         String connectionString = System.getenv("AGENT_TEMPDIRECTORY") != null
                 ? FileUtilities.readAllText(System.getenv("AGENT_TEMPDIRECTORY") + "/azure.secret").trim()
                 : FileUtilities.readAllText("azure.secret").trim();
