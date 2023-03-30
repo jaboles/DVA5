@@ -10,9 +10,7 @@
     <property name="JavaVersionMajor" value="17"/>
     <property name="JavaVersionPlus" value="17.0.5%2b8"/>
     <property name="JavaVersionUnderscore" value="17.0.5_8"/>
-    <condition property="DVAVersion" value="${env.DVAVERSION}" else="none">
-        <isset property="env.DVAVERSION"/>
-    </condition>
+    <property name="DVAVersion" value="${env.DVAVERSION}"/>
     <path id="jars">
         <fileset dir="jars">
             <include name="*" />
