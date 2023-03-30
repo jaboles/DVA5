@@ -47,7 +47,7 @@ public class LoadWindow {
             try
             {
                 Properties props = new Properties();
-                props.load(LoadWindow.class.getResourceAsStream("/buildnumber.txt"));
+                props.load(LoadWindow.class.getResourceAsStream("/version.txt"));
                 buildNumber = props.getProperty("build.number");
                 if (buildNumber.length() >= 1) {
                     buildNumber = Integer.toString(10000 + Integer.parseInt(buildNumber));

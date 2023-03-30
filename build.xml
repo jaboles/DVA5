@@ -5,10 +5,14 @@
     <exec executable="hostname" outputproperty="hostname" failonerror="true"/>
     <property name="ClassesDir" value="build/classes"/>
     <property name="OutDir" value="build${file.separator}Output"/>
+    <property name="DistDir" value="build${file.separator}Output${file.separator}dist"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="JavaVersionMajor" value="17"/>
     <property name="JavaVersionPlus" value="17.0.5%2b8"/>
     <property name="JavaVersionUnderscore" value="17.0.5_8"/>
+    <condition property="DVAVersion" value="${env.DVAVERSION}" else="none">
+        <isset property="env.DVAVERSION"/>
+    </condition>
     <path id="jars">
         <fileset dir="jars">
             <include name="*" />
@@ -157,8 +161,10 @@
 
     <!-- After Eclipse compile task, prepare JAR file -->
     <target name="CreateJar" description="Create Jar file" depends="Compile">
+        <echo>version: ${DVAVersion}</echo>
         <echo>build.number: ${env.BUILD_BUILDID}</echo>
-        <echo file="DVAApp/resources/buildnumber.txt" append="false">build.number: ${env.BUILD_BUILDID}</echo>
+        <echo file="DVAApp/resources/version.txt" append="false">version: ${DVAVersion}
+build.number: ${env.BUILD_BUILDID}</echo>
         <manifestclasspath property="ManifestClasspath" jarfile="jars/dummy.jar">
             <classpath refid="jars" />
         </manifestclasspath>
@@ -362,21 +368,8 @@ Log=    console
     </target>
 
     <target name="SetupCommon" description="common setup crap">
-        <copy file="DVAApp/resources/new.html" todir="${OutDir}"/>
-        <exec executable="sh" outputproperty="DVAVersion" osfamily="mac" failonerror="true">
-            <arg value="-c"/>
-            <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep '&quot;\d\+\.\d\+\.\d\+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
-        </exec>
-        <exec executable="sh" outputproperty="DVAVersion" osfamily="unix" failonerror="true">
-            <arg value="-c"/>
-            <arg value="cat DVAApp/src/jb/dvacommon/DVA.java | grep -P '&quot;\d+\.\d+\.\d+&quot;' | sed 's/.*&quot;\(.*\)&quot;[^&quot;]*$/\1/'"/>
-        </exec>
-        <exec executable="powershell.exe" outputproperty="DVAVersion" osfamily="windows" failonerror="true">
-            <arg value="-command"/>
-            <arg value="(gc DVAApp/src/jb/dvacommon/DVA.java -raw) -match '&quot;(\d+\.\d+\.\d+)&quot;' | out-null; $matches[1]"/>
-        </exec>
-        <echo level="info">Read version string: ${DVAVersion}</echo>
-        <echo file="${OutDir}/version.txt">${DVAVersion}</echo>
+        <mkdir dir="${DistDir}"/>
+        <copy file="DVAApp/resources/new.html" todir="${DistDir}"/>
     </target>
 
     <!-- Build Mac setup -->
@@ -397,17 +390,17 @@ Log=    console
         <echo>Building Mac DMG for arch: ${arch.java}</echo>
         <property name="DmgVolumeName" value="DVA 5"/>
         <property name="DmgMountPoint" value="/Volumes/${DmgVolumeName}"/>
-        <delete file="${OutDir}/${DmgName}-${arch.java}.ro.dmg" failonerror="false"/>
-        <delete file="${OutDir}/${DmgName}-${arch.java}.dmg" failonerror="false"/>
-        <delete file="${OutDir}/${DmgName}-${arch.java}.dmg.bz2" failonerror="false"/>
+        <delete file="${DistDir}/${DmgName}-${arch.java}.ro.dmg" failonerror="false"/>
+        <delete file="${DistDir}/${DmgName}-${arch.java}.dmg" failonerror="false"/>
+        <delete file="${DistDir}/${DmgName}-${arch.java}.dmg.bz2" failonerror="false"/>
         <exec executable="sh" outputproperty="dmgSizeMb">
             <arg line="-c &quot;echo $((`du -d 0 -m build/Output/${arch.java}/DVA.app | cut -f 1` + 5))&quot;"/>
         </exec>
         <echo>Creating .DMG with ${dmgSizeMb} mb</echo>
-        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
+        <exec executable="hdiutil" dir="${DistDir}" failonerror="true">
             <arg line="create -megabytes ${dmgSizeMb} -volname &quot;${DmgVolumeName}&quot; -fs HFS+ ${DmgName}-${arch.java}.dmg"/>
         </exec>
-        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
+        <exec executable="hdiutil" dir="${DistDir}" failonerror="true">
             <arg line="attach ${DmgName}-${arch.java}.dmg"/>
         </exec>
         <exec executable="sh" dir="${OutDir}/${arch.java}" failonerror="true">
@@ -422,13 +415,13 @@ Log=    console
             <arg line="detach '${DmgMountPoint}'"/>
         </exec>
         <echo level="info">Bzip2 compression: ${bzip2compression}</echo>
-        <exec executable="bzip2" dir="${OutDir}" failonerror="true">
+        <exec executable="bzip2" dir="${DistDir}" failonerror="true">
             <arg line="--verbose --${bzip2compression} --keep ${DmgName}-${arch.java}.dmg"/>
         </exec>
-        <exec executable="hdiutil" dir="${OutDir}" failonerror="true">
+        <exec executable="hdiutil" dir="${DistDir}" failonerror="true">
             <arg line="convert ${DmgName}-${arch.java}.dmg -format UDBZ -o ${DmgName}-${arch.java}.ro.dmg"/>
         </exec>
-        <move file="${OutDir}/${DmgName}-${arch.java}.ro.dmg" tofile="${OutDir}/${DmgName}-${arch.java}.dmg"/>
+        <move file="${DistDir}/${DmgName}-${arch.java}.ro.dmg" tofile="${DistDir}/${DmgName}-${arch.java}.dmg"/>
     </target>
     <target name="SignMacDmgs" description="Mac DMG Signing" depends="SignMac.Check,BuildMacDmgs" if="WillSignMac">
         <antcall target="SignMacDmg">
@@ -440,19 +433,19 @@ Log=    console
 
         <!-- still notarize the vanilla DMG for older versions to successfully update -->
         <echo>Signing Mac DMG (legacy)</echo>
-        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+        <exec executable="codesign" dir="${DistDir}" failonerror="true">
             <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}.dmg"/>
         </exec>
         <!-- verify codesign -->
-        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+        <exec executable="codesign" dir="${DistDir}" failonerror="true">
             <arg line="-v --verify ${DmgName}.dmg"/>
         </exec>
         <!-- Notarize -->
         <exec executable="sh" failonerror="true">
-            <arg line="./notarize.sh ${OutDir}/${DmgName}.dmg"/>
+            <arg line="./notarize.sh ${DistDir}/${DmgName}.dmg"/>
         </exec>
         <!-- verify gatekeeper -->
-        <exec executable="spctl" dir="${OutDir}" failonerror="true">
+        <exec executable="spctl" dir="${DistDir}" failonerror="true">
             <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}.dmg"/>
         </exec>
     </target>
@@ -461,19 +454,19 @@ Log=    console
              ${arch.java}   - the arch identifier as it would be in Java (x86_64, aarch64)
         -->
         <echo>Signing Mac DMG for arch: ${arch.java}</echo>
-        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+        <exec executable="codesign" dir="${DistDir}" failonerror="true">
             <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}-${arch.java}.dmg"/>
         </exec>
         <!-- verify codesign -->
-        <exec executable="codesign" dir="${OutDir}" failonerror="true">
+        <exec executable="codesign" dir="${DistDir}" failonerror="true">
             <arg line="-v --verify ${DmgName}-${arch.java}.dmg"/>
         </exec>
         <!-- Notarize -->
         <exec executable="sh" failonerror="true">
-            <arg line="./notarize.sh ${OutDir}/${DmgName}-${arch.java}.dmg"/>
+            <arg line="./notarize.sh ${DistDir}/${DmgName}-${arch.java}.dmg"/>
         </exec>
         <!-- verify gatekeeper -->
-        <exec executable="spctl" dir="${OutDir}" failonerror="true">
+        <exec executable="spctl" dir="${DistDir}" failonerror="true">
             <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}-${arch.java}.dmg"/>
         </exec>
     </target>
@@ -590,7 +583,7 @@ Log=    console
             <arg value="--build"/>
             <arg value="debian"/>
         </exec>
-        <move file="${OutDir}/debian.deb" tofile="${OutDir}/DVA5-${arch.java}.deb"/>
+        <move file="${OutDir}/debian.deb" tofile="${DistDir}/DVA5-${arch.java}.deb"/>
     </target>
 
     <target name="Run" description="Fast dev build" depends="CreateJar,SetupCommon">

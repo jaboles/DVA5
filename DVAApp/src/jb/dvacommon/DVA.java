@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.NoSuchFileException;
+import java.util.Properties;
 import javax.swing.UIManager;
 
 import com.sun.jna.WString;
@@ -33,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 
 public class DVA {
     private static final Logger logger = LogManager.getLogger(DVA.class);
-    public static final String VersionString = "5.5.10";
+    public static String VersionString;
     public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2023";
 
     private DVAShell mainWindow;
@@ -41,6 +42,14 @@ public class DVA {
     private final DVAManager dvaManager;
 
     public DVA() throws Exception {
+        try {
+            Properties props = new Properties();
+            props.load(LoadWindow.class.getResourceAsStream("/version.txt"));
+            VersionString = props.getProperty("version");
+        } catch (NullPointerException e) {
+            VersionString = "0.0.0";
+        }
+
         logger.info("DVA: {}, Java: {} {}", VersionString, System.getProperty("java.version"), System.getProperty("os.arch"));
         logger.info("OS: {} {}", System.getProperty("os.name"), System.getProperty("os.version"));
         logger.info("Temp is: {}", getTemp());
