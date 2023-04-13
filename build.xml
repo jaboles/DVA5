@@ -10,6 +10,7 @@
     <property name="JavaVersionMajor" value="17"/>
     <property name="JavaVersionPlus" value="17.0.5%2b8"/>
     <property name="JavaVersionUnderscore" value="17.0.5_8"/>
+    <property name="InnoSetupVersion" value="6.2.2"/>
     <property name="DVAVersion" value="${env.DVAVERSION}"/>
     <path id="jars">
         <fileset dir="jars">
@@ -39,7 +40,7 @@
     <property name="WinRun4JDir"     value="${ToolsDir}${file.separator}winrun4j${file.separator}bin${file.separator}"/>
     <property name="WinOutDir32"     value="${OutDir}${file.separator}win${file.separator}i386${file.separator}"/>
     <property name="WinOutDir64"     value="${OutDir}${file.separator}win${file.separator}amd64${file.separator}"/>
-    <property name="InnoSetupCompiler" value="c:\Program Files (x86)\Inno Setup 5\ISCC.exe"/>
+    <property name="InnoSetupCompiler" value="c:\Program Files (x86)\Inno Setup 6\ISCC.exe"/>
     <property name="DmgName" value="DVA5"/>
     <property name="WindowsSetupName" value="DVA5Setup"/>
 
@@ -105,7 +106,7 @@
             <cutdirsmapper dirs="1"/>
         </unzip>
         <!-- download Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/6/innosetup-6.2.2.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
+        <get src="https://files.jrsoftware.org/is/6/innosetup-${InnoSetupVersion}.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
         <!-- install Inno Setup -->
         <exec executable="${ToolsDir}/is.exe" failonerror="true">
             <arg line="/silent"/>
