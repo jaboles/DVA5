@@ -8,8 +8,8 @@
     <property name="DistDir" value="build${file.separator}Output${file.separator}dist"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="JavaVersionMajor" value="17"/>
-    <property name="JavaVersionPlus" value="17.0.5%2b8"/>
-    <property name="JavaVersionUnderscore" value="17.0.5_8"/>
+    <property name="JavaVersionPlus" value="17.0.6%2b10"/>
+    <property name="JavaVersionUnderscore" value="17.0.6_10"/>
     <property name="InnoSetupVersion" value="6.2.2"/>
     <property name="DVAVersion" value="${env.DVAVERSION}"/>
     <path id="jars">
