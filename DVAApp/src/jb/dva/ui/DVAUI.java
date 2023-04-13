@@ -63,7 +63,6 @@ import jb.dvacommon.ui.ThemedFlatSVGIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
-import org.jdesktop.swingx.JXBusyLabel;
 import org.swixml.SwingEngine;
 
 public class DVAUI {
@@ -106,8 +105,6 @@ public class DVAUI {
     @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoChannelsLabel;
     @SuppressWarnings("UnusedDeclaration") private JLabel soundInfoBytesPerFrameLabel;
     @SuppressWarnings("UnusedDeclaration") private JLabel announcementStatsLabel;
-    @SuppressWarnings("UnusedDeclaration") private JXBusyLabel playSavedAnnouncementBusyLabel;
-    @SuppressWarnings("UnusedDeclaration") private JXBusyLabel playCurrentAnnouncementBusyLabel;
 
     public DVAUI(final DVAManager dvaManager, Map<String, SoundLibrary> availableSoundLibraries, File temp) {
         this.dvaManager = dvaManager;
@@ -117,7 +114,6 @@ public class DVAUI {
         SwingEngine renderer = new SwingEngine(this);
         renderer.getTaglib().registerTag("tooltiplist", ToolTipList.class);
         renderer.getTaglib().registerTag("levelmeterpanel", LevelMeterPanel.class);
-        renderer.getTaglib().registerTag("xbusylabel", JXBusyLabel.class);
         renderer.getTaglib().registerTag("dvatextarea", DVATextArea.class);
 
         try {
@@ -426,20 +422,7 @@ public class DVAUI {
             stopAction.setEnabled(true);
             playStopButton.setAction(stopAction);
 
-            final Runnable longConcatCallback = () -> SwingUtilities.invokeLater(() -> {
-                if (playSaved) {
-                    playSavedAnnouncementBusyLabel.setBusy(true);
-                } else {
-                    playCurrentAnnouncementBusyLabel.setBusy(true);
-                }
-            });
-
-            final Runnable afterConcatCallback = () -> SwingUtilities.invokeLater(() -> {
-                playSavedAnnouncementBusyLabel.setBusy(false);
-                playCurrentAnnouncementBusyLabel.setBusy(false);
-            });
-
-            final Player p = dvaManager.play(levelMeterPanel, script, longConcatCallback, afterConcatCallback);
+            final Player p = dvaManager.play(levelMeterPanel, script, null, null);
             new Thread(() -> {
                 try {
                     p.join();
@@ -447,7 +430,6 @@ public class DVAUI {
                     stopAction.setEnabled(false);
                     playSavedAction.setEnabled(true);
                     playCurrentAction.setEnabled(true);
-                    afterConcatCallback.run();
                     playStopButton.setAction(action);
                 } catch (InterruptedException ignored) {
                 }

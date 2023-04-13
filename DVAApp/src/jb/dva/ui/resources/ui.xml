@@ -61,7 +61,6 @@
                         </panel>
                         <hbox constraints="BorderLayout.EAST">
                             <panel layout="FlowLayout(FlowLayout.TRAILING)">
-                                <xbusylabel id="playSavedAnnouncementBusyLabel" />
                                 <button id="playStopSavedAnnouncementButton" action="playSavedAction" />
                             </panel>
                             <levelmeterpanel id="levelMeterPanelSavedAnnouncement" border="EmptyBorder(4,10,4,10)"/>
@@ -89,7 +88,6 @@
                         </panel>
                         <hbox constraints="BorderLayout.EAST">
                             <panel layout="FlowLayout(FlowLayout.TRAILING)">
-                                <xbusylabel id="playCurrentAnnouncementBusyLabel" />
                                 <button id="playStopCurrentAnnouncementButton" action="playCurrentAction" />
                             </panel>
                             <levelmeterpanel id="levelMeterPanelCurrentAnnouncement" border="EmptyBorder(4,10,4,10)"/>
