@@ -8,7 +8,7 @@ AppVersion={#version}
 AppPublisher=Jonathan Boles
 CloseApplications=yes
 CloseApplicationsFilter=*.exe;*.dll;*.chm;*.jar
-DefaultDirName={pf}\DVA 5
+DefaultDirName={autopf}\DVA 5
 DefaultGroupName=DVA 5
 SourceDir=.
 OutputDir=..\build\Output\dist
@@ -19,7 +19,6 @@ UninstallDisplayIcon={app}\DVA.exe
 ArchitecturesInstallIn64BitMode=x64
 
 WindowVisible=no
-;BackColor=$884422
 WindowShowCaption=no
 
 [InstallDelete]
@@ -45,7 +44,6 @@ Source: "..\ffmpeg\win\amd64\*"; DestDir: "{app}"; Flags: replacesameversion; Ch
 Source: "..\jars\*.jar"; DestDir: "{app}"
 Source: "..\build\Output\*.jar"; DestDir: "{app}"
 Source: "..\build\Output\*.txt"; DestDir: "{app}"
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\DVA 5"; Filename: "{app}\DVA.exe"; AppUserModelID: "jb.DVA"

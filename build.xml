@@ -105,7 +105,7 @@
             <cutdirsmapper dirs="1"/>
         </unzip>
         <!-- download Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/5/innosetup-5.6.1.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
+        <get src="https://files.jrsoftware.org/is/6/innosetup-6.2.2.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
         <!-- install Inno Setup -->
         <exec executable="${ToolsDir}/is.exe" failonerror="true">
             <arg line="/silent"/>
@@ -493,19 +493,13 @@ Log=    console
     </target>
     <target name="SignWinFile" depends="SignWin.Check" if="WillSignWin">
         <echo message="Signing: ${file}"/>
-        <exec executable="osslsigncode" osfamily="mac" failonerror="true">
-            <arg line="sign -pkcs12 ${SignCert} -h sha256 -t http://timestamp.digicert.com -n &quot;DVA&quot; -in ${file} -out ${file}.signed"/>
-        </exec>
-        <exec executable="sh" osfamily="mac" failonerror="true">
-            <arg line="-c &quot;mv ${file}.signed ${file}&quot;"/>
-        </exec>
         <exec executable="C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x86\signtool.exe" osfamily="windows" failonerror="true">
             <arg line="sign /f ${SignCert} /fd sha256 /tr http://timestamp.digicert.com /td SHA256 /d &quot;DVA&quot; ${file}"/>
         </exec>
     </target>
     <target name="SignWinSetup" depends="BuildWinSetup">
         <antcall target="SignWinFile">
-            <param name="file" value="${OutDir}/DVA5Setup.exe" />
+            <param name="file" value="${OutDir}/dist/DVA5Setup.exe" />
         </antcall>
     </target>
 
