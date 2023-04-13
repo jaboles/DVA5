@@ -14,6 +14,7 @@ import jb.common.jna.windows.GDI32Ex;
 import jb.common.jna.windows.Shell32Ex;
 import jb.common.jna.windows.User32Ex;
 import jb.common.sound.Player;
+import jb.common.ui.MacOSUtilities;
 import jb.dva.DVAManager;
 import jb.dva.SoundLibraryManager;
 import jb.dvacommon.ui.ProgressWindow;
@@ -253,6 +254,13 @@ public class DVA {
 
         try {
             // Set native look and feel
+            if (OSDetection.isMac()) {
+                String laf = Settings.getLookAndFeelName();
+                if (laf.equals("auto") ||
+                        (laf.equals("dark") && MacOSUtilities.isDarkTheme())) {
+                    System.setProperty("apple.awt.application.appearance", "system");
+                }
+            }
             UIManager.setLookAndFeel(DVAShell.getLookAndFeelClassName(Settings.getLookAndFeelName()));
         } catch (Exception e) {
             // wtf?? Impossible situation

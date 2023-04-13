@@ -22,8 +22,10 @@ import com.sun.jna.platform.win32.WinReg;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.OSDetection;
+import jb.common.ui.MacOSUtilities;
 import jb.common.ui.SimpleEditorUndoRedoKit;
 import jb.common.ui.WindowUtils;
+import jb.common.ui.WindowsUtilities;
 import jb.dva.DVAManager;
 import jb.dva.SoundLibrary;
 import jb.dva.ui.DVAUI;
@@ -41,13 +43,14 @@ public class DVAShell
 {
     private final SwingEngine renderer;
     private JFrame window;
-    private final static Font DefaultFont = new Font("Dialog", Font.PLAIN, 13);
     private PlasmaUI plasmaUI;
     @SuppressWarnings("UnusedDeclaration") private JMenu themeMenu;
 
     @SuppressWarnings("UnusedDeclaration") private JTabbedPane tabbedPane;
     @SuppressWarnings("UnusedDeclaration") private JLabel updateInfoLabel;
     @SuppressWarnings("UnusedDeclaration") private JTextPane updateVersionHistoryPane;
+    @SuppressWarnings("UnusedDeclaration") private JMenuItem quitMenuItem;
+    @SuppressWarnings("UnusedDeclaration") private JMenuItem aboutMenuItem;
 
     public Action voiceLibraryToggleAction;
     public Action soundInfoAction;
@@ -73,7 +76,6 @@ public class DVAShell
     public Action indicatorEditAllStationsTosAction;
 
     public DVAShell(final DVAManager dvaManager, Map<String, SoundLibrary> availableSoundLibraries, File temp) {
-        UIManager.getLookAndFeelDefaults().put("defaultFont", DefaultFont);
         renderer = new SwingEngine(this);
 
         try {
@@ -106,6 +108,20 @@ public class DVAShell
             if (SwingEngine.isMacOSX())
             {
                 window.getRootPane().putClientProperty("apple.awt.brushMetalLook", true);
+
+                // Modern MacOS appearance
+                window.getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
+                window.getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
+                window.getRootPane().putClientProperty("apple.awt.windowTitleVisible", false);
+                Desktop desktop = Desktop.getDesktop();
+                if (desktop.isSupported(Desktop.Action.APP_ABOUT)) {
+                    desktop.setAboutHandler(e -> aboutAction.actionPerformed(null));
+                    aboutMenuItem.setVisible(false);
+                }
+                if (desktop.isSupported( Desktop.Action.APP_QUIT_HANDLER)) {
+                    desktop.setQuitHandler((e, response) -> response.performQuit());
+                    quitMenuItem.setVisible(false);
+                }
             }
             tabbedPane.putClientProperty(TABBED_PANE_TAB_AREA_ALIGNMENT, TABBED_PANE_ALIGN_CENTER);
             tabbedPane.add(dvaUI.getPanel());
@@ -119,6 +135,8 @@ public class DVAShell
                 }
             }
 
+            window.pack();
+            window.setSize(1090,712);
             WindowUtils.center(window);
         }
         catch (Exception e) {
@@ -239,7 +257,6 @@ public class DVAShell
             selectedMenuItem.setSelected(true);
             try {
                 UIManager.setLookAndFeel(getLookAndFeelClassName(selectedMenuItem.getActionCommand()));
-                UIManager.getLookAndFeelDefaults().put("defaultFont", DefaultFont);
             } catch (Exception ex) {
                 ExceptionReporter.reportException(ex);
             }
@@ -294,7 +311,7 @@ public class DVAShell
     @SuppressWarnings("unused")
     public Action checkForUpdateAction = new AbstractAction("Check for Update", null) {
         public void actionPerformed(ActionEvent e) {
-            final Optional<BaseUpdater> updater = Updater.updateAvailable(DVA.VersionString, Settings.getUpdateSuppressed());
+            final Optional<BaseUpdater> updater = Updater.updateAvailable(DVA.VersionString, null);
             if (updater.isPresent()) {
                 promptToUpdate(updater.get(), false);
             } else {
@@ -331,28 +348,9 @@ public class DVAShell
             case "dark": return OSDetection.isMac() ? FlatMacDarkLaf.class.getName() : FlatDarkLaf.class.getName();
             case "auto":
                 if (OSDetection.isMac()) {
-                    try {
-                        Process p = Runtime.getRuntime().exec("defaults read -g AppleInterfaceStyle");
-                        p.waitFor();
-                        BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                        String line = br.readLine();
-                        return line != null && line.equals("Dark") ? FlatMacDarkLaf.class.getName() : FlatMacLightLaf.class.getName();
-                    } catch (InterruptedException | IOException e) {
-                        return FlatMacLightLaf.class.getName();
-                    }
+                    return MacOSUtilities.isDarkTheme() ? FlatMacDarkLaf.class.getName() : FlatMacLightLaf.class.getName();
                 } else if (OSDetection.isWindows()) {
-                    try {
-                        if (Advapi32Util.registryGetIntValue(
-                                WinReg.HKEY_CURRENT_USER,
-                                "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
-                                "AppsUseLightTheme") == 0) {
-                            return FlatDarkLaf.class.getName();
-                        } else {
-                            return FlatLightLaf.class.getName();
-                        }
-                    } catch (Exception e) {
-                        return FlatLightLaf.class.getName();
-                    }
+                    return WindowsUtilities.isDarkTheme() ? FlatDarkLaf.class.getName() : FlatLightLaf.class.getName();
                 }
                 return FlatLightLaf.class.getName();
             default: return UIManager.getSystemLookAndFeelClassName();
