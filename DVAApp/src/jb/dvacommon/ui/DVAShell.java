@@ -294,8 +294,9 @@ public class DVAShell
                 if (SwingEngine.isMacOSX())
                 {
                     File executable = new File(FileUtilities.getJarFolder(DVA.class), "dva");
-                    JOptionPane.showMessageDialog(null, executable.getPath());
-                    new ProcessBuilder("open", "/Applications/Utilities/Terminal.app", executable.getPath()).start();
+                    File terminal = new File("/System/Applications/Utilities/Terminal.app");
+                    if (!terminal.exists()) terminal = new File("/Applications/Utilities/Terminal.app");
+                    new ProcessBuilder("open", terminal.getPath(), executable.getPath()).start();
                 }
                 else
                 {

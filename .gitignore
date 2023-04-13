@@ -5,3 +5,4 @@ azure.secret
 *.iws
 *.bak
 Thumbs.db
+version.txt
