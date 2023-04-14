@@ -297,7 +297,6 @@ build.number: ${env.BUILD_BUILDID}</echo>
         <chmod perm="u+x" file="${AppBundleContents}/ffmpeg"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/bin/java"/>
         <chmod perm="u+x" file="${AppBundleContents}/jre/lib/jspawnhelper"/>
-        <move file="${AppBundleContents}/jre/legal" tofile="${OutDir}/${arch.java}/DVA.app/Contents/Resources/legal"/>
     </target>
 
     <target name="SignMac.Check">
