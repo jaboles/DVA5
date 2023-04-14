@@ -112,6 +112,8 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
+        <delete dir="${ToolsDir}\jre\winarm64\include"/>
+        <delete dir="${ToolsDir}\jre\winarm64\jmods"/>
         <!-- download Inno Setup -->
         <get src="https://files.jrsoftware.org/is/6/innosetup-${InnoSetupVersion}.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
         <!-- install Inno Setup -->

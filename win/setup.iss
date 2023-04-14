@@ -1,7 +1,7 @@
 [Setup]
 AppName=DVA
 AppVerName=DVA
-AppVersion=0.0.0
+AppVersion={#version}
 AppPublisher=Jonathan Boles
 CloseApplications=yes
 CloseApplicationsFilter=*.exe;*.dll;*.chm;*.jar
@@ -10,7 +10,7 @@ DefaultGroupName=DVA 5
 SourceDir=.
 OutputDir=..\build\Output\dist
 OutputBaseFilename=DVA5Setup
-Compression=none
+Compression={#innosetupcompression}
 SolidCompression=yes
 UninstallDisplayIcon={app}\dva.ico
 ArchitecturesInstallIn64BitMode=x64 arm64
