@@ -105,6 +105,13 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
+        <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.6-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
+        <unzip dest="${ToolsDir}\jre\winarm64" overwrite="false">
+            <fileset dir="${ToolsDir}">
+                <include name="microsoft-jdk-*-aarch64.zip"/>
+            </fileset>
+            <cutdirsmapper dirs="1"/>
+        </unzip>
         <!-- download Inno Setup -->
         <get src="https://files.jrsoftware.org/is/6/innosetup-${InnoSetupVersion}.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
         <!-- install Inno Setup -->
