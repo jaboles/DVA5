@@ -52,7 +52,7 @@ Name: "{group}\{cm:UninstallProgram,DVA}"; Filename: "{uninstallexe}"
 Name: "{group}\DVA 5"; Filename: "{app}\DVA.exe"; AppUserModelID: "jb.DVA"; Check: not IsARM64
 Name: "{autodesktop}\DVA 5"; Filename: "{app}\DVA.exe"; Tasks: desktopicon; AppUserModelID: "jb.DVA"; Check: not IsARM64
 ; ARM64
-Name: "{group}\DVA 5"; Filename: "{app}\jre\bin\javaw.exe"; Parameters: "-cp {code:CalculateClasspath} jb.dvacommon.DVA"; WorkingDir: "{app}"; AppUserModelID: "jb.DVA"; Check: IsARM64
+Name: "{group}\DVA 5"; Filename: "{app}\jre\bin\javaw.exe"; Parameters: "-cp {code:CalculateClasspath} jb.dvacommon.DVA"; WorkingDir: "{app}"; AppUserModelID: "jb.DVA"; IconFilename: "{app}\dva.ico"; Check: IsARM64
 Name: "{autodesktop}\DVA 5"; Filename: "{app}\jre\bin\javaw.exe"; Parameters: "-cp {code:CalculateClasspath} jb.dvacommon.DVA"; WorkingDir: "{app}"; AppUserModelID: "jb.DVA"; IconFilename: "{app}\dva.ico"; Tasks: desktopicon; Check: IsARM64
 
 [Registry]
