@@ -69,7 +69,6 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <delete dir="${ToolsDir}/jre/mac-x86_64/Contents/Home/man"/>
         <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_aarch64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
         <untar dest="${ToolsDir}\jre\mac-arm64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
@@ -77,7 +76,11 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <delete dir="${ToolsDir}/jre/mac-arm64/Contents/Home/man"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${ToolsDir}\jre" includes="**/Contents/Home/man/"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/Contents/Home/legal/"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
+        </delete>
         <!-- Protocol Buffers compiler -->
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-osx-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
@@ -112,8 +115,15 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <delete dir="${ToolsDir}\jre\winarm64\include"/>
-        <delete dir="${ToolsDir}\jre\winarm64\jmods"/>
+        <delete includeemptydirs="true">
+            <fileset dir="${ToolsDir}\jre" includes="**/include/"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/jmods/"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/legal/"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/src.zip"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/*.lib"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/ct.sym"/>
+        </delete>
         <!-- download Inno Setup -->
         <get src="https://files.jrsoftware.org/is/6/innosetup-${InnoSetupVersion}.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
         <!-- install Inno Setup -->
@@ -140,6 +150,10 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <delete includeemptydirs="true">
+            <fileset dir="${ToolsDir}\jre" includes="**/legal/"/>
+            <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
+        </delete>
         <!-- Protocol Buffers compiler -->
         <get src="https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip" dest="${ToolsDir}/protoc.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/protoc.zip" dest="${ToolsDir}/protoc" overwrite="false"/>
