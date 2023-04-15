@@ -47,7 +47,8 @@ public class DVA {
             Properties props = new Properties();
             props.load(LoadWindow.class.getResourceAsStream("/version.txt"));
             VersionString = props.getProperty("version");
-        } catch (NullPointerException e) {
+            Utilities.compareVersion(VersionString, "0.0.0");
+        } catch (NullPointerException | NumberFormatException e) {
             VersionString = "0.0.0";
         }
 

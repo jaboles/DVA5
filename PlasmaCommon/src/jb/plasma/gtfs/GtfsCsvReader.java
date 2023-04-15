@@ -175,6 +175,7 @@ public class GtfsCsvReader
                         trips.get(parts[0]), // e.g. "108B.959.129.12.T.8.68357311"
                         parts[2], // e.g. "04:46:06"
                         stops.get(parts[3]), // e.g. "2135234"
+                        parts[5],
                         pickup,
                         dropoff
                 );

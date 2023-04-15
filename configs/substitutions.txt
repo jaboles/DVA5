@@ -30,5 +30,5 @@ Newcastle Interchange,Newcastle,Sydney-Male
 Newcastle Intg,Newcastle,Sydney-Male
 
 # Melbourne
-Sydenham,Watergardens
+Sydenham,Watergardens,Melbourne Metro Trains
 Spencer Street,Southern Cross

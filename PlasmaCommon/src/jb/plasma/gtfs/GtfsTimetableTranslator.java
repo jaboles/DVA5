@@ -132,7 +132,7 @@ public class GtfsTimetableTranslator
         LinkedList<TripInstance> list = new LinkedList<>();
         LocalDateTime now = LocalDateTime.now();
 
-        if (tripTimeAndPlace.Trip.Route.Id.equals("RTTA_REV") || tripTimeAndPlace.Trip.Route.Id.equals("RTTA_DEF") || tripTimeAndPlace.Trip.Headsign.equals("Empty Train"))
+        if (tripTimeAndPlace.Trip.Route.Id.equals("RTTA_REV") || tripTimeAndPlace.Trip.Route.Id.equals("RTTA_DEF") || (tripTimeAndPlace.Trip.Headsign.equals("Empty Train") && tripTimeAndPlace.Headsign.equals("")))
         {
             return Stream.empty();
         }
@@ -277,6 +277,7 @@ public class GtfsTimetableTranslator
                             st.Trip,
                             newDeparture != null ? newDeparture : st.Departure,
                             st.Stop,
+                            st.Headsign,
                             st.Pickup,
                             st.Dropoff
                     );

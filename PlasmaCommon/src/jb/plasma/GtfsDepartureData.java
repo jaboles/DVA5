@@ -15,7 +15,12 @@ public class GtfsDepartureData extends DepartureData
 
     public GtfsDepartureData(TripInstance ti, Phraser phraser)
     {
-        String[] headsignParts = ti.Trip.Headsign.split(" via ");
+        String headsign = ti.Trip.Headsign;
+        if (headsign.equals("Empty Train")) {
+            headsign = ti.RemainingStopList[ti.RemainingStopList.length - 1];
+        }
+
+        String[] headsignParts = headsign.split(" via ");
         CityrailLine line = CityrailLine.get(ti.Trip.Route.Description);
 
         this.Destination = substitute(headsignParts[0], true, line);

@@ -2,7 +2,7 @@
 # phrase when generating an announcement from the indicator board.
 #
 # Each line defines a station grouping. Subsequences of stations which match part
-# of the list will be collapsed into "all stations to X" phrasing. 
+# of the list will be collapsed into "all stations to X" phrasing.
 
 
 # Northern line
@@ -46,7 +46,7 @@ Berowra, Cowan, Hawkesbury River, Wondabyne, Woy Woy, Koolewong, Tascott, Point 
 # South Coast
 Waterfall, Helensburgh, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Thirroul, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow, North Wollongong
 Coniston, Lysaghts, Cringila, Port Kembla North, Port Kembla
-Unanderra, Kembla Grange, Dapto, Albion Park, Oak Flats, Shellharbour Junction | Dunmore, Minnamurra, Bombo, Kiama
+Unanderra, Kembla Grange | Kembla Grange Racecourse, Dapto, Albion Park, Oak Flats, Shellharbour Junction | Dunmore, Minnamurra, Bombo, Kiama
 
 # Southern Highlands
 Campbelltown, Macarthur, Menangle Park, Menangle, Douglas Park, Picton, Tahmoor, Bargo, Yerrinbool, Mittagong, Bowral, Burradoo, Moss Vale, Exeter, Bundanoon, Penrose, Wingello, Tallong, Marulan, Goulburn

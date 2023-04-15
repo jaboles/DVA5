@@ -33,6 +33,7 @@ public class MediaConcatenatorFfmpeg
 
             File ffmpeg = new File(FileUtilities.getJarFolder(MediaConcatenatorFfmpeg.class),
                     OSDetection.isWindows() ? "ffmpeg.exe" : "ffmpeg");
+            if (!ffmpeg.exists()) ffmpeg = new File("ffmpeg/mac-arm64/ffmpeg");
             List<String> ffmpegCmd = new LinkedList<>();
             ffmpegCmd.add(ffmpeg.getAbsolutePath());
             StringBuilder ffmpegCmdFilterComplex = new StringBuilder();
