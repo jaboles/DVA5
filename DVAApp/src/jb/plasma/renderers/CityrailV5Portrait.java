@@ -29,7 +29,7 @@ public class CityrailV5Portrait extends CityrailV4and5
         super(headerBackgroundColor);
         stationListInc = 0.04 / PlasmaPanel.FPS;
         stationListSeparation = 0.056;
-        stationListPosInitial = 0.14 + (1 * stationListSeparation);
+        stationListPosInitial = 0.2 + (1 * stationListSeparation);
         stationListPos = stationListPosInitial;
     }
 
@@ -188,7 +188,7 @@ public class CityrailV5Portrait extends CityrailV4and5
         }
 
         // Scrolling list
-        boolean shouldScroll = d0.Stops.length > 6;
+        boolean shouldScroll = d0.Stops.length > 9;
         g.setClip(round(LeftMargin * width), round((top + 0.2) * height), round(0.7 * width), round((0.53 - top) * height));
         fillRect(LeftMargin, top + 0.2, 0.7, top + 0.75, Color.white);
         for (int i = 0; i < d0.Stops.length; i++) {
