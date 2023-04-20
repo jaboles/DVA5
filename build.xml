@@ -287,7 +287,6 @@ build.number: ${env.BUILD_BUILDID}</echo>
                 <include name="*"/>
             </fileset>
         </copy>
-        <delete failonerror="false" dir="${AppBundleContents}/jre"/>
         <copy todir="${AppBundleContents}/jre" preservelastmodified="true">
             <fileset dir="${ToolsDir}/jre/mac-${arch}/Contents/Home">
                 <include name="**"/>

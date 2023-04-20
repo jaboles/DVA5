@@ -3,12 +3,15 @@ package jb.plasma.announcers;
 import jb.plasma.Announcer;
 import jb.plasma.DepartureData;
 import jb.plasma.Phraser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 
 import java.util.Arrays;
 
 public class CityrailStandard extends Announcer
 {
+    private static final Logger logger = LogManager.getLogger(Phraser.class);
     protected final boolean isMale;
     protected boolean coalesceStationSequences;
 
@@ -72,8 +75,9 @@ public class CityrailStandard extends Announcer
             boolean addedThen = false;
             for (int i = 1; i < stops.length; i++)
             {
+                logger.debug("Determining phrasing for {}", stops[i]);
                 if (coalesceStationSequences)
-                    ast = phraser.getAllStationsTo(stops, i);
+                    ast = phraser.getAllStationsTo(stops, i - 1);
 
                 if (i == 1 || addedAllStationsTo || ast != null || (i > 1 && i == stops.length - 1))
                 {
@@ -121,6 +125,7 @@ public class CityrailStandard extends Announcer
             s.append(", only");
         }
 
+        s.append(".");
         return s.toString();
     }
 

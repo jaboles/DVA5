@@ -3,6 +3,8 @@ package jb.plasma;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.StringUtilities;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
 
@@ -14,6 +16,7 @@ import java.util.stream.Stream;
 
 public class Phraser
 {
+    private static final Logger logger = LogManager.getLogger(Phraser.class);
     private Collection<String[]> substitutions;
     private Collection<Quartet<String,String,String,String>> vias;
     private Collection<List<String>> allStationsTos;
@@ -41,7 +44,10 @@ public class Phraser
             {
                 boolean substitute = s.length == 2 || StringUtilities.containsIgnoreCase(soundLibraryName, s[2]);
                 if (substitute && stop.equalsIgnoreCase(s[0]))
+                {
+                    logger.debug("For sound library: [{}] substituting [{}] to [{}]", s[2], s[0], s[1]);
                     return s[1];
+                }
             }
         }
 
@@ -84,15 +90,18 @@ public class Phraser
             List<String> allStationsToLower = allStationsTo.stream().map(String::toLowerCase).collect(Collectors.toList());
             int startIndex = allStationsToLower.indexOf(stopsLower[currentIndex]);
             int lastStationInSequence = currentIndex > 0 ? allStationsToLower.indexOf(stopsLower[currentIndex - 1]) : -1;
+            logger.debug("All stations match check: {}", stopsLower[currentIndex]);
 
             if (startIndex >= 0 && lastStationInSequence >= 0)
             {
                 int matches = 0;
                 for (int i = 0; (startIndex + i) < allStationsTo.size() && (currentIndex + i) < stops.length; i++)
                 {
-                    Stream<String> items = Arrays.stream(allStationsToLower.get(startIndex + i).split("\\|")).map(String::trim);
+                    List<String> items = Arrays.stream(allStationsToLower.get(startIndex + i).split("\\|")).map(String::trim).collect(Collectors.toList());
                     String currentStop = stopsLower[currentIndex + i];
-                    if (items.anyMatch(currentStop::equals))
+                    var match = items.stream().anyMatch(currentStop::equals);
+                    logger.debug("All stations match: [{}] matches [{}]: {}", currentStop, String.join(",", items), match);
+                    if (items.stream().anyMatch(currentStop::equals))
                     {
                         matches++;
                     }
@@ -103,7 +112,7 @@ public class Phraser
                 }
                 if (matches > 3)
                 {
-                    return new Pair<>("all stations to " + allStationsTo.get(startIndex + matches - 1), matches);
+                    return new Pair<>("all stations to " + allStationsTo.get(startIndex + matches - 1), matches - 1);
                 }
             }
         }
