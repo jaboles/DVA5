@@ -235,7 +235,7 @@ public class Settings {
         }
 
         return new IndicatorSettings(
-                prefs.getBoolean(key + "UseSchedule", false),
+                prefs.getInt(key + "TabIndex", 0),
                 renderers,
                 prefs.getBoolean(key + "PlayAnnouncements", true),
                 prefs.get(key + "AnnouncementTimes", "5,3,1,0"),
@@ -274,7 +274,7 @@ public class Settings {
     }
 
     public static void setIndicator(String key, IndicatorSettings is) {
-        prefs.putBoolean(key + "UseSchedule", is.useSchedule());
+        prefs.putInt(key + "TabIndex", is.getTabIndex());
         prefs.putInt(key + "RenderersCount", is.getRenderers().size());
         for (int i = 0; i < is.getRenderers().size(); i++)
         {
@@ -341,5 +341,13 @@ public class Settings {
 
     public static void setLookAndFeelName(String value) {
         prefs.put("lookAndFeelName", value);
+    }
+
+    public static int getPlasmaTabIndex() {
+        return prefs.getInt("plasmaTabIndex", 0);
+    }
+
+    public static void setPlasmaTabIndex(int index) {
+        prefs.putInt("plasmaTabIndex", index);
     }
 }

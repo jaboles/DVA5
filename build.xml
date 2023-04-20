@@ -165,12 +165,17 @@
         <delete failonerror="false" dir="${ClassesDir}"/>
     </target>
 
-    <target name="Compile" description="Compile java code">
-        <mkdir dir="${ClassesDir}"/>
+    <target name="Compile.Protoc.Check" description="Compile protobuf code">
+        <available file="PlasmaCommon/src/com/google/transit/realtime/GtfsRealtime1007Extension.java" property="GtfsProtocCompiled"/>
+    </target>
+    <target name="Compile.Protoc" depends="Compile.Protoc.Check" unless="GtfsProtocCompiled" description="Compile protobuf code">
         <exec executable="${ToolsDir}/protoc/bin/protoc${ExecutableExtension}" failonerror="true">
             <arg value="--java_out=PlasmaCommon/src" />
             <arg value="PlasmaCommon${file.separator}src${file.separator}jb${file.separator}plasma${file.separator}gtfs${file.separator}gtfs-realtime_1007_extension.proto" />
         </exec>
+    </target>
+    <target name="Compile" depends="Compile.Protoc" description="Compile java code">
+        <mkdir dir="${ClassesDir}"/>
         <javac destdir="${ClassesDir}" classpath="${BuildClasspath}" excludes="jb/common/nativefilechooser/*" debug="on" verbose="off" includeantruntime="no">
             <src path="DVAApp/src"/>
             <src path="DVACommon/src"/>

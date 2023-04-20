@@ -227,7 +227,6 @@ public class PlasmaUI
             // Initially select the first line, and show/hide the
             // window/fullscreen/preview buttons depending
             // on whether running in regular mode or screen saver settings mode
-            tabbedPane.setSelectedIndex(0);
             startButtonsPanel.setVisible(mode == Mode.REGULAR);
             previewButtonPanel.setVisible(mode == Mode.SCREENSAVER);
 
@@ -565,7 +564,7 @@ public class PlasmaUI
             data.add(dp.getData());
         }
 
-        return new IndicatorSettings(tabbedPane.getSelectedIndex() == 1,
+        return new IndicatorSettings(tabbedPane.getSelectedIndex(),
                 renderers,
                 playAnnouncementCheckbox.isSelected(),
                 dva != null ? playAnnouncementTimes.getText() : null,
@@ -589,7 +588,7 @@ public class PlasmaUI
     // Set the indicator settings in the panels from an IndicatorSettings object
     public void setSettings(IndicatorSettings settings)
     {
-        tabbedPane.setSelectedIndex(settings.useSchedule() ? 1 : 0);
+        tabbedPane.setSelectedIndex(settings.getTabIndex());
 
         playAnnouncementCheckbox.setSelected(settings.playAnnouncements());
         playAnnouncementTimes.setText(settings.announcementTimes());

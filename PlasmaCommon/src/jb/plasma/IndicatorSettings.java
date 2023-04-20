@@ -11,7 +11,7 @@ public class IndicatorSettings
     private final String gtfsPlatform;
     private final boolean filterRoute;
     private final String gtfsRoute;
-    private final boolean useSchedule;
+    private final int tabIndex;
     private final boolean playAnnouncements;
     private final String announcementTimes;
     private final String announcementVoice;
@@ -24,7 +24,7 @@ public class IndicatorSettings
     private final boolean recurringEndSelected;
     private final String recurringEnd;
 
-    public IndicatorSettings(boolean useSchedule,
+    public IndicatorSettings(int tabIndex,
                              List<String> renderers,
                              boolean playAnnouncements,
                              String announcementTimes,
@@ -44,7 +44,7 @@ public class IndicatorSettings
                              boolean filterRoute,
                              String gtfsRoute)
     {
-        this.useSchedule = useSchedule;
+        this.tabIndex = tabIndex;
         this.departureData = departureData;
         this.playAnnouncements = playAnnouncements;
         this.announcementTimes = announcementTimes;
@@ -67,7 +67,7 @@ public class IndicatorSettings
 
     public List<DepartureData> getDepartureData() { return departureData; }
 
-    public boolean useSchedule() { return useSchedule; }
+    public int getTabIndex() { return tabIndex; }
 
     public boolean playAnnouncements() { return playAnnouncements; }
 
