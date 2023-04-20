@@ -81,16 +81,16 @@ public class PlasmaUI
     @SuppressWarnings("UnusedDeclaration") private JButton promoteDeparturesButton;
 
     // Recurring section
-    private DeparturePanel recurringDeparturePanel;
-    private JRadioButton recurringIntervalRadioButton;
+    @SuppressWarnings("UnusedDeclaration") private DeparturePanel recurringDeparturePanel;
+    @SuppressWarnings("UnusedDeclaration") private JRadioButton recurringIntervalRadioButton;
     @SuppressWarnings("UnusedDeclaration") private XVBox recurringDeparture;
     @SuppressWarnings("UnusedDeclaration") private JSpinner recurringIntervalValue;
     @SuppressWarnings("UnusedDeclaration") private JCheckBox recurringEndCheckbox;
     @SuppressWarnings("UnusedDeclaration") private JTextField recurringEndValue;
     @SuppressWarnings("UnusedDeclaration") private JButton playStopButton2;
     @SuppressWarnings("UnusedDeclaration") private JButton updateIndicatorsButton2;
-    private JRadioButton recurringTimesRadioButton;
-    private JTextField recurringTimesValue;
+    @SuppressWarnings("UnusedDeclaration") private JRadioButton recurringTimesRadioButton;
+    @SuppressWarnings("UnusedDeclaration") private JTextField recurringTimesValue;
 
     // Timetables section
     @SuppressWarnings("UnusedDeclaration") private JLabel gtfsInfo;
@@ -162,11 +162,9 @@ public class PlasmaUI
                 if (i > 0) rendererComboboxesPanel.add(Box.createVerticalStrut(2));
                 rendererComboboxesPanel.add(hb);
             }
-            if (announcers != null)
-            {
-                playAnnouncementVoiceCombobox.setModel(new DefaultComboBoxModel<>(announcers));
-                playAnnouncementVoiceCombobox.setSelectedIndex(0);
-            }
+
+            playAnnouncementVoiceCombobox.setModel(new DefaultComboBoxModel<>(announcers));
+            playAnnouncementVoiceCombobox.setSelectedIndex(0);
 
             // Add the DeparturePanels, currently 3 for use with Cityrail
             // indicators.
@@ -274,7 +272,7 @@ public class PlasmaUI
         } else if (tabbedPane.getSelectedIndex() == 1) {
             try {
                 LocalDateTime start = recurringDeparturePanel.getData().DueOut;
-                LocalDateTime end = null;
+                LocalDateTime end;
                 if (recurringEndCheckbox.isSelected()) {
                     String[] values = recurringEndValue.getText().split(":");
                     int h = Integer.parseInt(values[0]);
@@ -450,7 +448,7 @@ public class PlasmaUI
                     } else {
                         width = (int)(height * aspectRatio.getWidth() / aspectRatio.getHeight());
                     }
-                    w = new PlasmaWindow(this, PlasmaWindow.Mode.FULLSCREEN_PREVIEW, null, "Preview - " + d.toString(), new Dimension(width, height), aspectRatio,
+                    w = new PlasmaWindow(this, PlasmaWindow.Mode.FULLSCREEN_PREVIEW, null, "Preview - " + d, new Dimension(width, height), aspectRatio,
                             new ProportionalPanel(aspectRatio, p, Color.black));
                     w.paint(w.getGraphics());
                     w.setVisible(true);
@@ -617,7 +615,7 @@ public class PlasmaUI
         var recurringDepartureData = settings.getRecurringDepartureData();
         // Next departure set to multiple of interval minutes
         LocalDateTime now = LocalDateTime.now();
-        recurringDepartureData.DueOut = now.withMinute(0).plusMinutes((int)((now.getMinute() / settings.getRecurringInterval() + 1) * settings.getRecurringInterval()));
+        recurringDepartureData.DueOut = now.withMinute(0).plusMinutes((((long)now.getMinute() / settings.getRecurringInterval() + 1) * settings.getRecurringInterval()));
         recurringDeparturePanel.setData(recurringDepartureData);
         recurringIntervalRadioButton.setSelected(settings.getRecurringIntervalSelected());
         recurringIntervalValue.setValue(settings.getRecurringInterval());
@@ -714,7 +712,7 @@ public class PlasmaUI
         }
     };
 
-    public Action updateIndicatorsAction = new AbstractAction("Refresh Indicators", new ThemedFlatSVGIcon("refresh")) {
+    @SuppressWarnings("UnusedDeclaration") public Action updateIndicatorsAction = new AbstractAction("Refresh Indicators", new ThemedFlatSVGIcon("refresh")) {
         public void actionPerformed(ActionEvent e)
         {
             departureData = getDepartureData();

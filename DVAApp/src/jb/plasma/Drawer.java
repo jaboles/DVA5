@@ -256,10 +256,8 @@ public abstract class Drawer implements Cloneable
 
         switch (aspectRatio) {
             case LANDSCAPE_43: return new Dimension(4, 3);
-            case LANDSCAPE_WS: return new Dimension(16, 10);
+            case LANDSCAPE_WS: default: return new Dimension(16, 10);
             case PORTRAIT_WS: return new Dimension(10, 16);
         }
-
-        return null;
     }
 }
