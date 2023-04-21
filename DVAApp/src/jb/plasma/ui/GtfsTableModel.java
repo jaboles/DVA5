@@ -39,7 +39,7 @@ public class GtfsTableModel extends AbstractTableModel {
             case 0: return dd.tripInstance.At.format(TimeFormat);
             case 1: return dd.tripInstance.Trip.Id.split("\\.")[0].replace("-","");
             case 2: return dd.tripInstance.Trip.SetType;
-            case 3: return dd.tripInstance.Trip.Headsign.equals("Empty Train") ? dd.tripInstance.Trip.Headsign : dd.tripInstance.Trip.Headsign;
+            case 3: return dd.Destination;
             case 4: return dd.tripInstance.Trip.Route;
             case 5: return dd.Platform;
             case 6: return dd.Type;
