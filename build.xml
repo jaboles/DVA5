@@ -19,11 +19,11 @@
     </path>
     <property name="BuildClasspath" value="${toString:jars}" />
     <property name="JlinkModules" value="java.desktop,java.naming,jdk.unsupported,java.management"/>
-    <condition property="Jlink" value="${env.JAVA_HOME_17_X64}/bin/jlink" else="jlink">
-        <available file="${JAVA_HOME_17_X64}/bin/jlink"/>
-    </condition>
     <condition property="ExecutableExtension" value=".exe" else="">
         <os family="windows"/>
+    </condition>
+    <condition property="Jlink" value="${env.JAVA_HOME_17_X64}/bin/jlink${ExecutableExtension}" else="jlink${ExecutableExtension}">
+        <available file="${JAVA_HOME_17_X64}/bin/jlink${ExecutableExtension}"/>
     </condition>
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
