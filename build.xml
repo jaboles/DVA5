@@ -85,8 +85,8 @@
         <antcall target="JlinkOptimizeJre">
             <param name="folder" value="mac-arm64/Contents/Home"/>
         </antcall>
-        <delete includeemptydirs="true">
-            <fileset dir="${ToolsDir}\jre" includes="**/Contents/Home/legal/"/>
+        <delete includeemptydirs="true" removeNotFollowedSymlinks="true">
+            <fileset dir="${ToolsDir}\jre" includes="**/Contents/Home/legal/" followsymlinks="false"/>
             <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
         </delete>
         <!-- Protocol Buffers compiler -->
@@ -168,8 +168,8 @@
         <antcall target="JlinkOptimizeJre">
             <param name="folder" value="linux-arm64"/>
         </antcall>
-        <delete includeemptydirs="true">
-            <fileset dir="${ToolsDir}\jre" includes="**/legal/"/>
+        <delete includeemptydirs="true" removeNotFollowedSymlinks="true">
+            <fileset dir="${ToolsDir}\jre" includes="**/legal/" followsymlinks="false"/>
             <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
         </delete>
         <!-- Protocol Buffers compiler -->
