@@ -99,14 +99,14 @@
         <get src="https://sourceforge.net/projects/winrun4j/files/winrun4j/0.4.5/winrun4J-0.4.5.zip/download" dest="${ToolsDir}/winrun4j.zip" usetimestamp="true"/>
         <unzip src="${ToolsDir}/winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
         <!-- JRE: Win -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jdk\win64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x64_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jdk\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x86-32_windows_*.zip"/>
