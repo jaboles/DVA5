@@ -62,22 +62,27 @@
     </target>
     <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
         <!-- JRE: Mac -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\mac-x86_64" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\mac-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_mac_*.tar.gz"/>
+                <include name="OpenJDK*-jdk_x64_mac_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_aarch64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\mac-arm64" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_aarch64_mac_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\mac-arm64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_aarch64_mac_*.tar.gz"/>
+                <include name="OpenJDK*-jdk_aarch64_mac_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <antcall target="JlinkOptimizeJre">
+            <param name="folder" value="mac-x86_64/Contents/Home"/>
+        </antcall>
+        <antcall target="JlinkOptimizeJre">
+            <param name="folder" value="mac-arm64/Contents/Home"/>
+        </antcall>
         <delete includeemptydirs="true">
-            <fileset dir="${ToolsDir}\jre" includes="**/Contents/Home/man/"/>
             <fileset dir="${ToolsDir}\jre" includes="**/Contents/Home/legal/"/>
             <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
         </delete>
@@ -95,34 +100,38 @@
         <unzip src="${ToolsDir}/winrun4j.zip" dest="${ToolsDir}" overwrite="false"/>
         <!-- JRE: Win -->
         <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
-        <unzip dest="${ToolsDir}\jre\win64" overwrite="false">
+        <unzip dest="${ToolsDir}\jdk\win64" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_windows_*.zip"/>
+                <include name="OpenJDK*-jdk_x64_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
         <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
-        <unzip dest="${ToolsDir}\jre\win32" overwrite="false">
+        <unzip dest="${ToolsDir}\jdk\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x86-32_windows_*.zip"/>
+                <include name="OpenJDK*-jdk_x86-32_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
         <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.6-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
-        <unzip dest="${ToolsDir}\jre\winarm64" overwrite="false">
+        <unzip dest="${ToolsDir}\jdk\winarm64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="microsoft-jdk-*-aarch64.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
+        <antcall target="JlinkOptimizeJre">
+            <param name="folder" value="win64"/>
+        </antcall>
+        <antcall target="JlinkOptimizeJre">
+            <param name="folder" value="win32"/>
+        </antcall>
+        <antcall target="JlinkOptimizeJre">
+            <param name="folder" value="winarm64"/>
+        </antcall>
         <delete includeemptydirs="true">
-            <fileset dir="${ToolsDir}\jre" includes="**/include/"/>
-            <fileset dir="${ToolsDir}\jre" includes="**/jmods/"/>
             <fileset dir="${ToolsDir}\jre" includes="**/legal/"/>
             <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
-            <fileset dir="${ToolsDir}\jre" includes="**/src.zip"/>
-            <fileset dir="${ToolsDir}\jre" includes="**/*.lib"/>
-            <fileset dir="${ToolsDir}\jre" includes="**/ct.sym"/>
         </delete>
         <!-- download Inno Setup -->
         <get src="https://files.jrsoftware.org/is/6/innosetup-${InnoSetupVersion}.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
@@ -136,20 +145,26 @@
     </target>
     <target name="FetchDeps.Linux" if="isLinux" depends="FetchDeps.Common">
         <!-- JRE: Linux -->
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_x64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\linux-x86_64" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\linux-x86_64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_x64_linux_*.tar.gz"/>
+                <include name="OpenJDK*-jdk_x64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jre_aarch64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
-        <untar dest="${ToolsDir}\jre\linux-arm64" compression="gzip" overwrite="false">
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_aarch64_linux_hotspot_${JavaVersionUnderscore}.tar.gz" dest="${ToolsDir}" usetimestamp="true"/>
+        <untar dest="${ToolsDir}\jdk\linux-arm64" compression="gzip" overwrite="false">
             <fileset dir="${ToolsDir}">
-                <include name="OpenJDK*-jre_aarch64_linux_*.tar.gz"/>
+                <include name="OpenJDK*-jdk_aarch64_linux_*.tar.gz"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </untar>
+        <antcall target="JlinkOptimizeJre">
+            <param name="folder" value="linux-x86_64"/>
+        </antcall>
+        <antcall target="JlinkOptimizeJre">
+            <param name="folder" value="linux-arm64"/>
+        </antcall>
         <delete includeemptydirs="true">
             <fileset dir="${ToolsDir}\jre" includes="**/legal/"/>
             <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
@@ -227,18 +242,18 @@ build.number: ${env.BUILD_BUILDID}</echo>
     </target>
 
     <target name="JlinkOptimizeJre">
-        <echo>Calling jlink (${jdkfolder}/${jlinkrelative}) to optimize JRE into ${output}</echo>
-        <delete dir="${ToolsDir}/jre/${jdkfolder}"/>
-        <chmod perm="u+x" file="${ToolsDir}/jdk/${jdkfolder}/${jlinkrelative}"/>
-        <exec executable="${ToolsDir}/jdk/${jdkfolder}/${jlinkrelative}">
+        <echo>Calling jlink to optimize JRE into ${ToolsDir}/jre/${folder}</echo>
+        <delete dir="${ToolsDir}/jre/${folder}"/>
+        <!--<chmod perm="u+x" file="${ToolsDir}/jdk/${jdkfolder}/${jlinkrelative}"/>-->
+        <exec executable="jlink">
             <arg value="--module-path"/>
-            <arg value="${ToolsDir}/jdk/${jdkfolder}/jmods"/>
+            <arg value="${ToolsDir}/jdk/${folder}/jmods"/>
             <arg value="--add-modules"/>
             <arg value="${JlinkModules}"/>
             <arg value="--no-header-files"/>
             <arg value="--no-man-pages"/>
             <arg value="--output"/>
-            <arg value="${output}"/>
+            <arg value="${ToolsDir}/jre/${folder}"/>
         </exec>
     </target>
 
