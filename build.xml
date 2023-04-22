@@ -247,6 +247,7 @@ build.number: ${env.BUILD_BUILDID}</echo>
     <target name="JlinkOptimizeJre">
         <echo>Calling ${Jlink} to optimize JRE into ${ToolsDir}/jre/${folder}</echo>
         <delete dir="${ToolsDir}/jre/${folder}"/>
+        <echo>${env.JAVA_HOME_17_X64}/bin/jlink${ExecutableExtension}</echo>
         <!--<chmod perm="u+x" file="${ToolsDir}/jdk/${jdkfolder}/${jlinkrelative}"/>-->
         <exec executable="${Jlink}">
             <arg value="--module-path"/>
