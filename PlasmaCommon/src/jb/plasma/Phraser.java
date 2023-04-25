@@ -89,10 +89,9 @@ public class Phraser
         {
             List<String> allStationsToLower = allStationsTo.stream().map(String::toLowerCase).collect(Collectors.toList());
             int startIndex = allStationsToLower.indexOf(stopsLower[currentIndex]);
-            int lastStationInSequence = currentIndex > 0 ? allStationsToLower.indexOf(stopsLower[currentIndex - 1]) : -1;
-            logger.debug("All stations match check: {}", stopsLower[currentIndex]);
+            logger.debug("All stations match check: {}, currentIndex={}, startIndex={}", stopsLower[currentIndex], currentIndex, startIndex);
 
-            if (startIndex >= 0 && lastStationInSequence >= 0)
+            if (startIndex >= 0)
             {
                 int matches = 0;
                 for (int i = 0; (startIndex + i) < allStationsTo.size() && (currentIndex + i) < stops.length; i++)
