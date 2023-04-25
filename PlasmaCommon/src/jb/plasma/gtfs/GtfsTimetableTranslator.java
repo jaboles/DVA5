@@ -73,7 +73,7 @@ public class GtfsTimetableTranslator
                 .toArray(String[]::new);
     }
 
-    public Stream<DepartureData> getDepartureDataForStation(
+    public Stream<GtfsDepartureData> getDepartureDataForStation(
             Stop station,
             Stop platform,
             String routeName,

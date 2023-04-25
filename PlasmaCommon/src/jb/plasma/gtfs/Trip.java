@@ -14,8 +14,10 @@ public class Trip implements Serializable
         VehicleCategory = vehicleCategory;
         Headsign = headsign;
         BlockId = blockId;
-        Cars = Integer.parseInt(Id.split("\\.")[5]);
-        Name = Id.split("\\.")[0];
+        String[] idParts = Id.split("\\.");
+        Cars = Integer.parseInt(idParts[5]);
+        SetType = idParts[5] + idParts[4];
+        Name = idParts[0];
     }
 
     public final String Id;
@@ -24,6 +26,7 @@ public class Trip implements Serializable
     public final String Headsign;
     public final String BlockId;
     public final int Cars;
+    public final String SetType;
     public final String Name;
     public final VehicleCategory VehicleCategory;
 }

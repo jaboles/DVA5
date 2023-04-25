@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableColumnModel;
 
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
@@ -101,6 +102,7 @@ public class PlasmaUI
     @SuppressWarnings("UnusedDeclaration") private JBComboBox<Stop> gtfsPlatform;
     @SuppressWarnings("UnusedDeclaration") private JCheckBox filterRoute;
     @SuppressWarnings("UnusedDeclaration") private JBComboBox<String> gtfsRoute;
+    @SuppressWarnings("UnusedDeclaration") private JTable gtfsTable;
 
     public PlasmaUI(int mode, DVAManager dvaManager, File temp) {
         this.dva = dvaManager;
@@ -237,6 +239,8 @@ public class PlasmaUI
                 }
                 recurringDeparturePanel.setScriptVoice((playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary());
             });
+
+            gtfsTable.setModel(new GtfsTableModel(new ArrayList<GtfsDepartureData>()));
         } catch (Exception e) {
             ExceptionReporter.reportException(e);
         }
@@ -321,13 +325,13 @@ public class PlasmaUI
             }
             return dd;
         } else {
-            return getTimetableDepartureData();
+            return new ArrayList<>(getTimetableDepartureData());
         }
     }
 
-    private List<DepartureData> getTimetableDepartureData()
+    private List<GtfsDepartureData> getTimetableDepartureData()
     {
-        List<DepartureData> result = null;
+        List<GtfsDepartureData> result = null;
         ProgressWindow pw = new ProgressWindow("Progress", "Scanning timetable data");
         try {
             pw.setProgressBarMaximum(100);
@@ -757,7 +761,7 @@ public class PlasmaUI
         public void actionPerformed(ActionEvent e)
         {
             try {
-                departureData = getTimetableDepartureData();
+                departureData = new ArrayList<>(getTimetableDepartureData());
                 for (int i = 0; i < departurePanels.length; i++) {
                     if (departureData != null && departureData.size() > i) {
                         departurePanels[i].setData(departureData.get(i));
@@ -766,6 +770,21 @@ public class PlasmaUI
                 tabbedPane.setSelectedIndex(0);
             } catch (Exception ex) {
                 ExceptionReporter.reportException(ex);
+            }
+        }
+    };
+
+    private static final int[] GtfsColumnWidths = {110, 60, 50, 100, 200, 50, 100, 530, 100};
+    @SuppressWarnings("UnusedDeclaration") public Action previewGtfsAction = new AbstractAction("Examine GTFS Data", new ThemedFlatSVGIcon("find")) {
+        public void actionPerformed(ActionEvent e)
+        {
+            List<GtfsDepartureData> dd = getTimetableDepartureData();
+            gtfsTable.setModel(new GtfsTableModel(dd));
+            GtfsTableCellRenderer renderer = new GtfsTableCellRenderer(dd);
+            TableColumnModel tcm = gtfsTable.getColumnModel();
+            for (int i = 0; i < tcm.getColumnCount(); i++) {
+                tcm.getColumn(i).setPreferredWidth(GtfsColumnWidths[i]);
+                tcm.getColumn(i).setCellRenderer(renderer);
             }
         }
     };

@@ -11,7 +11,7 @@ import java.util.List;
 public class GtfsDepartureData extends DepartureData
 {
     private static final Logger Logger = LogManager.getLogger(GtfsDepartureData.class);
-    private final TripInstance tripInstance;
+    public final TripInstance tripInstance;
 
     public GtfsDepartureData(TripInstance ti, Phraser phraser)
     {
