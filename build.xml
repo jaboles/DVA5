@@ -35,6 +35,12 @@
         <isset property="fast"/>
     </condition>
 
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${ToolsDir}/ant-contrib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
     <!-- Mac signing identity in Keychain -->
     <property name="SignIdentity" value="Developer ID Application: Jonathan Boles (W2WXX3D2U6)"/>
 
@@ -62,6 +68,9 @@
     <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Windows"/>
     <target name="FetchDeps.Common">
         <mkdir dir="${ToolsDir}"/>
+        <!-- Ant-Contrib -->
+        <get src="https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.tar.gz/download" dest="${ToolsDir}/ant-contrib.tar.gz" usetimestamp="true"/>
+        <untar src="${ToolsDir}/ant-contrib.tar.gz" dest="${ToolsDir}" compression="gzip" overwrite="false" />
     </target>
     <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
         <!-- JRE: Mac -->

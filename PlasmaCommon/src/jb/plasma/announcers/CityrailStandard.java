@@ -90,12 +90,16 @@ public class CityrailStandard extends Announcer
                     // "... (B) then all stations to C ..."
                     // Before last station, "... X, Y, then Z."
 
-                    if (!isMale && addedAllStationsTo && ast != null && (i + 1) == stops.length)
-                        // If last "all stations to" add "and" before "then".
-                        // "all stations to B) and (then all stations to C)."
-                        s.append(" and");
-
-                    if (addedThen && !addedAllStationsTo && (i + 1) == stops.length)
+                    boolean lastStation = (i + 1) == stops.length;
+                    if (ast != null && lastStation) {
+                        if (isMale)
+                            s.append(" then");
+                        else
+                            // If last "all stations to" add "and" before "then".
+                            // "all stations to B and then all stations to C."
+                            s.append(" and then");
+                    }
+                    else if (addedThen && lastStation)
                         s.append(" and");
                     else
                         s.append(" then");

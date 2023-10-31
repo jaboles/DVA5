@@ -165,6 +165,10 @@ public class WAzureUpdater extends BaseUpdater
             deleteContainer(soundjarsContainer);
             metadataContainer.getBlockBlobReference(SoundJarsList).deleteIfExists();
         }
+        else
+        {
+            System.err.println("Unknown command '" + cmd + "'");
+        }
     }
 
     private static void uploadArtifact(File f, CloudBlobContainer c) throws StorageException, IOException, URISyntaxException
