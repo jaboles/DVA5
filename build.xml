@@ -339,7 +339,7 @@ build.number: ${env.BUILD_BUILDID}</echo>
                 <equals arg1="${hostname}" arg2="jb.local"/>
                 <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
                 <equals arg1="${hostname}" arg2="MacBook-Air.local"/>
-                <equals arg1="${env.SYSTEM_COLLECTIONURI}" arg2="https://jonathanboles.visualstudio.com/"/>
+                <equals arg1="${env.BUILD_DEFINITIONNAME}" arg2="Release Build"/>
             </or>
         </condition>
     </target>
