@@ -23,7 +23,7 @@ Pick the appropriate download file for your system:
 - .exe : Windows
 - .dmg : Mac
 - .deb : Linux
-- amd64 : Intel/AMD processors - Windows PCs, Intel Macs, etc.
+- x86_64 : Intel/AMD processors - Windows PCs, Intel Macs, etc.
 - aarch64 : ARM64 processors - Apple Silicon (M1/M2/M3), Raspberry Pi's, etc. 
 
 [![Build status](https://jonathanboles.visualstudio.com/DVA/_apis/build/status/Build)](https://jonathanboles.visualstudio.com/DVA/_build/latest?definitionId=2)
