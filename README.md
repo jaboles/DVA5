@@ -16,7 +16,15 @@ Set up a departure screen showing your regular commute, create wacky announcemen
 
 ### Download
 
-https://www.railpage.com.au/f-t11377028-0-asc-s0.htm
+Head to the [Releases](https://github.com/jaboles/DVA5/releases) page to download the latest version.
+
+Pick the appropriate download file for your system:
+
+- .exe : Windows
+- .dmg : Mac
+- .deb : Linux
+- amd64 : Intel/AMD processors - Windows PCs, Intel Macs, etc.
+- aarch64 : ARM64 processors - Apple Silicon (M1/M2/M3), Raspberry Pi's, etc. 
 
 [![Build status](https://jonathanboles.visualstudio.com/DVA/_apis/build/status/Build)](https://jonathanboles.visualstudio.com/DVA/_build/latest?definitionId=2)
 
