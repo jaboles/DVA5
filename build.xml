@@ -539,7 +539,7 @@ Log=    console
         <condition property="WillSignWin">
             <or>
                 <available file="/Users/jb/Software/JonathanBoles.p12"/>
-                <equals arg1="${env.SYSTEM_COLLECTIONURI}" arg2="https://jonathanboles.visualstudio.com/"/>
+                <available file="${env.AGENT_TEMPDIRECTORY}/JonathanBoles.p12"/>
             </or>
         </condition>
         <available file="/Users/jb/Software/JonathanBoles.p12" property="SignCert" value="/Users/jb/Software/JonathanBoles.p12"/>
