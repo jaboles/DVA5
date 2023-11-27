@@ -372,7 +372,7 @@ Log=    console
 -addoverwrite ${stringtable}, STRINGTABLE,1,0
 </echo>
         <exec executable="${ResHackerDir}\ResourceHacker.exe" failonerror="true">
-            <arg line="-script temp.rh -log console"/>
+            <arg line="-script temp.rh"/>
         </exec>
         <delete file="temp.rh"/>
     </target>
