@@ -39,7 +39,7 @@ public class PlasmaRendererListCellRenderer implements ListCellRenderer<Drawer> 
             Color background = defaultRenderer.getListCellRendererComponent(list, value,
                     index, isSelected, cellHasFocus).getBackground();
 
-            Drawer d = value;
+            Drawer d = (Drawer)value.clone();
             d.dataChanged(SampleData);
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
