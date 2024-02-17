@@ -36,7 +36,7 @@ import org.apache.logging.log4j.Logger;
 public class DVA {
     private static final Logger logger = LogManager.getLogger(DVA.class);
     public static String VersionString;
-    public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2023";
+    public static final String CopyrightMessage = "Copyright © Jonathan Boles 1999-2024";
 
     private DVAShell mainWindow;
     private final SoundLibraryManager soundLibraryManager;
