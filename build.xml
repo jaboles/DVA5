@@ -125,7 +125,7 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.6-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
+        <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.10-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
         <unzip dest="${ToolsDir}\jdk\winarm64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="microsoft-jdk-*-aarch64.zip"/>
