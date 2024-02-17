@@ -40,11 +40,14 @@ public class PlasmaPanel extends JPanel
     private Image buf = null;
     private Graphics bg = null;
 
-    public PlasmaPanel(Drawer drawer) {
+    public PlasmaPanel(Drawer drawer, boolean repaint) {
         this.drawer = drawer;
         setDoubleBuffered(true);
-        ActionListener repaintAction = evt -> PlasmaPanel.this.repaint();
-        new Timer(1000 / FPS, repaintAction).start();
+        if (repaint)
+        {
+            ActionListener repaintAction = evt -> PlasmaPanel.this.repaint();
+            new Timer(1000 / FPS, repaintAction).start();
+        }
         /*
         if (mouseDebug)
         {

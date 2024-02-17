@@ -13,6 +13,20 @@ import java.util.List;
 
 public class PlasmaRendererListCellRenderer implements ListCellRenderer<Drawer> {
     private static final DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
+    private static final List<DepartureData> SampleData = new ArrayList<>();
+
+    static
+    {
+        SampleData.add(new ManualDepartureData("Destination", "via Location", CityrailLine.T8.Name, "Limited Stops",
+                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(3),
+                null, null, null, null));
+        SampleData.add(new ManualDepartureData("Next Destination", "via Location", CityrailLine.T2.Name, "Limited Stops",
+                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(7),
+                null, null, null, null));
+        SampleData.add(new ManualDepartureData("Next Destination", "via Location", CityrailLine.T9.Name, "Limited Stops",
+                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(10),
+                null, null, null, null));
+    }
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Drawer> list, Drawer value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -21,26 +35,15 @@ public class PlasmaRendererListCellRenderer implements ListCellRenderer<Drawer> 
                     index, isSelected, cellHasFocus);
         }
 
-        List<DepartureData> sampleData = new ArrayList<>();
-        sampleData.add(new ManualDepartureData("Destination", "via Location", CityrailLine.T8.Name, "Limited Stops",
-            8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(3),
-            null, null, null, null));
-        sampleData.add(new ManualDepartureData("Next Destination", "via Location", CityrailLine.T2.Name, "Limited Stops",
-                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(7),
-                null, null, null, null));
-        sampleData.add(new ManualDepartureData("Next Destination", "via Location", CityrailLine.T9.Name, "Limited Stops",
-                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(10),
-                null, null, null, null));
-
         try {
             Color background = defaultRenderer.getListCellRendererComponent(list, value,
                     index, isSelected, cellHasFocus).getBackground();
 
-            Drawer d = (Drawer)value.clone();
-            d.dataChanged(sampleData);
+            Drawer d = value;
+            d.dataChanged(SampleData);
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
-            JPanel preview = new ProportionalPanel(Drawer.convertAspectRatio(d.getAspectRatio(), null), new PlasmaPanel(d), null);
+            JPanel preview = new ProportionalPanel(Drawer.convertAspectRatio(d.getAspectRatio(), null), new PlasmaPanel(d, false), null);
             preview.setPreferredSize(new Dimension(120, 75));
             panel.setBackground(background);
             panel.add(preview, BorderLayout.WEST);

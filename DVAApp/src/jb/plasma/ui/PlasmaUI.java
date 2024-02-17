@@ -421,7 +421,7 @@ public class PlasmaUI
                 d = (Drawer) (rendererComboBox.getItemAt(rendererComboBox.getSelectedIndex())).clone();
                 drawers.add(d);
                 d.dataChanged(departureData);
-                PlasmaPanel p = new PlasmaPanel(d);
+                PlasmaPanel p = new PlasmaPanel(d, true);
 
                 ArrayList<GraphicsDevice> graphicsDevices = new ArrayList<>();
                 graphicsDevices.add(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
@@ -444,7 +444,7 @@ public class PlasmaUI
                     d = (Drawer) (rendererComboBox.getItemAt(rendererComboBox.getSelectedIndex())).clone();
                     drawers.add(d);
                     d.dataChanged(departureData);
-                    p = new PlasmaPanel(d);
+                    p = new PlasmaPanel(d, true);
                     int width = 300;
                     int height = 200;
                     if (aspectRatio.getWidth() > aspectRatio.getHeight()) {
