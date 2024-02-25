@@ -71,7 +71,8 @@ public class DVA {
 
         final LoadWindow lw = new LoadWindow();
         if (showLoadingProgress) {
-            lw.show(false, showMainWindow, true);
+            boolean fade = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT);
+            lw.show(false, showMainWindow, fade);
         }
 
         logger.info("Loading sound libraries");
