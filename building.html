@@ -49,68 +49,12 @@
 <h1>DVA 5 Build Instructions</h1>
 <p><a href="#mac">
     <img class="icon icons8-Mac-OS" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABHtJREFUaAXtV11oHFUUPvfO7O7MbpNiarci+mCxUqwGoREfbLVpLOLvg2gxKRRBpfgT7UOKKIgFn0TQFoI20CqYlIoPCiqoxaZB3yql1Y2UNLYVf6DNT9kkOzs7OzP3em6VMtlsZu6dcVcf9sJm7tzz933nzj33BKA1WhloZaCVgf8yA6TZwTcO8VR7zroHCDxKgNw3uiO3IQkGPYmxqm3PsL2ZU+sQAFn3j62t6qNWn9YuNOp964j1LKdsLAAeNwEmksZryg50D1sPIdohBLvok2UcPk9KoOE7cPeh6TZC4GAteHy3KOXvJSXQ8B3IGOYuBHldLVAO5PXRvtyl2nXV94bvAH41TywFRYaP95n7lq6rrzSBANwagOUC4a+OTppPASE8sB572vBPCJHN4sn9BtEeY5R+NdZr/hobbR3DRVWhjnzZpU2Hi9ekWGozoXwLfib3ouJafJ7C5wlO4AefwInverO/Bx3c/8lch+dpGxmDLkJIF8rED5NIxnBnjusePXZ0p3khaBM1j0Wg53BpBx5CURZzoQE4/InAvgdOpoFCN3C4LVT/b+FBmnIGvt3eMSehu7guRxrs5bR7nfUutgAvReomUuCToOkPjD5pnItyo3SIt95c3td48AIythq+90EUeCGXJtAzYj2M+9Uv4zSxDoHPMtx5RMaPdBViBN6IdWBkUAR0GPCPx3pzfUByUmVWisCWI1YXwcoRiNOQadnxZvm8tlvljpAioHF4TCodsWlxuDxXAcfjhTO7Vyu1F1IEOPBNeLBiwwszLNkuzBZtcD0GK1doyu2FFAFgWBX+JfwMe+hK1YeK44FVccHBuRhY3aAws+aLMLL1ZHIECLQHjT3Mlgjuugw8n4OHV6tY8xGcGNg+A8U/4nnlh+A4ijyfAROTOoNQ7I324klTHHIEAGzOedayPZgrOWBj9sKGwIjVJExliYwxRjo/Wsj/tLNtaokwZEHqHiiVq6XfLi7AxVkrEnxIrEgRm3eejlSqUZAigFlPi0PW6OG63nOqMaQI6Bo9q+o4jn7F8W/sHJx+RsVWioBG+JcqTuPqilODZfX924dm1sv6kCLgU3KAiirRhIFVTS/Pu4XOwRmpjle6uq/fPzVRtt1bmsDhagjTSP0xUVx9E5bXZcue1A4Ijzqlb1713KQJlm4SBl7AkCYw3n/tiJHWLjcJ+5WL30xD5GckTUAAzxh0oFkETEOf+PGFNZ9GxVMiUHg+/2HWSP0S5TSpXKOUGYRI/UOjREAAMwg8SDX1nkWFVM5Mv3P65fykjI0yAeG4zdRfky5fMigCOllDHx/vX7UnsBQ6VSYgvBVezL+1IqsfCfUcQ5jJaNOVlfk7VUwTJXLD/qmjC7a7rV5AcfGlNFrG5yWqQdH34AZspzt8n+n1bsRMSlto59m1JwfaZ+r5W24tEQHhtPPA1OOuA/1Vz7+LM9DSae081ejXJL9qz8/bSbU28B2DxW1V33nF9XgX3rptqH8hpfHhTNp/++Su68u1+q33VgZaGWhl4P+dgb8Av5luFjqm0oQAAAAASUVORK5CYII=" width="24" height="24">Mac OS</a> | <a href="#windows"><img class="icon icons8-Windows-Logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABXtJREFUaAXtWFtonEUUPuf/sxvbTVrBW9sEbKtYjaT0DsZ6axO1BUHEbAxW8M03QaoPaksXJYigKChK9UERVJI8iEaTJi1otqK15tbGFArVBmpKS9q0sc1195/jN3tzQ/87fXOHzM78c+5nzpw5E6JSK3mg5IGSB0oe+D97gMMaLw9TGS2/cw1Zai0xrQUf3WvRYyQ0RMyDxDJA05EO/u7klbByvOhCGSDxVXEw/ghK3uQlgEQuAu9NUos+5vaReU/8gAhGQPwsOvOrvpTX2Fkj3yee+TKULA+iwAbIrtuXg+c6D77Xgg0a0Yuvd2yrSiQosNxrGWZXgjOaN3c4MXNfV10ajpjdl964vf+1b7c3uOPnoEK8p2Pbo064ZU4Al/UwBlygu0d/z/EEvVQbBvVAsaNYOwwdBw1RQ6YlY1aZeQ+xqhVBUhCupe+plpmTwOux0ymQAZnMw+TPcwuldXOC1N4f6mtFqeoi0BbMtzDSljBTukznFMFfLrcUUozqLKJZMA0WQreuqgP10gUc/HwwZRRQSsLsHqm0lQk/O1HBDGAOo4CiubluLZxJhaEfaXkyecZOeb0WzACinU6MnNf5KH8zdjHRuWMJTLjfGc8Jwo7hoyl8GyCNd1UBX9+2wVoufNJqth6EkWDEUJDJMXw0L98GkJl63EH4NNYtB5iGZDwoEir8rpwbu/yzI28A/BsgrMNnAkniIPrbSBVxMtN3cOtfMZQJi0kZdah9XkHpcAB4SCWZdp7a/xzQMyQUJwdkMW1+QXPokxf6UzagwlKANCr7qfX002CaV67AJFfj/IoF3d+RptWbMb4Hg05pfJv0WaD1mLjGv6b1bQC3nu6hz+QGWjS1xmSqQeauQequQc5eAiWHcfEMWQYNUrxiGLuiL62t0rhymRai0ydwAjfTVHo3XZsvAyJtV9cpoZeJphrBLao5sg6K3F5gqNefJibSenWAhfdYz8S6uH30XBZX1usxYBtO7Pzpby8aX2cAyu8Ho2fRM8q7MYUdGxA6nWbr1Id5vEmz/HlUpXAAXcqveYyXhVSLB04G7L0DX/1zMzA3+WFWjINLa1J/S7LiFn6waxzTd3EXfGql555SBm9mEc1Tp2UcUjmGemjIYBm0hIeiM+f/SMT9vR08DTAN4zEI8bVTwCtqkjuAqRbpLa8hQ+3mB7p+A8LnuU6JBBmJfQhEXQwVNWmjaKLo223qaQCYh7n+L6W58khGsGToq5Fmj8CQgwivH0lxH0Xn+rmOJuSh2DLqTeudwHNUMDK64O0wv8tN8TzM3YCEwPNTegeCtm6KsyXJKEpiKq4+G5C1GvSBp1Q5SS/NEaXL/2OuAboZH2RH71/X0IjUzOg41WcgWMuVD1Deq3YqUr5IhGl4ps88tqsBllhhwkdZlLmNISNze+dl+RuFjvHW6bP+kD0OJ15CYQzoo3jlOCL9Rihxn19FCnjMrsVbAS83cd4BnT6FdEkQqOGGzmYfjjaA0P2M2XO+PgaYZYZ+SDsbaC8ct7GRr1+84t+OwySp2V/sAE5rzh7Kpj+dn88ga4yw0Akk7BO4oE6hNF6JOmg9gBsA34geywkYTzUt7pMmUCRDhd8hfoTSOV6+BkcDoNywUuZqal40asMpibUvMuttE0sNiexGAnwJKfIASgahwxFt1G02dB5LweJfM8snXg/GPsBfT63Ac2tFqjnWh/y/F8a84YNqIYppVgXJQJrYcQcWcvbx1Rw7i6Imm/7EuBe3qQ+iIpSA6TNPGfiQ5gldx9jsc9D/ReBccMUrAGUCJcZbhc8Ak+sXQjZCcRdUEEefwLnQhx1vAsH/VHkG8+MYh/HUOU4K88r5k7xJV6WlVvJAyQMlD5Q8UPJAMA/8C4eYo1vnFbl4AAAAAElFTkSuQmCC" width="24" height="24">Windows</a></p>
-<p>The following instructions have been tested on fresh installs of the following operating systems:</p>
+<p>The project is known to build on the following environments listed here: <a href="https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=yaml">Microsoft-hosted agents</a></p>
 <ul>
-    <li>Mac OS 10.10 ("Yosemite")</li>
-    <li>Mac OS 10.11 ("El Capitan")</li>
-    <li>Mac OS 10.12 ("Sierra")</li>
-    <li>Windows 7 Service Pack 1 (Windows NT 6.1)</li>
-    <li>Windows 8 (Windows NT 6.2)</li>
-    <li>Windows 8.1 (Windows NT 6.3)</li>
-    <li>Windows Server 2012 R2 (Windows NT 6.3)</li>
-    <li>Windows 10 (Windows NT 10.0)</li>
+    <li>windows-latest (Windows Server 2022)</li>
+    <li>macos-latest (macOS 12 Monterey)</li>
+    <li>ubuntu-latest (Ubuntu 22.04)</li>
 </ul>
-
-<hr>
-
-<table>
-    <tr>
-        <td rowspan="2" colspan="2"></td>
-        <td colspan="3" align="center">Building on...</td>
-    </tr>
-    <tr>
-        <td>Mac (Intel x64)</td>
-        <td>Mac (M1)</td>
-        <td>Windows (Intel x64)</td>
-    </tr>
-    <tr>
-        <td rowspan="6">...produces binaries for:</td>
-        <td>Mac (Intel x64)</td>
-        <td>👍</td>
-        <td>👍</td>
-        <td>-</td>
-    </tr>
-    <tr>
-        <td>Mac (M1, uses Intel x64 binaries via Rosetta)</td>
-        <td>👍</td>
-        <td>👍</td>
-        <td>-</td>
-    </tr>
-    <tr>
-        <td>Windows (Intel x64)</td>
-        <td>👍</td>
-        <td>-</td>
-        <td>👍</td>
-    </tr>
-    <tr>
-        <td>Windows (Intel x86)</td>
-        <td>👍</td>
-        <td>-</td>
-        <td>👍</td>
-    </tr>
-    <tr>
-        <td>Linux (Intel x64)</td>
-        <td>👍</td>
-        <td>-</td>
-        <td>-</td>
-    </tr>
-    <tr>
-        <td>Linux (ARM64)</td>
-        <td>👍</td>
-        <td>-</td>
-        <td>-</td>
-    </tr>
-</table>
 
 <hr>
 
@@ -135,38 +79,23 @@ cd DVA5-master</pre>
         <pre>brew install --ignore-dependencies ant</pre>
     </li>
     <li>
-        Building a Windows app or setup, or Linux .DEB package requires additional tools which you can install using:
-        <pre>ant FetchDeps</pre>
+        Fetch dependencies for build which includes:
+        <pre>ant FetchDeps.Mac</pre>
         <ul>
+            <li>
+                <a href="https://github.com/adoptium/temurin17-binaries/releases">JDK 17</a>
+            </li>
             <li>
                 <a href="http://ant-contrib.sourceforge.net">Ant-Contrib</a>
             </li>
             <li>
-                <a href="https://www.winehq.org" target="_blank">Wine</a>, required for running Inno Setup. Wine requires <a href="https://www.xquartz.org" target="_blank">XQuartz</a>.
-            </li>
-            <li>
-                <a href="http://www.angusj.com/resourcehacker/" target="_blank">Resource Hacker</a>
-            </li>
-            <li>
-                <a href="https://sourceforge.net/projects/winrun4j/" target="_blank">WinRun4J</a>
-            </li>
-            <li>
                 <a href="https://github.com/protocolbuffers/protobuf" target="_blank">Protocol Buffers</a> compiler to generate Java code from the TfNSW GTFS realtime specification
-            </li>
-            <li>
-                <a href="http://www.jrsoftware.org/isinfo.php" target="_blank">Inno Setup</a>
-            </li>
-            <li>
-                <a href="https://www.debian.org/doc/manuals/debian-faq/ch-pkgtools.en.html" target="_blank">Dpkg</a> for creating a .DEB package
-            </li>
-            <li>
-                <a href="https://wiki.debian.org/FakeRoot" target="_blank">Fakeroot</a> to ensure correct file permissions
             </li>
         </ul>
     </li>
     <li>
         Build DVA:
-        <pre>ant AllSetups</pre>
+        <pre>ant BuildMacDmg</pre>
     </li>
     <li>
         Build outputs will be placed in build/Output:
@@ -174,11 +103,7 @@ cd DVA5-master</pre>
             <tr><th>File</th><th>Description</th></tr>
             <tr><td>DVA.jar</td><td>DVA application (cross-platform)</td></tr>
             <tr><td>DVA.app</td><td>DVA application (Mac)</td></tr>
-            <tr><td>win\i386\DVA.exe, DVA.scr</td><td>DVA application and screensaver (Windows, 32-bit)</td></tr>
-            <tr><td>win\amd64\DVA.exe, DVA.scr</td><td>DVA application and screensaver (Windows, 64-bit)</td></tr>
             <tr><td>DVA5.dmg.bz2</td><td>Mac disk image</td></tr>
-            <tr><td>DVA5Setup.exe</td><td>Windows installer (if Wine and Inno Setup were installed above)</td></tr>
-            <tr><td>DVA5.deb</td><td>Linux installer</td></tr>
         </table>
     </li>
 </ol>
@@ -188,17 +113,6 @@ cd DVA5-master</pre>
 <h2><a name="windows"/><img class="icon icons8-Windows-Logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABXtJREFUaAXtWFtonEUUPuf/sxvbTVrBW9sEbKtYjaT0DsZ6axO1BUHEbAxW8M03QaoPaksXJYigKChK9UERVJI8iEaTJi1otqK15tbGFArVBmpKS9q0sc1195/jN3tzQ/87fXOHzM78c+5nzpw5E6JSK3mg5IGSB0oe+D97gMMaLw9TGS2/cw1Zai0xrQUf3WvRYyQ0RMyDxDJA05EO/u7klbByvOhCGSDxVXEw/ghK3uQlgEQuAu9NUos+5vaReU/8gAhGQPwsOvOrvpTX2Fkj3yee+TKULA+iwAbIrtuXg+c6D77Xgg0a0Yuvd2yrSiQosNxrGWZXgjOaN3c4MXNfV10ajpjdl964vf+1b7c3uOPnoEK8p2Pbo064ZU4Al/UwBlygu0d/z/EEvVQbBvVAsaNYOwwdBw1RQ6YlY1aZeQ+xqhVBUhCupe+plpmTwOux0ymQAZnMw+TPcwuldXOC1N4f6mtFqeoi0BbMtzDSljBTukznFMFfLrcUUozqLKJZMA0WQreuqgP10gUc/HwwZRRQSsLsHqm0lQk/O1HBDGAOo4CiubluLZxJhaEfaXkyecZOeb0WzACinU6MnNf5KH8zdjHRuWMJTLjfGc8Jwo7hoyl8GyCNd1UBX9+2wVoufNJqth6EkWDEUJDJMXw0L98GkJl63EH4NNYtB5iGZDwoEir8rpwbu/yzI28A/BsgrMNnAkniIPrbSBVxMtN3cOtfMZQJi0kZdah9XkHpcAB4SCWZdp7a/xzQMyQUJwdkMW1+QXPokxf6UzagwlKANCr7qfX002CaV67AJFfj/IoF3d+RptWbMb4Hg05pfJv0WaD1mLjGv6b1bQC3nu6hz+QGWjS1xmSqQeauQequQc5eAiWHcfEMWQYNUrxiGLuiL62t0rhymRai0ydwAjfTVHo3XZsvAyJtV9cpoZeJphrBLao5sg6K3F5gqNefJibSenWAhfdYz8S6uH30XBZX1usxYBtO7Pzpby8aX2cAyu8Ho2fRM8q7MYUdGxA6nWbr1Id5vEmz/HlUpXAAXcqveYyXhVSLB04G7L0DX/1zMzA3+WFWjINLa1J/S7LiFn6waxzTd3EXfGql555SBm9mEc1Tp2UcUjmGemjIYBm0hIeiM+f/SMT9vR08DTAN4zEI8bVTwCtqkjuAqRbpLa8hQ+3mB7p+A8LnuU6JBBmJfQhEXQwVNWmjaKLo223qaQCYh7n+L6W58khGsGToq5Fmj8CQgwivH0lxH0Xn+rmOJuSh2DLqTeudwHNUMDK64O0wv8tN8TzM3YCEwPNTegeCtm6KsyXJKEpiKq4+G5C1GvSBp1Q5SS/NEaXL/2OuAboZH2RH71/X0IjUzOg41WcgWMuVD1Deq3YqUr5IhGl4ps88tqsBllhhwkdZlLmNISNze+dl+RuFjvHW6bP+kD0OJ15CYQzoo3jlOCL9Rihxn19FCnjMrsVbAS83cd4BnT6FdEkQqOGGzmYfjjaA0P2M2XO+PgaYZYZ+SDsbaC8ct7GRr1+84t+OwySp2V/sAE5rzh7Kpj+dn88ga4yw0Akk7BO4oE6hNF6JOmg9gBsA34geywkYTzUt7pMmUCRDhd8hfoTSOV6+BkcDoNywUuZqal40asMpibUvMuttE0sNiexGAnwJKfIASgahwxFt1G02dB5LweJfM8snXg/GPsBfT63Ac2tFqjnWh/y/F8a84YNqIYppVgXJQJrYcQcWcvbx1Rw7i6Imm/7EuBe3qQ+iIpSA6TNPGfiQ5gldx9jsc9D/ReBccMUrAGUCJcZbhc8Ak+sXQjZCcRdUEEefwLnQhx1vAsH/VHkG8+MYh/HUOU4K88r5k7xJV6WlVvJAyQMlD5Q8UPJAMA/8C4eYo1vnFbl4AAAAAElFTkSuQmCC" width="24" height="24">Windows</h2>
 <p>The following commands are to be run in Powershell.</p>
 <ol>
-    <li>
-        If building on Windows 7, the following are required for running Scoop:
-        <ul>
-            <li>
-                <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" target="_blank">.NET Framework 4.5</a> or later.
-            </li>
-            <li>
-                Powershell 3 or later. Powershell 3 is superseded; Powershell 4 can be <a href="https://www.microsoft.com/en-us/download/details.aspx?id=40855" target="_blank">downloaded here</a>. You'll need the "Windows6.1" package, either x64 or x86 depending on your system.
-            </li>
-        </ul>
-    </li>
     <li>
         Enable Powershell:
         <pre>Set-ExecutionPolicy unrestricted -s cu</pre>
@@ -226,8 +140,11 @@ scoop install temurin11-jdk</pre>
     </li>
     <li>
         The following additional tools which you can install using:
-        <pre>ant FetchDeps</pre>
+        <pre>ant FetchDeps.Windows</pre>
         <ul>
+            <li>
+                <a href="https://github.com/adoptium/temurin17-binaries/releases">JDK 17</a>
+            </li>
             <li>
                 <a href="http://ant-contrib.sourceforge.net">Ant-Contrib</a>
             </li>
@@ -247,7 +164,7 @@ scoop install temurin11-jdk</pre>
     </li>
     <li>
         Build DVA:
-        <pre>ant AllSetups</pre>
+        <pre>ant BuildWinSetup</pre>
     </li>
     <li>
         Build outputs will be placed in build/Output:
