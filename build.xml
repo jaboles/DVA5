@@ -3,6 +3,12 @@
 <project name="DVA" default="CreateJar">
     <property environment="env"/>
     <exec executable="hostname" outputproperty="hostname" failonerror="true"/>
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="jars/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
     <property name="ClassesDir" value="build/classes"/>
     <property name="OutDir" value="build${file.separator}Output"/>
     <property name="DistDir" value="build${file.separator}Output${file.separator}dist"/>
@@ -11,7 +17,12 @@
     <property name="JavaVersionPlus" value="17.0.10%2b7"/>
     <property name="JavaVersionUnderscore" value="17.0.10_7"/>
     <property name="InnoSetupVersion" value="6.2.2"/>
-    <property name="DVAVersion" value="${env.DVAVERSION}"/>
+    <propertyregex property="DVAVersion"
+                   input="${env.BUILD_SOURCEBRANCH}"
+                   regexp="refs/tags/([\d\.]+)"
+                   select="\1"
+                   casesensitive="false"
+                   defaultvalue="0.0.0" />
     <path id="jars">
         <fileset dir="jars">
             <include name="*" />
@@ -34,12 +45,6 @@
     <condition property="dpkgcompression" value="none" else="xz">
         <isset property="fast"/>
     </condition>
-
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-        <classpath>
-            <pathelement location="${ToolsDir}/ant-contrib/ant-contrib-1.0b3.jar"/>
-        </classpath>
-    </taskdef>
 
     <!-- Mac signing identity in Keychain -->
     <property name="SignIdentity" value="Developer ID Application: Jonathan Boles (W2WXX3D2U6)"/>
@@ -68,9 +73,6 @@
     <target name="FetchDeps" depends="FetchDeps.Common,FetchDeps.Mac,FetchDeps.Windows"/>
     <target name="FetchDeps.Common">
         <mkdir dir="${ToolsDir}"/>
-        <!-- Ant-Contrib -->
-        <get src="https://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/ant-contrib-1.0b3-bin.tar.gz/download" dest="${ToolsDir}/ant-contrib.tar.gz" usetimestamp="true"/>
-        <untar src="${ToolsDir}/ant-contrib.tar.gz" dest="${ToolsDir}" compression="gzip" overwrite="false" />
     </target>
     <target name="FetchDeps.Mac" if="isMac" depends="FetchDeps.Common">
         <!-- JRE: Mac -->
