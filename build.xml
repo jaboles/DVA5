@@ -39,7 +39,7 @@
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
     </condition>
-    <condition property="innosetupcompression" value="none" else="lzma2/ultra">
+    <condition property="innosetupcompression" value="zip/1" else="lzma2/ultra">
         <isset property="fast"/>
     </condition>
     <condition property="dpkgcompression" value="none" else="xz">
@@ -258,8 +258,6 @@ build.number: ${env.BUILD_BUILDID}</echo>
     <target name="JlinkOptimizeJre">
         <echo>Calling ${Jlink} to optimize JRE into ${ToolsDir}/jre/${folder}</echo>
         <delete dir="${ToolsDir}/jre/${folder}"/>
-        <echo>${env.JAVA_HOME_17_X64}/bin/jlink${ExecutableExtension}</echo>
-        <!--<chmod perm="u+x" file="${ToolsDir}/jdk/${jdkfolder}/${jlinkrelative}"/>-->
         <exec executable="${Jlink}">
             <arg value="--module-path"/>
             <arg value="${ToolsDir}/jdk/${folder}/jmods"/>
