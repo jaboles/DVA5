@@ -14,8 +14,8 @@
     <property name="DistDir" value="build${file.separator}Output${file.separator}dist"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="JavaVersionMajor" value="17"/>
-    <property name="JavaVersionPlus" value="17.0.11%2b9"/>
-    <property name="JavaVersionUnderscore" value="17.0.11_9"/>
+    <property name="JavaVersionPlus" value="17.0.10%2b7"/>
+    <property name="JavaVersionUnderscore" value="17.0.10_7"/>
     <property name="InnoSetupVersion" value="6.2.2"/>
     <propertyregex property="DVAVersion"
                    input="${env.BUILD_SOURCEBRANCHNAME}"
@@ -127,7 +127,7 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.11-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
+        <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.10-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
         <unzip dest="${ToolsDir}\jdk\winarm64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="microsoft-jdk-*-aarch64.zip"/>

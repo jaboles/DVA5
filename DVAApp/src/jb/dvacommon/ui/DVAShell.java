@@ -160,6 +160,12 @@ public class DVAShell
     }
 
     public void promptToUpdate(BaseUpdater updater, boolean allowSkip) {
+        // Skip update check on 32-bit OS (JRE no longer available)
+        if (System.getProperty("os.arch").equals("x86"))
+        {
+            return;
+        }
+
         String skip = "Skip this version";
         String notnow = "Not now";
         String update = "Install and relaunch";
