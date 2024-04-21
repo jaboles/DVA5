@@ -120,7 +120,7 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK${JavaVersionMajor}U-jdk_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10%2b7/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.10_7.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jdk\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x86-32_windows_*.zip"/>
