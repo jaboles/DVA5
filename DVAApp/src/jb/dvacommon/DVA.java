@@ -236,6 +236,10 @@ public class DVA {
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "DVA");
         System.setProperty("com.apple.mrj.application.growbox.intrudes", "true");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("sun.java2d.metal", "true");
+
+        // Set TLS version to 1.2 only
+        System.setProperty("jdk.tls.client.protocols", "TLSv1.2");
 
         // Set AUMI on Windows 7, to fix two separate DVA taskbar icons appearing during
         // launch (DVA.exe and java.exe)
