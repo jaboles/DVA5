@@ -80,6 +80,15 @@ public class DVA {
                 ? name -> lw.setText("Loading sound libraries... " + name)
                 : null);
 
+        if (soundLibraryManager.getSoundLibraries().size() <= 1)
+        {
+            fetchSoundJars();
+
+            soundLibraryManager.loadAllSoundLibraries(showLoadingProgress
+                    ? name -> lw.setText("Loading sound libraries... " + name)
+                    : null);
+        }
+
         logger.info("Fetching GTFS timetable");
         if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
         GtfsGenerator.initialize(new File(getTemp(), "GtfsTimetable").toPath());

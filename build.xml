@@ -13,9 +13,9 @@
     <property name="OutDir" value="build${file.separator}Output"/>
     <property name="DistDir" value="build${file.separator}Output${file.separator}dist"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
-    <property name="JavaVersionMajor" value="17"/>
-    <property name="JavaVersionPlus" value="17.0.10%2b7"/>
-    <property name="JavaVersionUnderscore" value="17.0.10_7"/>
+    <property name="JavaVersionMajor" value="21"/>
+    <property name="JavaVersionPlus" value="21.0.3%2b9"/>
+    <property name="JavaVersionUnderscore" value="21.0.3_9"/>
     <property name="InnoSetupVersion" value="6.2.2"/>
     <propertyregex property="DVAVersion"
                    input="${env.BUILD_SOURCEBRANCHNAME}"
@@ -29,12 +29,12 @@
         </fileset>
     </path>
     <property name="BuildClasspath" value="${toString:jars}" />
-    <property name="JlinkModules" value="java.desktop,java.naming,jdk.unsupported,java.management"/>
+    <property name="JlinkModules" value="java.desktop,java.naming,jdk.unsupported,java.management,java.net.http"/>
     <condition property="ExecutableExtension" value=".exe" else="">
         <os family="windows"/>
     </condition>
-    <condition property="Jlink" value="${env.JAVA_HOME_17_X64}/bin/jlink${ExecutableExtension}" else="jlink${ExecutableExtension}">
-        <available file="${env.JAVA_HOME_17_X64}/bin/jlink${ExecutableExtension}"/>
+    <condition property="Jlink" value="${env.JAVA_HOME_21_X64}/bin/jlink${ExecutableExtension}" else="jlink${ExecutableExtension}">
+        <available file="${env.JAVA_HOME_21_X64}/bin/jlink${ExecutableExtension}"/>
     </condition>
     <condition property="bzip2compression" value="fast" else="best">
         <isset property="fast"/>
@@ -127,7 +127,7 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.10-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
+        <get src="https://aka.ms/download-jdk/microsoft-jdk-21.0.3-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
         <unzip dest="${ToolsDir}\jdk\winarm64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="microsoft-jdk-*-aarch64.zip"/>

@@ -6,4 +6,5 @@ exec ./jre/bin/java \
     -Xdock:name=DVA \
     -Xdock:icon="$DOCKICON" \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
+    -Dsun.java2d.metal=true \
     -jar DVA.jar "$@"

@@ -11,19 +11,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FileUtilities
 {
@@ -47,7 +45,7 @@ public class FileUtilities
           destination.write(buffer);
         }
       }
-    
+
     public static void copyFile(File sourceFile, File destinationFile) throws IOException {
         if(destinationFile.exists() || destinationFile.createNewFile()) {
             try (
@@ -58,7 +56,7 @@ public class FileUtilities
             }
         }
     }
-    
+
     public static void copyStream(InputStream sourceStream, File destinationFile) throws IOException
     {
         try (
@@ -67,19 +65,19 @@ public class FileUtilities
             fastChannelCopy(Channels.newChannel(sourceStream), fos.getChannel());
         }
     }
-    
-    public static String readFromUrl(URL url) throws IOException
+
+    public static String readFromUrl(URL url) throws IOException, InterruptedException
     {
         StringBuilder sb = new StringBuilder();
-        BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream()));
-        String s;
-        while ((s = r.readLine()) != null)
-        {
-            sb.append(s);
-            sb.append("\n");
-        }
-        logger.debug("Read string of length {} from {}", sb.length(), url);
-        return sb.toString();
+        logger.info("Read from {}", url);
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url.toString()))
+                .build();
+        HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        var s = response.body().toString();
+        logger.debug("Read string of length {} from {}", s.length(), url);
+        return s;
     }
 
     public static String postToUrl(URL url, Map<String,String> params) throws Exception
@@ -112,17 +110,13 @@ public class FileUtilities
         return sb.toString();
     }
 
-    public static List<String> readLinesFromUrl(URL url) throws IOException
+    public static List<String> readLinesFromUrl(URL url) throws IOException, InterruptedException
     {
-        List<String> lines = new LinkedList<>();
+        logger.debug("Read lines from {}", url);
         BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream()));
-        String s;
-        while ((s = r.readLine()) != null)
-        {
-            lines.add(s);
-        }
-        logger.debug("Read {} lines from {}", lines.size(), url);
-        return lines;
+        String[] lines = readFromUrl(url).split("\\r?\\n");
+        logger.debug("Read {} lines from {}", lines.length, url);
+        return Arrays.stream(lines).collect(Collectors.toList());
     }
 
     public static URLStat statUrl(URL url) throws IOException, URISyntaxException
@@ -159,12 +153,12 @@ public class FileUtilities
         }
         return lines;
     }
-    
+
     public static String readAllText(String path) throws IOException
     {
         return readAllText(new File(path));
     }
-    
+
     public static String readAllText(File f) throws IOException
     {
         StringBuilder sb = new StringBuilder();
@@ -179,7 +173,7 @@ public class FileUtilities
         }
         return sb.toString();
     }
-    
+
     public static File getJarFolder(Class<?> c) {
         try {
             return new File(c.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile();

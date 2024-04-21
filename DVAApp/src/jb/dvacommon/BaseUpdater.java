@@ -98,7 +98,7 @@ public abstract class BaseUpdater
         final int contentLength = uc.getContentLength();
         if (totalProgress == null) totalProgress = contentLength;
 
-        byte[] data = new byte[102400];
+        byte[] data = new byte[2097152];
         int totalRead = 0;
 
         try (
