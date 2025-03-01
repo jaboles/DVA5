@@ -14,8 +14,9 @@
     <property name="DistDir" value="build${file.separator}Output${file.separator}dist"/>
     <property name="ToolsDir" value="build${file.separator}Tools"/>
     <property name="JavaVersionMajor" value="17"/>
-    <property name="JavaVersionPlus" value="17.0.11%2b9"/>
-    <property name="JavaVersionUnderscore" value="17.0.11_9"/>
+    <property name="JavaVersionPlus" value="17.0.14%2b7"/>
+    <property name="JavaVersionUnderscore" value="17.0.14_7"/>
+    <property name="JavaVersionMicrosoft" value="17.0.14"/>
     <property name="InnoSetupVersion" value="6.2.2"/>
     <propertyregex property="DVAVersion"
                    input="${env.BUILD_SOURCEBRANCHNAME}"
@@ -120,14 +121,14 @@
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <get src="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.10%2b7/OpenJDK17U-jdk_x86-32_windows_hotspot_17.0.10_7.zip" dest="${ToolsDir}" usetimestamp="true"/>
+        <get src="https://github.com/adoptium/temurin${JavaVersionMajor}-binaries/releases/download/jdk-${JavaVersionPlus}/OpenJDK17U-jdk_x86-32_windows_hotspot_${JavaVersionUnderscore}.zip" dest="${ToolsDir}" usetimestamp="true"/>
         <unzip dest="${ToolsDir}\jdk\win32" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="OpenJDK*-jdk_x86-32_windows_*.zip"/>
             </fileset>
             <cutdirsmapper dirs="1"/>
         </unzip>
-        <get src="https://aka.ms/download-jdk/microsoft-jdk-17.0.11-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
+        <get src="https://aka.ms/download-jdk/microsoft-jdk-{JavaVersionMicrosoft}-windows-aarch64.zip" dest="${ToolsDir}" usetimestamp="true" />
         <unzip dest="${ToolsDir}\jdk\winarm64" overwrite="false">
             <fileset dir="${ToolsDir}">
                 <include name="microsoft-jdk-*-aarch64.zip"/>
