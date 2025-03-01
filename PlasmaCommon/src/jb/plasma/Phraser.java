@@ -45,7 +45,7 @@ public class Phraser
                 boolean substitute = s.length == 2 || StringUtilities.containsIgnoreCase(soundLibraryName, s[2]);
                 if (substitute && stop.equalsIgnoreCase(s[0]))
                 {
-                    logger.debug("For sound library: [{}] substituting [{}] to [{}]", s[2], s[0], s[1]);
+                    logger.debug("For sound library: [{}] substituting [{}] to [{}]", s.length > 2 ? s[2] : "any", s[0], s[1]);
                     return s[1];
                 }
             }
