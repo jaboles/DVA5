@@ -35,11 +35,11 @@ public class SoundLibraryManager {
         this.temp = temp;
         this.dvaVersion = dvaVersion;
         this.specialSoundsEnabled = specialSoundsEnabled;
+        this.soundLibraryCache = new ObjectCache<>(temp, "soundlibrary_" + CacheUniverse + "_" + dvaVersion);
     }
 
     public void loadAllSoundLibraries(Consumer<String> progress) throws Exception {
         final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(temp, "soundlibrarymap_" + CacheUniverse + "_" + dvaVersion);
-        soundLibraryCache = new ObjectCache<>(temp, "soundlibrary_" + CacheUniverse + "_" + dvaVersion);
 
         populateSoundLibraries(specialSoundsEnabled);
 

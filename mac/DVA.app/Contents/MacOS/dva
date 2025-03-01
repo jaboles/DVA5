@@ -1,9 +1,8 @@
 #!/bin/sh
 BASEDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 DOCKICON=`echo "$BASEDIR" | sed -e 's/MacOS/Resources\/dva.icns/'`
-cd "$BASEDIR"
-exec ./jre/bin/java \
+exec "$BASEDIR/jre/bin/java" \
     -Xdock:name=DVA \
     -Xdock:icon="$DOCKICON" \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
-    -jar DVA.jar "$@"
+    -jar "$BASEDIR/DVA.jar" "$@"

@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import javax.swing.UIManager;
 
@@ -207,6 +209,12 @@ public class DVA {
             logger.info("Loading sound library '{}'", announcement.getVoice());
             soundLibraryManager.loadSoundLibraryWithFallback(announcement.getVoice());
             dvaManager.verify(announcement);
+            if (!Paths.get(filename).isAbsolute())
+            {
+                filename = Paths.get(System.getProperty("user.dir")).resolve(filename).toString();
+            }
+            File file = new File(filename);
+            if (file.exists()) file.delete();
             logger.info("Exporting to '{}': '{}'", filename, dvaManager.getCanonicalScript(announcement));
             try {
                 dvaManager.export(announcement, filename);
