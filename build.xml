@@ -17,7 +17,7 @@
     <property name="JavaVersionPlus" value="17.0.14%2b7"/>
     <property name="JavaVersionUnderscore" value="17.0.14_7"/>
     <property name="JavaVersionMicrosoft" value="17.0.14"/>
-    <property name="InnoSetupVersion" value="6.2.2"/>
+    <property name="InnoSetupVersion" value="6.4.1"/>
     <propertyregex property="DVAVersion"
                    input="${env.BUILD_SOURCEBRANCHNAME}"
                    regexp="([\d\.]+)"
