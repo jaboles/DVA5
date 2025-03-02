@@ -337,6 +337,7 @@ build.number: ${env.BUILD_BUILDID}</echo>
         <condition property="WillSignMac">
             <or>
                 <equals arg1="${hostname}" arg2="jb"/>
+                <equals arg1="${hostname}" arg2="jb.lan"/>
                 <equals arg1="${hostname}" arg2="jb.local"/>
                 <equals arg1="${hostname}" arg2="jb.wavecable.com"/>
                 <equals arg1="${hostname}" arg2="MacBook-Air.local"/>
