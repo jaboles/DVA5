@@ -235,16 +235,6 @@ public class DVAShell
     };
 
     @SuppressWarnings("unused")
-    public Action specialSoundsAction = new AbstractAction("Enable/Disable Special Sounds") {
-        public void actionPerformed(ActionEvent e) {
-            boolean specialSoundsEnabled = Settings.specialSoundsEnabled();
-            Settings.setSpecialSoundsEnabled(!specialSoundsEnabled);
-            JOptionPane.showMessageDialog(window, "Changing this setting requires re-launching DVA. DVA will now close.", "Restart Required", JOptionPane.WARNING_MESSAGE);
-            System.exit(0);
-        }
-    };
-
-    @SuppressWarnings("unused")
     public Action themeAction = new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
             String laf = UIManager.getSystemLookAndFeelClassName();

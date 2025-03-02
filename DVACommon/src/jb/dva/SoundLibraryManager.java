@@ -14,14 +14,7 @@ public class SoundLibraryManager {
     private Map<String, SoundLibrary> soundLibraryMap = new LinkedHashMap<>();
     private ObjectCache<SoundLibrary> soundLibraryCache = null;
     private final File temp;
-    private final boolean specialSoundsEnabled;
     private final String dvaVersion;
-
-    // 'Special' sounds which are only shown after enabling the option
-    private static final Set<String> SPECIAL_SOUNDS = Arrays.stream(new String[] {
-            "dTrog remix",
-            "AnnouncementRail",
-    }).collect(Collectors.toSet());
 
     // Set fallback libraries for incomplete sound libraries
     private static final Map<String, String> FALLBACK_LIBRARIES = Arrays.stream(new String[][] {
@@ -31,17 +24,16 @@ public class SoundLibraryManager {
             { "Sydney-Female (replaced low-quality sounds)", "Sydney-Female" },
     }).collect(Collectors.toMap(v -> v[0], v -> v[1]));
 
-    public SoundLibraryManager(File temp, String dvaVersion, boolean specialSoundsEnabled) throws Exception {
+    public SoundLibraryManager(File temp, String dvaVersion) throws Exception {
         this.temp = temp;
         this.dvaVersion = dvaVersion;
-        this.specialSoundsEnabled = specialSoundsEnabled;
         this.soundLibraryCache = new ObjectCache<>(temp, "soundlibrary_" + CacheUniverse + "_" + dvaVersion);
     }
 
     public void loadAllSoundLibraries(Consumer<String> progress) throws Exception {
         final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(temp, "soundlibrarymap_" + CacheUniverse + "_" + dvaVersion);
 
-        populateSoundLibraries(specialSoundsEnabled);
+        populateSoundLibraries();
 
         // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
         soundLibraryMap = mc.load(SoundLibraryManager.class, Integer.toString(soundLibraryMap.size()), () -> {
@@ -72,7 +64,7 @@ public class SoundLibraryManager {
     }
 
     // Find folders and jars next to the application and load them as sound libraries.
-    private void populateSoundLibraries(boolean specialSoundsEnabled) {
+    private void populateSoundLibraries() {
         File f = getSoundJarsFolder();
         if (f.exists() && f.isDirectory()) {
             File[] soundDirs = f.listFiles();
@@ -82,14 +74,12 @@ public class SoundLibraryManager {
                     String name;
                     if (soundDir.isDirectory() && !path.toLowerCase().endsWith(".app")) {
                         name = path.substring(path.lastIndexOf(File.separatorChar) + 1);
-                        if (!SPECIAL_SOUNDS.contains(name) || specialSoundsEnabled) {
-                            getOrCreateSoundLibrary(name).addFile(soundDir);
-                        }
+                        if (name.equals("AnnouncementRail") || name.equals("dTrog remix")) continue;
+                        getOrCreateSoundLibrary(name).addFile(soundDir);
                     } else if (path.toLowerCase().endsWith(".jar")) {
                         name = path.substring(path.lastIndexOf(File.separatorChar) + 1, path.length() - 4);
-                        if (!SPECIAL_SOUNDS.contains(name) || specialSoundsEnabled) {
-                            getOrCreateSoundLibrary(name).addFile(soundDir);
-                        }
+                        if (name.equals("AnnouncementRail") || name.equals("dTrog remix")) continue;
+                        getOrCreateSoundLibrary(name).addFile(soundDir);
                     }
                 }
             }

@@ -10,8 +10,6 @@
             <menuitem action="voiceLibraryToggleAction" icon="null" mnemonic="VK_V" />
             <menuitem action="soundInfoAction" icon="null" mnemonic="VK_S" accelerator="MENU_DVA_SOUND_INFO_ACCELERATOR" />
             <separator />
-            <menuitem action="specialSoundsAction" icon="null" mnemonic="VK_E" />
-            <separator />
             <menu text="Theme" id="themeMenu">
                 <checkboxmenuitem action="themeAction" text="Light" actionCommand="light"/>
                 <checkboxmenuitem action="themeAction" text="Dark" actionCommand="dark"/>

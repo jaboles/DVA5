@@ -190,17 +190,6 @@ public class Settings {
 
     public static void setSelectedSoundLibraryIndex(int index) { prefs.putInt("selectedSoundLibrary", index); }
 
-    public static boolean specialSoundsEnabled() {
-        return prefs.getBoolean("specialSounds", false);
-    }
-
-    public static void setSpecialSoundsEnabled(boolean value) {
-        prefs.putBoolean("specialSounds", value);
-        try {
-            prefs.flush();
-        } catch (BackingStoreException e) { e.printStackTrace(System.err); }
-    }
-
     private static boolean getDemoAdded(String name) {
         return prefs.getBoolean("demoAdded " + name, false);
     }
