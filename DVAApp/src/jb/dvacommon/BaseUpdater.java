@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
@@ -22,6 +23,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.blob.CloudBlobClient;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.ListBlobItem;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.OSDetection;
@@ -53,20 +58,11 @@ public abstract class BaseUpdater
             {
                 try
                 {
-                    URL baseUrl = getBaseUrl(version);
-                    if (downloadIncrementalJarUpdates(baseUrl, new URL(baseUrl, "jars.list"), FileUtilities.getJarFolder(this), pw) >= 0)
-                    {
-                        pw.updateProgressComplete("Download complete - restarting");
-                        restart();
-                    }
-                    else
-                    {
-                        File downloaded = downloadToTemp(getDownloadUrl(version), pw);
-                        logger.debug("Downloaded update to {}", downloaded != null ? downloaded.getAbsolutePath() : "<null>");
-                        pw.updateProgressComplete("Download complete - " + (OSDetection.isMac() ? "installing" : "launching installer"));
-                        if (downloaded != null)
-                            launchInstaller(downloaded);
-                    }
+                    File downloaded = downloadToTemp(getDownloadUrl(version), pw);
+                    logger.debug("Downloaded update to {}", downloaded != null ? downloaded.getAbsolutePath() : "<null>");
+                    pw.updateProgressComplete("Download complete - " + (OSDetection.isMac() ? "installing" : "launching installer"));
+                    if (downloaded != null)
+                        launchInstaller(downloaded);
                 }
                 catch (InterruptedException ex)
                 {
@@ -140,7 +136,7 @@ public abstract class BaseUpdater
         return new URL(getBaseUrl(version), "new.html");
     }
 
-    public static int downloadIncrementalJarUpdates(URL baseUrl, URL artifactList, File localArtifactRoot, ProgressAdapter pw)
+    public static int downloadFolder(URL containerUrl, File localArtifactRoot, ProgressAdapter pw)
     {
         List<Triplet<URL, URLStat,File>> rv = new LinkedList<>();
         File dest = null;
@@ -149,11 +145,12 @@ public abstract class BaseUpdater
                 logger.error("Could not create local artifact root {}", localArtifactRoot);
                 return -1;
             }
-            List<String> urls = FileUtilities.readLinesFromUrl(artifactList);
-            logger.info("Downloading {} artifacts", urls.size());
-            for (String s : urls) {
-                logger.info("Base URL {}", baseUrl);
-                URL url = new URL(baseUrl, s.replaceAll(" ", "%20"));
+
+            CloudBlobContainer container = new CloudBlobContainer(containerUrl.toURI());
+            logger.info("Container URL {}", containerUrl);
+            for (ListBlobItem blob : container.listBlobs()) {
+                logger.info("Blob URL {}", blob.getUri());
+                URL url = new URL(blob.getUri().toURL().toString().replaceAll(" ", "%20"));
                 URLStat stat = FileUtilities.statUrl(url);
                 String urlPath = url.getPath();
                 String artifactName = urlPath.substring(urlPath.lastIndexOf('/') + 1).replaceAll("%20", " ");

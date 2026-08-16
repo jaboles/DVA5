@@ -4,23 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.InvalidKeyException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.StreamSupport;
+import java.util.*;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageException;
-import com.microsoft.azure.storage.blob.BlobContainerPermissions;
-import com.microsoft.azure.storage.blob.BlobContainerPublicAccessType;
-import com.microsoft.azure.storage.blob.CloudBlobClient;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import com.microsoft.azure.storage.blob.*;
 import jb.common.ExceptionReporter;
 import jb.common.FileUtilities;
 import jb.common.StringUtilities;
@@ -51,8 +43,18 @@ public class WAzureUpdater extends BaseUpdater
         {
             try
             {
-                String[] versions = FileUtilities.readFromUrl(new URL(baseUrl, MetadataContainerName + "/" + VersionsListName)).split("\r?\n");
-                Arrays.stream(versions).max(VersionComparator.Instance).ifPresent(s -> latestVersion = s);
+                var versions = new ArrayList<String>();
+                var container = new CloudBlobContainer(new URI("https://dvaupdate.blob.core.windows.net/update"));
+                for (ListBlobItem blob : container.listBlobs())
+                {
+                    if (blob instanceof CloudBlobDirectory)
+                    {
+                        var dir = ((CloudBlobDirectory)blob).getPrefix().replace("/", "");
+                        versions.add(dir);
+                    }
+                }
+
+                versions.stream().max(VersionComparator.Instance).ifPresent(s -> latestVersion = s);
             } catch (Exception e) {
                 ExceptionReporter.reportException(e);
             }
@@ -62,8 +64,7 @@ public class WAzureUpdater extends BaseUpdater
 
     public URL getBaseUrl(String version) throws MalformedURLException
     {
-        String container = version.replace('.', '-');
-        return new URL(baseUrl, container + "/");
+        return new URL(baseUrl, "update/" + version + "/");
     }
 
     public static void main(String[] args) throws InvalidKeyException, URISyntaxException, StorageException, IOException
@@ -87,60 +88,9 @@ public class WAzureUpdater extends BaseUpdater
         metadataContainer.createIfNotExists();
         metadataContainer.uploadPermissions(bcp);
 
-        if (cmd.equals("uploadversion"))
+        if (cmd.equals("updateversion"))
         {
-            String version = null;
-            if (args.length > 1) {
-                version = args[1];
-            } else {
-                version = "0." + Files.readString(Paths.get("build/Output/version.txt"));
-            }
-            CloudBlobContainer versionContainer = getVersionContainer(serviceClient, version);
-
-            versionContainer.createIfNotExists();
-            versionContainer.uploadPermissions(bcp);
-
-            // Upload an image file.
-            File[] artifacts = new File[] {
-                    // New version summary
-                    new File("build/Output/dist/new.html"),
-
-                    // JAR
-                    new File("build/Output/DVA.jar"),
-
-                    // Mac
-                    new File("build/Output/dist/DVA5.dmg"),
-                    new File("build/Output/dist/DVA5.dmg.bz2"),
-                    new File("build/Output/dist/DVA5-x86_64.dmg"),
-                    new File("build/Output/dist/DVA5-aarch64.dmg"),
-
-                    // Windows
-                    new File("build/Output/dist/DVA5Setup.exe"),
-
-                    // Linux
-                    new File("build/Output/dist/DVA5-x86_64.deb"),
-                    new File("build/Output/dist/DVA5-aarch64.deb"),
-                };
-            for (File f : artifacts)
-            {
-                if (f.exists())
-                    uploadArtifact(f, versionContainer);
-            }
-            updateVersions(serviceClient, metadataContainer);
-        }
-        else if (cmd.equals("deleteversion"))
-        {
-            CloudBlobContainer versionContainer = getVersionContainer(serviceClient, args[1]);
-            deleteContainer(versionContainer);
-            updateVersions(serviceClient, metadataContainer);
-        }
-        else if (cmd.equals("updateversion"))
-        {
-            updateVersions(serviceClient, metadataContainer);
-        }
-        else if (cmd.equals("listversion"))
-        {
-            Arrays.stream(getVersions(serviceClient)).forEach(System.out::println);
+            updateVersions(metadataContainer);
         }
         else if (cmd.equals("uploadsoundjars"))
         {
@@ -159,11 +109,6 @@ public class WAzureUpdater extends BaseUpdater
                 }
                 uploadArtifactList(jars, metadataContainer, SoundJarsList);
             }
-        }
-        else if (cmd.equals("deletesoundjars"))
-        {
-            deleteContainer(soundjarsContainer);
-            metadataContainer.getBlockBlobReference(SoundJarsList).deleteIfExists();
         }
         else
         {
@@ -195,49 +140,30 @@ public class WAzureUpdater extends BaseUpdater
         System.out.println("done");
     }
 
-    private static void updateVersions(CloudBlobClient serviceClient, CloudBlobContainer metadataContainer) throws StorageException, URISyntaxException, IOException
+    private static void updateVersions(CloudBlobContainer metadataContainer) throws StorageException, URISyntaxException, IOException
     {
         CloudBlockBlob versionsList = metadataContainer.getBlockBlobReference(VersionsListName);
 
-        String[] versions = getVersions(serviceClient);
+        var versions = getVersions();
 
         System.out.print("Uploading version list: " + versionsList.getName() + " ... ");
         versionsList.deleteIfExists();
         versionsList.uploadText(StringUtilities.join("\n", versions));
         System.out.println("done");
+    }
 
-        BlobContainerPermissions bcp = new BlobContainerPermissions();
-        bcp.setPublicAccess(BlobContainerPublicAccessType.CONTAINER);
-        for (String version : versions) {
-            System.out.print("Set public permissions for version: " + version + " ... ");
-            CloudBlobContainer versionContainer = getVersionContainer(serviceClient, version);
-            versionContainer.createIfNotExists();
-            versionContainer.uploadPermissions(bcp);
-            System.out.println("done");
+    private static List<String> getVersions() throws URISyntaxException, StorageException
+    {
+        var result = new ArrayList<String>();
+        var container = new CloudBlobContainer(new URI("https://dvaupdate.blob.core.windows.net/update"));
+        for (ListBlobItem blob : container.listBlobs())
+        {
+            if (blob instanceof CloudBlobDirectory)
+            {
+                result.add(((CloudBlobDirectory)blob).getPrefix());
+            }
         }
-    }
 
-    private static void deleteContainer(CloudBlobContainer versionContainer) throws StorageException
-    {
-        System.out.print("Deleting " + versionContainer.getName() + " ... ");
-        versionContainer.delete();
-        System.out.println("done");
-    }
-
-    private static CloudBlobContainer getVersionContainer(CloudBlobClient serviceClient, String version) throws URISyntaxException, StorageException {
-        // Container name must be lower case.
-        String containerName = version.replace('.',  '-');
-        return serviceClient.getContainerReference(containerName);
-    }
-
-    private static String[] getVersions(CloudBlobClient serviceClient)
-    {
-        return StreamSupport.stream(serviceClient.listContainers().spliterator(), false)
-                .filter(c -> !c.getName().equals(MetadataContainerName))
-                .filter(c -> !c.getName().equals(SoundJarsContainerName))
-                .filter(c -> !c.getName().equals(ExceptionsContainerName))
-                .filter(c -> !c.getName().equals(ScreenshotsContainerName))
-                .filter(c -> !c.getName().equals(TempContainerName))
-                .map(c -> c.getName().replace('-', '.')).toArray(String[]::new);
+        return result;
     }
 }
