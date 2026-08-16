@@ -2,7 +2,6 @@ package jb.dva;
 
 import jb.common.FileUtilities;
 import jb.common.OSDetection;
-import jb.common.ObjectCache;
 
 import java.io.File;
 import java.util.*;
@@ -10,9 +9,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class SoundLibraryManager {
-    private static final String CacheUniverse = "4";
     private Map<String, SoundLibrary> soundLibraryMap = new LinkedHashMap<>();
-    private ObjectCache<SoundLibrary> soundLibraryCache = null;
     private final File temp;
     private final String dvaVersion;
 
@@ -27,19 +24,10 @@ public class SoundLibraryManager {
     public SoundLibraryManager(File temp, String dvaVersion) throws Exception {
         this.temp = temp;
         this.dvaVersion = dvaVersion;
-        this.soundLibraryCache = new ObjectCache<>(temp, "soundlibrary_" + CacheUniverse + "_" + dvaVersion);
     }
 
     public void loadAllSoundLibraries(Consumer<String> progress) throws Exception {
-        final ObjectCache<Map<String,SoundLibrary>> mc = new ObjectCache<>(temp, "soundlibrarymap_" + CacheUniverse + "_" + dvaVersion);
-
         populateSoundLibraries();
-
-        // Map cache is keyed to size of the map so that if new libraries are added or removed the cache is refreshed.
-        soundLibraryMap = mc.load(SoundLibraryManager.class, Integer.toString(soundLibraryMap.size()), () -> {
-            soundLibraryCache.emptyCache();
-            return soundLibraryMap;
-        });
 
         for (SoundLibrary library : soundLibraryMap.values()) {
             if (FALLBACK_LIBRARIES.containsKey(library.getName())) {
@@ -110,17 +98,14 @@ public class SoundLibraryManager {
     }
 
     private void loadSoundLibrary(String name) throws Exception {
-        SoundLibrary library = soundLibraryCache.load(SoundLibraryManager.class, name, () -> {
-            SoundLibrary l = soundLibraryMap.get(name);
-            try {
-                l.populate();
-            } catch (Exception ignored) {
+        SoundLibrary library = soundLibraryMap.get(name);
+        try {
+            if (library != null)
+            {
+                library.populate();
+                soundLibraryMap.put(name, library);
             }
-            return l;
-        });
-
-        if (library != null) {
-            soundLibraryMap.put(name, library);
+        } catch (Exception ignored) {
         }
     }
 

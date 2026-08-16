@@ -139,9 +139,12 @@ public class DVAUI {
             suggestedSoundList.setCellRenderer(new SoundListCellRenderer());
 
             SoundLibrary selectedLibrary = voiceComboBox.getSelectedValue();
-            currentScript.setVoice(selectedLibrary.getName());
-            suggestedSoundListModel.setSoundLibrary(selectedLibrary);
-            inflectionPanel.setVisible(selectedLibrary.supportsInflections());
+            if (selectedLibrary != null)
+            {
+                currentScript.setVoice(selectedLibrary.getName());
+                suggestedSoundListModel.setSoundLibrary(selectedLibrary);
+                inflectionPanel.setVisible(selectedLibrary.supportsInflections());
+            }
 
             SimpleEditorUndoRedoKit.enableUndo(dvaTextArea);
             dvaTextArea.setFont(dvaTextAreaLabel.getFont());

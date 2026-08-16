@@ -165,10 +165,6 @@ public class SoundLibrary implements Serializable, Comparable {
                 logger.debug("icon found - {}", urlString);
                 this.icon = u;
             }
-            else if (urlString.toLowerCase().endsWith("files.list"))
-            {
-                logger.debug("files.list found");
-            }
             else if (urlString.toLowerCase().endsWith("properties.properties"))
             {
                 // Found a properties file
