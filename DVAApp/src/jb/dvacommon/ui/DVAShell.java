@@ -281,17 +281,23 @@ public class DVAShell
         public void actionPerformed(ActionEvent e)
         {
             try {
-                if (SwingEngine.isMacOSX())
+                if (OSDetection.isMac())
                 {
                     File executable = new File(FileUtilities.getJarFolder(DVA.class), "dva");
                     File terminal = new File("/System/Applications/Utilities/Terminal.app");
                     if (!terminal.exists()) terminal = new File("/Applications/Utilities/Terminal.app");
                     new ProcessBuilder("open", terminal.getPath(), executable.getPath()).start();
                 }
-                else
+                else if (OSDetection.isWindows())
                 {
                     File executable = new File(FileUtilities.getJarFolder(DVA.class), "dva.exe");
                     Runtime.getRuntime().exec("cmd.exe /c start cmd /c \"" + executable.getPath() + "\" && pause");
+                }
+                else
+                {
+                    File executable = new File(FileUtilities.getJarFolder(DVA.class), "dva");
+                    File terminal = new File("/usr/bin/gnome-terminal");
+                    new ProcessBuilder(terminal.getPath(), executable.getPath()).start();
                 }
             } catch (IOException ex) {
                 ExceptionReporter.reportException(ex);
