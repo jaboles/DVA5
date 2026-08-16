@@ -27,7 +27,7 @@ public class NswCountry extends CityrailStandard
         s.append(" ").append(d.Platform);
 
         // "... terminates here"
-        if (stops.length == 0)
+        if (d.Terminates)
         {
             s.append(" terminates here. Please do not join this train.");
             return s.toString();

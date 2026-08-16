@@ -2,15 +2,7 @@ package jb.plasma.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
 
@@ -50,6 +42,7 @@ public class DeparturePanel
     @SuppressWarnings("UnusedDeclaration") private ColorComboBox textColorValue;
     @SuppressWarnings("UnusedDeclaration") private FileTextField customAnnouncementText;
     @SuppressWarnings("UnusedDeclaration") private JLabel customAnnouncementIndicatorIconLabel;
+    private JCheckBox terminatesValue;
     private Container panel;
 
     public DeparturePanel(String title, DVAManager dvaManager, String soundLibraryName)
@@ -129,6 +122,7 @@ public class DeparturePanel
         serviceTypeValue.setSelectedItem(d.Type);
         carsValue.setValue(d.Cars);
         platformValue.setValue(d.Platform);
+        terminatesValue.setSelected(d.Terminates);
         departureTimeValue.setText(d.DueOut != null ? d.dueOutAsString() : "");
         stationsValue.setText(d.stopsAsString());
         CityrailLine line = CityrailLine.get(d.Line);
@@ -161,6 +155,7 @@ public class DeparturePanel
             serviceTypeValue.getSelectedItem() != null ? serviceTypeValue.getSelectedItem().toString() : "",
             (Integer)carsValue.getValue(),
             (Integer)platformValue.getValue(),
+            terminatesValue.isSelected(),
             stationsValue.getText(),
             departureTimeValue.getText(),
             color1Value.getSelectedItem() instanceof Color? (Color)color1Value.getSelectedItem() : null,

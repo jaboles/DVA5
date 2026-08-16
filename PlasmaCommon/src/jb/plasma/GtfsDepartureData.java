@@ -28,6 +28,7 @@ public class GtfsDepartureData extends DepartureData
         this.Type = ti.LimitedStops ? "Limited Stops" : "All Stops";
         this.Cars = ti.Trip.Cars;
         this.Platform = Integer.parseInt(ti.Platform.Name.split(" Station Platform ")[1]);
+        this.Terminates = ti.Terminates;
 
         List<Stop> stops = new ArrayList<>();
         for (int i = 0; i < ti.RemainingStopList.length; i++)
@@ -48,7 +49,10 @@ public class GtfsDepartureData extends DepartureData
         this.Stops = stops.toArray(new Stop[0]);
         this.DueOut = ti.At;
 
-        if (headsignParts.length >= 2) {
+        if (Terminates) {
+            this.Destination = "Terminates";
+            this.Destination2 = "";
+        } else if (headsignParts.length >= 2) {
             this.Destination2 = "via " + substitute(headsignParts[1], true, line);
         } else {
             this.Destination2 = phraser.getVia(this);

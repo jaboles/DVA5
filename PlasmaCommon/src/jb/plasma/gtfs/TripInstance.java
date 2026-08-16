@@ -1,5 +1,7 @@
 package jb.plasma.gtfs;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
 // Represents a potential departure of a trip from a given place which will occur at a given time.
 public class TripInstance
 {
+    private final static Logger logger = LogManager.getLogger(TripInstance.class);
+
     public TripInstance(StopTime tripTimeAndPlace,
                         LocalDate date,
                         List<NormalizedStopTime> stopTimes,
@@ -35,6 +39,9 @@ public class TripInstance
                 limitedStops |= !nst.StopTime.Dropoff;
             }
         }
+
+        // Terminating train if there are no future stops, it does not pickup, but it does dropoff.
+        Terminates = stops.size() == 0 && !tripTimeAndPlace.Pickup && tripTimeAndPlace.Dropoff;
         LimitedStops = limitedStops;
         RemainingStopList = stops.stream()
                 .map(s -> s.Name.split(" Station Platform ")[0])
@@ -57,4 +64,5 @@ public class TripInstance
     public final Trip BlockContinuingTrip;
     public final LocalDateTime At;
     public final boolean LimitedStops;
+    public final boolean Terminates;
 }

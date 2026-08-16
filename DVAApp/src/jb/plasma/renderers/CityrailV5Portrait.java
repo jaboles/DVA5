@@ -63,7 +63,7 @@ public class CityrailV5Portrait extends CityrailV4and5
         MiniTextBoxFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
 
         int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
-        LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+        LineLogo = TryReloadLineLogo(Line, DepartureData.size() >= 1 && DepartureData.get(0).Terminates, new Dimension(logoSize, logoSize));
 
         airportIcon = loadSvg("/jb/plasma/renderers/resources/airport.svg", new Dimension(round(AirportIconWidth * width), round(AirportIconWidth * width)));
     }
@@ -79,7 +79,7 @@ public class CityrailV5Portrait extends CityrailV4and5
             if (Line != null)
             {
                 int logoSize = round(height * (Line.IsNswTrainlink ? 0.08 : 0.11));
-                LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+                LineLogo = TryReloadLineLogo(Line, d.Terminates, new Dimension(logoSize, logoSize));
                 if (Line.IsNswTrainlink) {
                     stationListPosInitial += nswTrainlinkTopOffset;
                 }

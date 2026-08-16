@@ -119,7 +119,7 @@ public class GtfsTimetableTranslator
         LocalDate today = LocalDate.now();
         Phraser phraser = new Phraser();
         return applyRealtimeInfo(stopsAtSelectedLocation.stream(), today)
-            .filter(st -> st.Pickup)
+            .filter(st -> st.Pickup || st.Dropoff)
             .filter(st -> routes == null || routes.contains(st.Trip.Route))
             .flatMap(st -> expandTrips(st, stopTimesByTrip))
             .sorted(Comparator.comparing(t -> t.At))
@@ -160,6 +160,7 @@ public class GtfsTimetableTranslator
 
                 if (tripStopTimes.size() == 0)
                 {
+                    logger.info("0 stops for run {} at {}", tripTimeAndPlace.Trip.Id, tripTimeAndPlace.Stop.Name);
                     continue;
                 }
 

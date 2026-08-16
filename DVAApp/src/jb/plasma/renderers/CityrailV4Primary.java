@@ -40,7 +40,7 @@ public class CityrailV4Primary extends CityrailV4Landscape
             DepartureData d = data.get(0);
             Line = CityrailLine.get(d.Line);
             int logoSize = round(height * 0.2);
-            LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+            LineLogo = TryReloadLineLogo(Line, d.Terminates, new Dimension(logoSize, logoSize));
         }
         else {
             LineLogo = null;
@@ -51,7 +51,7 @@ public class CityrailV4Primary extends CityrailV4Landscape
     public void dimensionsChanged() {
         super.dimensionsChanged();
         int logoSize = round(height * 0.2);
-        if (Line != null) LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+        if (Line != null) LineLogo = TryReloadLineLogo(Line, DepartureData.size() >= 1 && DepartureData.get(0).Terminates, new Dimension(logoSize, logoSize));
     }
 
     public void paintInfrequent(Graphics g)

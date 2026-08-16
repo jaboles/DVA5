@@ -13,6 +13,7 @@ public class ManualDepartureData extends DepartureData
             String type,
             int cars,
             int platform,
+            boolean terminates,
             String stopsString,
             String dueOut,
             Color color1Override,
@@ -27,6 +28,7 @@ public class ManualDepartureData extends DepartureData
                 type,
                 cars,
                 platform,
+                terminates,
                 color1Override,
                 color2Override,
                 textColorOverride,
@@ -63,6 +65,7 @@ public class ManualDepartureData extends DepartureData
             String type,
             int cars,
             int platform,
+            boolean terminates,
             String[] stops,
             LocalDateTime dueOut,
             Color color1Override,
@@ -77,6 +80,7 @@ public class ManualDepartureData extends DepartureData
                 type,
                 cars,
                 platform,
+                terminates,
                 color1Override,
                 color2Override,
                 textColorOverride,
@@ -95,6 +99,7 @@ public class ManualDepartureData extends DepartureData
             String type,
             int cars,
             int platform,
+            boolean terminates,
             Color color1Override,
             Color color2Override,
             Color textColorOverride,
@@ -107,6 +112,7 @@ public class ManualDepartureData extends DepartureData
         this.Type = type;
         this.Cars = cars;
         this.Platform = platform;
+        this.Terminates = terminates;
         this.Color1Override = color1Override;
         this.Color2Override = color2Override;
         this.TextColorOverride = textColorOverride;

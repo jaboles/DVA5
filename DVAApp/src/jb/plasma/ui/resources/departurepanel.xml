@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <hbox border="EmptyBorder(3,0,3,0)">
     <panel layout="BorderLayout">
-        <label id="titleLabel" constraints="BorderLayout.NORTH" border="EmptyBorder(0,0,3,0)" />
+        <panel layout="BorderLayout" constraints="BorderLayout.NORTH">
+            <label id="titleLabel" constraints="BorderLayout.WEST" border="EmptyBorder(0,0,3,0)" />
+            <checkbox id="terminatesValue" constraints="BorderLayout.EAST" text="Terminates" border="EmptyBorder(0,0,3,0)" />
+        </panel>
         <panel id="gridPanel" layout="GridLayout(4,2,2,2)">
             <hbox>
                 <label text="Destination:" />

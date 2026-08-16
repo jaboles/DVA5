@@ -65,7 +65,7 @@ public class CityrailV4Portrait extends CityrailV4
         MiniTextBoxFont = Resources.RobotoMedium.deriveFont(Font.PLAIN, (int)(height * 0.017));
 
         int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
-        LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+        LineLogo = TryReloadLineLogo(Line, DepartureData.size() >= 1 && DepartureData.get(0).Terminates, new Dimension(logoSize, logoSize));
     }
 
     public void dataChanged(java.util.List<DepartureData> data)
@@ -77,7 +77,7 @@ public class CityrailV4Portrait extends CityrailV4
             DepartureData d = data.get(0);
             Line = CityrailLine.get(d.Line);
             int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
-            LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+            LineLogo = TryReloadLineLogo(Line, d.Terminates, new Dimension(logoSize, logoSize));
             if (Line.IsNswTrainlink) {
                 stationListPosInitial += nswTrainlinkTopOffset;
             }

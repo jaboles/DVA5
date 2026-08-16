@@ -42,13 +42,23 @@ public abstract class CityrailV4and5 extends Cityrail
         fillRect(0, 0, 1, 1, BackgroundColor);
     }
 
-    protected BufferedImage TryReloadLineLogo(CityrailLine line, Dimension d) {
+    protected BufferedImage TryReloadLineLogo(CityrailLine line, boolean terminates, Dimension d) {
+        if (terminates) {
+            return LoadImage("terminates.png", d);
+        }
+        if (line != null && line.LogoImageFilename != null) {
+            return LoadImage(line.LogoImageFilename, d);
+        }
+
+        return null;
+    }
+
+    protected BufferedImage LoadImage(String filename, Dimension d) {
         if (d.height == 0 || d.width == 0) return null;
 
-        if (line != null && line.LogoImageFilename != null)
+        if (filename != null)
         {
-            String filename = line.LogoImageFilename;
-            URL url = CityrailV4Primary.class.getResource("/jb/plasma/renderers/resources/" + line.LogoImageFilename);
+            URL url = CityrailV4and5.class.getResource("/jb/plasma/renderers/resources/" + filename);
             if (url == null) return null;
 
             BufferedImage bi = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);

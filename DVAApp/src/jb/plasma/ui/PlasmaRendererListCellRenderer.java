@@ -18,13 +18,13 @@ public class PlasmaRendererListCellRenderer implements ListCellRenderer<Drawer> 
     static
     {
         SampleData.add(new ManualDepartureData("Destination", "via Location", CityrailLine.T8.Name, "Limited Stops",
-                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(3),
+                8, 1, false, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(3),
                 null, null, null, null));
         SampleData.add(new ManualDepartureData("Next Destination", "via Location", CityrailLine.T2.Name, "Limited Stops",
-                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(7),
+                8, 1, false, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(7),
                 null, null, null, null));
         SampleData.add(new ManualDepartureData("Next Destination", "via Location", CityrailLine.T9.Name, "Limited Stops",
-                8, 1, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(10),
+                8, 1, false, new String[] {"Stop 1", "Stop 2", "Stop 3"}, LocalDateTime.now().plusMinutes(10),
                 null, null, null, null));
     }
 

@@ -23,6 +23,7 @@ public abstract class DepartureData
     public int Platform = 0; // Platform no. (shown on concourse indicators)
     public LocalDateTime DueOut = null;  // Departure time
     public Stop[] Stops = new Stop[] { }; // List of stops
+    public boolean Terminates = false;
     public Color Color1Override = null;
     public Color Color2Override = null;
     public Color TextColorOverride = null;
