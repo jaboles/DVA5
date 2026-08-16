@@ -17,7 +17,7 @@
     <property name="JavaVersionPlus" value="17.0.14%2b7"/>
     <property name="JavaVersionUnderscore" value="17.0.14_7"/>
     <property name="JavaVersionMicrosoft" value="17.0.14"/>
-    <property name="InnoSetupVersion" value="6.7.3"/>
+    <property name="InnoSetupUrl" value="https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe"/>
     <propertyregex property="DVAVersion"
                    input="${env.BUILD_SOURCEBRANCHNAME}"
                    regexp="([\d\.]+)"
@@ -149,7 +149,7 @@
             <fileset dir="${ToolsDir}\jre" includes="**/classes*.jsa"/>
         </delete>
         <!-- download Inno Setup -->
-        <get src="https://files.jrsoftware.org/is/6/innosetup-${InnoSetupVersion}.exe" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
+        <get src="${InnoSetupUrl}" dest="${ToolsDir}/is.exe" usetimestamp="true"/>
         <!-- install Inno Setup -->
         <exec executable="${ToolsDir}/is.exe" failonerror="true">
             <arg line="/silent"/>
