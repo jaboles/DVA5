@@ -59,9 +59,10 @@ public class GtfsDepartureData extends DepartureData
 
     public void logDetails()
     {
-        Logger.info("Trip: {} departs from '{}' at {} to '{}' with {} cars. Continues as {}",
+        Logger.info("Trip: {} departs from '{}' on line '{}' at {} to '{}' with {} cars. Continues as {}",
                 tripInstance.Trip.Name,
                 tripInstance.Platform.Name,
+                tripInstance.Trip.Route.Description,
                 tripInstance.At,
                 tripInstance.Trip.Headsign,
                 tripInstance.Trip.Cars,

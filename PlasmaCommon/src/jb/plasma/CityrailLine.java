@@ -62,7 +62,7 @@ public class CityrailLine
         T1_NORTH_SHORE = new CityrailLine("T1 North Shore Line", yellow, Color.black, false, "T1.svg");
         T1_WESTERN = new CityrailLine("T1 Western Line", yellow, Color.black, false, "T1.svg");
         T2 = new CityrailLine("T2 Inner West & Leppington Line", blue, Color.white, false, "T2.svg");
-        T3 = new CityrailLine("T3 Bankstown Line", brown, Color.black, false, "T3.svg");
+        T3 = new CityrailLine("T3 Liverpool & Inner West Line", brown, Color.black, false, "T3.svg");
         T4 = new CityrailLine("T4 Eastern Suburbs & Illawarra Line", darkBlue, Color.white, false, "T4.svg");
         T5 = new CityrailLine("T5 Cumberland Line", pink, Color.white, false, "T5.svg");
         T7 = new CityrailLine("T7 Olympic Park Line", grey, Color.white, false, "T7.svg");
@@ -118,6 +118,13 @@ public class CityrailLine
 
         if (line == null)
             line = allLines.get(name.replace(" Train Services", ""));
+
+        // Fallback logic in case line name changes
+        if (line == null && name.startsWith("T") && !name.startsWith("T1"))
+        {
+            var l = allLines.keySet().stream().filter(k -> k.startsWith(name.substring(0, 2))).findFirst();
+            if (l.isPresent()) line = allLines.get(l);
+        }
 
         return line;
     }

@@ -76,10 +76,13 @@ public class CityrailV5Portrait extends CityrailV4and5
         {
             DepartureData d = data.get(0);
             Line = CityrailLine.get(d.Line);
-            int logoSize = round(height * (Line != null && Line.IsNswTrainlink ? 0.08 : 0.11));
-            LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
-            if (Line.IsNswTrainlink) {
-                stationListPosInitial += nswTrainlinkTopOffset;
+            if (Line != null)
+            {
+                int logoSize = round(height * (Line.IsNswTrainlink ? 0.08 : 0.11));
+                LineLogo = TryReloadLineLogo(Line, new Dimension(logoSize, logoSize));
+                if (Line.IsNswTrainlink) {
+                    stationListPosInitial += nswTrainlinkTopOffset;
+                }
             }
         }
         else {
