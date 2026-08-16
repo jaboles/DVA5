@@ -22,11 +22,6 @@ public class WAzureUpdater extends BaseUpdater
 {
     private String latestVersion = null;
 
-    private static final String VersionsListName = "versionslist";
-    private static final String SoundJarsList = "soundjarslist";
-    private static final String MetadataContainerName = "metadata";
-    private static final String SoundJarsContainerName = "soundjars";
-
     public static final String PersistedLastModifiedTimestamp = "PersistedLastModifiedTimestamp";
 
     public WAzureUpdater(URL baseUrl)
@@ -76,8 +71,8 @@ public class WAzureUpdater extends BaseUpdater
         CloudBlobClient serviceClient = account.createCloudBlobClient();
 
         String cmd = args[0];
-        CloudBlobContainer metadataContainer = serviceClient.getContainerReference(MetadataContainerName);
-        CloudBlobContainer soundjarsContainer = serviceClient.getContainerReference(SoundJarsContainerName);
+        CloudBlobContainer metadataContainer = serviceClient.getContainerReference("metadata");
+        CloudBlobContainer soundjarsContainer = serviceClient.getContainerReference("soundjars");
 
         BlobContainerPermissions bcp = new BlobContainerPermissions();
         bcp.setPublicAccess(BlobContainerPublicAccessType.CONTAINER);
@@ -85,11 +80,7 @@ public class WAzureUpdater extends BaseUpdater
         metadataContainer.createIfNotExists();
         metadataContainer.uploadPermissions(bcp);
 
-        if (cmd.equals("updateversion"))
-        {
-            updateVersions(metadataContainer);
-        }
-        else if (cmd.equals("uploadsoundjars"))
+        if (cmd.equals("uploadsoundjars"))
         {
             soundjarsContainer.createIfNotExists();
             soundjarsContainer.uploadPermissions(bcp);
@@ -104,7 +95,7 @@ public class WAzureUpdater extends BaseUpdater
                 for (File jar : jars) {
                     uploadArtifact(jar, soundjarsContainer);
                 }
-                uploadArtifactList(jars, metadataContainer, SoundJarsList);
+                uploadArtifactList(jars, metadataContainer, "soundjarslist");
             }
         }
         else
@@ -134,18 +125,6 @@ public class WAzureUpdater extends BaseUpdater
         System.out.print("Uploading artifact list: " + listBlob.getName() + " ... ");
         listBlob.deleteIfExists();
         listBlob.uploadText(StringUtilities.join("\n", artifactNames));
-        System.out.println("done");
-    }
-
-    private static void updateVersions(CloudBlobContainer metadataContainer) throws StorageException, URISyntaxException, IOException
-    {
-        CloudBlockBlob versionsList = metadataContainer.getBlockBlobReference(VersionsListName);
-
-        var versions = getVersions();
-
-        System.out.print("Uploading version list: " + versionsList.getName() + " ... ");
-        versionsList.deleteIfExists();
-        versionsList.uploadText(StringUtilities.join("\n", versions));
         System.out.println("done");
     }
 
