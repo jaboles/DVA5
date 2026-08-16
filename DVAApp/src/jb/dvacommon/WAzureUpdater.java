@@ -22,13 +22,10 @@ public class WAzureUpdater extends BaseUpdater
 {
     private String latestVersion = null;
 
-    public static final String VersionsListName = "versionslist";
-    public static final String SoundJarsList = "soundjarslist";
-    public static final String MetadataContainerName = "metadata";
-    public static final String SoundJarsContainerName = "soundjars";
-    public static final String ExceptionsContainerName = "exceptions";
-    public static final String TempContainerName = "temp";
-    public static final String ScreenshotsContainerName = "screenshots";
+    private static final String VersionsListName = "versionslist";
+    private static final String SoundJarsList = "soundjarslist";
+    private static final String MetadataContainerName = "metadata";
+    private static final String SoundJarsContainerName = "soundjars";
 
     public static final String PersistedLastModifiedTimestamp = "PersistedLastModifiedTimestamp";
 
@@ -160,7 +157,7 @@ public class WAzureUpdater extends BaseUpdater
         {
             if (blob instanceof CloudBlobDirectory)
             {
-                result.add(((CloudBlobDirectory)blob).getPrefix());
+                result.add(((CloudBlobDirectory)blob).getPrefix().replace("/", ""));
             }
         }
 
