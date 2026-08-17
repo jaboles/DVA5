@@ -486,24 +486,6 @@ Log=    console
         <antcall target="SignMacDmg">
             <param name="arch.java" value="aarch64"/>
         </antcall>
-
-        <!-- still notarize the vanilla DMG for older versions to successfully update -->
-        <echo>Signing Mac DMG (legacy)</echo>
-        <exec executable="codesign" dir="${DistDir}" failonerror="true">
-            <arg line="-v --force --timestamp --sign '${SignIdentity}' ${DmgName}.dmg"/>
-        </exec>
-        <!-- verify codesign -->
-        <exec executable="codesign" dir="${DistDir}" failonerror="true">
-            <arg line="-v --verify ${DmgName}.dmg"/>
-        </exec>
-        <!-- Notarize -->
-        <exec executable="sh" failonerror="true">
-            <arg line="./notarize.sh ${DistDir}/${DmgName}.dmg"/>
-        </exec>
-        <!-- verify gatekeeper -->
-        <exec executable="spctl" dir="${DistDir}" failonerror="true">
-            <arg line="-vv --assess --type open --context context:primary-signature ${DmgName}.dmg"/>
-        </exec>
     </target>
     <target name="SignMacDmg">
         <!-- Params:
