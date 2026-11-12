@@ -94,6 +94,7 @@ public class PlasmaUI
     @SuppressWarnings("UnusedDeclaration") private JTextField recurringTimesValue;
 
     // Timetables section
+    @SuppressWarnings("UnusedDeclaration") private JPanel timetablePanel;
     @SuppressWarnings("UnusedDeclaration") private JLabel gtfsInfo;
     @SuppressWarnings("UnusedDeclaration") private JLabel gtfsDownloadTimestamp;
     @SuppressWarnings("UnusedDeclaration") private JLabel gtfsExpiryTime;
@@ -126,31 +127,30 @@ public class PlasmaUI
             recurringRadioButtons.add(recurringTimesRadioButton);
 
             // Instantiate the available renderers and announcers
-            Drawer[] renderers = new Drawer[] {
-                new CityrailV5Portrait(CityrailV4and5.Orange),
-                new CityrailV5Primary(CityrailV4and5.Orange, null), new CityrailV5Secondary(CityrailV4and5.Orange),
-                new CityrailV4Portrait(false, CityrailV4and5.Orange),
-                new CityrailV4Portrait(true, CityrailV4and5.Orange),
-                new CityrailV4Primary(CityrailV4and5.Orange), new CityrailV4Secondary(CityrailV4and5.Orange),
-                new CityrailV3Primary(), new CityrailV3Secondary(),
-                new CityrailV2(false), new CityrailV1Portrait(true, true), new CityrailV1Landscape(true, false),
-                new CityrailV1Portrait(false, true), new CityrailV1Landscape(false, false),
-                new OlympicParkLED(),
-                new CityrailV5Primary(CityrailLine.busesBlue, "Sydney Bus Museum") };
+            Drawer[] renderers = new Drawer[]{
+                    new CityrailV5Portrait(CityrailV4and5.Orange),
+                    new CityrailV5Primary(CityrailV4and5.Orange, null), new CityrailV5Secondary(CityrailV4and5.Orange),
+                    new CityrailV4Portrait(false, CityrailV4and5.Orange),
+                    new CityrailV4Portrait(true, CityrailV4and5.Orange),
+                    new CityrailV4Primary(CityrailV4and5.Orange), new CityrailV4Secondary(CityrailV4and5.Orange),
+                    new CityrailV3Primary(), new CityrailV3Secondary(),
+                    new CityrailV2(false), new CityrailV1Portrait(true, true), new CityrailV1Landscape(true, false),
+                    new CityrailV1Portrait(false, true), new CityrailV1Landscape(false, false),
+                    new OlympicParkLED(),
+                    new CityrailV5Primary(CityrailLine.busesBlue, "Sydney Bus Museum")};
 
-            Announcer[] announcers = new Announcer[] {
-                new CityrailStandard("Sydney-Male", true),
-                new CityrailStandard("Sydney-Female", false),
-                new NswCountry("Sydney-Male", true),
-                new NswCountry("Sydney-Female", false),
-                new SydneyBusMuseum()
+            Announcer[] announcers = new Announcer[]{
+                    new CityrailStandard("Sydney-Male", true),
+                    new CityrailStandard("Sydney-Female", false),
+                    new NswCountry("Sydney-Male", true),
+                    new NswCountry("Sydney-Female", false),
+                    new SydneyBusMuseum()
             };
 
             // Populate the comboboxes with them, the second combobox has the
             // additional option of 'None'.
             rendererComboBoxes = new ArrayList<>();
-            for (int i = 0; i < 3; i++)
-            {
+            for (int i = 0; i < 3; i++) {
                 JComboBox<Drawer> cb = new JComboBox<>();
                 cb.addItem(new NullDrawer());
                 for (Drawer d : renderers) {
@@ -172,8 +172,8 @@ public class PlasmaUI
             // indicators.
             for (int i = 0; i < departurePanels.length; i++) {
                 departurePanels[i] = new DeparturePanel(departurePanelTitles[i],
-                    dva,
-                    dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary() : null);
+                        dva,
+                        dva != null ? (playAnnouncementVoiceCombobox.getSelectedItemTyped()).getSoundLibrary() : null);
 
                 if (i >= 1) {
                     JSeparator separator = new JSeparator();
@@ -205,24 +205,32 @@ public class PlasmaUI
             recurringTimesRadioButton.addActionListener(recurringRadioButtonChanged);
 
             timetableTranslator = GtfsTimetableTranslator.getInstance();
-            gtfsInfo.setText("TfNSW GTFS timetable");
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            gtfsDownloadTimestamp.setText("Downloaded: " + timetableTranslator.downloadTimestamp().format(fmt));
-            gtfsExpiryTime.setText("Expiry & next download: " + timetableTranslator.expiryTime().format(fmt));
+            if (timetableTranslator != null)
+            {
+                gtfsInfo.setText("TfNSW GTFS timetable");
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                gtfsDownloadTimestamp.setText("Downloaded: " + timetableTranslator.downloadTimestamp().format(fmt));
+                gtfsExpiryTime.setText("Expiry & next download: " + timetableTranslator.expiryTime().format(fmt));
 
-            gtfsStation.replaceItems(timetableTranslator.getStations());
+                gtfsStation.replaceItems(timetableTranslator.getStations());
 
-            // When the station is changed, update the list of platforms and routes
-            ActionListener gtfsStationChanged = e -> {
-                Stop station = gtfsStation.getSelectedItemTyped();
+                // When the station is changed, update the list of platforms and routes
+                ActionListener gtfsStationChanged = e -> {
+                    Stop station = gtfsStation.getSelectedItemTyped();
 
-                if (station != null) {
-                    gtfsPlatform.replaceItems(timetableTranslator.getPlatformsForStation(station));
-                    gtfsRoute.replaceItems(timetableTranslator.getRoutesForStation(station));
-                }
-            };
-            gtfsStationChanged.actionPerformed(null);
-            gtfsStation.addActionListener(gtfsStationChanged);
+                    if (station != null) {
+                        gtfsPlatform.replaceItems(timetableTranslator.getPlatformsForStation(station));
+                        gtfsRoute.replaceItems(timetableTranslator.getRoutesForStation(station));
+                    }
+                };
+                gtfsStationChanged.actionPerformed(null);
+                gtfsStation.addActionListener(gtfsStationChanged);
+            }
+            else
+            {
+                gtfsInfo.setText("GTFS Unavailable");
+                UIUtilities.setContainerEnabled(timetablePanel, false);
+            }
 
             // Initially select the first line, and show/hide the
             // window/fullscreen/preview buttons depending

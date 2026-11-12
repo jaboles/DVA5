@@ -1,10 +1,10 @@
 package jb.dvacommon;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import javax.swing.UIManager;
@@ -93,28 +93,39 @@ public class DVA {
 
         logger.info("Fetching GTFS timetable");
         if (showLoadingProgress) lw.setText("Fetching GTFS timetable... ");
-        GtfsGenerator.initialize(new File(getTemp(), "GtfsTimetable").toPath());
-        GtfsGenerator.getInstance().download(false);
+        try {
+            GtfsGenerator.initialize(new File(getTemp(), "GtfsTimetable").toPath());
+            GtfsGenerator.getInstance().download(false);
+        } catch (IOException e) {
+            logger.warn("Failed to download GTFS timetable", e);
+        }
 
         logger.info("Reading timetable data");
         if (showLoadingProgress) lw.setText("Reading timetable data... ");
-        GtfsTimetable tt;
+        GtfsTimetable tt = null;
         try {
             tt = GtfsGenerator.getInstance().read();
         } catch (NoSuchFileException e) {
-            if (showLoadingProgress) lw.setText("Detected incomplete timetable data, re-downloading... ");
-            GtfsGenerator.getInstance().download(true);
-            if (showLoadingProgress) lw.setText("Reading timetable data... ");
-            tt = GtfsGenerator.getInstance().read();
+            try {
+                if (showLoadingProgress) lw.setText("Detected incomplete timetable data, re-downloading... ");
+                GtfsGenerator.getInstance().download(true);
+                if (showLoadingProgress) lw.setText("Reading timetable data... ");
+                tt = GtfsGenerator.getInstance().read();
+            } catch (IOException e2) {
+                logger.error("Failed a second attempt to download GTFS timetable", e2);
+            }
         }
 
-        int steps = GtfsTimetable.getAnalysisStepCount();
-        if (showLoadingProgress) lw.setText("Reading timetable data... indexing stops");
-        for (int i = 0; i < steps; i++)  {
-            String stepDescription = tt.analyse(i);
-            if (showLoadingProgress) lw.setText("Analysing timetable... " + stepDescription);
+        if (tt != null)
+        {
+            int steps = GtfsTimetable.getAnalysisStepCount();
+            if (showLoadingProgress) lw.setText("Reading timetable data... indexing stops");
+            for (int i = 0; i < steps; i++)  {
+                String stepDescription = tt.analyse(i);
+                if (showLoadingProgress) lw.setText("Analysing timetable... " + stepDescription);
+            }
+            GtfsTimetableTranslator.initialize(tt, getTemp());
         }
-        GtfsTimetableTranslator.initialize(tt, getTemp());
 
         if (showMainWindow) {
             logger.info("Loading main window");

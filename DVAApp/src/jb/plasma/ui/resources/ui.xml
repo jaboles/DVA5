@@ -72,7 +72,7 @@
                 </panel>
             </vbox>
         </panel>
-        <panel name="Timetable" layout="BorderLayout">
+        <panel id="timetablePanel" name="Timetable" layout="BorderLayout">
             <panel layout="FlowLayout" constraints="BorderLayout.NORTH">
                 <vbox>
                     <hbox>
