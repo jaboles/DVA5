@@ -18,27 +18,9 @@ public class CityrailLine
     public boolean IsNswTrainlink;
     public String LogoImageFilename;
 
-    public static final CityrailLine T1_NORTH_SHORE;
-    public static final CityrailLine T1_WESTERN;
-    public static final CityrailLine T2;
-    public static final CityrailLine T3;
-    public static final CityrailLine T4;
-    public static final CityrailLine T5;
-    public static final CityrailLine T7;
-    public static final CityrailLine T8;
-    public static final CityrailLine T9;
-
-    public static final CityrailLine BMT;
-    public static final CityrailLine CCN;
-    public static final CityrailLine SCO;
-    public static final CityrailLine SHL;
-    public static final CityrailLine HUN;
-
-    public static final CityrailLine NRC;
-    public static final CityrailLine NRW;
-    public static final CityrailLine STH;
-    public static final CityrailLine WST;
-
+    public static final CityrailLine T1_NORTH_SHORE, T1_WESTERN, T2, T3, T4, T5, T6_CARLINGFORD, T6_BANKSTOWN, T7, T8, T9;
+    public static final CityrailLine BMT, CCN, SCO, SHL, HUN;
+    public static final CityrailLine NRC, NRW, STH, WST;
     public static final CityrailLine SBM;
 
     // 'Official' Cityrail colours
@@ -46,10 +28,12 @@ public class CityrailLine
     public static final Color red = new Color(207, 17, 43);
     public static final Color yellow = new Color(246, 193, 72);
     public static final Color green = new Color(75, 159, 71);
-    public static final Color brown = new Color(242, 103, 38);
+    public static final Color t3orange = new Color(242, 103, 38);
+    public static final Color brown = new Color(124, 62, 38);
     public static final Color blue = new Color(27, 130, 197);
     public static final Color pink = new Color(204, 0, 160);
-    public static final Color darkBlue = new Color(0, 43, 127);
+    public static final Color medBlue = new Color(0, 43, 127);
+    public static final Color greyBlue = new Color(69, 108, 170);
     public static final Color darkRed = new Color(129, 47, 51);
     //public static final Color lightBlue = new Color(121, 213, 242);
     //public static final Color lightPurple = new Color(140, 127, 179);
@@ -62,9 +46,11 @@ public class CityrailLine
         T1_NORTH_SHORE = new CityrailLine("T1 North Shore Line", yellow, Color.black, false, "T1.svg");
         T1_WESTERN = new CityrailLine("T1 Western Line", yellow, Color.black, false, "T1.svg");
         T2 = new CityrailLine("T2 Inner West & Leppington Line", blue, Color.white, false, "T2.svg");
-        T3 = new CityrailLine("T3 Liverpool & Inner West Line", brown, Color.black, false, "T3.svg");
-        T4 = new CityrailLine("T4 Eastern Suburbs & Illawarra Line", darkBlue, Color.white, false, "T4.svg");
+        T3 = new CityrailLine("T3 Liverpool & Inner West Line", t3orange, Color.black, false, "T3.svg");
+        T4 = new CityrailLine("T4 Eastern Suburbs & Illawarra Line", medBlue, Color.white, false, "T4.svg");
         T5 = new CityrailLine("T5 Cumberland Line", pink, Color.white, false, "T5.svg");
+        T6_CARLINGFORD = new CityrailLine("T6 Carlingford Line", greyBlue, Color.white, false, "T6Carlingford.svg");
+        T6_BANKSTOWN = new CityrailLine("T6 Lidcombe & Bankstown Line", brown, Color.white, false, "T6Bankstown.svg");
         T7 = new CityrailLine("T7 Olympic Park Line", grey, Color.white, false, "T7.svg");
         T8 = new CityrailLine("T8 Airport & South Line", green, Color.white, false, "T8.svg");
         T9 = new CityrailLine("T9 Northern Line", red, Color.white, false, "T9.svg");
@@ -83,7 +69,7 @@ public class CityrailLine
         SBM = new CityrailLine("Sydney Bus Museum", busesBlue, Color.white, false, "B.svg");
 
         CityrailLine[] lines = new CityrailLine[] {
-                T1_NORTH_SHORE, T1_WESTERN, T2, T3, T4, T5, T7, T8, T9,
+                T1_NORTH_SHORE, T1_WESTERN, T2, T3, T4, T5, T6_BANKSTOWN, T6_CARLINGFORD, T7, T8, T9,
                 BMT, CCN, SCO, SHL, HUN, NRC, NRW, STH, WST, SBM
         };
         for (CityrailLine line : lines) {
