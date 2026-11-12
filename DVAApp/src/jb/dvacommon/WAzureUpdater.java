@@ -127,19 +127,4 @@ public class WAzureUpdater extends BaseUpdater
         listBlob.uploadText(StringUtilities.join("\n", artifactNames));
         System.out.println("done");
     }
-
-    private static List<String> getVersions() throws URISyntaxException, StorageException
-    {
-        var result = new ArrayList<String>();
-        var container = new CloudBlobContainer(new URI("https://dvaupdate.blob.core.windows.net/update"));
-        for (ListBlobItem blob : container.listBlobs())
-        {
-            if (blob instanceof CloudBlobDirectory)
-            {
-                result.add(((CloudBlobDirectory)blob).getPrefix().replace("/", ""));
-            }
-        }
-
-        return result;
-    }
 }

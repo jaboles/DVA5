@@ -30,7 +30,7 @@
         </fileset>
     </path>
     <property name="BuildClasspath" value="${toString:jars}" />
-    <property name="JlinkModules" value="java.desktop,java.naming,jdk.unsupported,java.management,java.net.http"/>
+    <property name="JlinkModules" value="java.desktop,java.naming,jdk.unsupported,java.management,java.net.http,jdk.crypto.ec"/>
     <condition property="ExecutableExtension" value=".exe" else="">
         <os family="windows"/>
     </condition>
